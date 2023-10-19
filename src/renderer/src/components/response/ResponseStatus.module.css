@@ -1,0 +1,53 @@
+.statusBar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px 0 2px;
+
+  & > .showConsole {
+    align-self: start;
+  }
+
+  & > .status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 12px;
+    gap: 10px;
+  
+  
+    & > .item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    
+      & > .name {
+        font-weight: 500;
+      }
+      & > .value {
+        color: var(--status-200-color);
+  
+        &.redirect {
+          color: var(--status-300-color);
+        }
+        
+        &.client-error {
+          color: var(--status-400-color);
+        }
+        
+        &.server-error {
+          color: var(--status-500-color);
+        }
+        
+        &.unknown {
+          color: var(--status-unkonwn-color);
+        }
+      }
+    }
+}
+}
