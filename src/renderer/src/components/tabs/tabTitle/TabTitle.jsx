@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './TabTitle.module.css'
 import { useOutsideClick } from '../../../hooks/useOutsideClick'
 import { AppContext } from '../../../context/AppContext'
@@ -8,12 +8,16 @@ export default function TabTitle({ tab }) {
 
   const { tabs } = useContext(AppContext)
   const [editing, setEditing] = useState(false)
+  const [tabName, setTabName] = useState()
   const inputRef = useRef()
 
+  useEffect(() => setTabName(tab.name), [tab])
+
   const getTabTitle = () => {
+    if (tabName !== undefined) return tabName
     if (tab.type === 'history') return 'History'
     if (tab.type === 'draft') return 'Draft'
-    return tab.name || tab.id
+    return tabName || tab.id
   }
 
   const onDoubleClick = () => {
@@ -31,8 +35,13 @@ export default function TabTitle({ tab }) {
 
     // TODO: save tab name
     if (e.key === 'Enter') {
+      console.log('save tab name', tabName)
       setEditing(false)
     }
+  }
+
+  const onChange = (e) => {
+    setTabName(e.target.value)
   }
 
   const onClose = (e) => {
@@ -50,8 +59,9 @@ export default function TabTitle({ tab }) {
           type="text"
           ref={inputRef}
           className={styles.input}
-          value={tab.name}
+          value={tabName}
           onKeyDown={onKeyDown}
+          onChange={onChange}
           placeholder='Request name'
         />
       )}

@@ -8,20 +8,31 @@ import RequestPanel from './RequestPanel'
 export default function ContentTabs() {
 
   const { tabs } = useContext(AppContext)
-
   const onSelect = (index) => tabs.setActiveTab(index)
+  const onWheel = (e) => {
+    const el = e.currentTarget
+    const scrollLeft = el.scrollLeft
+    el.scrollTo({
+      left: scrollLeft + e.deltaY * 0.4,
+      behavior: 'instant'
+    })
+  }
 
   return (
     <div className='panel-tabs'>
       <Tabs onSelect={onSelect} selectedIndex={tabs.getSelectedTabIndex()}>
-        <TabList>
-          {tabs.getTabs().map((tab, index) => (
-            <Tab key={index} className='request-tab'>
-              <TabTitle tab={tab} /> 
-            </Tab>
-          ))}
+        <div className='panel-tabs-header'>
+          <div className='panel-tabs-header-list' onWheel={onWheel}>
+            <TabList>
+              {tabs.getTabs().map((tab, index) => (
+                <Tab key={index} className='request-tab'>
+                  <TabTitle tab={tab} /> 
+                </Tab>
+              ))}
+            </TabList>
+          </div>
           <NewTab />
-        </TabList>
+        </div>
         <div className='panel-tabs-content'>
           {tabs.getTabs().map((tab, index) => (
             <TabPanel key={index} forceRender={true}>

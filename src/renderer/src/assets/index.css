@@ -327,6 +327,19 @@ button {
     display: flex;
     flex-direction: column;
 
+    & .panel-tabs-header {
+      display: flex;
+      flex-direction: row;
+
+      & .panel-tabs-header-list{
+        overflow-x: auto;
+    
+        &::-webkit-scrollbar {
+          height: 0.2rem;
+        }
+      }
+    }
+
     & .panel-tabs-content {
       flex: 1;
       overflow: hidden;
