@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from 'react'
 import styles from './TabTitle.module.css'
 import { useOutsideClick } from '../../../hooks/useOutsideClick'
 import { AppContext } from '../../../context/AppContext'
+import ButtonIcon from '../../base/ButtonIcon'
 
 export default function TabTitle({ tab }) {
 
@@ -59,7 +60,9 @@ export default function TabTitle({ tab }) {
           <span className={styles.title} onDoubleClick={onDoubleClick}>
             {getTabTitle()}
           </span>
-          <span className={styles.close} onClick={onClose}>&times;</span>
+          <span className={styles.close} onClick={onClose}>
+            <ButtonIcon icon='close' size={15} />
+          </span>
         </div>
       ) }
     </div>

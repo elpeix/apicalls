@@ -1,6 +1,7 @@
 .tabTitle {
   font-size: 13px;
   padding: 0;
+  border-right: 1px solid var(--color-9);
 
   & .content {
     display: block;
@@ -11,6 +12,10 @@
     &:hover {
       background-color: var(--color-7);
       cursor: pointer;
+
+      & .close {
+        visibility: visible;
+      }
     }
 
     & .title {
@@ -21,12 +26,16 @@
   &.active .content{
     background-color: var(--tab-selected-background-color) !important;
     color: var(--tab-selected-color) !important;
+
+    & .close {
+      visibility: visible;
+    }
   }
 
   & .close {
     color: var(--color-1);
-    margin-left: 0.2rem;
-    padding: 0.5rem 0.8rem;
+    padding: 0.5rem 0.5rem;
+    visibility: hidden;
   }
 
   &.draft span.title {
