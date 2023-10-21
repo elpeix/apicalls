@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react'
 import useTabs from '../hooks/useTabs'
+import { useHistory } from '../hooks/useHistory'
 
 export const AppContext = createContext()
 
@@ -72,18 +73,7 @@ export default function AppContextProvider({ children }) {
     ]
   }])
   const [environments, setEnvironments] = useState([])
-  const [history, setHistory] = useState([{
-    method: { value: 'GET', label: 'GET', body: false },
-    url: 'https://jsonplaceholder.typicode.com/todos/2',
-    headers: [
-      { name: 'Content-Type', value: 'application/json', enabled: true },
-      { name: 'Accept', value: 'application/json', enabled: true }
-    ],
-    params: [
-      { name: 'userId', value: '1', enabled: true },
-      { name: 'id', value: '1', enabled: true }
-    ]
-  }])
+  const history = useHistory()
 
   const selectItem = id => {
     const item = menu.find(item => item.id === id)
@@ -106,10 +96,7 @@ export default function AppContextProvider({ children }) {
       items: environments,
       set: setEnvironments
     },
-    history: {
-      items: history,
-      set: setHistory
-    }
+    history
   }
 
   return (

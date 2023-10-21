@@ -5,8 +5,8 @@ import { RequestContext } from '../../context/RequestContext'
 
 export default function RequestBar() {
 
-  const context = useContext(RequestContext)
-  const handleSelectChange = value => context.request.setMethod(value)
+  const { request, fetching } = useContext(RequestContext)
+  const onChange = value => request.setMethod(value)
 
   return (
     <div className='request-basic'>
@@ -14,18 +14,19 @@ export default function RequestBar() {
         <Select
           className='select'
           classNamePrefix='select'
-          onChange={handleSelectChange}
-          defaultValue={context.request.method}
+          onChange={onChange}
+          defaultValue={request.method}
           isClearable={false}
           isSearchable={false}
           unstyled={true}
-          options={context.request.methods} />
+          options={request.methods} />
       </div>
       <RequestUrl />
       <button 
         className='request-send'
-        onClick={context.request.fetch}
-        disabled={context.fetching}>
+        onClick={request.fetch}
+        disabled={fetching}
+      >
           Send
       </button>
     </div>

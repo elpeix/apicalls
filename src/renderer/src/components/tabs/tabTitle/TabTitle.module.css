@@ -1,7 +1,7 @@
 .tabTitle {
   font-size: 13px;
   padding: 0;
-  border-right: 1px solid var(--color-9);
+  border-right: 1px solid var(--color-10);
 
   & .content {
     display: block;
@@ -10,7 +10,7 @@
     transition: background-color 0.2s ease-in-out;
 
     &:hover {
-      background-color: var(--color-7);
+      background-color: var(--color-8);
       cursor: pointer;
 
       & .close {
@@ -57,7 +57,7 @@
   }
 
   & .input {
-    background: var(--color-7);
+    background: var(--color-8);
     font-weight: 500;
     font-size: 12px;
     color: var(--color-1);

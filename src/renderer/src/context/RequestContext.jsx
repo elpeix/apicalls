@@ -1,8 +1,11 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { AppContext } from './AppContext'
 
 export const RequestContext = createContext()
 
 export default function RequestContextProvider({ definedRequest, children }) {
+
+  const { history } = useContext(AppContext)
 
   const methods = useMemo(() => [
     { value: 'GET', label: 'GET', body: false },
@@ -14,6 +17,8 @@ export default function RequestContextProvider({ definedRequest, children }) {
     { value: 'OPTION', label: 'OPTION', body: false }
   ], [])
 
+  const [id, setId] = useState(0)
+  const [name, setName] = useState('')
   const [requestMethod, setRequestMethod] = useState(methods[0])
   const [requestUrl, setRequestUrl] = useState('')
   const [requestBody, setRequestBody] = useState('')
@@ -35,6 +40,8 @@ export default function RequestContextProvider({ definedRequest, children }) {
   useEffect(() => {
     if (definedRequest) {
       // TODO validate definedRequest
+      setId(definedRequest.id || 0)
+      setName(definedRequest.name || '')
       setRequestMethod(definedRequest.method || methods[0])
       setRequestUrl(definedRequest.url || '')
       setRequestBody(definedRequest.body || '')
@@ -71,6 +78,19 @@ export default function RequestContextProvider({ definedRequest, children }) {
       referrerPolicy: 'no-referrer',
     }
     if (requestBody && requestMethod.body) requestParameters.body = requestBody
+
+    history.add({
+      date: new Date().toISOString(),
+      id: id || new Date().getTime(),
+      name: name || `${requestMethod.value} - ${requestUrl}`,
+      request: {
+        method: requestMethod,
+        url: requestUrl,
+        headers: requestHeaders,
+        params: requestParams,
+        body: requestBody
+      }
+    })
 
     let fetchResponseSize = null
 
@@ -147,6 +167,10 @@ export default function RequestContextProvider({ definedRequest, children }) {
     setRequestParams(params)
   }
 
+  const getActiveParamsLength = () => {
+    return requestParams.filter(param => param.enabled).length
+  }
+
   const addHeader = () => {
     setRequestHeaders([...requestHeaders, { name: '', value: '' }])
   }
@@ -155,6 +179,10 @@ export default function RequestContextProvider({ definedRequest, children }) {
     const headers = [...requestHeaders]
     headers.splice(index, 1)
     setRequestHeaders(headers)
+  }
+
+  const getActiveHeadersLength = () => {
+    return requestHeaders.filter(header => header.enabled).length
   }
     
   const contextValue = {
@@ -172,8 +200,10 @@ export default function RequestContextProvider({ definedRequest, children }) {
       setParams: setRequestParams,
       addParam,
       removeParam,
+      getActiveParamsLength,
       addHeader,
       removeHeader,
+      getActiveHeadersLength,
       fetch: sendRequest
     },
     fetching,

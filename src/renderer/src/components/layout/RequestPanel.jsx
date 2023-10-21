@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import RequestBar from '../request/RequestBar'
 import { Panel, PanelGroup } from 'react-resizable-panels'
 import Gutter from './Gutter'
-import Request from '../request/Request'
+import RequestTabs from '../request/RequestTabs'
 import Response from '../response/Response'
 import Console from '../base/Console/Console'
 import RequestContextProvider from '../../context/RequestContext'
@@ -23,7 +23,7 @@ export default function RequestPanel({ definedRequest }) {
         <RequestBar />
         <PanelGroup direction="vertical">
           <Panel defaultSize={20} minSize={10} maxSize={50} collapsible={true} ref={requestPanel}>
-            <Request />
+            <RequestTabs />
           </Panel>
           <Gutter mode='horizontal' onDoubleClick={expandRequestPanel} />
           <Panel >

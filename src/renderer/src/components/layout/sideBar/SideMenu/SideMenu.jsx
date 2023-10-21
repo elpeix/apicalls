@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from './SideMenu.module.css'
-import ButtonIcon from '../../base/ButtonIcon'
-import { AppContext } from '../../../context/AppContext'
+import ButtonIcon from '../../../base/ButtonIcon'
+import { AppContext } from '../../../../context/AppContext'
 
 export default function SideMenu({ showSelected, onSelect, isCollapsed, collapse }) {
 

@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
 import styles from './SidePanel.module.css'
 import Collections from '../Collections'
-import { AppContext } from '../../../context/AppContext'
+import { AppContext } from '../../../../context/AppContext'
+import History from '../history/History'
 
 export default function SidePanel() {
 
@@ -13,18 +14,10 @@ export default function SidePanel() {
       <div className={styles.content}>
         {appContext.menu.selected && (
           <div className={styles.sidePanel}>
-            {appContext.menu.selected.id === 'collection' && (
-              <Collections />
-            )}
-            {appContext.menu.selected.id === 'environment' && (
-              ''
-            )}
-            {appContext.menu.selected.id === 'history' && (
-              ''
-            )}
-            {appContext.menu.selected.id === 'settings' && (
-              ''
-            )}
+            {appContext.menu.selected.id === 'collection' && <Collections />}
+            {appContext.menu.selected.id === 'environment' && ('')}
+            {appContext.menu.selected.id === 'history' && (<History />)}
+            {appContext.menu.selected.id === 'settings' && ('')}
           </div>
         )}
       </div>

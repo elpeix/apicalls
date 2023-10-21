@@ -3,22 +3,23 @@
   --color-2: #ddd;
   --color-3: #bbb;
   --color-4: #999;
-  --color-5: #666;
-  --color-6: #363636;
-  --color-7: #282828;
-  --color-8: #222;
-  --color-9: #1d1d1d;
-  --color-10: #000;
+  --color-5: #777;
+  --color-6: #4a4a4a;
+  --color-7: #363636;
+  --color-8: #282828;
+  --color-9: #222;
+  --color-10: #1d1d1d;
+  --color-11: #000;
 
-  --background-base: var(--color-8);
-  --background-content: var(--color-9);
+  --background-base: var(--color-9);
+  --background-content: var(--color-10);
 
   --selected-color: var(--color-1);
   --base-color: var(--color-3);
-  --accent-color: var(--color-5);
-  --border-color: var(--color-6);
-  --hover-color: var(--color-7);
-  --side-color: var(--color-7);
+  --accent-color: var(--color-6);
+  --border-color: var(--color-7);
+  --hover-color: var(--color-8);
+  --side-color: var(--color-8);
   --highlight-color: #b8f70a;
 
   --status-200-color: rgb(108, 185, 73);
@@ -186,7 +187,7 @@ button {
     transition: opacity 0.2s ease-in-out;
 
     &:hover {
-      opacity: 1;
+      opacity: 0.8;
     }
 
     &:active {

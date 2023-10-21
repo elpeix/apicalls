@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useState } from 'react'
 import { Panel, PanelGroup, } from 'react-resizable-panels'
 import { AppContext } from '../../context/AppContext'
-import SideMenu from '../sideBar/SideMenu/SideMenu'
-import SidePanel from '../sideBar/SidePanel/SidePanel'
+import SideMenu from './sideBar/SideMenu/SideMenu'
+import SidePanel from './sideBar/SidePanel/SidePanel'
 import ContentTabs from './ContentTabs'
 import Gutter from './Gutter'
 

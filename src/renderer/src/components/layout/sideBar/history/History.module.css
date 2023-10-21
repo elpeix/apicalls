@@ -1,0 +1,15 @@
+.history {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0.5rem;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

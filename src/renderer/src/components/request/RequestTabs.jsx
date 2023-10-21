@@ -4,15 +4,20 @@ import { RequestContext } from '../../context/RequestContext'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import Params from './Params'
 import Headers from './Headers'
+import RequestTab from './requestTab/RequestTab'
 
-export default function Request() {
+export default function RequestTabs() {
 
   const context = useContext(RequestContext)
   const [showBody, setShowBody] = useState(false)
+  const [activeParams, setActiveParams] = useState(0)
+  const [activeHeaders, setActiveHeaders] = useState(0)
 
   useEffect(() => {
     setShowBody(context.request.method.body)
-  }, [context.request.method])
+    setActiveParams(context.request.getActiveParamsLength())
+    setActiveHeaders(context.request.getActiveHeadersLength())
+  }, [context.request])
 
   const handleBodyChange = value => context.request.setBody(value)
 
@@ -20,8 +25,15 @@ export default function Request() {
     <div className='request-tabs'>
       <Tabs className='tabs'>
         <TabList>
-          <Tab>Params</Tab>
-          <Tab>Headers</Tab>
+          <Tab>
+            <RequestTab name='Params' count={activeParams} />
+          </Tab>
+          <Tab>
+            <RequestTab name='Headers' count={activeHeaders} />
+          </Tab>
+          <Tab>
+            Authorization
+          </Tab>
           {showBody && <Tab>Body</Tab> }
         </TabList>
         <div className='tab-panel-wrapper'>
@@ -30,6 +42,9 @@ export default function Request() {
           </TabPanel>
           <TabPanel forceRender={true}>
             <Headers />
+          </TabPanel>
+          <TabPanel forceRender={true}>
+            Authorization TODO
           </TabPanel>
           { showBody && <TabPanel>
             <Editor
