@@ -2,14 +2,51 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 0.5rem;
   overflow-y: auto;
   overflow-x: hidden;
-  margin: 0.5rem;
+  user-select: none;
 
-  & > div {
+  & .item {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    background-color: transparent;
+    transition: background-color 0.2s ease-in-out;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-7);
+    }
+
+    & .title {
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      align-items: center;
+      gap: 0.5rem;
+
+      & .url {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--color-4);
+
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    & .date {
+      font-size: 0.8rem;
+      color: var(--color-5);
+
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }

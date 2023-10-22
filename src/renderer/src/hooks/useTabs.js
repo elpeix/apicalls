@@ -4,14 +4,16 @@ export default function useTabs(initialTabs) {
 
   const [tabs, setTabs] = useState([...initialTabs])
 
-  const newTab = () => {
+  const newTab = (itemRequest) => {
     const tabId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    addTab({
+    itemRequest = itemRequest || {
       type: 'draft',
       id: tabId,
       active: false,
       request: {}
-    })
+    }
+    console.log('newTab', itemRequest)
+    addTab(itemRequest)
   }
 
   const addTab = (tab) => {

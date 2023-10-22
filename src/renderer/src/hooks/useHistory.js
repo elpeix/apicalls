@@ -4,7 +4,7 @@ export function useHistory() {
 
   const [history, setHistory] = useState([
     {
-      date: '2020-01-01T00:00:00.000Z',
+      date: '2020-09-01T00:00:00.000Z',
       id: '1',
       name: 'Test',
       request: {

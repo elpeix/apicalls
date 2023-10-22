@@ -11,8 +11,8 @@
   color: var(--color-3);
   border: 1px solid var(--color-5);
   border-radius: 50%;
-  width: 1rem;
-  height: 1rem;
+  width: 1.1rem;
+  height: 1.1rem;
   aspect-ratio: 1;
   user-select: none;
   opacity: 0.7;
