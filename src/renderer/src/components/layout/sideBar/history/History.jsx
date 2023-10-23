@@ -1,10 +1,15 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import styles from './History.module.css'
+import ButtonIcon from '../../../base/ButtonIcon'
 
 export default function History() {
 
   const { history, tabs } = useContext(AppContext)
+  const [historyItems, setHistoryItems] = useState([])
+  useEffect(() => {
+    setHistoryItems(history.getAll())
+  }, [history])
 
   const formatDate = (jsonDate) => {
     const date = new Date(jsonDate)
@@ -24,10 +29,19 @@ export default function History() {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
   }
 
+  const clear = () =>  history.clear()
+
   return (
     <div className={styles.history}>
-      {history.getAll().map((historyItem, index) => (
-        <div key={index} className={styles.item} onClick={() => tabs.newTab(historyItem)}>
+      { historyItems.length > 0 && (
+        <div className={styles.header}>
+          <div className={styles.clear}>
+            <ButtonIcon icon='clear' title='clear' onClick={clear} />
+          </div>
+        </div>
+      )}
+      {historyItems.map((historyItem, index) => (
+        <div key={index} className={styles.item} onClick={() => tabs.openTab(historyItem)}>
           <div className={styles.title}>
             <div className={styles.method}>{historyItem.request.method?.value}</div>
             <div className={styles.url}>{historyItem.request.url}</div>

@@ -1,19 +1,14 @@
 import React, { createContext, useState } from 'react'
 import useTabs from '../hooks/useTabs'
 import { useHistory } from '../hooks/useHistory'
+import { useEnvironments } from '../hooks/useEnvironments'
+import { useMenu } from '../hooks/useMenu'
 
 export const AppContext = createContext()
 
 export default function AppContextProvider({ children }) {
 
-  const menu = [
-    { id: 'collection', title: 'Collections' },
-    { id: 'environment', title: 'Environments' },
-    { id: 'history', title: 'History' },
-    { spacer: true },
-    { id: 'settings', title: 'Settings' }
-  ]
-  const [selectedMenu, setSelected] = useState(menu[0])
+  const menu = useMenu()
   const tabs = useTabs([{ 
     type: 'history',
     id: '1',
@@ -51,7 +46,6 @@ export default function AppContextProvider({ children }) {
     active: false,
     request: {}
   }])
-
   const [collections, setCollections] = useState([{
     id: '1',
     name: 'Collection 1',
@@ -72,30 +66,17 @@ export default function AppContextProvider({ children }) {
       }
     ]
   }])
-  const [environments, setEnvironments] = useState([])
+  const environments = useEnvironments()
   const history = useHistory()
 
-  const selectItem = id => {
-    const item = menu.find(item => item.id === id)
-    if (item) setSelected(item)
-    else setSelected(null)
-  }
-
   const contextValue = {
-    menu: {
-      items: menu,
-      selected: selectedMenu,
-      select: selectItem
-    },
+    menu,
     tabs,
     collections: {
       items: collections,
       set: setCollections
     },
-    environments: {
-      items: environments,
-      set: setEnvironments
-    },
+    environments,
     history
   }
 

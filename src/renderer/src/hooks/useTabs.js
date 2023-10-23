@@ -4,6 +4,15 @@ export default function useTabs(initialTabs) {
 
   const [tabs, setTabs] = useState([...initialTabs])
 
+  const openTab = (itemRequest) => {
+    const tab = getTab(itemRequest.id)
+    if (tab) {
+      setActiveTab(tabs.indexOf(tab))
+    } else {
+      newTab(itemRequest)
+    }
+  }
+
   const newTab = (itemRequest) => {
     const tabId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
     itemRequest = itemRequest || {
@@ -12,7 +21,6 @@ export default function useTabs(initialTabs) {
       active: false,
       request: {}
     }
-    console.log('newTab', itemRequest)
     addTab(itemRequest)
   }
 
@@ -61,6 +69,7 @@ export default function useTabs(initialTabs) {
   }
 
   return {
+    openTab,
     newTab,
     addTab,
     removeTab,

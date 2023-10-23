@@ -5,27 +5,27 @@ import { AppContext } from '../../../../context/AppContext'
 
 export default function SideMenu({ showSelected, onSelect, isCollapsed, collapse }) {
 
-  const appContext = useContext(AppContext)
+  const { menu } = useContext(AppContext)
   const [selected, setSelected] = useState('')
   useEffect(() => {
-    setSelected(appContext.menu.selected)
-  }, [appContext])
+    setSelected(menu.selected)
+  }, [menu])
 
   const isSelected = id => showSelected && selected && selected.id === id
   const handleClick = id => {
     if (id) {
-      if (!isCollapsed && appContext.menu.selected && appContext.menu.selected.id === id) {
+      if (!isCollapsed && menu.selected && menu.selected.id === id) {
         collapse()
         return
       }
-      appContext.menu.select(id)
+      menu.select(id)
       onSelect()
     }
   }
   
   return (
     <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''}`}>
-      {appContext.menu.items.map((item, index) => (
+      {menu.items.map((item, index) => (
         <div 
           key={index}
           className={`${styles.item} ${isSelected(item.id) ? styles.active : ''}  ${item.spacer ? styles.spacer : ''}`}
