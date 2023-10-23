@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 function Versions() {
   const [versions] = useState(window.electron.process.versions)

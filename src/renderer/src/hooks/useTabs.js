@@ -23,7 +23,7 @@ export default function useTabs(initialTabs) {
   }
 
   const removeTab = (tabId) => {
-    const index = _getTabIndex(tabId)
+    const index = tabs.findIndex(t => t.id === tabId)
     if (index === -1) return
 
     const newTabs = [...tabs]
@@ -51,8 +51,6 @@ export default function useTabs(initialTabs) {
       return tab
     })
   }
-
-  const _getTabIndex = (tabId) => tabs.findIndex(t => t.id === tabId)
 
   const getSelectedTabIndex = () => {
     let index = tabs.findIndex(t => t.active)

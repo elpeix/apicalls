@@ -70,8 +70,8 @@ export default function TabTitle({ tab }) {
           <span className={styles.title} onDoubleClick={onDoubleClick}>
             {getTabTitle()}
           </span>
-          <span className={styles.close} onClick={onClose}>
-            <ButtonIcon icon='close' size={15} />
+          <span className={styles.close}>
+            <ButtonIcon icon='close' size={15} onClick={onClose} />
           </span>
         </div>
       ) }

@@ -5,13 +5,12 @@ import ButtonIcon from '../../base/ButtonIcon'
 
 export default function NewTab() {
 
-  const appContext = useContext(AppContext)
+  const { tabs } = useContext(AppContext)
+  const onClick = () => tabs.newTab()
 
   return (
-    <>
-      <div className={styles.newTab}>
-        <ButtonIcon icon='more' size={21} onClick={appContext.tabs.newTab} />       
-      </div>
-    </>
+    <div className={styles.newTab}>
+      <ButtonIcon icon='more' size={21} onClick={onClick} />       
+    </div>
   )
 }
