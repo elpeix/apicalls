@@ -32,25 +32,28 @@ export default function History() {
   const clear = () =>  history.clear()
 
   return (
-    <div className={styles.history}>
-      { historyItems.length > 0 && (
-        <div className={styles.header}>
+    <>
+      <div className={styles.header}>
+        <div className={styles.title}>History</div>
+        { historyItems.length > 0 && (
           <div className={styles.clear}>
             <ButtonIcon icon='clear' title='clear' onClick={clear} />
           </div>
-        </div>
-      )}
-      {historyItems.map((historyItem, index) => (
-        <div key={index} className={styles.item} onClick={() => tabs.openTab(historyItem)}>
-          <div className={styles.title}>
-            <div className={styles.method}>{historyItem.request.method?.value}</div>
-            <div className={styles.url}>{historyItem.request.url}</div>
+        )}
+      </div>
+      <div className={styles.content}>
+        {historyItems.map((historyItem, index) => (
+          <div key={index} className={styles.item} onClick={() => tabs.openTab(historyItem)}>
+            <div className={styles.title}>
+              <div className={styles.method}>{historyItem.request.method?.value}</div>
+              <div className={styles.url}>{historyItem.request.url}</div>
+            </div>
+            <div className={styles.date}>
+              {formatDate(historyItem.date)}
+            </div>
           </div>
-          <div className={styles.date}>
-            {formatDate(historyItem.date)}
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   )
 }

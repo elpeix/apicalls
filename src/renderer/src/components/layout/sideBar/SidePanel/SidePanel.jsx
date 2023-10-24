@@ -10,7 +10,6 @@ export default function SidePanel() {
 
   return (
     <div className={styles.sidePanel}>
-      <div className={styles.title}>{menu.selected.title}</div>
       <div className={styles.content}>
         {menu.selected && (
           <div className={styles.sidePanel}>

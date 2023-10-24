@@ -1,20 +1,30 @@
-.history {
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.7rem;
+  height: 2.5rem;
+  border-bottom: 1px solid var(--border-color);
+
+  & .title {
+    width: 100%;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--base-color);
+    text-transform: uppercase;
+  }
+}
+
+.content {
   display: flex;
   flex-direction: column;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   user-select: none;
-  
-  & .header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 0.7rem;
-    border-bottom: 1px solid var(--border-color);
-  }
 
   & .item {
     display: flex;

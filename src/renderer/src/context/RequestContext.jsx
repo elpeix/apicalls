@@ -79,18 +79,7 @@ export default function RequestContextProvider({ definedRequest, children }) {
     }
     if (requestBody && requestMethod.body) requestParameters.body = requestBody
 
-    history.add({
-      date: new Date().toISOString(),
-      id: id || new Date().getTime(),
-      name: name || `${requestMethod.value} - ${requestUrl}`,
-      request: {
-        method: requestMethod,
-        url: requestUrl,
-        headers: requestHeaders,
-        params: requestParams,
-        body: requestBody
-      }
-    })
+    saveHistory()
 
     let fetchResponseSize = null
 
@@ -130,6 +119,28 @@ export default function RequestContextProvider({ definedRequest, children }) {
       })
       .catch(err => console.log(err))
       .finally(() => setFetching(false))
+  }
+
+
+
+  const saveHistory = () => {
+    history.add({
+      date: new Date().toISOString(),
+      id: new Date().getTime(),
+      name: name || `${requestMethod.value} - ${requestUrl}`,
+      request: {
+        method: requestMethod,
+        url: requestUrl,
+        headers: requestHeaders,
+        params: requestParams,
+        body: requestBody
+      }
+    })
+  }
+
+  const saveRequest = () => {
+    // TODO
+    console.log('saveRequest', id)
   }
 
   const urlIsValid = () => {
@@ -220,6 +231,7 @@ export default function RequestContextProvider({ definedRequest, children }) {
       // setStatus: setResponseStatus,
       // setTime: setResponseTime
     },
+    save: saveRequest,
     console: {
       logs: consoleLogs,
       clear: () => setConsoleLogs([])
