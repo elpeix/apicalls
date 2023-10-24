@@ -51,9 +51,15 @@ export default function TabTitle({ tab }) {
 
   const active = tab.active ? styles.active : ''
   
+  const onMouseDown = (e) => {
+    if (e.button === 1) {
+      e.stopPropagation()
+      tabs.removeTab(tab.id)
+    }
+  }
 
   return (
-    <div className={`${styles.tabTitle} ${styles[tab.type]} ${active}`}>
+    <div className={`${styles.tabTitle} ${styles[tab.type]} ${active}`} onMouseDown={onMouseDown}>
       {editing && (
         <input
           type="text"
