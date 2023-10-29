@@ -1,7 +1,7 @@
 .tabTitle {
   font-size: 13px;
   padding: 0;
-  border-right: 1px solid var(--color-10);
+  border-right: 1px solid var(--border-color);
 
   & .content {
     display: block;

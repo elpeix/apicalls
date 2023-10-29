@@ -20,7 +20,7 @@
   --border-color: var(--color-7);
   --hover-color: var(--color-8);
   --side-color: var(--color-8);
-  --highlight-color: #b8f70a;
+  --highlight-color: #0cf;
 
   --status-200-color: rgb(108, 185, 73);
   --status-300-color: rgb(255, 165, 0);
@@ -45,6 +45,34 @@
 
   background-color: var(--background-base);
   color: var(--base-color);
+}
+
+/* Light theme */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-1: #000;
+    --color-2: #444;
+    --color-3: #555;
+    --color-4: #666;
+    --color-5: #777;
+    --color-6: #888;
+    --color-7: #ccc;
+    --color-8: #ddd;
+    --color-9: #eee;
+    --color-10: #f4f4f4;
+    --color-11: #fff;
+
+    --border-color: var(--color-7);
+    --hover-color: var(--color-7);
+    --side-color: var(--color-8);
+
+    --highlight-color: #00ccff;
+
+    --status-200-color: rgb(108, 185, 73);
+    --status-300-color: rgb(255, 165, 0);
+    --status-400-color: rgb(196, 80, 231);
+    --status-500-color: rgb(223, 48, 48);
+  }
 }
 
 ::selection {

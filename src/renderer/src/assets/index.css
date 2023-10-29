@@ -120,17 +120,17 @@ button {
     height: 100%;
     min-height: 42px;
     box-shadow: inset 0 0 0 1px transparent;
-    transition: box-shadow 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 
     &.select__control--is-focused {
-      box-shadow: inset 0 0 0 1px var(--accent-color);
+      background-color: var(--hover-color);
     }
   }
   .select__value-container {
-    color: #fff;
+    color: var(--base-color);
   }
   .select__single-value {
-    color: #fff;
+    color: var(--base-color);
     padding: 0 10px;
   }
   .select__indicator {

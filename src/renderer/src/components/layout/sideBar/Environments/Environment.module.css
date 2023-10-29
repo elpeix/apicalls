@@ -43,6 +43,10 @@
       border: 1px solid var(--border-color);
       border-top: none;
       border-left: none;
+
+      &:last-child {
+        border-right: none;
+      }
     }
   
     & input {

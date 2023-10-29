@@ -1,10 +1,10 @@
-import { Editor } from '@monaco-editor/react'
 import React, { useContext, useEffect, useState } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import Params from './Params'
 import Headers from './Headers'
 import RequestTab from './requestTab/RequestTab'
+import Editor from '../base/Editor'
 
 export default function RequestTabs() {
 
@@ -48,23 +48,9 @@ export default function RequestTabs() {
           </TabPanel>
           { showBody && <TabPanel>
             <Editor
-              defaultLanguage='json'
-              theme='vs-dark'
+              language='json'
               onChange={handleBodyChange}
-              height="100%"
-              width="100%"
               value={context.request.body}
-              options={{
-                minimap: {
-                  enabled: false
-                },
-                acceptSuggestionOnCommitCharacter: false,
-                scrollBeyondLastLine: false,
-                codeLens: false,
-                contextmenu: false,
-                accessibilityHelpUrl: false,
-                suggestOnTriggerCharacters: false,
-              }}
             /> 
           </TabPanel> }
         </div>

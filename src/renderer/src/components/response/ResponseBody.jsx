@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Editor } from '@monaco-editor/react'
 import { formatSource, getLanguageName } from '../../lib/languageSupport'
+import Editor from '../base/Editor'
 
 export default function ResponseBody({ value }) {
 
@@ -22,36 +22,6 @@ export default function ResponseBody({ value }) {
     navigator.clipboard.writeText(showRaw ? rawValue : parsedValue)
   }
 
-  const options = {
-    minimap: {
-      enabled: false
-    },
-    commandPalette: false,
-    acceptSuggestionOnCommitCharacter: false,
-    readOnly: true,
-    readOnlyMessage: '',
-    scrollBeyondLastLine: false,
-    codeLens: false,
-    contextmenu: false,
-    accessibilityHelpUrl: true,
-    accessibilitySupport: 'off',
-
-    // Disable column selection
-    //columnSelection: false,
-
-    // Disable line colors
-    renderLineHighlight: 'none',
-
-    // Disable indendt lines
-    renderIndentGuides: false,
-    
-    // Hide invisible characters
-    renderWhitespace: 'none',
-
-    wordWrap: showRaw ? 'on' : 'off',
-    fontSize: 12,
-  }
-
   return (
     <div className="response-body">
       { rawValue && (
@@ -63,13 +33,9 @@ export default function ResponseBody({ value }) {
 
           <div className="response-body-content">
             <Editor
-              defaultLanguage={language}
               language={language}
-              theme="vs-dark"
-              height="100%"
-              width="100%"
               value={showRaw ? rawValue : parsedValue}
-              options={options}
+              wordWrap={showRaw}
             />
           </div>
         </>

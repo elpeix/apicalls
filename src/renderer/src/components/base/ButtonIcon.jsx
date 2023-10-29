@@ -3,7 +3,7 @@ import Icon from './Icon'
 
 export default function ButtonIcon({ 
   icon,
-  color='#bbb',
+  color='',
   size=20,
   onClick,
   className='',
