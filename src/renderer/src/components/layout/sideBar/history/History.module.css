@@ -1,71 +1,28 @@
-
-.header {
+.title {
   display: flex;
   flex-direction: row;
+  justify-content: start;
   align-items: center;
-  justify-content: flex-end;
-  gap: 1rem;
-  padding: 0.7rem;
-  height: 2.5rem;
-  border-bottom: 1px solid var(--border-color);
+  gap: 0.5rem;
 
-  & .title {
-    width: 100%;
-    font-size: 13px;
+  & .url {
+    font-size: 0.78rem;
     font-weight: 500;
-    color: var(--base-color);
-    text-transform: uppercase;
+    color: var(--color-4);
+
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  user-select: none;
+.date {
+  font-size: 0.74rem;
+  color: var(--color-5);
 
-  & .item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    background-color: transparent;
-    transition: background-color 0.2s ease-in-out;
-    border-bottom: 1px solid var(--border-color);
-    padding: 0.5rem 0.7rem;
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--color-7);
-    }
-
-    & .title {
-      display: flex;
-      flex-direction: row;
-      justify-content: start;
-      align-items: center;
-      gap: 0.5rem;
-
-      & .url {
-        font-size: 0.78rem;
-        font-weight: 500;
-        color: var(--color-4);
-
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
-    & .date {
-      font-size: 0.74rem;
-      color: var(--color-5);
-
-      max-width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

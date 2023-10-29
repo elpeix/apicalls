@@ -1,0 +1,43 @@
+.sidePanel-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 .7rem;
+  height: 2.5rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: default;
+
+  & .sidePanel-header-title {
+    width: 100%;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--base-color);
+    text-transform: uppercase;
+    flex-grow: 1;
+  }
+}
+
+.sidePanel-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: none;
+
+  & .sidePanel-content-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: transparent;
+    transition: background-color 0.2s ease-in-out;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-7);
+    }
+  }
+}

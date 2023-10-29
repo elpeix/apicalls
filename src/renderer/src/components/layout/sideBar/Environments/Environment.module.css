@@ -1,0 +1,72 @@
+.environment {
+
+  & .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 .3rem;
+    width: 100%;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  & .title {
+    padding: 0rem 0.7rem;
+    height: 2rem;
+    flex-grow: 1;
+    cursor: text;
+    align-items: center;
+    display: flex;
+
+    & input {
+      width: 100%;
+      font-size: 14px;
+      color: var(--base-color);
+      background-color: transparent;
+      border: none;
+      outline: none;
+      padding: 0.5rem;
+      transition: background-color 0.2s ease-in-out;;
+
+      &:focus {
+        outline: none;
+        box-shadow: inset 0 0 0 1px var(--accent-color);
+      }
+    }
+  }
+
+  & .variable {
+    display: flex;
+    flex-direction: row;
+  
+    & > * {
+      padding: 0.3rem 0.5rem;
+      border: 1px solid var(--border-color);
+      border-top: none;
+      border-left: none;
+    }
+  
+    & input {
+      width: 100%;
+      font-size: 13px;
+      color: var(--base-color);
+      background-color: transparent;
+      outline: none;
+      padding: 0.3rem 0.5rem;
+      transition: background-color 0.2s ease-in-out;;
+  
+      &:focus {
+        outline: none;
+        box-shadow: inset 0 0 0 1px var(--accent-color);
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+    padding: .3rem;
+    width: 100%;
+  }
+}

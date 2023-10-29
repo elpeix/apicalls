@@ -33,17 +33,17 @@ export default function History() {
 
   return (
     <>
-      <div className={styles.header}>
-        <div className={styles.title}>History</div>
+      <div className='sidePanel-header'>
+        <div className='sidePanel-header-title'>History</div>
         { historyItems.length > 0 && (
-          <div className={styles.clear}>
+          <div>
             <ButtonIcon icon='clear' title='clear' onClick={clear} />
           </div>
         )}
       </div>
-      <div className={styles.content}>
+      <div className='sidePanel-content'>
         {historyItems.map((historyItem, index) => (
-          <div key={index} className={styles.item} onClick={() => tabs.openTab(historyItem)}>
+          <div key={index} className={`sidePanel-content-item ${styles.item}`} onClick={() => tabs.openTab(historyItem)}>
             <div className={styles.title}>
               <div className={styles.method}>{historyItem.request.method?.value}</div>
               <div className={styles.url}>{historyItem.request.url}</div>

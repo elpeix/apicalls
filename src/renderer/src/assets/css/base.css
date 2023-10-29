@@ -1,0 +1,108 @@
+:root {
+  --color-1: #fff;
+  --color-2: #ddd;
+  --color-3: #bbb;
+  --color-4: #999;
+  --color-5: #777;
+  --color-6: #4a4a4a;
+  --color-7: #363636;
+  --color-8: #282828;
+  --color-9: #222;
+  --color-10: #1d1d1d;
+  --color-11: #000;
+
+  --background-base: var(--color-9);
+  --background-content: var(--color-10);
+
+  --selected-color: var(--color-1);
+  --base-color: var(--color-3);
+  --accent-color: var(--color-6);
+  --border-color: var(--color-7);
+  --hover-color: var(--color-8);
+  --side-color: var(--color-8);
+  --highlight-color: #b8f70a;
+
+  --status-200-color: rgb(108, 185, 73);
+  --status-300-color: rgb(255, 165, 0);
+  --status-400-color: rgb(196, 80, 231);
+  --status-500-color: rgb(223, 48, 48);
+  --status-unkonwn-color: rgb(151, 151, 151);
+
+  --gutter-color: var(--border-color);
+  --gutter-color-drag: var(--highlight-color);
+  --gutter-transition: 0.2s;
+  --gutter-transition-delay: 0.1s;
+
+  --tab-color: var(--base-color);
+  --tab-background-color: transparent;
+  --tab-hover-background-color: var(--hover-color);
+  --tab-selected-color: var(--selected-color);
+  --tab-selected-background-color: var(--border-color);
+  --tab-height: 33px;
+  --tab-panel-background-color: var(--background-content);
+
+  --select-arrow: var(--base-color);
+
+  background-color: var(--background-base);
+  color: var(--base-color);
+}
+
+::selection {
+  background-color: var(--accent-color);
+  color: var(--selected-color);
+}
+
+::-webkit-scrollbar {
+  height: 14px;
+  width: 14px;
+  border-left: 1px solid var(--border-color);
+  background: var(--background-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-color);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-11);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family:
+    Roboto,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Open Sans',
+    sans-serif;
+  font-size: 14px;
+}
+
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+*:focus,
+*:focus-visible {
+  outline: none;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
