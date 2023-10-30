@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Environment from './Environment'
+import EnvironmentItem from './EnvironmentItem'
 
 export default function Environments() {
 
@@ -13,9 +14,7 @@ export default function Environments() {
     setSelectedEnvironment(environment)
   }
 
-  const update = (environment) => {
-    environments.update(environment)
-  }
+  const update = (environment) =>  environments.update(environment)
 
   const remove = () => {
     environments.remove(selectedEnvironment.id)
@@ -41,23 +40,13 @@ export default function Environments() {
       { !selectedEnvironment && (
         <div className='sidePanel-content'>
           {environments.getAll().map((environment) => (
-            <div className='sidePanel-content-item item-row' key={environment.id} onClick={() => setSelectedEnvironment(environment)}>
-              <input 
-                type ='checkbox'
-                checked={environment.selected}
-                onClick={e => e.stopPropagation()}
-                onChange={e => {
-                  if (e.target.checked) {
-                    environments.select(environment.id)
-                  } else {
-                    environments.deselect()
-                  }
-                }}
-              />
-              <div>
-                {environment.name}
-              </div>
-            </div>
+            <EnvironmentItem 
+              key={environment.id}
+              environment={environment}
+              selectEnvironment={setSelectedEnvironment}
+              activeEnvironment={(id) => environments.active(id)}
+              deactiveEnvironment={() => environments.deactive()}
+            />
           ))}
         </div>
       )}

@@ -7,7 +7,7 @@ export function useEnvironments() {
   const [environments, setEnvironments] = useState([{
     id: new Date().getTime(),
     name: 'Development',
-    selected: true,
+    active: true,
     variables: [
       { name: 'baseUrl', value: 'http://localhost:3000' },
       { name: 'appId', value: '1234567890' },
@@ -30,13 +30,13 @@ export function useEnvironments() {
   const clear = () => setEnvironments([])
   const getAll = () => environments
   const get = id => environments.find(environment => environment.id === id)
-  const getSelected = () => environments.find(environment => environment.selected)
-  const select = id => setEnvironments(environments.map(environment => {
-    environment.selected = environment.id === id
+  const getActive = () => environments.find(environment => environment.active)
+  const active = id => setEnvironments(environments.map(environment => {
+    environment.active = environment.id === id
     return environment
   }))
-  const deselect = () => setEnvironments(environments.map(environment => {
-    environment.selected = false
+  const deactive = () => setEnvironments(environments.map(environment => {
+    environment.active = false
     return environment
   }))
 
@@ -48,9 +48,9 @@ export function useEnvironments() {
     remove,
     clear,
     get,
-    getSelected,
-    select,
-    deselect
+    getActive,
+    active,
+    deactive
   }
 
 }
