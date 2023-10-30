@@ -18,5 +18,5 @@ export default function useTheme() {
 
   const getTheme = (light, dark) => mode === LIGHT ? light : dark
 
-  return { theme: mode, getTheme }
+  return { mode, getTheme }
 }

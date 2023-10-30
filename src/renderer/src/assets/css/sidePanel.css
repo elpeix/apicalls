@@ -39,5 +39,14 @@
     &:hover {
       background-color: var(--color-7);
     }
+
+    &.item-row {
+      flex-direction: row;
+      gap: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      align-items: center;
+      justify-content: start;
+      width: 100%;
+    }
   }
 }

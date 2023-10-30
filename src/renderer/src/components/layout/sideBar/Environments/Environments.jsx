@@ -41,8 +41,21 @@ export default function Environments() {
       { !selectedEnvironment && (
         <div className='sidePanel-content'>
           {environments.getAll().map((environment) => (
-            <div className='sidePanel-content-item' key={environment.id} onClick={() => setSelectedEnvironment(environment)}>
-              {environment.name}
+            <div className='sidePanel-content-item item-row' key={environment.id}>
+              <input 
+                type ='checkbox'
+                checked={environment.selected}
+                onChange={e => {
+                  if (e.target.checked) {
+                    environments.select(environment.id)
+                  } else {
+                    environments.deselect()
+                  }
+                }}
+              />
+              <div onClick={() => setSelectedEnvironment(environment)}>
+                {environment.name}
+              </div>
             </div>
           ))}
         </div>
