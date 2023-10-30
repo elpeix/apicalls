@@ -41,10 +41,11 @@ export default function Environments() {
       { !selectedEnvironment && (
         <div className='sidePanel-content'>
           {environments.getAll().map((environment) => (
-            <div className='sidePanel-content-item item-row' key={environment.id}>
+            <div className='sidePanel-content-item item-row' key={environment.id} onClick={() => setSelectedEnvironment(environment)}>
               <input 
                 type ='checkbox'
                 checked={environment.selected}
+                onClick={e => e.stopPropagation()}
                 onChange={e => {
                   if (e.target.checked) {
                     environments.select(environment.id)
@@ -53,7 +54,7 @@ export default function Environments() {
                   }
                 }}
               />
-              <div onClick={() => setSelectedEnvironment(environment)}>
+              <div>
                 {environment.name}
               </div>
             </div>
