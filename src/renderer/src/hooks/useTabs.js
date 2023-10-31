@@ -4,7 +4,7 @@ export default function useTabs(initialTabs) {
 
   const [tabs, setTabs] = useState([...initialTabs])
 
-  const openTab = (itemRequest) => {
+  const openTab = itemRequest => {
     const tab = getTab(itemRequest.id)
     if (tab) {
       setActiveTab(tabs.indexOf(tab))
@@ -13,7 +13,7 @@ export default function useTabs(initialTabs) {
     }
   }
 
-  const newTab = (itemRequest) => {
+  const newTab = itemRequest => {
     const tabId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
     itemRequest = itemRequest || {
       type: 'draft',
@@ -24,25 +24,24 @@ export default function useTabs(initialTabs) {
     addTab(itemRequest)
   }
 
-  const addTab = (tab) => {
+  const addTab = tab => {
     const newTabs = [...tabs, tab]
     _setActiveTab(newTabs, tabs.length)
     setTabs(newTabs)
   }
 
-  const removeTab = (tabId) => {
+  const removeTab = tabId => {
+    console.log('removeTab', tabId)
     const index = tabs.findIndex(t => t.id === tabId)
     if (index === -1) return
-
-    const newTabs = [...tabs]
-    if (newTabs[index].active) {
+    if (tabs[index].active) {
       if (index === 0) {
-        _setActiveTab(newTabs, 1)
+        _setActiveTab(tabs, 1)
       } else {
-        _setActiveTab(newTabs, index - 1)
+        _setActiveTab(tabs, index - 1)
       }
     }
-    setTabs(newTabs.filter(tab => tab.id !== tabId))
+    setTabs(tabs.filter(tab => tab.id !== tabId))
   }
 
   const updateTab = (tabId, tab) => {

@@ -21,13 +21,9 @@ export default function RequestBar() {
           unstyled={true}
           options={request.methods} />
       </div>
-      <RequestUrl />
-      <button 
-        className='request-send'
-        onClick={request.fetch}
-        disabled={fetching}
-      >
-          Send
+      <RequestUrl request={request} />
+      <button className='request-send' onClick={request.fetch} disabled={fetching}>
+        Send
       </button>
     </div>
   )

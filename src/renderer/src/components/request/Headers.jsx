@@ -1,15 +1,12 @@
-import React, { useContext } from 'react'
-import { RequestContext } from '../../context/RequestContext'
+import React from 'react'
 import SimpleTable from '../base/SimpleTable/SimpleTable'
 import ButtonIcon from '../base/ButtonIcon'
 
-export default function Headers() {
-
-  const context = useContext(RequestContext)
+export default function Headers({ headers, setHeaders, addHeader }) {
 
   return (
     <div className='request-headers'>
-      { context.request.headers.length > 0 && (
+      { headers && headers.length > 0 && (
         <SimpleTable templateColumns="30px 1fr 1fr 40px">
           <SimpleTable.Header>
             <SimpleTable.HeaderCell></SimpleTable.HeaderCell>
@@ -18,16 +15,16 @@ export default function Headers() {
             <SimpleTable.HeaderCell></SimpleTable.HeaderCell>
           </SimpleTable.Header>
           <SimpleTable.Body>
-            { context.request.headers.map((header, index) => (
+            { headers.map((header, index) => (
               <SimpleTable.Row key={index} className={header.enabled ? 'row-enabled' : ''}>
                 <SimpleTable.Cell >
                   <input 
                     type ='checkbox'
                     checked={header.enabled}
                     onChange={e => {
-                      const headers = [...context.request.headers]
-                      headers[index].enabled = e.target.checked
-                      context.request.setHeaders(headers)
+                      const newHeaders = [...headers]
+                      newHeaders[index].enabled = e.target.checked
+                      setHeaders(newHeaders)
                     }}
                   />
                 </SimpleTable.Cell>
@@ -37,9 +34,9 @@ export default function Headers() {
                   value={header.name}
                   placeholder='Name'
                   onChange={value => {
-                    const headers = [...context.request.headers]
-                    headers[index].name = value
-                    context.request.setHeaders(headers)
+                    const newHeaders = [...headers]
+                    newHeaders[index].name = value
+                    setHeaders(newHeaders)
                   }}
                 />
                 <SimpleTable.Cell 
@@ -47,9 +44,9 @@ export default function Headers() {
                   value={header.value}
                   placeholder='Value'
                   onChange={value => {
-                    const headers = [...context.request.headers]
-                    headers[index].value = value
-                    context.request.setHeaders(headers)
+                    const newHeaders = [...headers]
+                    newHeaders[index].value = value
+                    setHeaders(newHeaders)
                   }}
                 />
                 <SimpleTable.Cell 
@@ -57,9 +54,9 @@ export default function Headers() {
                     <ButtonIcon
                       icon='delete'
                       onClick={() => {
-                        const headers = [...context.request.headers]
-                        headers.splice(index, 1)
-                        context.request.setHeaders(headers)
+                        const newHeaders = [...headers]
+                        newHeaders.splice(index, 1)
+                        setHeaders(newHeaders)
                       }}
                     />
                   }
@@ -69,11 +66,8 @@ export default function Headers() {
           </SimpleTable.Body>
         </SimpleTable>
       )}
-      <button 
-        className='add'
-        onClick={context.request.addHeader}
-      >
-          Add header
+      <button className='add' onClick={addHeader}>
+        Add header
       </button>
     </div>
   )

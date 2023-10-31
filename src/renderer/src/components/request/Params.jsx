@@ -1,19 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { RequestContext } from '../../context/RequestContext'
+import React from 'react'
 import SimpleTable from '../base/SimpleTable/SimpleTable'
 import ButtonIcon from '../base/ButtonIcon'
 
-export default function Params() {
-
-  const [params, setParams] = useState([])
-  const context = useContext(RequestContext)
-  useEffect(() => {
-    setParams(context.request.params)
-  }, [context.request.params])
+export default function Params({ params, addParam, setParams }) {
 
   return (
     <div className='request-params'>
-      { context.request.params.length > 0 && (
+      { params && params.length > 0 && (
         <SimpleTable templateColumns="30px 1fr 1fr 40px">
           <SimpleTable.Header>
             <SimpleTable.HeaderCell></SimpleTable.HeaderCell>
@@ -29,9 +22,9 @@ export default function Params() {
                     type ='checkbox'
                     checked={param.enabled}
                     onChange={e => {
-                      const params = [...context.request.params]
-                      params[index].enabled = e.target.checked
-                      context.request.setParams(params)
+                      const newParams = [...params]
+                      newParams[index].enabled = e.target.checked
+                      setParams(newParams)
                     }}
                   />
                 </SimpleTable.Cell>
@@ -41,9 +34,9 @@ export default function Params() {
                   value={param.name}
                   placeholder='Enter name...'
                   onChange={value => {
-                    const params = [...context.request.params]
-                    params[index].name = value
-                    context.request.setParams(params)
+                    const newParams = [...params]
+                    newParams[index].name = value
+                    setParams(newParams)
                   }}
                 />
                 <SimpleTable.Cell 
@@ -51,18 +44,18 @@ export default function Params() {
                   value={param.value}
                   placeholder='Enter value...'
                   onChange={value => {
-                    const params = [...context.request.params]
-                    params[index].value = value
-                    context.request.setParams(params)
+                    const newParams = [...params]
+                    newParams[index].value = value
+                    setParams(newParams)
                   }}
                 />
                 <SimpleTable.Cell>
                   <ButtonIcon
                     icon='delete'
                     onClick={() => {
-                      const params = [...context.request.params]
-                      params.splice(index, 1)
-                      context.request.setParams(params)
+                      const newParams = [...params]
+                      newParams.splice(index, 1)
+                      setParams(newParams)
                     }}
                   />
                 </SimpleTable.Cell> 
@@ -71,11 +64,8 @@ export default function Params() {
           </SimpleTable.Body>
         </SimpleTable>
       )}
-      <button 
-        className='add'
-        onClick={context.request.addParam}
-      >
-          Add Param
+      <button className='add' onClick={addParam}>
+        Add Param
       </button>
     </div>
   )

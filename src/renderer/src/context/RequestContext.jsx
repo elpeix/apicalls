@@ -121,8 +121,6 @@ export default function RequestContextProvider({ definedRequest, children }) {
       .finally(() => setFetching(false))
   }
 
-
-
   const saveHistory = () => {
     history.add({
       date: new Date().toISOString(),
@@ -169,7 +167,7 @@ export default function RequestContextProvider({ definedRequest, children }) {
   }
 
   const addParam = () => {
-    setRequestParams([...requestParams, { name: '', value: '' }])
+    setRequestParams([...requestParams, { enabled: true, name: '', value: '' }])
   }
 
   const removeParam = index => {
@@ -183,7 +181,7 @@ export default function RequestContextProvider({ definedRequest, children }) {
   }
 
   const addHeader = () => {
-    setRequestHeaders([...requestHeaders, { name: '', value: '' }])
+    setRequestHeaders([...requestHeaders, { enabled: true, name: '', value: '' }])
   }
 
   const removeHeader = index => {

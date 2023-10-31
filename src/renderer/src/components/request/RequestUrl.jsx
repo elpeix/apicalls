@@ -1,27 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { RequestContext } from '../../context/RequestContext'
+import React, { useEffect, useRef, useState } from 'react'
 
-export default function RequestUrl() {
+export default function RequestUrl({ request }) {
 
-  const context = useContext(RequestContext)
+  const urlRef = useRef()
 
   const [url, setUrl] = useState('')
 
   useEffect(() => {
-    const params = context.request.params
-      .filter(param => param.enabled)
+    const params = request.params
+      .filter(param => param.enabled && param.value.length > 0)
       .map(param => `${param.name}=${param.value}`)
       .join('&')
-    const url = `${context.request.url}${params ? '?' + params : ''}`
-    setUrl(url)
-  }, [context])
+    setUrl(`${request.url}${params ? '?' + params : ''}`)
+  }, [request])
 
   const handleUrlChange = e => setUrl(e.target.value)
 
   const handleUrlBlur = e => {
-
     const [url, params] = e.target.value.split('?')
-    context.request.setUrl(url)
+    request.setUrl(url)
 
     const paramList = params ? params.split('&')
       .map(param => param.trim())
@@ -33,7 +30,7 @@ export default function RequestUrl() {
         }
       }) : []
 
-    const newParams = context.request.params.map(param => {
+    const newParams = request.params.map(param => {
       const paramIndex = paramList.findIndex(p => p.name === param.name)
       if (paramIndex > -1) {
         const value = paramList[paramIndex].value
@@ -45,11 +42,12 @@ export default function RequestUrl() {
       }
     }).filter(param => !param.toDelete)
 
-    context.request.setParams([...newParams, ...paramList])
+    request.setParams([...newParams, ...paramList])
   }
 
   return (
     <input 
+      ref={urlRef}
       type='text'
       className='request-url'
       value={url}

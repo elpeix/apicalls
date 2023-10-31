@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import Params from './Params'
@@ -8,18 +8,12 @@ import Editor from '../base/Editor'
 
 export default function RequestTabs() {
 
-  const context = useContext(RequestContext)
-  const [showBody, setShowBody] = useState(false)
-  const [activeParams, setActiveParams] = useState(0)
-  const [activeHeaders, setActiveHeaders] = useState(0)
+  const { request } = useContext(RequestContext)
+  const showBody = request.method.body !== ''
+  const activeParams = request.getActiveParamsLength()
+  const activeHeaders = request.getActiveHeadersLength()
 
-  useEffect(() => {
-    setShowBody(context.request.method.body)
-    setActiveParams(context.request.getActiveParamsLength())
-    setActiveHeaders(context.request.getActiveHeadersLength())
-  }, [context.request])
-
-  const handleBodyChange = value => context.request.setBody(value)
+  const handleBodyChange = value => request.setBody(value)
 
   return (
     <div className='request-tabs'>
@@ -38,10 +32,10 @@ export default function RequestTabs() {
         </TabList>
         <div className='tab-panel-wrapper'>
           <TabPanel forceRender={true}>
-            <Params />
+            <Params params={request.params} setParams={request.setParams} addParam={request.addParam} />
           </TabPanel>
           <TabPanel forceRender={true}>
-            <Headers />
+            <Headers headers={request.headers} setHeaders={request.setHeaders} addHeader={request.addHeader} />
           </TabPanel>
           <TabPanel forceRender={true}>
             Authorization TODO
@@ -50,7 +44,7 @@ export default function RequestTabs() {
             <Editor
               language='json'
               onChange={handleBodyChange}
-              value={context.request.body}
+              value={request.body}
             /> 
           </TabPanel> }
         </div>
