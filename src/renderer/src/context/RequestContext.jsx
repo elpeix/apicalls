@@ -57,13 +57,12 @@ export default function RequestContextProvider({ tabId, definedRequest, children
     requestUrl,
     requestBody,
     requestHeaders,
-    requestParams])
-
+    requestParams
+  ])
 
   const sendRequest = () => {
     if (!requestUrl || !urlIsValid()) return
     setFetching(true)
-
     const headers = requestHeaders.reduce((headers, header) => {
       headers[header.name] = header.value
       return headers
@@ -91,7 +90,6 @@ export default function RequestContextProvider({ tabId, definedRequest, children
     saveHistory()
 
     let fetchResponseSize = null
-
     const time = new Date().getTime()
     fetch(url, requestParameters)
       .then(res => {
@@ -105,18 +103,15 @@ export default function RequestContextProvider({ tabId, definedRequest, children
         if (contentLength) {
           fetchResponseSize = Number(contentLength.value)
         }
-
         setFetched(true)
         setResponseStatus(res.status)
         setFetchedHeaders(headers)
-
         setConsoleLogs([...consoleLogs, {
           method: requestMethod.value,
           url: requestUrl,
           status: res.status,
           time: fetchTime
         }])
-
         return res.text()
       })
       .then(text => {

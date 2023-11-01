@@ -31,7 +31,6 @@ export default function useTabs(initialTabs) {
   }
 
   const removeTab = tabId => {
-    console.log('removeTab', tabId)
     const index = tabs.findIndex(t => t.id === tabId)
     if (index === -1) return
     if (tabs[index].active) {

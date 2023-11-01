@@ -44,7 +44,7 @@ export default function Environments() {
               key={environment.id}
               environment={environment}
               selectEnvironment={setSelectedEnvironment}
-              activeEnvironment={(id) => environments.active(id)}
+              activeEnvironment={id => environments.active(id)}
               deactiveEnvironment={() => environments.deactive()}
             />
           ))}
