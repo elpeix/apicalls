@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import RequestBar from '../request/RequestBar'
 import { Panel, PanelGroup } from 'react-resizable-panels'
 import Gutter from './Gutter'
@@ -7,7 +7,7 @@ import Response from '../response/Response'
 import Console from '../base/Console/Console'
 import RequestContextProvider from '../../context/RequestContext'
 
-export default function RequestPanel({ definedRequest }) {
+export default function RequestPanel({ tab }) {
 
   const requestPanel = useRef()
   const consolePanel = useRef()
@@ -18,7 +18,7 @@ export default function RequestPanel({ definedRequest }) {
   const expandConsole = () => consolePanel.current.expand()
 
   return (
-    <RequestContextProvider definedRequest={definedRequest}>
+    <RequestContextProvider tabId={tab.id} definedRequest={tab.request}>
       <div className='request-panel'>
         <RequestBar />
         <PanelGroup direction="vertical">

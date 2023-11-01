@@ -3,9 +3,9 @@ import { AppContext } from './AppContext'
 
 export const RequestContext = createContext()
 
-export default function RequestContextProvider({ definedRequest, children }) {
+export default function RequestContextProvider({ tabId, definedRequest, children }) {
 
-  const { history } = useContext(AppContext)
+  const { history, tabs } = useContext(AppContext)
 
   const methods = useMemo(() => [
     { value: 'GET', label: 'GET', body: false },
@@ -17,13 +17,12 @@ export default function RequestContextProvider({ definedRequest, children }) {
     { value: 'OPTION', label: 'OPTION', body: false }
   ], [])
 
-  const [id, setId] = useState(0)
-  const [name, setName] = useState('')
-  const [requestMethod, setRequestMethod] = useState(methods[0])
-  const [requestUrl, setRequestUrl] = useState('')
-  const [requestBody, setRequestBody] = useState('')
-  const [requestHeaders, setRequestHeaders] = useState([])
-  const [requestParams, setRequestParams] = useState([])
+  const [changed, setChanged] = useState(false)
+  const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])
+  const [requestUrl, setRequestUrl] = useState(definedRequest.url || '')
+  const [requestBody, setRequestBody] = useState(definedRequest.body || '')
+  const [requestHeaders, setRequestHeaders] = useState(definedRequest.headers || [])
+  const [requestParams, setRequestParams] = useState(definedRequest.params || [])
 
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
@@ -38,17 +37,27 @@ export default function RequestContextProvider({ definedRequest, children }) {
   const [consoleLogs, setConsoleLogs] = useState([])
 
   useEffect(() => {
-    if (definedRequest) {
-      // TODO validate definedRequest
-      setId(definedRequest.id || 0)
-      setName(definedRequest.name || '')
-      setRequestMethod(definedRequest.method || methods[0])
-      setRequestUrl(definedRequest.url || '')
-      setRequestBody(definedRequest.body || '')
-      setRequestHeaders(definedRequest.headers || [])
-      setRequestParams(definedRequest.params || [])
+    if (changed) {
+      setChanged(false)
+      tabs.updateTabRequest(tabId, {
+        ...definedRequest,
+        method: requestMethod,
+        url: requestUrl,
+        headers: requestHeaders,
+        params: requestParams,
+        body: requestBody
+      })
     }
-  }, [definedRequest, methods])
+  }, [
+    tabId,
+    tabs,
+    changed,
+    definedRequest,
+    requestMethod,
+    requestUrl,
+    requestBody,
+    requestHeaders,
+    requestParams])
 
 
   const sendRequest = () => {
@@ -99,7 +108,7 @@ export default function RequestContextProvider({ definedRequest, children }) {
 
         setFetched(true)
         setResponseStatus(res.status)
-        setHeaders(headers)
+        setFetchedHeaders(headers)
 
         setConsoleLogs([...consoleLogs, {
           method: requestMethod.value,
@@ -138,7 +147,7 @@ export default function RequestContextProvider({ definedRequest, children }) {
 
   const saveRequest = () => {
     // TODO
-    console.log('saveRequest', id)
+    console.log('saveRequest', definedRequest.id)
   }
 
   const urlIsValid = () => {
@@ -155,9 +164,31 @@ export default function RequestContextProvider({ definedRequest, children }) {
     const definedMethod = methods.find(m => m.value === method.value)
     if (!definedMethod) return
     setRequestMethod(definedMethod)
+    setChanged(true)
+  }
+
+  const setUrl = url => {
+    setRequestUrl(url)
+    setChanged(true)
+  }
+
+  const setBody = body => {
+    setRequestBody(body)
+    setChanged(true)
   }
 
   const setHeaders = headers => {
+    setRequestHeaders(headers)
+    setChanged(true)
+  }
+
+  const setParams = params => {
+    setRequestParams(params)
+    setChanged(true)
+  }
+
+
+  const setFetchedHeaders = headers => {
     setResponseHeaders(headers)
     const cookies = headers
       .filter(header => header.name === 'set-cookie')
@@ -173,7 +204,7 @@ export default function RequestContextProvider({ definedRequest, children }) {
   const removeParam = index => {
     const params = [...requestParams]
     params.splice(index, 1)
-    setRequestParams(params)
+    setParams(params)
   }
 
   const getActiveParamsLength = () => {
@@ -181,13 +212,13 @@ export default function RequestContextProvider({ definedRequest, children }) {
   }
 
   const addHeader = () => {
-    setRequestHeaders([...requestHeaders, { enabled: true, name: '', value: '' }])
+    setHeaders([...requestHeaders, { enabled: true, name: '', value: '' }])
   }
 
   const removeHeader = index => {
     const headers = [...requestHeaders]
     headers.splice(index, 1)
-    setRequestHeaders(headers)
+    setHeaders(headers)
   }
 
   const getActiveHeadersLength = () => {
@@ -203,10 +234,10 @@ export default function RequestContextProvider({ definedRequest, children }) {
       headers: requestHeaders,
       params: requestParams,
       setMethod,
-      setUrl: setRequestUrl,
-      setBody: setRequestBody,
-      setHeaders: setRequestHeaders,
-      setParams: setRequestParams,
+      setUrl,
+      setBody,
+      setHeaders,
+      setParams,
       addParam,
       removeParam,
       getActiveParamsLength,

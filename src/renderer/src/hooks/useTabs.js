@@ -47,6 +47,9 @@ export default function useTabs(initialTabs) {
   const updateTab = (tabId, tab) => {
     setTabs(tabs.map(t => t.id === tabId ? tab : t))
   }
+  const updateTabRequest = (tabId, request) => {
+    setTabs(tabs.map(t => t.id === tabId ? { ...t, request } : t))
+  }
 
   const getTab = tabId => tabs.find(t => t.id === tabId)
   const getTabs = () => tabs
@@ -73,6 +76,7 @@ export default function useTabs(initialTabs) {
     addTab,
     removeTab,
     updateTab,
+    updateTabRequest,
     getTab,
     getTabs,
     setActiveTab,
