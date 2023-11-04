@@ -19,7 +19,8 @@
   --accent-color: var(--color-5);
   --border-color: var(--color-7);
   --hover-color: var(--color-8);
-  --side-color: var(--color-8);
+  --sidePanel-color: var(--color-8);
+  --sidePanel-color-hover: var(--color-7);
   --highlight-color: #0cf;
 
   --status-200-color: rgb(108, 185, 73);
@@ -55,18 +56,21 @@
     --color-3: #555;
     --color-4: #666;
     --color-5: #777;
-    --color-6: #888;
+    --color-6: #aaa;
     --color-7: #ccc;
     --color-8: #ddd;
     --color-9: #eee;
-    --color-10: #f4f4f4;
+    --color-10: #fafafa;
     --color-11: #fff;
 
+    --accent-color: var(--color-6);
     --border-color: var(--color-7);
-    --hover-color: var(--color-7);
-    --side-color: var(--color-8);
+    --hover-color: var(--color-8);
+    --sidePanel-color: var(--color-9);
+    --sidePanel-color-hover: var(--color-8);
+    --tab-panel-background-color: var(--color-10);
 
-    --highlight-color: #00ccff;
+    --highlight-color: #0088ff;
 
     --status-200-color: rgb(108, 185, 73);
     --status-300-color: rgb(255, 165, 0);

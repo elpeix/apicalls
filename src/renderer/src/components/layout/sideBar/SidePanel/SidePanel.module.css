@@ -3,7 +3,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--side-color);
+  background-color: var(--sidePanel-color);
 
   .title {
     width: 100%;

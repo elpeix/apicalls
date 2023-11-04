@@ -1,6 +1,6 @@
 import React from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
-import styles from './EnvironmentItem.module.css'
+import styles from './Environment.module.css'
 
 export default function EnvironmentItem({ 
   environment,

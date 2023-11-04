@@ -17,7 +17,7 @@
     height: 56px;
 
     &.active {
-      background-color: var(--side-color);
+      background-color: var(--sidePanel-color);
       border: 1px solid var(--border-color);
       border-right: none;
 
@@ -28,7 +28,7 @@
         right: -1px;
         width: 1px;
         height: 100%;
-        background-color: var(--side-color);
+        background-color: var(--sidePanel-color);
       }
 
       & > button {

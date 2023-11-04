@@ -74,3 +74,24 @@
     width: 100%;
   }
 }
+
+.item {
+  flex-direction: row !important;
+  gap: 0.5rem !important;
+  padding: 0.4rem 0.7rem 0.4rem 0.5rem !important;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+
+  & .title {
+    flex-grow: 1;
+  }
+
+  & .edit {
+    display: none;
+  }
+
+  &:hover .edit {
+    display: block;
+  }
+}

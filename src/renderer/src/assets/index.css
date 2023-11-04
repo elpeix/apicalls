@@ -12,7 +12,7 @@ input[type="checkbox"] {
   width: 20px;
   height: 20px;
   border: 1px solid var(--border-color);
-  background-color: var(--background-content);
+  background-color: var(--color-9);
   cursor: pointer;
   position: relative;
 
@@ -23,14 +23,14 @@ input[type="checkbox"] {
     left: 6px;
     width: 6px;
     height: 12px;
-    border: solid var(--background-content);
+    border: solid transparent;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
     transition: border-color 0.2s ease-in-out;
   }
 
   &:hover {
-    background-color: var(--hover-color);
+    border-color: var(--accent-color);
 
     &::after {
       border-color: var(--accent-color);
@@ -38,8 +38,6 @@ input[type="checkbox"] {
   }
 
   &:checked {
-    background-color: var(--background-content);
-
     &::after {
       border-color: var(--highlight-color);
     }
@@ -49,7 +47,7 @@ input[type="checkbox"] {
 button {
   border: 1px solid var(--border-color);
   background-color: transparent;
-  color: var(--accent-color);
+  color: var(--base-color);
   cursor: pointer;
   user-select: none;
   text-transform: uppercase;

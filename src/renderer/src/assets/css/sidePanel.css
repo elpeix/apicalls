@@ -38,7 +38,7 @@
     cursor: pointer;
 
     &:hover {
-      background-color: var(--color-7);
+      background-color: var(--sidePanel-hover-color);
     }
   }
 }
