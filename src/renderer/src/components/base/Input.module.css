@@ -1,0 +1,53 @@
+.input {
+  display: grid;
+  grid-template-columns: 1fr;
+
+  & > * {
+    letter-spacing: 0.5;
+    line-height: 10px;
+    font-family: var(--font-family);
+    grid-row-start: 1;
+    grid-row-end: 1;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+  }
+
+  & > div {
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    & > div {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: var(--base-color);
+      align-self: center;
+
+      & mark {
+        color: var(--highlight-color);
+        background: transparent;
+        height: 100%;
+      }
+    }
+  }
+
+  & input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: transparent !important;
+    caret-color: var(--base-color);
+
+    &::placeholder {
+      color: var(--accent-color);
+    }
+  }
+}

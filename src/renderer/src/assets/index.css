@@ -15,6 +15,7 @@ input[type="checkbox"] {
   background-color: var(--color-9);
   cursor: pointer;
   position: relative;
+  transition: border-color 0.2s ease-in-out;
 
   &::after {
     content: '';

@@ -85,12 +85,18 @@
   width: 100%;
   overflow: auto;
 
-  &>.add {
+  & > .add {
     margin: 10px 8px;
   }
 
-  & .row-enabled input {
-    color: var(--selected-color) !important;
+  & [role="cell"] > div {
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  & .row-enabled [role="cell"]>div {
+    opacity: 1;
+    font-style: normal;
   }
 }
 

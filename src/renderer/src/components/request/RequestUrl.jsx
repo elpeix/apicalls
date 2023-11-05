@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import Input from '../base/Input'
 
 export default function RequestUrl({ request }) {
 
@@ -14,10 +15,10 @@ export default function RequestUrl({ request }) {
     setUrl(`${request.url}${params ? '?' + params : ''}`)
   }, [request])
 
-  const handleUrlChange = e => setUrl(e.target.value)
+  const handleUrlChange = value => setUrl(value)
 
-  const handleUrlBlur = e => {
-    const [url, params] = e.target.value.split('?')
+  const handleUrlBlur = value => {
+    const [url, params] = value.split('?')
     request.setUrl(url)
 
     const paramList = params ? params.split('&')
@@ -46,9 +47,8 @@ export default function RequestUrl({ request }) {
   }
 
   return (
-    <input 
-      ref={urlRef}
-      type='text'
+    <Input 
+      inputRef={urlRef}
       className='request-url'
       value={url}
       onChange={handleUrlChange}

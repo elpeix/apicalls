@@ -5,7 +5,7 @@ export const RequestContext = createContext()
 
 export default function RequestContextProvider({ tabId, definedRequest, children }) {
 
-  const { history, tabs } = useContext(AppContext)
+  const { history, environments, tabs } = useContext(AppContext)
 
   const methods = useMemo(() => [
     { value: 'GET', label: 'GET', body: false },
@@ -64,16 +64,16 @@ export default function RequestContextProvider({ tabId, definedRequest, children
     if (!requestUrl || !urlIsValid()) return
     setFetching(true)
     const headers = requestHeaders.reduce((headers, header) => {
-      headers[header.name] = header.value
+      headers[getValue(header.name)] = getValue(header.value)
       return headers
     }, {})
 
     const queryParams = requestParams.reduce((params, param) => {
-      if (param.enabled) params[param.name] = param.value
+      if (param.enabled) params[getValue(param.name)] = getValue(param.value)
       return params
     }, {})
 
-    const url = new URL(requestUrl)
+    const url = getUrl()
     url.search = new URLSearchParams(queryParams).toString()
 
     const requestParameters = {
@@ -85,7 +85,7 @@ export default function RequestContextProvider({ tabId, definedRequest, children
       redirect: 'follow',
       referrerPolicy: 'no-referrer',
     }
-    if (requestBody && requestMethod.body) requestParameters.body = requestBody
+    if (requestBody && requestMethod.body) requestParameters.body = getValue(requestBody)
 
     saveHistory()
 
@@ -108,7 +108,7 @@ export default function RequestContextProvider({ tabId, definedRequest, children
         setFetchedHeaders(headers)
         setConsoleLogs([...consoleLogs, {
           method: requestMethod.value,
-          url: requestUrl,
+          url: url.href,
           status: res.status,
           time: fetchTime
         }])
@@ -147,12 +147,15 @@ export default function RequestContextProvider({ tabId, definedRequest, children
 
   const urlIsValid = () => {
     try {
-      new URL(requestUrl)
+      getUrl()
       return true
     } catch (err) {
       return false
     }
   }
+
+  const getUrl = () => new URL(getValue(requestUrl))
+  const getValue = value => environments.replaceVariables(value)
 
   const setMethod = method => {
     if (!method) return
@@ -181,7 +184,6 @@ export default function RequestContextProvider({ tabId, definedRequest, children
     setRequestParams(params)
     setChanged(true)
   }
-
 
   const setFetchedHeaders = headers => {
     setResponseHeaders(headers)

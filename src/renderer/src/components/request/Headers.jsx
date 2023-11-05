@@ -17,7 +17,7 @@ export default function Headers({ headers, setHeaders, addHeader }) {
           <SimpleTable.Body>
             { headers.map((header, index) => (
               <SimpleTable.Row key={index} className={header.enabled ? 'row-enabled' : ''}>
-                <SimpleTable.Cell >
+                <SimpleTable.Cell>
                   <input 
                     type ='checkbox'
                     checked={header.enabled}

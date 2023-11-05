@@ -39,6 +39,19 @@ export function useEnvironments() {
     environment.active = false
     return environment
   }))
+  const variableIsDefined = (name) => {
+    const activeEnvironment = getActive()
+    if (!activeEnvironment) return false
+    return activeEnvironment.variables.find(variable => variable.name === name)
+  }
+  const replaceVariables = (value) => {
+    const activeEnvironment = getActive()
+    if (!activeEnvironment) return value
+    activeEnvironment.variables.forEach(variable => {
+      value = value.replace(`{{${variable.name}}}`, variable.value)
+    })
+    return value
+  }
 
   return {
     getAll,
@@ -50,7 +63,9 @@ export function useEnvironments() {
     get,
     getActive,
     active,
-    deactive
+    deactive,
+    variableIsDefined,
+    replaceVariables
   }
 
 }

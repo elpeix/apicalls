@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import styles from './SimpleTable.module.css'
+import Input from '../Input'
 
 const SimpleTableContext = createContext()
 
@@ -19,9 +20,7 @@ export default function SimpleTable({ templateColumns, children }) {
 }
 
 function SimpleTableHeader({ children }) {
-
   const { templateColumns } = useContext(SimpleTableContext)
-
   return (
     <div 
       className={styles.header}
@@ -50,9 +49,7 @@ function SimpleTableBody({ children }) {
 }
 
 function SimpleTableRow({ className, children }) {
-
   const { templateColumns } = useContext(SimpleTableContext)
-
   return (
     <div 
       className={`${styles.row} ${className}`}
@@ -83,10 +80,10 @@ function SimpleTableCell({ editable, autoFocus, value='', placeholder='', onChan
       inputRef.current.focus()
     }
   }
-  const handleChange = e => setEditableValue(e.target.value)
-  const handleBlur = e => {
+  const handleChange = value => setEditableValue(value)
+  const handleBlur = value => {
     if (onChange) {
-      onChange(e.target.value)
+      onChange(value)
     }
   }
 
@@ -96,16 +93,18 @@ function SimpleTableCell({ editable, autoFocus, value='', placeholder='', onChan
       role='cell'
       onClick={handleCellClick}
     >
-      { !!editable && (
-        <input
-          ref={inputRef}
-          type='text'
-          value={editableValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          placeholder={placeholder}
-        />) }
-      { !editable && <div>{value || children}</div> }
+      <div>
+        { !!editable && (
+          <Input
+            inputRef={inputRef}
+            value={editableValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            fontSize={12}
+          />) }
+        { !editable && <>{value || children}</> }
+      </div>
     </div>
   )
 }
