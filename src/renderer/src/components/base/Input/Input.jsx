@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from './Input.module.css'
-import { AppContext } from '../../context/AppContext'
+import { AppContext } from '../../../context/AppContext'
 
 export default function Input({
   inputRef,

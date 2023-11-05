@@ -4,11 +4,12 @@ import ResponseBody from './ResponseBody'
 import ResponseHeaders from './ResponseHeaders'
 import ResponseStatus from './ResponseStatus'
 import { RequestContext } from '../../context/RequestContext'
+import Loading from '../base/Loading/Loading'
 
 export default function Response({ consoleIsHidden, showConsole }) {
 
   const context = useContext(RequestContext)
-  const [fetching, setFetching] = useState(false)
+  const [fetching, setFetching] = useState(true)
   const [fetched, setFetched] = useState(false)
   const [status, setStatus] = useState(0)
   const [time, setTime] = useState(0)
@@ -16,21 +17,19 @@ export default function Response({ consoleIsHidden, showConsole }) {
   const [headers, setHeaders] = useState([])
   const [body, setBody] = useState('')
 
-  useEffect(() => {
-    setFetching(context.fetching)
-    setFetched(context.fetched)
-    setStatus(context.response.status)
-    setTime(context.response.time)
-    setHeaders(context.response.headers)
-    setBody(context.response.body)
-    setSize(context.response.size)
-  }, [context])
+  // useEffect(() => {
+  //   setFetching(context.fetching)
+  //   setFetched(context.fetched)
+  //   setStatus(context.response.status)
+  //   setTime(context.response.time)
+  //   setHeaders(context.response.headers)
+  //   setBody(context.response.body)
+  //   setSize(context.response.size)
+  // }, [context])
 
   return (
     <>
-      {fetching && (
-        <div className='fetching'>Loading...</div>
-      )}
+      {fetching && <Loading />}
       {!fetching && fetched && (
         <div className='response'>
           <div className='response-content'>

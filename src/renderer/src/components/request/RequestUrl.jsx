@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Input from '../base/Input'
+import Input from '../base/Input/Input'
 
 export default function RequestUrl({ request }) {
 

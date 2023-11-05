@@ -9,7 +9,7 @@ import Editor from '../base/Editor'
 export default function RequestTabs() {
 
   const { request } = useContext(RequestContext)
-  const showBody = request.method.body !== ''
+  const showBody = request.method.body
   const activeParams = request.getActiveParamsLength()
   const activeHeaders = request.getActiveHeadersLength()
 

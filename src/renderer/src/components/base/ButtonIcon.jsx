@@ -1,5 +1,5 @@
 import React from 'react'
-import Icon from './Icon'
+import Icon from './Icon/Icon'
 
 export default function ButtonIcon({ 
   icon,

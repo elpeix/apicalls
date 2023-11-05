@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import styles from './SimpleTable.module.css'
-import Input from '../Input'
+import Input from '../Input/Input'
 
 const SimpleTableContext = createContext()
 
