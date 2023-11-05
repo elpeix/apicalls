@@ -36,7 +36,8 @@ export default function AppContextProvider({ children }) {
       url: 'https://jsonplaceholder.typicode.com/todos/',
       headers: [
         { name: 'Content-Type', value: 'application/json', enabled: true },
-        { name: 'Accept', value: 'application/json', enabled: true }
+        { name: 'Accept', value: 'application/json', enabled: true },
+        { name: 'x-app-id', value: '{{appId}}', enabled: true }
       ],
       params: []
     }
