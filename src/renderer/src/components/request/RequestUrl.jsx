@@ -20,7 +20,7 @@ export default function RequestUrl({ request }) {
 
   const handleUrlChange = value => {
     const [url] = value.split('?')
-    setUrlError(!request.urlIsValid({ url }))
+    setUrlError(url.length && !request.urlIsValid({ url }))
   }
 
   const handleUrlBlur = value => {
@@ -54,7 +54,7 @@ export default function RequestUrl({ request }) {
   }
 
   const getClassName = () => {
-    return `${styles.url} ${urlError ? styles.error : ''}`
+    return `${styles.url} ${url.length && urlError ? styles.error : ''}`
   }
 
   return (
