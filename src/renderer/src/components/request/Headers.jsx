@@ -1,11 +1,12 @@
 import React from 'react'
 import SimpleTable from '../base/SimpleTable/SimpleTable'
 import ButtonIcon from '../base/ButtonIcon'
+import styles from './Request.module.css'
 
 export default function Headers({ headers, setHeaders, addHeader }) {
 
   return (
-    <div className='request-headers'>
+    <div className={styles.headers}>
       { headers && headers.length > 0 && (
         <SimpleTable templateColumns="30px 1fr 1fr 40px">
           <SimpleTable.Header>
@@ -16,7 +17,7 @@ export default function Headers({ headers, setHeaders, addHeader }) {
           </SimpleTable.Header>
           <SimpleTable.Body>
             { headers.map((header, index) => (
-              <SimpleTable.Row key={index} className={header.enabled ? 'row-enabled' : ''}>
+              <SimpleTable.Row key={index} className={header.enabled ? styles.rowEnabled : ''}>
                 <SimpleTable.Cell>
                   <input 
                     type ='checkbox'
@@ -66,7 +67,7 @@ export default function Headers({ headers, setHeaders, addHeader }) {
           </SimpleTable.Body>
         </SimpleTable>
       )}
-      <button className='add' onClick={addHeader}>
+      <button className={styles.add} onClick={addHeader}>
         Add header
       </button>
     </div>

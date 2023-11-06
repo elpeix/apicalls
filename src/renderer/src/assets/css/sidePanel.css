@@ -6,7 +6,6 @@
   gap: 1rem;
   padding: 0 .7rem;
   height: 2.5rem;
-  border-bottom: 1px solid var(--border-color);
   cursor: default;
   user-select: none;
 
@@ -26,6 +25,8 @@
   overflow-y: auto;
   overflow-x: hidden;
   user-select: none;
+  min-width: 15rem;
+  width: 100%;
 
   & .sidePanel-content-item {
     display: flex;
@@ -33,9 +34,13 @@
     gap: 0.5rem;
     background-color: transparent;
     transition: background-color 0.2s ease-in-out;
-    border-bottom: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-color);
     padding: 0.5rem 0.7rem;
     cursor: pointer;
+
+    &:last-child {
+      border-bottom: 1px solid var(--border-color);
+    }
 
     &:hover {
       background-color: var(--sidePanel-hover-color);

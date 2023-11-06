@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import RequestUrl from './RequestUrl'
 import Select from 'react-select'
 import { RequestContext } from '../../context/RequestContext'
+import styles from './Request.module.css'
 
 export default function RequestBar() {
 
@@ -9,8 +10,8 @@ export default function RequestBar() {
   const onChange = value => request.setMethod(value)
 
   return (
-    <div className='request-basic'>
-      <div className='request-method'>
+    <div className={styles.content}>
+      <div className={styles.method}>
         <Select
           className='select'
           classNamePrefix='select'
@@ -22,7 +23,7 @@ export default function RequestBar() {
           options={request.methods} />
       </div>
       <RequestUrl request={request} />
-      <button className='request-send' onClick={request.fetch} disabled={fetching}>
+      <button className={styles.send} onClick={request.fetch} disabled={fetching}>
         Send
       </button>
     </div>

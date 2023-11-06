@@ -21,20 +21,18 @@ export default function Input({
 
   const handleChange = e => {
     setInternalValue(e.target.value)
+    if (onChange) onChange(e.target.value)
   }
 
   const handleBlur = () => {
     if (onBlur) onBlur(internalValue)
-    if (onChange) onChange(internalValue)
   }
 
   const highlight = () => {
     return internalValue.split(/\{\{([^}]+)\}\}/g).map((part, index) => {
       if (index % 2 === 0) return part
-      if (environments.variableIsDefined(part)) {
-        return (<mark key={index}>{`{{${part}}}`}</mark>)
-      }
-      return `{{${part}}}`
+      const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined
+      return (<mark title='hola' key={index} className={className}>{`{{${part}}}`}</mark>)
     })
   }
 

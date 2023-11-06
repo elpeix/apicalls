@@ -1,132 +1,28 @@
-.request-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-.request-basic {
-  display: flex;
-  flex-direction: row;
-}
-
-.request-method {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--border-color);
-  border-left: none;
-  border-right: none;
-  background-color: var(--background-content);
-  min-height: 40px;
-  min-width: 104px;
-  font-size: 14px;
-  line-height: 22px;
-  user-select: none;
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background-color: var(--hover-color);
-  }
-}
-
-.request-url {
-  /* url input */
-  flex: 1;
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  background-color: var(--background-content);
-  color: var(--base-color);
-  font-size: 14px;
-  line-height: 22px;
-  outline: none;
-  box-shadow: inset 0 0 0 1px transparent;
-  transition: box-shadow 0.2s ease-in-out;
-
-  &:focus {
-    outline: none;
-    box-shadow: inset 0 0 0 1px var(--accent-color);
-  }
-}
-
-.request-send {
-  /* send button */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
-  border: 1px solid var(--border-color);
-  border-left: none;
-  background-color: var(--background-content);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--base-color);
-  cursor: pointer;
-  user-select: none;
-  text-transform: uppercase;
-  box-shadow: inset 0 0 0 1px transparent;
-  transition:
-    background-color 0.2s ease-in-out,
-    color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
-
-  &:hover {
-    background-color: var(--hover-color);
-  }
-
-  &:focus {
-    box-shadow: inset 0 0 0 1px var(--accent-color);
-  }
-}
-
-.request-params,
-.request-headers {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-
-  & > .add {
-    margin: 10px 8px;
-  }
-
-  & [role="cell"] > div {
-    opacity: 0.7;
-    font-style: italic;
-  }
-
-  & .row-enabled [role="cell"]>div {
-    opacity: 1;
-    font-style: normal;
-  }
-}
-
-.request-tabs,
 .response {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
   overflow: hidden;
-}
 
-.request-tabs .request-tabs-content,
-.response .response-content {
-  flex: 1;
-  overflow: hidden;
-
-  & .response-headers {
-    height: 100%;
-    overflow: auto;
+  .content {
+    flex: 1;
+    overflow: hidden;
+  
+    & .headers {
+      height: 100%;
+      overflow: auto;
+    }
   }
 }
 
-.response .response-body {
+.body {
   height: 100%;
   display: grid;
   grid-template-rows: 30px 1fr;
   flex-direction: column;
 
-  .response-body-header {
+  .bodyHeader {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -153,7 +49,7 @@
       }
     }
 
-    .response-body-header-switch-raw {
+    .raw {
       position: relative;
       color: var(--accent-color);
       cursor: pointer;
@@ -207,13 +103,13 @@
     }
   }
 
-  .response-body-content {
+  .bodyContent {
     height: 100%;
     overflow: hidden;
   }
 }
 
-.response .response-footer {
+.footer {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -223,7 +119,7 @@
   user-select: none;
 }
 
-.no-response {
+.noResponse {
   width: 100%;
   height: 100%;
   flex-grow: 1;
@@ -234,21 +130,75 @@
   font-size: 14px;
   user-select: none;
 
-  &>.no-response-content {
+  &>.noResponseContent {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 20px;
 
-    &>.no-response-title {
+    &>.noResponseTitle {
       font-size: 16px;
       font-weight: 500;
     }
 
-    &>.no-response-message {
+    &>.noResponseMessage {
       font-size: 12px;
     }
 
+  }
+}
+
+.statusBar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px 0 2px;
+
+  & > .showConsole {
+    align-self: start;
+  }
+
+  & > .status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 12px;
+    gap: 10px;
+  
+  
+    & > .item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    
+      & > .name {
+        font-weight: 500;
+      }
+      & > .value {
+        color: var(--status-200-color);
+  
+        &.redirect {
+          color: var(--status-300-color);
+        }
+        
+        &.client-error {
+          color: var(--status-400-color);
+        }
+        
+        &.server-error {
+          color: var(--status-500-color);
+        }
+        
+        &.unknown {
+          color: var(--status-unkonwn-color);
+        }
+      }
+    }
   }
 }

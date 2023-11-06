@@ -61,7 +61,7 @@ export default function RequestContextProvider({ tabId, definedRequest, children
   ])
 
   const sendRequest = () => {
-    if (!requestUrl || !urlIsValid()) return
+    if (!requestUrl || !urlIsValid({})) return
     setFetching(true)
     const headers = requestHeaders.reduce((headers, header) => {
       headers[getValue(header.name)] = getValue(header.value)
@@ -73,7 +73,7 @@ export default function RequestContextProvider({ tabId, definedRequest, children
       return params
     }, {})
 
-    const url = getUrl()
+    const url = getUrl({})
     url.search = new URLSearchParams(queryParams).toString()
 
     const requestParameters = {
@@ -145,16 +145,16 @@ export default function RequestContextProvider({ tabId, definedRequest, children
     console.log('saveRequest', definedRequest.id)
   }
 
-  const urlIsValid = () => {
+  const urlIsValid = ({ url = requestUrl }) => {
     try {
-      getUrl()
+      getUrl({ url })
       return true
     } catch (err) {
       return false
     }
   }
 
-  const getUrl = () => new URL(getValue(requestUrl))
+  const getUrl = ({ url = requestUrl }) => new URL(getValue(url))
   const getValue = value => environments.replaceVariables(value)
 
   const setMethod = method => {
@@ -241,7 +241,8 @@ export default function RequestContextProvider({ tabId, definedRequest, children
       addHeader,
       removeHeader,
       getActiveHeadersLength,
-      fetch: sendRequest
+      fetch: sendRequest,
+      urlIsValid
     },
     fetching,
     fetched,

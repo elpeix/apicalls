@@ -35,7 +35,6 @@ export default function SideMenu({ showSelected, onSelect, isCollapsed, collapse
           {item.id && <ButtonIcon icon={item.id} size={24} />}
         </div>
       ))}
-
     </div>
   )
 }

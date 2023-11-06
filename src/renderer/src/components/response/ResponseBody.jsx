@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { formatSource, getLanguageName } from '../../lib/languageSupport'
 import Editor from '../base/Editor'
+import styles from './Response.module.css'
 
 export default function ResponseBody({ value }) {
 
@@ -23,15 +24,15 @@ export default function ResponseBody({ value }) {
   }
 
   return (
-    <div className="response-body">
+    <div className={styles.body}>
       { rawValue && (
         <>
-          <div className="response-body-header">
-            <div className='copy' onClick={handleCopy}>Copy</div>
-            <div className={`response-body-header-switch-raw ${showRaw ? 'active' : ''}`} onClick={() => setShowRaw(!showRaw)}>Raw</div>
+          <div className={styles.bodyHeader}>
+            <div className={styles.copy} onClick={handleCopy}>Copy</div>
+            <div className={`${styles.raw} ${showRaw ? styles.active : ''}`} onClick={() => setShowRaw(!showRaw)}>Raw</div>
           </div>
 
-          <div className="response-body-content">
+          <div className={styles.bodyContent}>
             <Editor
               language={language}
               value={showRaw ? rawValue : parsedValue}

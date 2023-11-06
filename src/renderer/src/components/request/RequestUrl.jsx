@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Input from '../base/Input/Input'
+import styles from './Request.module.css'
 
 export default function RequestUrl({ request }) {
 
   const urlRef = useRef()
 
   const [url, setUrl] = useState('')
+  const [urlError, setUrlError] = useState(request.urlIsValid({}))
 
   useEffect(() => {
     const params = request.params
@@ -13,12 +15,17 @@ export default function RequestUrl({ request }) {
       .map(param => `${param.name}=${param.value}`)
       .join('&')
     setUrl(`${request.url}${params ? '?' + params : ''}`)
+    setUrlError(!request.urlIsValid({}))
   }, [request])
 
-  const handleUrlChange = value => setUrl(value)
+  const handleUrlChange = value => {
+    const [url] = value.split('?')
+    setUrlError(!request.urlIsValid({ url }))
+  }
 
   const handleUrlBlur = value => {
     const [url, params] = value.split('?')
+    setUrl(value)
     request.setUrl(url)
 
     const paramList = params ? params.split('&')
@@ -46,10 +53,14 @@ export default function RequestUrl({ request }) {
     request.setParams([...newParams, ...paramList])
   }
 
+  const getClassName = () => {
+    return `${styles.url} ${urlError ? styles.error : ''}`
+  }
+
   return (
     <Input 
       inputRef={urlRef}
-      className='request-url'
+      className={getClassName()}
       value={url}
       onChange={handleUrlChange}
       onBlur={handleUrlBlur}

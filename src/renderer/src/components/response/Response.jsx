@@ -5,6 +5,7 @@ import ResponseHeaders from './ResponseHeaders'
 import ResponseStatus from './ResponseStatus'
 import { RequestContext } from '../../context/RequestContext'
 import Loading from '../base/Loading/Loading'
+import styles from './Response.module.css'
 
 export default function Response({ consoleIsHidden, showConsole }) {
 
@@ -31,8 +32,8 @@ export default function Response({ consoleIsHidden, showConsole }) {
     <>
       {fetching && <Loading /> }
       {!fetching && fetched && (
-        <div className='response'>
-          <div className='response-content'>
+        <div className={styles.response}>
+          <div className={styles.content}>
             <Tabs className='tabs'>
               <TabList>
                 <Tab>Response</Tab>
@@ -48,7 +49,7 @@ export default function Response({ consoleIsHidden, showConsole }) {
               </div>
             </Tabs>
           </div>
-          <div className='response-footer'>
+          <div className={styles.footer}>
             <ResponseStatus 
               status={status}
               time={time}
@@ -60,10 +61,10 @@ export default function Response({ consoleIsHidden, showConsole }) {
         </div>
       )}
       {!fetching && !fetched && (
-        <div className='no-response'>
-          <div className='no-response-content'>
-            <div className='no-response-title'>No response</div>
-            <div className='no-response-message'>Send a request to get a response</div>
+        <div className={styles.noResponse}>
+          <div className={styles.noResponseContent}>
+            <div className={styles.noResponseTitle}>No response</div>
+            <div className={styles.noResponseMessage}>Send a request to get a response</div>
           </div>
         </div>
       )}

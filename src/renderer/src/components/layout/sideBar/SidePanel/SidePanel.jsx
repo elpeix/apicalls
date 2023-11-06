@@ -10,7 +10,7 @@ export default function SidePanel() {
   const { menu } = useContext(AppContext)
 
   return (
-    <div className={styles.sidePanel}>
+    <aside className={styles.sidePanel}>
       <div className={styles.content}>
         { menu.selected && (
           <div className={styles.sidePanel}>
@@ -21,6 +21,6 @@ export default function SidePanel() {
           </div>
         )}
       </div>
-    </div>
+    </aside>
   )
 }

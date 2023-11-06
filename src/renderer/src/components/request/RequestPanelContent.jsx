@@ -1,11 +1,12 @@
 import React, { useContext, useRef, useState } from 'react'
 import { RequestContext } from '../../context/RequestContext'
-import RequestBar from '../request/RequestBar'
+import RequestBar from './RequestBar'
 import { Panel, PanelGroup } from 'react-resizable-panels'
-import RequestTabs from '../request/RequestTabs'
-import Gutter from './Gutter'
+import RequestTabs from './RequestTabs'
+import Gutter from '../layout/Gutter'
 import Console from '../base/Console/Console'
 import Response from '../response/Response'
+import styles from './Request.module.css'
 
 export default function RequestPanelContent() {
 
@@ -43,7 +44,7 @@ export default function RequestPanelContent() {
   }
 
   return (
-    <div className='request-panel' onKeyDown={handleKeyDown}>
+    <div className={styles.panel} onKeyDown={handleKeyDown}>
       <RequestBar />
       <PanelGroup direction="vertical">
         <Panel

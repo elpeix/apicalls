@@ -3,8 +3,9 @@ import { RequestContext } from '../../context/RequestContext'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import Params from './Params'
 import Headers from './Headers'
-import RequestTab from './requestTab/RequestTab'
+import RequestTab from './RequestTab'
 import Editor from '../base/Editor'
+import styles from './Request.module.css'
 
 export default function RequestTabs() {
 
@@ -16,7 +17,7 @@ export default function RequestTabs() {
   const handleBodyChange = value => request.setBody(value)
 
   return (
-    <div className='request-tabs'>
+    <div className={styles.tabs}>
       <Tabs className='tabs'>
         <TabList>
           <Tab>

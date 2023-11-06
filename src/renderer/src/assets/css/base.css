@@ -22,6 +22,7 @@
   --sidePanel-color: var(--color-8);
   --sidePanel-color-hover: var(--color-7);
   --highlight-color: #0cf;
+  --error-background-color: rgba(223, 48, 48, 0.1);
 
   --status-200-color: rgb(108, 185, 73);
   --status-300-color: rgb(255, 165, 0);
@@ -71,7 +72,7 @@
     --sidePanel-color: var(--color-9);
     --sidePanel-color-hover: var(--color-8);
     --tab-panel-background-color: var(--color-10);
-
+    
     --highlight-color: #0088ff;
 
     --status-200-color: rgb(108, 185, 73);

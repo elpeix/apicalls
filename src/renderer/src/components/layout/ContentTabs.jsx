@@ -3,7 +3,7 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { AppContext } from '../../context/AppContext'
 import TabTitle from '../tabs/tabTitle/TabTitle'
 import NewTab from '../tabs/newTab/NewTab'
-import RequestPanel from './RequestPanel'
+import RequestPanel from '../request/RequestPanel'
 
 export default function ContentTabs() {
 

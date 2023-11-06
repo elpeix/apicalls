@@ -1,11 +1,12 @@
 import React from 'react'
 import SimpleTable from '../base/SimpleTable/SimpleTable'
 import ButtonIcon from '../base/ButtonIcon'
+import styles from './Request.module.css'
 
 export default function Params({ params, addParam, setParams }) {
 
   return (
-    <div className='request-params'>
+    <div className={styles.params}>
       { params && params.length > 0 && (
         <SimpleTable templateColumns="30px 1fr 1fr 40px">
           <SimpleTable.Header>
@@ -16,7 +17,7 @@ export default function Params({ params, addParam, setParams }) {
           </SimpleTable.Header>
           <SimpleTable.Body>
             { params.map((param, index) => (
-              <SimpleTable.Row key={index} className={param.enabled ? 'row-enabled' : ''}>
+              <SimpleTable.Row key={index} className={param.enabled ? styles.rowEnabled : ''}>
                 <SimpleTable.Cell>
                   <input 
                     type ='checkbox'
@@ -64,7 +65,7 @@ export default function Params({ params, addParam, setParams }) {
           </SimpleTable.Body>
         </SimpleTable>
       )}
-      <button className='add' onClick={addParam}>
+      <button className={styles.add} onClick={addParam}>
         Add Param
       </button>
     </div>

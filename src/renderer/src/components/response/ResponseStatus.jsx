@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getStatusName } from '../../lib/status'
-import styles from './ResponseStatus.module.css'
 import ButtonIcon from '../base/ButtonIcon'
+import styles from './Response.module.css'
 
 export default function ResponseStatus({ status, time, size, consoleIsHidden, showConsole }) {
 
