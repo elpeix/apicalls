@@ -19,7 +19,16 @@
     &.active {
       background-color: var(--sidePanel-color);
       border: 1px solid var(--border-color);
+      border-left: none;
       border-right: none;
+      
+      &:first-child {
+        border-top: none;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
 
       &::after {
         content: '';

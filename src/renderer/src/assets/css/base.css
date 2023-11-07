@@ -48,7 +48,8 @@
   background-color: var(--background-base);
   color: var(--base-color);
 
-  --font-family: Roboto;
+  --font-family: Roboto, 'Ubuntu', 'Helvetica Neue', sans-serif;
+  --font-size: 0.8rem;
 }
 
 /* Light theme */
@@ -110,18 +111,8 @@
 body {
   display: flex;
   flex-direction: column;
-  font-family:
-    Roboto,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Helvetica Neue',
-    'Segoe UI',
-    'Oxygen',
-    'Ubuntu',
-    'Cantarell',
-    'Open Sans',
-    sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size);
 }
 
 *,
