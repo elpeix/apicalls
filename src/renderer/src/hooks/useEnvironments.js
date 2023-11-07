@@ -52,6 +52,13 @@ export function useEnvironments() {
     })
     return value
   }
+  const getVariableValue = (name) => {
+    const activeEnvironment = getActive()
+    if (!activeEnvironment) return ''
+    const variable = activeEnvironment.variables.find(variable => variable.name === name)
+    if (!variable) return ''
+    return variable.value
+  }
 
   return {
     getAll,
@@ -65,7 +72,8 @@ export function useEnvironments() {
     active,
     deactive,
     variableIsDefined,
-    replaceVariables
+    replaceVariables,
+    getVariableValue
   }
 
 }

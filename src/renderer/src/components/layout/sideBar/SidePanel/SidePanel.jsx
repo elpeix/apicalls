@@ -4,6 +4,7 @@ import Collections from '../Collections'
 import { AppContext } from '../../../../context/AppContext'
 import History from '../history/History'
 import Environments from '../Environments/Environments'
+import Settings from '../Settings/Settings'
 
 export default function SidePanel() {
 
@@ -16,8 +17,8 @@ export default function SidePanel() {
           <div className={styles.sidePanel}>
             { menu.selected.id === 'collection' && <Collections /> }
             { menu.selected.id === 'environment' && <Environments /> }
-            { menu.selected.id === 'history' && (<History />) }
-            { menu.selected.id === 'settings' && ('') }
+            { menu.selected.id === 'history' && <History /> }
+            { menu.selected.id === 'settings' && <Settings /> }
           </div>
         )}
       </div>

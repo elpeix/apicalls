@@ -28,6 +28,7 @@
 
     & > div {
       pointer-events: none;
+      /* user-select: none; */
       white-space: pre-wrap;
       word-wrap: break-word;
       color: var(--base-color);
@@ -43,6 +44,10 @@
 
         &.variableUndefined {
           color: var(--accent-color);
+        }
+
+        &:hover {
+          opacity: 0.8;
         }
       }
     }

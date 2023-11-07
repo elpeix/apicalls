@@ -12,6 +12,8 @@ export default function Input({
   fontSize = 14
 }) {
 
+  const REGEX = /\{\{([^}]+)\}\}/g // Get {{variable}} from string
+
   const { environments } = useContext(AppContext)
   const [internalValue, setInternalValue] = useState(value)
   
@@ -29,17 +31,27 @@ export default function Input({
   }
 
   const highlight = () => {
-    return internalValue.split(/\{\{([^}]+)\}\}/g).map((part, index) => {
+    return internalValue.split(REGEX).map((part, index) => {
       if (index % 2 === 0) return part
       const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined
-      return (<mark title='hola' key={index} className={className}>{`{{${part}}}`}</mark>)
+      return (<mark key={index} className={className}>{`{{${part}}}`}</mark>)
+    })
+  }
+
+  const mouseOverHandler = () => {
+    console.log('mouse over', internalValue)
+    // TODO: show tooltip with variable value
+    internalValue.split(REGEX).forEach(part => {
+      if (environments.variableIsDefined(part)) {
+        console.log(part, environments.getVariableValue(part))
+      }
     })
   }
 
   const style = { fontSize: `${fontSize}px` }
 
   return (
-    <div className={`${styles.input} ${className}`}>
+    <div className={`${styles.input} ${className}`} onMouseOver={mouseOverHandler}>
       <div style={style}>
         <div>{highlight()}</div>
       </div>
