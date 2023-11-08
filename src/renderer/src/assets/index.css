@@ -6,6 +6,39 @@
 input, progress {
   accent-color: var(--accent-color);
 }
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--base-color);
+  padding: 5px 10px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+
+  &:hover, &:active {
+    background-color: var(--hover-color);
+    color: var(--base-color);
+  }
+
+  &:active {
+    color: var(--highlight-color);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    color: var(--accent-color);
+  }
+}
+
 input[type="checkbox"] {
   appearance: none;
   width: 20px;
@@ -75,6 +108,7 @@ button {
     background-color: transparent;
     color: var(--accent-color);
   }
+  
 
   &.button-icon {
     display: flex;
@@ -107,6 +141,39 @@ button {
       opacity: 0.5;
       cursor: not-allowed;
     }
+  }
+}
+
+select {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--base-color);
+  cursor: pointer;
+  user-select: none;
+  padding: 5px 10px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+
+  &:hover, &:active {
+    background-color: var(--hover-color);
+    color: var(--base-color);
+  }
+
+  &:active {
+    color: var(--highlight-color);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    color: var(--accent-color);
   }
 }
 
@@ -163,4 +230,20 @@ button {
 
 .monaco-quick-open-widget {
   display: none;
+}
+
+ul.versions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+
+  & > li {
+    list-style: none;
+    width: 100%;
+    color: var(--accent-color);
+  }
 }
