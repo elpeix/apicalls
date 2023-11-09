@@ -1,8 +1,9 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext } from 'react'
 import useTabs from '../hooks/useTabs'
 import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
 import { useMenu } from '../hooks/useMenu'
+import { useCollections } from '../hooks/useCollections'
 
 export const AppContext = createContext()
 
@@ -47,36 +48,14 @@ export default function AppContextProvider({ children }) {
     active: false,
     request: {}
   }])
-  const [collections, setCollections] = useState([{
-    id: '1',
-    name: 'Collection 1',
-    requests: [
-      {
-        id: '1',
-        name: 'Request 1',
-        url: 'https://www.google.com',
-        method: 'GET',
-        headers: [
-          { name: 'Content-Type', value: 'application/json', enabled: true },
-          { name: 'Accept', value: 'application/json', enabled: true }
-        ],
-        params: [
-          { name: 'userId', value: '1', enabled: true },
-          { name: 'id', value: '1', enabled: true }
-        ]
-      }
-    ]
-  }])
+  const collections = useCollections()
   const environments = useEnvironments()
   const history = useHistory()
 
   const contextValue = {
     menu,
     tabs,
-    collections: {
-      items: collections,
-      set: setCollections
-    },
+    collections,
     environments,
     history
   }

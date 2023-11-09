@@ -16,6 +16,7 @@
     color: var(--base-color);
     text-transform: uppercase;
     flex-grow: 1;
+    padding: 0.8rem 0;
   }
 }
 
@@ -43,7 +44,7 @@
     }
 
     &:hover {
-      background-color: var(--sidePanel-hover-color);
+      background-color: var(--sidePanel-color-hover);
     }
   }
 }

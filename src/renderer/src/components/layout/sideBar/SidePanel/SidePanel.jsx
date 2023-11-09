@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import styles from './SidePanel.module.css'
-import Collections from '../Collections'
 import { AppContext } from '../../../../context/AppContext'
 import History from '../history/History'
 import Environments from '../Environments/Environments'
 import Settings from '../Settings/Settings'
+import Collections from '../Collections/Collections'
 
 export default function SidePanel() {
 
