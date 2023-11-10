@@ -56,3 +56,51 @@
     visibility: visible;
   }
 }
+
+.collectionContent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.folder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  cursor: pointer;
+
+  .folderHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 .3rem;
+    width: 100%;
+    height: 1.8rem;
+    
+      & .folderTitle {
+        padding: 0rem 0.7rem;
+        align-items: center;
+        flex-grow: 1;
+      }
+    
+      & .folderEdit {
+        visibility: hidden;
+      }
+    
+      &:hover .folderEdit {
+        visibility: visible;
+      }
+  }
+
+  .folderContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    padding-left: 0.5rem;
+
+    
+  }
+}

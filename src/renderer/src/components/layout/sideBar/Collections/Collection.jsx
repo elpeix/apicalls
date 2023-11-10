@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
+import CollectionElement from './CollectionElement'
 
 export default function Collection({ collection, back, update, remove }) {
 
@@ -60,6 +61,9 @@ export default function Collection({ collection, back, update, remove }) {
         <div className={styles.remove}>
           <ButtonIcon icon='delete' onClick={remove} />
         </div>
+      </div>
+      <div className={styles.collectionContent}>
+        {coll.elements.map((element, i) => <CollectionElement key={i} element={element} />)}
       </div>
     </div>
   )

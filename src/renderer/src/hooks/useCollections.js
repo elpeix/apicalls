@@ -5,19 +5,29 @@ export function useCollections() {
   const [collections, setCollections] = useState([{
     id: '1',
     name: 'Collection 1',
-    requests: [
+    elements: [
       {
-        id: '1',
-        name: 'Request 1',
-        url: 'https://www.google.com',
-        method: 'GET',
-        headers: [
-          { name: 'Content-Type', value: 'application/json', enabled: true },
-          { name: 'Accept', value: 'application/json', enabled: true }
-        ],
-        params: [
-          { name: 'userId', value: '1', enabled: true },
-          { name: 'id', value: '1', enabled: true }
+        type: 'folder',
+        name: 'Main folder',
+        elements: [
+          {
+            id: '1',
+            name: 'Request 1',
+            url: 'https://www.google.com',
+            method: 'GET',
+            headers: [
+              { name: 'Content-Type', value: 'application/json', enabled: true },
+              { name: 'Accept', value: 'application/json', enabled: true }
+            ],
+            params: [
+              { name: 'userId', value: '1', enabled: true },
+              { name: 'id', value: '1', enabled: true }
+            ]
+          },{
+            type: 'folder',
+            name: 'Other folder',
+            items: []
+          }
         ]
       }
     ]
