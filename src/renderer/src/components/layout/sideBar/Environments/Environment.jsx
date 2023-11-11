@@ -62,7 +62,7 @@ export default function Environment({ environment, back, update, remove }) {
     <div className={`sidePanel-content ${styles.environment}`}>
       <div className={styles.header}>
         <div className={styles.back}>
-          <ButtonIcon icon='back' onClick={back} />
+          <ButtonIcon icon='arrow' direction='west' onClick={back} />
         </div>
         <div className={styles.title} onClick={editName}>
           {editingName && (

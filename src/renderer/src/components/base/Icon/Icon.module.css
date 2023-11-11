@@ -1,8 +1,25 @@
 .icon {
   aspect-ratio: 1;
+  transition: all 0.1s ease-in-out;
   
   &.spin {
     animation: spin 1.8s linear infinite;
+  }
+
+  &.south {
+    transform: rotate(0deg);
+  }
+
+  &.north {
+    transform: rotate(180deg);
+  }
+
+  &.east {
+    transform: rotate(-90deg);
+  }
+
+  &.west {
+    transform: rotate(90deg);
   }
 }
 

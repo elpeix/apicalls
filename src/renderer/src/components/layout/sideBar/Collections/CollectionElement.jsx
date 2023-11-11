@@ -1,5 +1,6 @@
 import React from 'react'
 import Folder from './Folder'
+import CollectionRequest from './CollectionRequest'
 
 export default function CollectionElement({ element }) {
 
@@ -9,7 +10,7 @@ export default function CollectionElement({ element }) {
   return (
     <>
       { isFolder && <Folder folder={element} />}
-      { !isFolder && <div>{element.name}</div>}
+      { !isFolder && <CollectionRequest collectionRequest={element} />}
     </>
   )
 }

@@ -5,6 +5,7 @@ export default function useTabs(initialTabs) {
   const [tabs, setTabs] = useState([...initialTabs])
 
   const openTab = itemRequest => {
+    console.log('openTab', itemRequest)
     const tab = getTab(itemRequest.id)
     if (tab) {
       setActiveTab(tabs.indexOf(tab))

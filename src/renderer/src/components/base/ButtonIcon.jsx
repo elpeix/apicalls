@@ -8,6 +8,7 @@ export default function ButtonIcon({
   onClick,
   className='',
   disabled=false,
+  direction='south',
   title
 }) {
   return (
@@ -17,7 +18,7 @@ export default function ButtonIcon({
       disabled={disabled}
       title={title}
     >
-      <Icon icon={icon} color={color} size={size}  />
+      <Icon icon={icon} color={color} size={size} direction={direction} />
     </button>
   )
 }

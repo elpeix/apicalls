@@ -12,7 +12,7 @@ export default function AppContextProvider({ children }) {
   const menu = useMenu()
   const tabs = useTabs([{ 
     type: 'history',
-    id: '1',
+    id: '000001',
     active: true,
     date: '2020-01-01T00:00:00.000Z',
     request: {
@@ -30,7 +30,7 @@ export default function AppContextProvider({ children }) {
   },{
     type: 'collection',
     name: 'Get Todos',
-    id: '2',
+    id: '000002',
     active: false,
     request: {
       method: { value: 'GET', label: 'GET', body: false },
@@ -44,7 +44,7 @@ export default function AppContextProvider({ children }) {
     }
   }, {
     type: 'draft',
-    id: '3',
+    id: '000003',
     active: false,
     request: {}
   }])

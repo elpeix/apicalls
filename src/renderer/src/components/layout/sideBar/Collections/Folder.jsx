@@ -17,16 +17,16 @@ export default function Folder({ folder }) {
     <div className={styles.folder}>
       <div className={styles.folderHeader}>
         <div>
-          <ButtonIcon icon='back' onClick={toggleExpand} />
+          <ButtonIcon icon='arrow' direction={expanded ? 'south' : 'east'} onClick={toggleExpand} />
         </div>
-        <div className={styles.folderTitle}>
+        <div className={styles.folderTitle} onClick={toggleExpand}>
           {folder.name}
         </div>
         <div className={styles.folderEdit}>
           <ButtonIcon icon='edit' onClick={() => editFolder} />
         </div>
       </div>
-      { expanded && (
+      { expanded && folder.elements && (
         <div className={styles.folderContent}>
           {folder.elements.map((element, i) => <CollectionElement key={i} element={element} />)}
         </div>
