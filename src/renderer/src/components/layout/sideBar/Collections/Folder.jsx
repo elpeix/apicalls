@@ -15,7 +15,7 @@ export default function Folder({ folder }) {
 
   return (
     <div className={styles.folder}>
-      <div className={styles.folderHeader}>
+      <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''}`}>
         <div>
           <ButtonIcon icon='arrow' direction={expanded ? 'south' : 'east'} onClick={toggleExpand} />
         </div>
