@@ -1,5 +1,6 @@
 .tooltip {
   position: relative;
+  pointer-events: none;
 
   & .content {
     visibility: visible;
@@ -12,7 +13,7 @@
 
     position: absolute;
     z-index: 1;
-    top: calc(100% - 0.1rem);
+    top: 100%;
     left: 0;
   }
 }
