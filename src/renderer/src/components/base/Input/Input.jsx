@@ -1,6 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
+import { useDebounce } from '../../../hooks/useDebounce'
+import Tooltip from '../Tooltip/Tooltip'
 
 export default function Input({
   inputRef,
@@ -12,14 +14,30 @@ export default function Input({
   fontSize = 14
 }) {
 
-  const REGEX = /\{\{([^}]+)\}\}/g // Get {{variable}} from string
+  const REGEX = useMemo(() => /\{\{([^}]+)\}\}/g, []) // Get {{variable}} from string
 
   const { environments } = useContext(AppContext)
   const [internalValue, setInternalValue] = useState(value)
+  const [onOver, setOnOver] = useState(false)
+  const debouncedOnOver = useDebounce(onOver, 500)
+  const debouncedValue = useDebounce(internalValue, 500)
+  const [variableList, setVariableList] = useState([])
   
   useEffect(() => {
     setInternalValue(value)
   }, [value])
+
+  useEffect(() => {
+    if (debouncedValue) {
+      const variables = []
+      internalValue.split(REGEX).forEach(part => {
+        if (environments.variableIsDefined(part)) {
+          variables.push({part, value: environments.getVariableValue(part)})
+        }
+      })
+      setVariableList(variables)
+    }
+  }, [debouncedOnOver, internalValue, REGEX, environments, debouncedValue])
 
   const handleChange = e => {
     setInternalValue(e.target.value)
@@ -38,20 +56,13 @@ export default function Input({
     })
   }
 
-  const mouseOverHandler = () => {
-    console.log('mouse over', internalValue)
-    // TODO: show tooltip with variable value
-    internalValue.split(REGEX).forEach(part => {
-      if (environments.variableIsDefined(part)) {
-        console.log(part, environments.getVariableValue(part))
-      }
-    })
-  }
+  const mouseOverHandler = () => setOnOver(true)
+  const mouseOutHandler = () => setOnOver(false)
 
   const style = { fontSize: `${fontSize}px` }
 
   return (
-    <div className={`${styles.input} ${className}`} onMouseOver={mouseOverHandler}>
+    <div className={`${styles.input} ${className}`} onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
       <div style={style}>
         <div>{highlight()}</div>
       </div>
@@ -63,6 +74,22 @@ export default function Input({
         value={internalValue}
         style={style}
       />
+      { variableList.length > 0 && onOver && debouncedOnOver && (
+        <Tooltip>
+          <div className={styles.variableList}>
+            {internalValue.split(REGEX).map((part, index) => {
+              if (index % 2 === 0) return null
+              const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined
+              return (
+                <>
+                  <span className={className}>{part}</span>
+                  <span className={styles.variableValue}>{environments.getVariableValue(part)}</span>
+                </>
+              )
+            })}
+          </div>
+        </Tooltip>
+      )}
     </div>
   )
 }

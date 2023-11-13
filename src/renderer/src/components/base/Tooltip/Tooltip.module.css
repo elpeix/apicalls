@@ -1,0 +1,18 @@
+.tooltip {
+  position: relative;
+
+  & .content {
+    visibility: visible;
+    max-width: 50rem;
+    background-color: var(--background-base);
+    color: var(--base-color);
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 1px 1px 0.5rem var(--color-10);
+
+    position: absolute;
+    z-index: 1;
+    top: calc(100% - 0.1rem);
+    left: 0;
+  }
+}
