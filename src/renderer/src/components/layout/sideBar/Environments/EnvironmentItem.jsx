@@ -19,12 +19,14 @@ export default function EnvironmentItem({
 
   return (
     <div className={`sidePanel-content-item ${styles.item}`} onClick={() => selectEnvironment(environment)}>
-      <input 
-        type ='checkbox'
-        checked={environment.active}
-        onClick={e => e.stopPropagation()}
-        onChange={onChange}
-      />
+      <div className={styles.checkbox}>
+        <input
+          type ='checkbox'
+          checked={environment.active}
+          onClick={e => e.stopPropagation()}
+          onChange={onChange}
+        />
+      </div>
       <div className={styles.title}>
         {environment.name}
       </div>

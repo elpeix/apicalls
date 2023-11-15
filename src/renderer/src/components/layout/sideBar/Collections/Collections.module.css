@@ -18,6 +18,10 @@
     align-items: center;
     display: flex;
 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     & input {
       width: 100%;
       font-size: 14px;
@@ -46,6 +50,9 @@
 
   & .title {
     flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .edit {
@@ -86,6 +93,9 @@
       padding: 0rem 0.7rem;
       align-items: center;
       flex-grow: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   
     & .folderEdit {
@@ -132,6 +142,10 @@
 
   & .requestName {
     flex-grow: 1;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &:hover {

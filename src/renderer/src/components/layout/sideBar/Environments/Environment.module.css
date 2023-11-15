@@ -17,6 +17,9 @@
     cursor: text;
     align-items: center;
     display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     & input {
       width: 100%;
@@ -86,6 +89,10 @@
 
   & .title {
     flex-grow: 1;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .edit {
