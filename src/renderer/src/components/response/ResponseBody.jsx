@@ -24,7 +24,7 @@ export default function ResponseBody({ value }) {
   }
 
   return (
-    <div className={styles.body}>
+    <div className={`${rawValue.length ? styles.body : styles.bodyNoContent}`}>
       { rawValue && (
         <>
           <div className={styles.bodyHeader}>
@@ -42,7 +42,7 @@ export default function ResponseBody({ value }) {
         </>
       )}
       { !rawValue && (
-        <div>No content</div>
+        <div className={styles.noContent}>No content</div>
       )}
     </div>
   )

@@ -101,12 +101,25 @@
         background-color: var(--base-color);
       }
     }
+
   }
+
 
   .bodyContent {
     height: 100%;
     overflow: hidden;
   }
+}
+
+.bodyNoContent {
+  background-color: var(--color-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: var(--accent-color);
 }
 
 .footer {

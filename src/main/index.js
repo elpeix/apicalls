@@ -48,7 +48,7 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
 
   // Set theme source for nativeTheme
-  nativeTheme.themeSource = store.get('settings.theme', 'system')
+  nativeTheme.themeSource = 'light' //store.get('settings.theme', 'system')
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

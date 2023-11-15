@@ -15,6 +15,10 @@ export default function RequestBar() {
         <Select
           className='select'
           classNamePrefix='select'
+          classNames={{
+            option: ({ data }) => data.value,
+            singleValue: ({ selectProps }) =>  selectProps.value?.value || '',
+          }}
           onChange={onChange}
           defaultValue={request.method}
           isClearable={false}

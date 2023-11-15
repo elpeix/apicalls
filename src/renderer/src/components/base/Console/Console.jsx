@@ -16,6 +16,8 @@ export default function Console({ collapse }) {
 
   const scrollToBottom = () => endRef.current.scrollIntoView({ behavior: 'smooth' })
 
+  console.log('Console render', logs)
+
   return (
     <div className={styles.console}>
       <div className={styles.header} ref={endRef}>
@@ -35,7 +37,7 @@ export default function Console({ collapse }) {
         {logs.map((log, index) => (
           <div key={index} className={styles.log}>
             <div className={`${styles.status} ${styles[getStatusName(log.status)]}`}>{log.status}</div>
-            <div className={styles.method}>{log.method}</div>
+            <div className={`${styles.method} ${log.method}`}>{log.method}</div>
             <div className={styles.url}>{log.url}</div>
             <div className={styles.time}>{log.time} ms</div>
           </div>

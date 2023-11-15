@@ -247,3 +247,25 @@ ul.versions {
     color: var(--accent-color);
   }
 }
+
+.GET {
+  color: var(--method-get-color) !important;
+}
+.POST {
+  color: var(--method-post-color) !important;
+}
+.PUT {
+  color: var(--method-put-color)!important;
+}
+.DELETE {
+  color: var(--method-delete-color)!important;
+}
+.PATCH {
+  color: var(--method-patch-color)!important;
+}
+.HEAD {
+  color: var(--method-head-color)!important;
+}
+.OPTION {
+  color: var(--method-option-color)!important;
+}

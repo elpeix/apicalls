@@ -45,7 +45,7 @@ export default function History() {
         {historyItems.map((historyItem, index) => (
           <div key={index} className={`sidePanel-content-item ${styles.item}`} onClick={() => tabs.openTab(historyItem)}>
             <div className={styles.title}>
-              <div className={styles.method}>{historyItem.request.method?.value}</div>
+              <div className={`${styles.method} ${historyItem.request.method.value}`}>{historyItem.request.method?.value}</div>
               <div className={styles.url}>{historyItem.request.url}</div>
             </div>
             <div className={styles.date}>

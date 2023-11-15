@@ -9,7 +9,7 @@ export default function CollectionRequest({ collectionRequest }) {
 
   return (
     <div className={styles.request} onClick={() => tabs.openTab(collectionRequest)}>
-      <div className={styles.requestMethod}>{request.method.label}</div>
+      <div className={`${styles.requestMethod} ${request.method.value}`}>{request.method.label}</div>
       <div className={styles.requestName}>{collectionRequest.name}</div>
     </div>
   )

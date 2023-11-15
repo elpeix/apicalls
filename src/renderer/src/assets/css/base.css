@@ -30,6 +30,14 @@
   --status-500-color: rgb(223, 48, 48);
   --status-unkonwn-color: rgb(151, 151, 151);
 
+  --method-get-color: rgb(73, 185, 166);
+  --method-post-color: rgb(66, 133, 244);
+  --method-put-color: rgb(251, 142, 0);
+  --method-patch-color: rgb(251, 192, 0);
+  --method-delete-color: rgb(223, 48, 101);
+  --method-head-color: rgb(151, 151, 151);
+  --method-option-color: rgb(158, 78, 248);
+
   --gutter-color: var(--border-color);
   --gutter-color-drag: var(--highlight-color);
   --gutter-transition: 0.2s;
@@ -80,6 +88,14 @@
     --status-300-color: rgb(255, 165, 0);
     --status-400-color: rgb(196, 80, 231);
     --status-500-color: rgb(223, 48, 48);
+    
+    --method-get-color: rgb(45, 151, 133);
+    --method-post-color: rgb(66, 133, 244);
+    --method-put-color: rgb(204, 99, 0);
+    --method-patch-color: rgb(180, 138, 0);
+    --method-delete-color: rgb(223, 48, 101);
+    --method-head-color: rgb(126, 126, 126);
+    --method-option-color: rgb(158, 78, 248);
   }
 }
 

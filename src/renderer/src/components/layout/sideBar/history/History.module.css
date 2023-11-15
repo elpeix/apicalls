@@ -5,6 +5,10 @@
   align-items: center;
   gap: 0.5rem;
 
+  & > .method {
+    font-size: 0.7rem;
+  }
+
   & .url {
     font-size: 0.78rem;
     font-weight: 500;

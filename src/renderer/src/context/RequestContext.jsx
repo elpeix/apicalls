@@ -8,7 +8,7 @@ export default function RequestContextProvider({ tabId, definedRequest, children
   const { history, environments, tabs } = useContext(AppContext)
 
   const methods = useMemo(() => [
-    { value: 'GET', label: 'GET', body: false },
+    { value: 'GET', label: 'GET', body: false, className: 'GET' },
     { value: 'POST', label: 'POST', body: true },
     { value: 'PUT', label: 'PUT', body: true },
     { value: 'PATCH', label: 'PATCH', body: true },
