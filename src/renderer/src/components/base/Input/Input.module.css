@@ -4,6 +4,13 @@
   height: 100%;
   grid-template-columns: 1fr;
   position: relative;
+  overflow: hidden;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 0rem;
+  }
+
 
   & > * {
     letter-spacing: 0.5;
@@ -13,7 +20,6 @@
     grid-row-end: 1;
     grid-column-start: 1;
     grid-column-end: 1;
-    width: 100%;
     height: 100%;
     padding: 0;
     margin: 0;
@@ -29,10 +35,10 @@
 
     & > div {
       pointer-events: none;
-      /* user-select: none; */
       white-space: pre-wrap;
       word-wrap: break-word;
       color: var(--base-color);
+      white-space: nowrap;
 
       & mark {
         background: transparent;

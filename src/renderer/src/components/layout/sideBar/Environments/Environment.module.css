@@ -84,8 +84,12 @@
   gap: 0.5rem !important;
   padding: 0.4rem 0.7rem 0.4rem 0.5rem !important;
   align-items: center;
-  justify-content: start;
   width: 100%;
+
+  & .checkbox {
+    display: flex;
+    align-items: center;
+  }
 
   & .title {
     flex-grow: 1;
