@@ -3,10 +3,12 @@ import RequestUrl from './RequestUrl'
 import Select from 'react-select'
 import { RequestContext } from '../../context/RequestContext'
 import styles from './Request.module.css'
+import SaveButton from './SaveButton'
+import SendButton from './SendButton'
 
 export default function RequestBar() {
 
-  const { request, fetching } = useContext(RequestContext)
+  const { request } = useContext(RequestContext)
   const onChange = value => request.setMethod(value)
 
   return (
@@ -27,9 +29,8 @@ export default function RequestBar() {
           options={request.methods} />
       </div>
       <RequestUrl request={request} />
-      <button className={styles.send} onClick={request.fetch} disabled={fetching}>
-        Send
-      </button>
+      <SendButton />
+      <SaveButton />
     </div>
   )
 }

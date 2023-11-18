@@ -23,7 +23,7 @@ export default function Console({ collapse }) {
       <div className={styles.header} ref={endRef}>
         <div className={styles.title}>Console</div>
         <div className={styles.clear}>
-          <ButtonIcon icon='clear' onClick={context.console.clear}  disabled={context.console.logs.length === 0} />
+          <ButtonIcon icon='clear' onClick={context.console.clear} disabled={context.console.logs.length === 0} />
         </div>
         <div className={styles.close}>
           <ButtonIcon icon='close' onClick={collapse} />

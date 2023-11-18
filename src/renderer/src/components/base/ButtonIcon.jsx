@@ -5,11 +5,11 @@ export default function ButtonIcon({
   icon,
   color='',
   size=20,
-  onClick,
+  onClick=()=>{},
   className='',
   disabled=false,
   direction='south',
-  title
+  title=''
 }) {
   return (
     <button

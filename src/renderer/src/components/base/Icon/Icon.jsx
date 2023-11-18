@@ -5,7 +5,7 @@ import styles from './Icon.module.css'
 
 export default function Icon({ 
   icon,
-  color,
+  color='',
   size=20,
   spin=false,
   direction='south',
