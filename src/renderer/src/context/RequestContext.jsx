@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
 
-export const RequestContext = createContext()
+export const RequestContext = createContext(null)
 
 export default function RequestContextProvider({ tabId, definedRequest, children }) {
 
@@ -14,7 +14,7 @@ export default function RequestContextProvider({ tabId, definedRequest, children
     { value: 'PATCH', label: 'PATCH', body: true },
     { value: 'DELETE', label: 'DELETE', body: false },
     { value: 'HEAD', label: 'HEAD', body: false },
-    { value: 'OPTION', label: 'OPTION', body: false }
+    { value: 'OPTIONS', label: 'OPTIONS', body: false }
   ], [])
 
   console.log('definedRequest', tabId, definedRequest)

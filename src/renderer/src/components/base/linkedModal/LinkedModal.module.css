@@ -1,0 +1,21 @@
+.linkedModal {
+  position: fixed;
+  min-width: 6rem;
+  max-width: 20rem;
+  max-height: 60rem;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+  & > * {
+    padding: 0.3rem;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.8rem;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+}

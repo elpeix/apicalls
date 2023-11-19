@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import styles from './Request.module.css'
+import Icon from '../base/Icon/Icon'
 
 export default function SendButton() {
 
@@ -8,7 +9,8 @@ export default function SendButton() {
 
   return (
     <button className={styles.send} onClick={request.fetch} disabled={fetching}>
-      Send
+      <div className={styles.buttonIcon}><Icon icon="send" /></div>
+      <div className={styles.buttonText}>Send</div>
     </button>
   )
 }

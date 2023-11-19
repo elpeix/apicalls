@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
-import Tooltip from '../Tooltip/Tooltip'
+import LinkedModal from '../linkedModal/LinkedModal'
 
 export default function Input({
   inputRef,
@@ -62,21 +62,23 @@ export default function Input({
   const style = { fontSize: `${fontSize}px` }
 
   return (
-    <div className={`${styles.input} ${className}`} onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
-      <div style={style}>
-        <div>{highlight()}</div>
+    <>
+      <div className={`${styles.input} ${className}`} onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
+        <div style={style}>
+          <div>{highlight()}</div>
+        </div>
+        <input
+          ref={inputRef}
+          placeholder={placeholder}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={internalValue}
+          style={style}
+        />
       </div>
-      <input
-        ref={inputRef}
-        placeholder={placeholder}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        value={internalValue}
-        style={style}
-      />
       { variableList.length > 0 && onOver && debouncedOnOver && (
-        <Tooltip>
-          <div className={styles.variableList}>
+        <LinkedModal parentRef={inputRef} topOffset={3}>
+          <div className={styles.variableList} onMouseOver={mouseOverHandler} >
             {internalValue.split(REGEX).map((part, index) => {
               if (index % 2 === 0) return null
               const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined
@@ -88,8 +90,8 @@ export default function Input({
               )
             })}
           </div>
-        </Tooltip>
+        </LinkedModal>
       )}
-    </div>
+    </>
   )
 }

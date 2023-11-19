@@ -98,13 +98,11 @@ button {
 
   &:focus {
     outline: none;
-    border-color: var(--accent-color);
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    border: 1px solid var(--border-color);
     background-color: transparent;
     color: var(--accent-color);
   }
@@ -266,6 +264,6 @@ ul.versions {
 .HEAD {
   color: var(--method-head-color)!important;
 }
-.OPTION {
+.OPTIONS {
   color: var(--method-option-color)!important;
 }
