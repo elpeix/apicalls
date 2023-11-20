@@ -12,12 +12,11 @@ export default function Layout() {
   const sidePanel = useRef()
   const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false)
   const expandSidePanel = () => sidePanel.current.expand()
-  const canShowSelected = () => !sidePanelCollapsed && appContext.menu.selected
 
   return (
     <PanelGroup direction="horizontal">
       <SideMenu
-        showSelected={canShowSelected()}
+        showSelected={!sidePanelCollapsed && appContext.menu.selected}
         onSelect={expandSidePanel}
         isCollapsed={sidePanelCollapsed}
         collapse={() => sidePanel.current.collapse()}
@@ -28,7 +27,8 @@ export default function Layout() {
         maxSizePercentage={40}
         collapsible={true}
         ref={sidePanel}
-        onCollapse={setSidePanelCollapsed}
+        onCollapse={() => setSidePanelCollapsed(true)}
+        onExpand={() => setSidePanelCollapsed(false)}
       >
         <SidePanel />
       </Panel>

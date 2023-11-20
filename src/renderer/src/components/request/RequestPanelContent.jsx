@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import RequestBar from './RequestBar'
 import { Panel, PanelGroup } from 'react-resizable-panels'
@@ -53,7 +53,8 @@ export default function RequestPanelContent() {
           maxSizePercentage={50}
           collapsible={true}
           ref={requestPanel}
-          onCollapse={setRequestPanelCollapsed}
+          onCollapse={() => setRequestPanelCollapsed(true)}
+          onExpand={() => setRequestPanelCollapsed(false)}
         >
           <RequestTabs />
         </Panel>
@@ -62,13 +63,15 @@ export default function RequestPanelContent() {
           <Response showConsole={expandConsole} consoleIsHidden={consoleCollapsed} />
         </Panel>
         <Gutter mode='horizontal' onDoubleClick={toggleConsole} />
+
         <Panel
           defaultSizePercentage={0}
           minSizePercentage={10}
           maxSizePercentage={35}
           collapsible={true}
           ref={consolePanel}
-          onCollapse={setConsoleCollapsed}
+          onCollapse={() => setConsoleCollapsed(true)}
+          onExpand={() => setConsoleCollapsed(false)}
         >
           <Console collapse={collapseConsole} />
         </Panel>

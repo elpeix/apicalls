@@ -17,7 +17,7 @@ export default function RequestContextProvider({ tabId, definedRequest, children
     { value: 'OPTIONS', label: 'OPTIONS', body: false }
   ], [])
 
-  console.log('definedRequest', tabId, definedRequest)
+  // console.log('definedRequest', tabId, definedRequest)
 
   const [changed, setChanged] = useState(false)
   const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])

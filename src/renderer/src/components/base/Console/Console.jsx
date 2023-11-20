@@ -16,8 +16,6 @@ export default function Console({ collapse }) {
 
   const scrollToBottom = () => endRef.current.scrollIntoView({ behavior: 'smooth' })
 
-  console.log('Console render', logs)
-
   return (
     <div className={styles.console}>
       <div className={styles.header} ref={endRef}>
