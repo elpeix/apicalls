@@ -78,7 +78,7 @@ export default function Input({
       </div>
       { variableList.length > 0 && onOver && debouncedOnOver && (
         <LinkedModal parentRef={inputRef} topOffset={3}>
-          <div className={styles.variableList} onMouseOver={mouseOverHandler} >
+          <div className={styles.variableList} onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
             {internalValue.split(REGEX).map((part, index) => {
               if (index % 2 === 0) return null
               const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined

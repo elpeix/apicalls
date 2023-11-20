@@ -130,6 +130,10 @@
   background-color: var(--background-content);
   border: 1px solid var(--border-color);
   border-right: none;
+
+  &:hover {
+    background-color: var(--hover-color);
+  }
 }
 
 .params,
