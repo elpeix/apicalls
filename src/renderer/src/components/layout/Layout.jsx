@@ -23,9 +23,9 @@ export default function Layout() {
         collapse={() => sidePanel.current.collapse()}
       />
       <Panel
-        defaultSize={15}
-        minSize={10}
-        maxSize={40}
+        defaultSizePercentage={15}
+        minSizePercentage={10}
+        maxSizePercentage={40}
         collapsible={true}
         ref={sidePanel}
         onCollapse={setSidePanelCollapsed}
