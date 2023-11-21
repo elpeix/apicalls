@@ -23,6 +23,7 @@
   --sidePanel-color-hover: var(--color-7);
   --highlight-color: #0cf;
   --error-background-color: rgba(223, 48, 48, 0.1);
+  --overlay-color: rgba(0, 0, 0, 0.5);
 
   --status-200-color: rgb(108, 185, 73);
   --status-300-color: rgb(255, 165, 0);

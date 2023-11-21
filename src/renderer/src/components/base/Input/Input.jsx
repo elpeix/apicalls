@@ -19,8 +19,8 @@ export default function Input({
   const { environments } = useContext(AppContext)
   const [internalValue, setInternalValue] = useState(value)
   const [onOver, setOnOver] = useState(false)
-  const debouncedOnOver = useDebounce(onOver, 500)
-  const debouncedValue = useDebounce(internalValue, 500)
+  const debouncedOnOver = useDebounce(onOver, 700)
+  const debouncedValue = useDebounce(internalValue, 700)
   const [variableList, setVariableList] = useState([])
   
   useEffect(() => {
@@ -84,8 +84,8 @@ export default function Input({
               const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined
               return (
                 <>
-                  <span className={className}>{part}</span>
-                  <span className={styles.variableValue}>{environments.getVariableValue(part)}</span>
+                  <span key={`${index}_${part}`} className={className}>{part}</span>
+                  <span key={`${index}_${value}`} className={styles.variableValue}>{environments.getVariableValue(part)}</span>
                 </>
               )
             })}
