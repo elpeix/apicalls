@@ -2,15 +2,23 @@ import React, { useRef, useState } from 'react'
 import styles from './Request.module.css'
 import Icon from '../base/Icon/Icon'
 import LinkedModal from '../base/linkedModal/LinkedModal'
+import Dialog from '../base/dialog/Dialog'
 
 export default function SaveButton() {
 
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
+  const [showDialog, setShowDialog] = useState(false)
 
   const openModal = (e) => {
     e.stopPropagation()
     setShowModal(!showModal)
+  }
+
+  const openDialog = (e) => {
+    e.stopPropagation()
+    setShowDialog(true)
+    setShowModal(false)
   }
 
   return (
@@ -30,8 +38,13 @@ export default function SaveButton() {
           className={styles.saveAsModal}
           closeModal={() => setShowModal(false)}
         >
-          <div>Save as...</div>
+          <div onClick={openDialog}>Save as...</div>
         </LinkedModal>
+      )}
+      { showDialog && (
+        <Dialog onClose={() => setShowDialog(false)}>
+          <div>Save as...</div>
+        </Dialog>
       )}
     </>
   )
