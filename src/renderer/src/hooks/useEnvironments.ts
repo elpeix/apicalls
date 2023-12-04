@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export function useEnvironments() {
+export function useEnvironments(): EnvironmentsHook {
   // TODO: use localStorage to persist environments
 
   const [environments, setEnvironments] = useState<Environment[]>([
@@ -27,15 +27,15 @@ export function useEnvironments() {
     return newEnvironment
   }
   const add = (environment: Environment) => setEnvironments([...environments, environment])
-  const remove = (id: number) =>
+  const remove = (id: number | string) =>
     setEnvironments(environments.filter((environment) => environment.id !== id))
   const update = (environment: Environment) =>
     setEnvironments(environments.map((env) => (env.id === environment.id ? environment : env)))
   const clear = () => setEnvironments([])
   const getAll = () => environments
-  const get = (id: number) => environments.find((environment) => environment.id === id)
+  const get = (id: number | string) => environments.find((environment) => environment.id === id)
   const getActive = () => environments.find((environment) => environment.active)
-  const active = (id: number) =>
+  const active = (id: number | string) =>
     setEnvironments(
       environments.map((environment) => {
         environment.active = environment.id === id
@@ -49,10 +49,10 @@ export function useEnvironments() {
         return environment
       })
     )
-  const variableIsDefined = (name: string) => {
+  const variableIsDefined = (name: string): boolean => {
     const activeEnvironment = getActive()
     if (!activeEnvironment) return false
-    return activeEnvironment.variables.find((variable) => variable.name === name)
+    return activeEnvironment.variables.some((variable) => variable.name === name)
   }
   const replaceVariables = (value: string) => {
     const activeEnvironment = getActive()

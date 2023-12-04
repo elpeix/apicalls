@@ -6,16 +6,16 @@ import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
 
 export const AppContext = createContext<{
-  menu: any,
+  menu: MenuHook | null,
   tabs: any,
-  collections: any,
-  environments: any,
+  collections: CollectionsHook | null,
+  environments: EnvironmentsHook | null,
   history: any,
 }>({
-  menu: {},
+  menu: null,
   tabs: {},
-  collections: {},
-  environments: {},
+  collections: null,
+  environments: null,
   history: {}
 })
 

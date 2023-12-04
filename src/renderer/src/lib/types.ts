@@ -76,6 +76,38 @@ type RequestLog = {
   time: number
 }
 
+type CollectionsHook = {
+  create: () => Collection
+  add: (collection: Collection) => void
+  remove: (id: number | string) => void
+  update: (collection: Collection) => void
+  clear: () => void
+  getAll: () => Collection[]
+  get: (id: number | string) => Collection | undefined
+}
+
+type EnvironmentsHook = {
+  create: () => Environment
+  add: (environment: Environment) => void
+  remove: (id: number | string) => void
+  update: (environment: Environment) => void
+  clear: () => void
+  getAll: () => Environment[]
+  get: (id: number | string) => Environment | undefined
+  getActive: () => Environment | undefined
+  active: (id: number | string) => void
+  deactive: () => void
+  variableIsDefined: (name: string) => boolean
+  replaceVariables: (value: string) => string
+  getVariableValue: (name: string) => string
+}
+
+type MenuHook = {
+  items: { id?: string | number; title?: string; spacer?: boolean }[]
+  selected: { id?: string | number; title?: string }
+  select: (id: string | number) => void
+}
+
 type RequestContextRequest = {
   methods: Method[]
   method: Method

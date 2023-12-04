@@ -3,9 +3,14 @@ import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import CollectionElement from './CollectionElement'
 
-export default function Collection({ collection, back, update, remove }) {
+export default function Collection({ collection, back, update, remove }: {
+  collection: Collection,
+  back: () => void,
+  update: (collection: Collection) => void,
+  remove: () => void
+}) {
 
-  const nameRef = useRef(null)
+  const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [editingName, setEditingName] = useState(false)
 
@@ -14,22 +19,26 @@ export default function Collection({ collection, back, update, remove }) {
 
     if (!collection.name) {
       setEditingName(true)
-      setTimeout(() => nameRef.current.focus(), 0)
+      setTimeout(() => {
+        if (!nameRef.current) return
+        nameRef.current.focus()
+      }, 0)
     }
   }, [collection])
 
   const editName = () => {
     setEditingName(true)
     setTimeout(() => {
+      if (!nameRef.current) return
       nameRef.current.setSelectionRange(0, coll.name.length)
       nameRef.current.focus()
     }, 0)
   }
-  const changeName = (e) => {
+  const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setColl({ ...coll, name: e.target.value })
     update({ ...coll, name: e.target.value })
   }
-  const onKeyDown = (e) => {
+  const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setEditingName(false)
     }

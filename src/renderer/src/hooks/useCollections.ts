@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export function useCollections() {
+export function useCollections(): CollectionsHook {
   const [collections, setCollections] = useState<Collection[]>([
     {
       id: '1',

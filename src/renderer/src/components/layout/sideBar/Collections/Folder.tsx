@@ -3,7 +3,9 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Collections.module.css'
 import CollectionElement from './CollectionElement'
 
-export default function Folder({ folder }) {
+export default function Folder({ folder }: {
+  folder: CollectionFolder
+}) {
 
   const [expanded, setExpanded] = useState(false)
 

@@ -2,7 +2,9 @@ import React, { useContext } from 'react'
 import styles from './Collections.module.css'
 import { AppContext } from '../../../../context/AppContext'
 
-export default function CollectionRequest({ collectionRequest }) {
+export default function CollectionRequest({ collectionRequest }: {
+  collectionRequest: RequestCollection
+}) {
 
   const { tabs } = useContext(AppContext)
   const { request } = collectionRequest

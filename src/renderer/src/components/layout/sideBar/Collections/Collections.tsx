@@ -7,16 +7,21 @@ import Collection from './Collection'
 export default function Collections() {
 
   const { collections } = useContext(AppContext)
-  const [selectedCollection, setSelectedCollection] = useState(null)
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
 
   const add = () => {
+    if (!collections) return
     const collection = collections.create()
     setSelectedCollection(collection)
   }
 
-  const update = (collection) =>  collections.update(collection)
+  const update = (collection: Collection) =>  {
+    if (!collections) return
+    collections.update(collection)
+  }
 
   const remove = () => {
+    if (!selectedCollection || !collections) return
     collections.remove(selectedCollection.id)
     setSelectedCollection(null)
   }
@@ -41,7 +46,7 @@ export default function Collections() {
 
       { !selectedCollection && (
         <div className='sidePanel-content'>
-          {collections.getAll().map(collection => (
+          {collections != null && collections.getAll().map(collection => (
             <CollectionItem key={collection.id} collection={collection} selectCollection={setSelectedCollection} />
           ))}
         </div>
