@@ -16,5 +16,6 @@ if (process.contextIsolated) {
   }
 } else {
   window.electron = electronAPI
+  // @ts-ignore
   window.api = api
 }

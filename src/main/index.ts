@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, nativeTheme, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/icon.png'
 import Store from 'electron-store'
 
 const store = new Store()
@@ -18,7 +18,7 @@ function createWindow() {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       webSecurity: false,
-      spellcheck: false,
+      spellcheck: false
     }
   })
 
@@ -48,7 +48,7 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
 
   // Set theme source for nativeTheme
-  nativeTheme.themeSource = store.get('settings.theme', 'system')
+  nativeTheme.themeSource = store.get('settings.theme', 'system') as 'light' | 'dark' | 'system'
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -78,10 +78,13 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('get-settings', (event) => {
-  event.reply('settings', store.get('settings', {
-    theme: 'system',
-    proxy: ''
-  }))
+  event.reply(
+    'settings',
+    store.get('settings', {
+      theme: 'system',
+      proxy: ''
+    })
+  )
 })
 
 ipcMain.on('save-settings', (_, settings) => {
