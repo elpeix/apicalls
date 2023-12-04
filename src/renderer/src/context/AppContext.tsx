@@ -6,65 +6,68 @@ import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
 
 export const AppContext = createContext<{
-  menu: MenuHook | null,
-  tabs: any,
-  collections: CollectionsHook | null,
-  environments: EnvironmentsHook | null,
-  history: any,
+  menu: MenuHook | null
+  tabs: TabsHook | null
+  collections: CollectionsHook | null
+  environments: EnvironmentsHook | null
+  history: HistoryHook | null
 }>({
   menu: null,
-  tabs: {},
+  tabs: null,
   collections: null,
   environments: null,
-  history: {}
+  history: null
 })
 
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
-
   const menu = useMenu()
-  const tabs = useTabs([{ 
-    type: 'history',
-    id: '000001',
-    active: true,
-    date: '2020-01-01T00:00:00.000Z',
-    request: {
-      method: { value: 'GET', label: 'GET', body: false },
-      url: 'https://jsonplaceholder.typicode.com/todos/1',
-      headers: [
-        { name: 'Content-Type', value: 'application/json', enabled: true },
-        { name: 'Accept', value: 'application/json', enabled: true }
-      ],
-      params: [
-        { name: 'userId', value: '1', enabled: true },
-        { name: 'id', value: '1', enabled: true }
-      ]
+  const tabs = useTabs([
+    {
+      type: 'history',
+      id: '000001',
+      active: true,
+      date: '2020-01-01T00:00:00.000Z',
+      request: {
+        method: { value: 'GET', label: 'GET', body: false },
+        url: 'https://jsonplaceholder.typicode.com/todos/1',
+        headers: [
+          { name: 'Content-Type', value: 'application/json', enabled: true },
+          { name: 'Accept', value: 'application/json', enabled: true }
+        ],
+        params: [
+          { name: 'userId', value: '1', enabled: true },
+          { name: 'id', value: '1', enabled: true }
+        ]
+      }
+    },
+    {
+      type: 'collection',
+      name: 'Get Todos',
+      id: '000002',
+      active: false,
+      request: {
+        method: { value: 'GET', label: 'GET', body: false },
+        url: 'https://jsonplaceholder.typicode.com/todos/',
+        headers: [
+          { name: 'Content-Type', value: 'application/json', enabled: true },
+          { name: 'Accept', value: 'application/json', enabled: true },
+          { name: 'x-app-id', value: '{{appId}}', enabled: true }
+        ],
+        params: []
+      }
+    },
+    {
+      type: 'draft',
+      id: '000003',
+      active: false,
+      request: {
+        url: '',
+        method: { value: 'GET', label: 'GET', body: false },
+        headers: [],
+        params: []
+      }
     }
-  },{
-    type: 'collection',
-    name: 'Get Todos',
-    id: '000002',
-    active: false,
-    request: {
-      method: { value: 'GET', label: 'GET', body: false },
-      url: 'https://jsonplaceholder.typicode.com/todos/',
-      headers: [
-        { name: 'Content-Type', value: 'application/json', enabled: true },
-        { name: 'Accept', value: 'application/json', enabled: true },
-        { name: 'x-app-id', value: '{{appId}}', enabled: true }
-      ],
-      params: []
-    }
-  }, {
-    type: 'draft',
-    id: '000003',
-    active: false,
-    request: {
-      url: '',
-      method: { value: 'GET', label: 'GET', body: false },
-      headers: [],
-      params: []
-    }
-  }])
+  ])
   const collections = useCollections()
   const environments = useEnvironments()
   const history = useHistory()
@@ -77,9 +80,5 @@ export default function AppContextProvider({ children }: { children: React.React
     history
   }
 
-  return (
-    <AppContext.Provider value={contextValue}>
-      {children}
-    </AppContext.Provider>
-  )
+  return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
 }

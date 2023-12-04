@@ -6,10 +6,13 @@ import NewTab from '../tabs/newTab/NewTab'
 import RequestPanel from '../request/RequestPanel'
 
 export default function ContentTabs() {
-
   const { tabs } = useContext(AppContext)
-  const onSelect = index => tabs.setActiveTab(index)
-  const onWheel = e => {
+  const onSelect = (index: number, _: number, __: Event) => {
+    if (!tabs) return false
+    tabs.setActiveTab(index)
+    return true
+  }
+  const onWheel = (e: React.WheelEvent) => {
     const el = e.currentTarget
     const scrollLeft = el.scrollLeft
     el.scrollTo({
@@ -18,25 +21,27 @@ export default function ContentTabs() {
     })
   }
 
+  if (!tabs) return null
+
   return (
-    <div className='panel-tabs'>
+    <div className="panel-tabs">
       <Tabs onSelect={onSelect} selectedIndex={tabs.getSelectedTabIndex()}>
-        <div className='panel-tabs-header'>
-          <div className='panel-tabs-header-list' onWheel={onWheel}>
+        <div className="panel-tabs-header">
+          <div className="panel-tabs-header-list" onWheel={onWheel}>
             <TabList>
-              {tabs.getTabs().map(tab => (
-                <Tab key={tab.id} className='request-tab'>
-                  <TabTitle tab={tab} /> 
+              {tabs.getTabs().map((tab) => (
+                <Tab key={tab.id} className="request-tab">
+                  <TabTitle tab={tab} />
                 </Tab>
               ))}
             </TabList>
           </div>
           <NewTab />
         </div>
-        <div className='panel-tabs-content'>
-          {tabs.getTabs().map(tab => (
+        <div className="panel-tabs-content">
+          {tabs.getTabs().map((tab) => (
             <TabPanel key={tab.id} forceRender={true}>
-              <RequestPanel tab={tab} definedRequest={tab.request} />
+              <RequestPanel tab={tab} />
             </TabPanel>
           ))}
         </div>

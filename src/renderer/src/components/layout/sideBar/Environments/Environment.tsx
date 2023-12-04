@@ -3,9 +3,18 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Environment.module.css'
 import EnvironmentVariable from './EnvironmentVariable'
 
-export default function Environment({ environment, back, update, remove }) {
-
-  const nameRef = useRef(null)
+export default function Environment({
+  environment,
+  back,
+  update,
+  remove
+}: {
+  environment: Environment
+  back: () => void
+  update: (environment: Environment) => void
+  remove: () => void
+}) {
+  const nameRef = useRef<HTMLInputElement>(null)
   const [env, setEnv] = useState(environment)
   const [editingName, setEditingName] = useState(false)
 
@@ -14,22 +23,26 @@ export default function Environment({ environment, back, update, remove }) {
 
     if (!environment.name) {
       setEditingName(true)
-      setTimeout(() => nameRef.current.focus(), 0)
+      setTimeout(() => {
+        if (!nameRef.current) return
+        nameRef.current.focus()
+      }, 0)
     }
   }, [environment])
 
   const editName = () => {
     setEditingName(true)
     setTimeout(() => {
+      if (!nameRef.current) return
       nameRef.current.setSelectionRange(0, env.name.length)
       nameRef.current.focus()
     }, 0)
   }
-  const changeName = (e) => {
+  const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEnv({ ...env, name: e.target.value })
     update({ ...env, name: e.target.value })
   }
-  const onKeyDown = (e) => {
+  const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setEditingName(false)
     }
@@ -42,18 +55,18 @@ export default function Environment({ environment, back, update, remove }) {
     const variables = [...env.variables, { name: '', value: '' }]
     updateVariables({ variables })
   }
-  const removeVariable = (index) => {
+  const removeVariable = (index: number) => {
     const variables = [...env.variables]
     variables.splice(index, 1)
     updateVariables({ variables })
   }
-  const updateVariable = (index, variable) => {
+  const updateVariable = (index: number, variable: KeyValue) => {
     const variables = [...env.variables]
     variables[index] = { ...variables[index], ...variable }
     updateVariables({ variables })
   }
 
-  const updateVariables = ({ variables }) => {
+  const updateVariables = ({ variables }: { variables: KeyValue[] }) => {
     setEnv({ ...env, variables })
     update({ ...env, variables })
   }
@@ -62,24 +75,24 @@ export default function Environment({ environment, back, update, remove }) {
     <div className={`sidePanel-content ${styles.environment}`}>
       <div className={styles.header}>
         <div className={styles.back}>
-          <ButtonIcon icon='arrow' direction='west' onClick={back} />
+          <ButtonIcon icon="arrow" direction="west" onClick={back} />
         </div>
         <div className={styles.title} onClick={editName}>
           {editingName && (
             <input
               ref={nameRef}
               className={styles.nameInput}
-              placeholder='Environment name'
+              placeholder="Environment name"
               value={env.name}
               onChange={changeName}
               onBlur={() => setEditingName(false)}
               onKeyDown={onKeyDown}
             />
           )}
-          {!editingName && (env.name)}
+          {!editingName && env.name}
         </div>
         <div className={styles.remove}>
-          <ButtonIcon icon='delete' onClick={remove} />
+          <ButtonIcon icon="delete" onClick={remove} />
         </div>
       </div>
       <div className={styles.content}>
@@ -87,7 +100,7 @@ export default function Environment({ environment, back, update, remove }) {
           <EnvironmentVariable
             key={index}
             variable={variable}
-            id={index}
+            index={index}
             className={styles.variable}
             removeVariable={removeVariable}
             updateVariable={updateVariable}
@@ -96,7 +109,7 @@ export default function Environment({ environment, back, update, remove }) {
       </div>
       <div className={styles.footer}>
         <div>
-          <ButtonIcon icon='more' onClick={addVariable} />
+          <ButtonIcon icon="more" onClick={addVariable} />
         </div>
       </div>
     </div>

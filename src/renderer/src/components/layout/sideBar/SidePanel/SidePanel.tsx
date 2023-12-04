@@ -7,18 +7,17 @@ import Settings from '../Settings/Settings'
 import Collections from '../Collections/Collections'
 
 export default function SidePanel() {
-
   const { menu } = useContext(AppContext)
 
   return (
     <aside className={styles.sidePanel}>
       <div className={styles.content}>
-        { menu.selected && (
+        {menu && menu.selected && (
           <div className={styles.sidePanel}>
-            { menu.selected.id === 'collection' && <Collections /> }
-            { menu.selected.id === 'environment' && <Environments /> }
-            { menu.selected.id === 'history' && <History /> }
-            { menu.selected.id === 'settings' && <Settings /> }
+            {menu.selected.id === 'collection' && <Collections />}
+            {menu.selected.id === 'environment' && <Environments />}
+            {menu.selected.id === 'history' && <History />}
+            {menu.selected.id === 'settings' && <Settings />}
           </div>
         )}
       </div>

@@ -3,20 +3,19 @@ import Icons from '../../../assets/icons/icons.svg'
 import useTheme from '../../../hooks/useTheme'
 import styles from './Icon.module.css'
 
-export default function Icon({ 
+export default function Icon({
   icon,
-  color='',
-  size=20,
-  spin=false,
-  direction='south',
+  color = '',
+  size = 20,
+  spin = false,
+  direction = 'south'
 }: {
-  icon: string,
-  color?: string,
-  size?: number,
-  spin?: boolean,
-  direction?: 'north' | 'south' | 'east' | 'west',
+  icon: string | number
+  color?: string
+  size?: number
+  spin?: boolean
+  direction?: 'north' | 'south' | 'east' | 'west'
 }) {
-
   const LIGHT_COLOR = '#444'
   const DARK_COLOR = '#bbb'
 
@@ -32,11 +31,7 @@ export default function Icon({
   const className = `${styles.icon} icon-${icon} ${spin ? styles.spin : ''} ${styles[direction]}`
 
   return (
-    <svg
-      className={className} 
-      fill={getIconColor()}
-      width={size}
-      height={size}>
+    <svg className={className} fill={getIconColor()} width={size} height={size}>
       <use xlinkHref={`${Icons}#${icon}`} />
     </svg>
   )

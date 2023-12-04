@@ -3,13 +3,17 @@ import Versions from './Versions'
 import styles from './Settings.module.css'
 
 export default function Settings() {
+  const [settings, setSettings] = useState<AppSettings>({
+    theme: 'light',
+    maxHistory: 100,
+    timeout: 1000,
+    proxy: ''
+  })
 
-  const [settings, setSettings] = useState({})
-  
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
     ipcRenderer.send('get-settings')
-    ipcRenderer.on('settings', (_, settings) => setSettings(settings))
+    ipcRenderer.on('settings', (_: any, settings: AppSettings) => setSettings(settings))
     return () => ipcRenderer.removeAllListeners('settings')
   }, [])
 
@@ -18,10 +22,21 @@ export default function Settings() {
     ipcRenderer.send('save-settings', settings)
   }
 
+  const getThemeName = (value: string): Theme => {
+    switch (value) {
+      case 'light':
+        return 'light'
+      case 'dark':
+        return 'dark'
+      default:
+        return 'system'
+    }
+  }
+
   return (
     <div className={styles.settings}>
-      <div className='sidePanel-header'>
-        <div className='sidePanel-header-title'>Settings</div>
+      <div className="sidePanel-header">
+        <div className="sidePanel-header-title">Settings</div>
       </div>
       <div className={`sidePanel-content ${styles.content}`}>
         <div className={styles.main}>
@@ -30,7 +45,7 @@ export default function Settings() {
             <select
               id="theme"
               value={settings.theme}
-              onChange={e => setSettings({ ...settings, theme: e.target.value })}
+              onChange={(e) => setSettings({ ...settings, theme: getThemeName(e.target.value) })}
             >
               <option value="light">Light</option>
               <option value="dark">Dark</option>
@@ -45,8 +60,8 @@ export default function Settings() {
               value={settings.maxHistory}
               min={10}
               max={1000}
-              placeholder='100'
-              onChange={e => setSettings({ ...settings, maxHistory: e.target.value })}
+              placeholder="100"
+              onChange={(e) => setSettings({ ...settings, maxHistory: Number(e.target.value) })}
             />
           </div>
           <div className={styles.group}>
@@ -57,8 +72,8 @@ export default function Settings() {
               min={1}
               max={10000}
               value={settings.timeout}
-              placeholder='1000'
-              onChange={e => setSettings({ ...settings, timeout: e.target.value })}
+              placeholder="1000"
+              onChange={(e) => setSettings({ ...settings, timeout: Number(e.target.value) })}
             />
           </div>
           <div className={styles.group}>
@@ -67,8 +82,8 @@ export default function Settings() {
               id="proxy"
               type="text"
               value={settings.proxy}
-              placeholder='http://localhost:8080'
-              onChange={e => setSettings({ ...settings, proxy: e.target.value })}
+              placeholder="http://localhost:8080"
+              onChange={(e) => setSettings({ ...settings, proxy: e.target.value })}
             />
           </div>
 

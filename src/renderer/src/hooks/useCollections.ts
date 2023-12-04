@@ -49,13 +49,13 @@ export function useCollections(): CollectionsHook {
   }
 
   const add = (collection: Collection) => setCollections([...collections, collection])
-  const remove = (id: number | string) =>
+  const remove = (id: Identifier) =>
     setCollections(collections.filter((collection) => collection.id !== id))
   const update = (collection: Collection) =>
     setCollections(collections.map((coll) => (coll.id === collection.id ? collection : coll)))
   const clear = () => setCollections([])
   const getAll = () => collections
-  const get = (id: number | string) => collections.find((collection) => collection.id === id)
+  const get = (id: Identifier) => collections.find((collection) => collection.id === id)
 
   return {
     create,

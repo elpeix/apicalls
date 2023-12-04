@@ -3,13 +3,17 @@ import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import CollectionElement from './CollectionElement'
 
-export default function Collection({ collection, back, update, remove }: {
-  collection: Collection,
-  back: () => void,
-  update: (collection: Collection) => void,
+export default function Collection({
+  collection,
+  back,
+  update,
+  remove
+}: {
+  collection: Collection
+  back: () => void
+  update: (collection: Collection) => void
   remove: () => void
 }) {
-
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [editingName, setEditingName] = useState(false)
@@ -51,28 +55,30 @@ export default function Collection({ collection, back, update, remove }: {
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
         <div className={styles.back}>
-          <ButtonIcon icon='arrow' direction='west' onClick={back} />
+          <ButtonIcon icon="arrow" direction="west" onClick={back} />
         </div>
         <div className={styles.title} onClick={editName}>
           {editingName && (
             <input
               ref={nameRef}
               className={styles.nameInput}
-              placeholder='Collection name'
+              placeholder="Collection name"
               value={coll.name}
               onChange={changeName}
               onBlur={() => setEditingName(false)}
               onKeyDown={onKeyDown}
             />
           )}
-          {!editingName && (coll.name)}
+          {!editingName && coll.name}
         </div>
         <div className={styles.remove}>
-          <ButtonIcon icon='delete' onClick={remove} />
+          <ButtonIcon icon="delete" onClick={remove} />
         </div>
       </div>
       <div className={styles.collectionContent}>
-        {coll.elements.map((element, i) => <CollectionElement key={i} element={element} />)}
+        {coll.elements.map((element, i) => (
+          <CollectionElement key={i} element={element} />
+        ))}
       </div>
     </div>
   )

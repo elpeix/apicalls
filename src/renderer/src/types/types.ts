@@ -1,3 +1,5 @@
+type Identifier = number | string
+
 type Method = {
   value: string
   label: string
@@ -20,30 +22,19 @@ type RequestBase = {
 }
 
 type RequestType = {
-  id: number | string
+  type: 'draft' | 'history' | 'collection'
+  id: Identifier
   name?: string
+  date?: string
   request: RequestBase
 }
 
-type RequestDraft = RequestType & {
-  type: 'draft'
-}
-
-type RequestHistory = RequestType & {
-  type: 'history'
-  date: string
-}
-
-type RequestCollection = RequestType & {
-  type: 'collection'
-}
-
-type Tab = (RequestDraft | RequestHistory | RequestCollection) & {
+type Tab = RequestType & {
   active: boolean
 }
 
 type Environment = {
-  id: number | string
+  id: Identifier
   name: string
   active: boolean
   variables: KeyValue[]
@@ -52,21 +43,34 @@ type Environment = {
 type CollectionFolder = {
   type: 'folder'
   name: string
-  elements: (RequestCollection | CollectionFolder)[]
+  elements: (CollectionFolder | RequestType)[]
 }
 
 type Collection = {
-  id: number | string
+  id: Identifier
   name: string
-  elements: (CollectionFolder | RequestCollection)[]
+  elements: (CollectionFolder | RequestType)[]
 }
 
 type HistoryHook = {
-  getAll: () => RequestHistory[]
-  add: (request: RequestHistory) => void
+  getAll: () => RequestType[]
+  add: (request: RequestType) => void
   remove: (id: string) => void
   clear: () => void
-  get: (id: number | string) => RequestHistory | undefined
+  get: (id: Identifier) => RequestType | undefined
+}
+
+type TabsHook = {
+  openTab: (itemRequest: RequestType) => void
+  newTab: (itemRequest?: RequestType) => void
+  addTab: (tab: Tab) => void
+  removeTab: (tabId: Identifier) => void
+  updateTab: (tabId: Identifier, tab: Tab) => void
+  updateTabRequest: (tabId: Identifier, request: RequestBase) => void
+  getTab: (tabId: Identifier) => Tab | undefined
+  getTabs: () => Tab[]
+  setActiveTab: (index: number) => void
+  getSelectedTabIndex: () => number
 }
 
 type RequestLog = {
@@ -79,33 +83,39 @@ type RequestLog = {
 type CollectionsHook = {
   create: () => Collection
   add: (collection: Collection) => void
-  remove: (id: number | string) => void
+  remove: (id: Identifier) => void
   update: (collection: Collection) => void
   clear: () => void
   getAll: () => Collection[]
-  get: (id: number | string) => Collection | undefined
+  get: (id: Identifier) => Collection | undefined
 }
 
 type EnvironmentsHook = {
   create: () => Environment
   add: (environment: Environment) => void
-  remove: (id: number | string) => void
+  remove: (id: Identifier) => void
   update: (environment: Environment) => void
   clear: () => void
   getAll: () => Environment[]
-  get: (id: number | string) => Environment | undefined
+  get: (id: Identifier) => Environment | undefined
   getActive: () => Environment | undefined
-  active: (id: number | string) => void
+  active: (id: Identifier) => void
   deactive: () => void
   variableIsDefined: (name: string) => boolean
   replaceVariables: (value: string) => string
   getVariableValue: (name: string) => string
 }
 
+type MenuItem = {
+  id: Identifier
+  title?: string
+  spacer?: boolean
+}
+
 type MenuHook = {
-  items: { id?: string | number; title?: string; spacer?: boolean }[]
-  selected: { id?: string | number; title?: string }
-  select: (id: string | number) => void
+  items: MenuItem[]
+  selected: MenuItem
+  select: (id: Identifier) => void
 }
 
 type RequestContextRequest = {
@@ -128,4 +138,13 @@ type RequestContextRequest = {
   getActiveHeadersLength: () => number
   fetch: () => void
   urlIsValid: ({ url }: { url?: string }) => boolean
+}
+
+type Theme = 'light' | 'dark' | 'system'
+
+type AppSettings = {
+  theme: Theme
+  proxy: string
+  maxHistory: number
+  timeout: number
 }

@@ -1,24 +1,24 @@
 import React from 'react'
 import Icon from './Icon/Icon'
 
-export default function ButtonIcon({ 
+export default function ButtonIcon({
   icon,
-  color='',
-  size=20,
-  onClick=(_: React.MouseEvent)=>{},
-  className='',
-  disabled=false,
-  direction='south',
-  title=''
+  color = '',
+  size = 20,
+  onClick = (_: React.MouseEvent) => {},
+  className = '',
+  disabled = false,
+  direction = 'south',
+  title = ''
 }: {
-  icon: string,
-  color?: string,
-  size?: number,
-  onClick?: (e: React.MouseEvent) => void,
-  className?: string,
-  disabled?: boolean,
-  direction?: 'north' | 'south' | 'east' | 'west',
-  title?: string,
+  icon: string | number
+  color?: string
+  size?: number
+  onClick?: (e: React.MouseEvent) => void
+  className?: string
+  disabled?: boolean
+  direction?: 'north' | 'south' | 'east' | 'west'
+  title?: string
 }) {
   return (
     <button

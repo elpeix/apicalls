@@ -2,20 +2,20 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { AppContext } from './AppContext'
 
 export const RequestContext = createContext<{
-  request: RequestContextRequest,
-  fetching: boolean,
-  fetched: boolean,
+  request: RequestContextRequest
+  fetching: boolean
+  fetched: boolean
   response: {
-    body: string,
-    headers: KeyValue[],
-    cookies: String[][],
-    status: number,
-    time: number,
+    body: string
+    headers: KeyValue[]
+    cookies: String[][]
+    status: number
+    time: number
     size: number
-  },
-  save: () => void,
+  }
+  save: () => void
   console: {
-    logs: RequestLog[],
+    logs: RequestLog[]
     clear: () => void
   }
 }>({
@@ -57,11 +57,17 @@ export const RequestContext = createContext<{
   }
 })
 
-export default function RequestContextProvider({ tabId, requestName='', requestId=0, definedRequest, children }: {
-  tabId: string | number,
-  requestName?: string,
-  requestId?: number,
-  definedRequest: RequestBase,
+export default function RequestContextProvider({
+  tabId,
+  requestName = '',
+  requestId = 0,
+  definedRequest,
+  children
+}: {
+  tabId: string | number
+  requestName?: string
+  requestId?: number
+  definedRequest: RequestBase
   children: React.ReactNode
 }) {
   const { history, environments, tabs } = useContext(AppContext)
@@ -99,7 +105,7 @@ export default function RequestContextProvider({ tabId, requestName='', requestI
   const [consoleLogs, setConsoleLogs] = useState<RequestLog[]>([])
 
   useEffect(() => {
-    if (changed) {
+    if (changed && tabs) {
       setChanged(false)
       tabs.updateTabRequest(tabId, {
         ...definedRequest,
@@ -125,15 +131,21 @@ export default function RequestContextProvider({ tabId, requestName='', requestI
   const sendRequest = () => {
     if (!requestUrl || !urlIsValid({})) return
     setFetching(true)
-    const headers: Record<string, string> = requestHeaders.reduce((headers: Record<string, string>, header) => {
-      headers[getValue(header.name)] = getValue(header.value)
-      return headers
-    }, {})
+    const headers: Record<string, string> = requestHeaders.reduce(
+      (headers: Record<string, string>, header) => {
+        headers[getValue(header.name)] = getValue(header.value)
+        return headers
+      },
+      {}
+    )
 
-    const queryParams: Record<string, string> = requestParams.reduce((params: Record<string, string>, param) => {
-      if (param.enabled) params[getValue(param.name)] = getValue(param.value)
-      return params
-    }, {})
+    const queryParams: Record<string, string> = requestParams.reduce(
+      (params: Record<string, string>, param) => {
+        if (param.enabled) params[getValue(param.name)] = getValue(param.value)
+        return params
+      },
+      {}
+    )
 
     const url = getUrl({})
     url.search = new URLSearchParams(queryParams).toString()
@@ -191,7 +203,9 @@ export default function RequestContextProvider({ tabId, requestName='', requestI
   }
 
   const saveHistory = () => {
+    if (!history) return
     history.add({
+      type: 'history',
       date: new Date().toISOString(),
       id: new Date().getTime(),
       name: requestName || `${requestMethod.value} - ${requestUrl}`,
@@ -220,7 +234,10 @@ export default function RequestContextProvider({ tabId, requestName='', requestI
   }
 
   const getUrl = ({ url = requestUrl }) => new URL(getValue(url))
-  const getValue = (value: string): string => environments.replaceVariables(value)
+  const getValue = (value: string): string => {
+    if (!environments) return value
+    return environments.replaceVariables(value)
+  }
 
   const setMethod = (method: Method) => {
     if (!method) return
@@ -330,9 +347,5 @@ export default function RequestContextProvider({ tabId, requestName='', requestI
     }
   }
 
-  return (
-    <RequestContext.Provider value={contextValue}>
-      {children}
-    </RequestContext.Provider>
-  )
+  return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
 }

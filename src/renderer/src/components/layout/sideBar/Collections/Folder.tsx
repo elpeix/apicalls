@@ -3,10 +3,7 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Collections.module.css'
 import CollectionElement from './CollectionElement'
 
-export default function Folder({ folder }: {
-  folder: CollectionFolder
-}) {
-
+export default function Folder({ folder }: { folder: CollectionFolder }) {
   const [expanded, setExpanded] = useState(false)
 
   const editFolder = () => {
@@ -19,18 +16,20 @@ export default function Folder({ folder }: {
     <div className={styles.folder}>
       <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''}`}>
         <div>
-          <ButtonIcon icon='arrow' direction={expanded ? 'south' : 'east'} onClick={toggleExpand} />
+          <ButtonIcon icon="arrow" direction={expanded ? 'south' : 'east'} onClick={toggleExpand} />
         </div>
         <div className={styles.folderTitle} onClick={toggleExpand}>
           {folder.name}
         </div>
         <div className={styles.folderEdit}>
-          <ButtonIcon icon='edit' onClick={() => editFolder} />
+          <ButtonIcon icon="edit" onClick={() => editFolder} />
         </div>
       </div>
-      { expanded && folder.elements && (
+      {expanded && folder.elements && (
         <div className={styles.folderContent}>
-          {folder.elements.map((element, i) => <CollectionElement key={i} element={element} />)}
+          {folder.elements.map((element, i) => (
+            <CollectionElement key={i} element={element} />
+          ))}
         </div>
       )}
     </div>
