@@ -9,8 +9,9 @@ import Response from '../response/Response'
 import styles from './Request.module.css'
 
 export default function RequestPanelContent() {
-
   const { request, fetching } = useContext(RequestContext)
+
+  if (!request) return null
 
   const requestPanel = useRef<any>()
   const [requestPanelCollapsed, setRequestPanelCollapsed] = useState(false)
@@ -59,11 +60,11 @@ export default function RequestPanelContent() {
         >
           <RequestTabs />
         </Panel>
-        <Gutter mode='horizontal' onDoubleClick={toggleRequestPanel} />
-        <Panel >
+        <Gutter mode="horizontal" onDoubleClick={toggleRequestPanel} />
+        <Panel>
           <Response showConsole={expandConsole} consoleIsHidden={consoleCollapsed} />
         </Panel>
-        <Gutter mode='horizontal' onDoubleClick={toggleConsole} />
+        <Gutter mode="horizontal" onDoubleClick={toggleConsole} />
 
         <Panel
           defaultSizePercentage={0}

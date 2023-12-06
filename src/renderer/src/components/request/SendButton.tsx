@@ -6,6 +6,8 @@ import Icon from '../base/Icon/Icon'
 export default function SendButton() {
   const { request, fetching } = useContext(RequestContext)
 
+  if (!request) return null
+
   return (
     <button className={styles.send} onClick={request.fetch} disabled={fetching}>
       <div className={styles.buttonIcon}>

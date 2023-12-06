@@ -9,6 +9,9 @@ import styles from './Request.module.css'
 
 export default function RequestTabs() {
   const { request } = useContext(RequestContext)
+
+  if (!request) return null
+
   const showBody = request.method.body
   const activeParams = request.getActiveParamsLength()
   const activeHeaders = request.getActiveHeadersLength()

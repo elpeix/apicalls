@@ -7,8 +7,10 @@ import SaveButton from './SaveButton'
 import SendButton from './SendButton'
 
 export default function RequestBar() {
-
   const { request } = useContext(RequestContext)
+
+  if (!request) return null
+
   const onChange = (value: any) => {
     const method: Method = {
       value: value.value,
@@ -22,18 +24,20 @@ export default function RequestBar() {
     <div className={styles.content}>
       <div className={styles.method}>
         <Select
-          className='select'
-          classNamePrefix='select'
+          className="select"
+          classNamePrefix="select"
           classNames={{
             option: ({ data }) => data.value,
-            singleValue: ({ selectProps }: {selectProps: { value: any }}) =>  selectProps.value?.value || '',
+            singleValue: ({ selectProps }: { selectProps: { value: any } }) =>
+              selectProps.value?.value || ''
           }}
           onChange={onChange}
           defaultValue={request.method}
           isClearable={false}
           isSearchable={false}
           unstyled={true}
-          options={request.methods} />
+          options={request.methods}
+        />
       </div>
       <RequestUrl request={request} />
       <SendButton />

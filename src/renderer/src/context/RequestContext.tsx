@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { AppContext } from './AppContext'
 
 export const RequestContext = createContext<{
-  request: RequestContextRequest
+  request: RequestContextRequest | null
   fetching: boolean
   fetched: boolean
   response: {
@@ -17,29 +17,9 @@ export const RequestContext = createContext<{
   console: {
     logs: RequestLog[]
     clear: () => void
-  }
+  } | null
 }>({
-  request: {
-    methods: [],
-    method: { value: '', label: '', body: false },
-    url: '',
-    body: '',
-    headers: [],
-    params: [],
-    setMethod: () => {},
-    setUrl: () => {},
-    setBody: () => {},
-    setHeaders: () => {},
-    setParams: () => {},
-    addParam: () => {},
-    removeParam: () => {},
-    getActiveParamsLength: () => 0,
-    addHeader: () => {},
-    removeHeader: () => {},
-    getActiveHeadersLength: () => 0,
-    fetch: () => {},
-    urlIsValid: () => false
-  },
+  request: null,
   fetching: false,
   fetched: false,
   response: {
@@ -51,10 +31,7 @@ export const RequestContext = createContext<{
     size: 0
   },
   save: () => {},
-  console: {
-    logs: [],
-    clear: () => {}
-  }
+  console: null
 })
 
 export default function RequestContextProvider({
