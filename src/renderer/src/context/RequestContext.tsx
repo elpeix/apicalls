@@ -39,15 +39,17 @@ export default function RequestContextProvider({
   requestName = '',
   requestId = 0,
   definedRequest,
+  collectionId,
   children
 }: {
-  tabId: string | number
+  tabId: Identifier
   requestName?: string
-  requestId?: number
+  requestId?: Identifier
+  collectionId?: Identifier | null
   definedRequest: RequestBase
   children: React.ReactNode
 }) {
-  const { history, environments, tabs } = useContext(AppContext)
+  const { history, environments, tabs, collections } = useContext(AppContext)
 
   const methods = useMemo(
     () => [
@@ -61,6 +63,9 @@ export default function RequestContextProvider({
     ],
     []
   )
+
+  // Pre-request scripts will be executed before the request is sent
+  const [preRequestData, setPreRequestData] = useState<PreRequestData | null>(null)
 
   const [changed, setChanged] = useState(false)
   const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])
@@ -105,9 +110,21 @@ export default function RequestContextProvider({
     requestParams
   ])
 
+  useEffect(() => {
+    if (!collectionId || !collections) return
+    const collection = collections.get(collectionId)
+    if (!collection) return
+    const preRequestdata = collection.preRequestData
+    if (!preRequestdata) return
+    setPreRequestData(preRequestData)
+  }, [collectionId, collections])
+
   const sendRequest = () => {
     if (!requestUrl || !urlIsValid({})) return
     setFetching(true)
+
+    // TODO Pre-request scripts
+
     const headers: Record<string, string> = requestHeaders.reduce(
       (headers: Record<string, string>, header) => {
         headers[getValue(header.name)] = getValue(header.value)

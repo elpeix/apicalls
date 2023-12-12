@@ -56,6 +56,20 @@ export function useCollections(): CollectionsHook {
   const clear = () => setCollections([])
   const getAll = () => collections
   const get = (id: Identifier) => collections.find((collection) => collection.id === id)
+  const addPreRequestData = (collectionId: Identifier, preRequestData: PreRequestData) => {
+    const collection = get(collectionId)
+    if (collection) {
+      collection.preRequestData = preRequestData
+      update(collection)
+    }
+  }
+  const removePreRequestData = (collectionId: Identifier) => {
+    const collection = get(collectionId)
+    if (collection) {
+      delete collection.preRequestData
+      update(collection)
+    }
+  }
 
   return {
     create,
@@ -64,6 +78,8 @@ export function useCollections(): CollectionsHook {
     update,
     clear,
     getAll,
-    get
+    get,
+    addPreRequestData,
+    removePreRequestData
   }
 }

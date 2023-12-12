@@ -16,6 +16,8 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
     const tabId: Identifier = String(
       Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
     )
+    console.log('newTab', itemRequest)
+
     if (!itemRequest) {
       itemRequest = {
         type: 'draft',
@@ -33,10 +35,9 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
       }
     }
 
-    if (itemRequest && 'type' in itemRequest && itemRequest.type === 'collection') {
-      const tab: Tab = { ...itemRequest, active: true }
-      addTab(tab)
-    }
+    console.log('newTab', itemRequest)
+    const tab: Tab = { ...itemRequest, active: true }
+    addTab(tab)
   }
 
   const addTab = (tab: Tab) => {

@@ -40,6 +40,15 @@ type Environment = {
   variables: KeyValue[]
 }
 
+type PreRequestData = {
+  request: RequestBase
+  type: 'authorization' | 'data'
+  dataToCapture: {
+    type: 'header' | 'body'
+    jsonPath: string
+  }[]
+}
+
 type CollectionFolder = {
   type: 'folder'
   name: string
@@ -49,6 +58,7 @@ type CollectionFolder = {
 type Collection = {
   id: Identifier
   name: string
+  preRequestData?: PreRequestData
   elements: (CollectionFolder | RequestType)[]
 }
 
@@ -88,6 +98,8 @@ type CollectionsHook = {
   clear: () => void
   getAll: () => Collection[]
   get: (id: Identifier) => Collection | undefined
+  addPreRequestData: (collectionId: Identifier, preRequestData: PreRequestData) => void
+  removePreRequestData: (collectionId: Identifier) => void
 }
 
 type EnvironmentsHook = {
