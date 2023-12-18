@@ -50,9 +50,9 @@ export default function RequestPanelContent() {
       <RequestBar />
       <PanelGroup direction="vertical">
         <Panel
-          defaultSizePercentage={20}
-          minSizePercentage={10}
-          maxSizePercentage={50}
+          defaultSize={20}
+          minSize={10}
+          maxSize={50}
           collapsible={true}
           ref={requestPanel}
           onCollapse={() => setRequestPanelCollapsed(true)}
@@ -67,9 +67,9 @@ export default function RequestPanelContent() {
         <Gutter mode="horizontal" onDoubleClick={toggleConsole} />
 
         <Panel
-          defaultSizePercentage={0}
-          minSizePercentage={10}
-          maxSizePercentage={35}
+          defaultSize={0}
+          minSize={10}
+          maxSize={35}
           collapsible={true}
           ref={consolePanel}
           onCollapse={() => setConsoleCollapsed(true)}
