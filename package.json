@@ -21,7 +21,7 @@
     "@electron-toolkit/utils": "^3.0.0",
     "@monaco-editor/react": "^4.6.0",
     "electron-store": "^8.1.0",
-    "react-resizable-panels": "^1.0.5",
+    "react-resizable-panels": "^1.0.7",
     "react-select": "^5.8.0",
     "react-tabs": "^6.0.2"
   },
