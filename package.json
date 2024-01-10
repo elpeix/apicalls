@@ -14,7 +14,9 @@
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build && electron-builder --mac --config",
-    "build:linux": "npm run build && electron-builder --linux --config"
+    "build:linux": "npm run build && electron-builder --linux --config",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
@@ -23,7 +25,8 @@
     "electron-store": "^8.1.0",
     "react-resizable-panels": "^1.0.7",
     "react-select": "^5.8.0",
-    "react-tabs": "^6.0.2"
+    "react-tabs": "^6.0.2",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
@@ -40,6 +43,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.11"
+    "vite": "^5.0.11",
+    "vitest": "^1.1.3"
   }
 }

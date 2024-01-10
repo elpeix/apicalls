@@ -1,0 +1,29 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI fixture
+  description: This is a fixture for testing the openapi generator
+  version: 1.0.0
+paths:
+  /test:
+    get:
+      summary: Test endpoint
+      description: This is a test endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hello, world!
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Something went wrong

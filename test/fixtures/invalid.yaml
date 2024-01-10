@@ -1,0 +1,6 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI fixture
+  description: This is a fixture for testing the openapi generator
+  version
+1.0.0
