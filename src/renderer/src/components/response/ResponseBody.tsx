@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { formatSource, getLanguageName } from '../../lib/languageSupport'
 import Editor from '../base/Editor'
 import styles from './Response.module.css'
+import Switch from '../base/Switch/Switch'
 
 export default function ResponseBody({ value }: { value: string }) {
-
   const [showRaw, setShowRaw] = useState(false)
   const [rawValue, setRawValue] = useState('')
   const [parsedValue, setParsedValue] = useState('')
@@ -14,7 +14,7 @@ export default function ResponseBody({ value }: { value: string }) {
     setParsedValue(formatSource(value))
   }, [value])
 
-  const language = useMemo(() => {
+  const language: string = useMemo(() => {
     if (showRaw) return 'text'
     return getLanguageName(rawValue)
   }, [showRaw, rawValue])
@@ -25,11 +25,13 @@ export default function ResponseBody({ value }: { value: string }) {
 
   return (
     <div className={`${rawValue.length ? styles.body : styles.bodyNoContent}`}>
-      { rawValue && (
+      {rawValue && (
         <>
           <div className={styles.bodyHeader}>
-            <div className={styles.copy} onClick={handleCopy}>Copy</div>
-            <div className={`${styles.raw} ${showRaw ? styles.active : ''}`} onClick={() => setShowRaw(!showRaw)}>Raw</div>
+            <div className={styles.copy} onClick={handleCopy}>
+              Copy
+            </div>
+            <Switch text="Raw" active={showRaw} onChange={setShowRaw} />
           </div>
 
           <div className={styles.bodyContent}>
@@ -41,10 +43,7 @@ export default function ResponseBody({ value }: { value: string }) {
           </div>
         </>
       )}
-      { !rawValue && (
-        <div className={styles.noContent}>No content</div>
-      )}
+      {!rawValue && <div className={styles.noContent}>No content</div>}
     </div>
   )
 }
-

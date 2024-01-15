@@ -22,6 +22,7 @@
   --sidePanel-color: var(--color-8);
   --sidePanel-color-hover: var(--color-7);
   --highlight-color: #0cf;
+  --success-background-color: rgba(0, 204, 255, 0.2);
   --error-background-color: rgba(223, 48, 48, 0.1);
   --overlay-color: rgba(0, 0, 0, 0.5);
 
@@ -82,14 +83,15 @@
     --sidePanel-color: var(--color-9);
     --sidePanel-color-hover: var(--color-8);
     --tab-panel-background-color: var(--color-10);
-    
+
     --highlight-color: #0088ff;
+    --success-background-color: #69b9ff;
 
     --status-200-color: rgb(108, 185, 73);
     --status-300-color: rgb(255, 165, 0);
     --status-400-color: rgb(196, 80, 231);
     --status-500-color: rgb(223, 48, 48);
-    
+
     --method-get-color: rgb(45, 151, 133);
     --method-post-color: rgb(66, 133, 244);
     --method-put-color: rgb(204, 99, 0);
