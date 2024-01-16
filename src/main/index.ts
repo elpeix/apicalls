@@ -1,8 +1,9 @@
-import { app, shell, BrowserWindow, nativeTheme, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, nativeTheme, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png'
 import Store from 'electron-store'
+import OpenApiImporter from '../lib/importOpenApi'
 
 const store = new Store()
 
@@ -89,4 +90,25 @@ ipcMain.on('get-settings', (event) => {
 
 ipcMain.on('save-settings', (_, settings) => {
   store.set('settings', settings)
+})
+
+ipcMain.on('import-openapi', async (event, options: Electron.OpenDialogSyncOptions) => {
+  dialog.showOpenDialog(options).then(async (result) => {
+    if (result.canceled) {
+      event.reply('import-openapi-canceled')
+      return
+    }
+    event.reply('import-openapi-progress', 0)
+    const importer = new OpenApiImporter(result.filePaths[0])
+    for await (const status of importer.import()) {
+      event.reply('import-openapi-progress', status)
+    }
+    event.reply('import-openapi-progress', 100)
+    const collection = importer.getCollection()
+
+    event.reply('import-openapi-result', {
+      filePath: result.filePaths[0],
+      collection
+    })
+  })
 })

@@ -50,8 +50,9 @@ class OpenApiImporter {
   }
 
   private parseCollection(data: any): Collection {
+    const id = new Date().getTime()
     const collection: Collection = {
-      id: 0,
+      id,
       name: data.info.title,
       elements: []
     }
@@ -67,10 +68,12 @@ class OpenApiImporter {
 
   private parsePaths(paths: any, baseUrl: string): RequestType[] {
     const collectionRequests: RequestType[] = []
+    let count = 0
+    const id = new Date().getTime()
     for (const path in paths) {
       const collectionRequest: RequestType = {
         type: 'collection',
-        id: 0, // TODO generate id
+        id: `${id}_${++count}`, // TODO generate id
         name: paths[path].summary || path,
         request: {
           url: baseUrl + path,
