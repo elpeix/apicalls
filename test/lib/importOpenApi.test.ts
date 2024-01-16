@@ -6,8 +6,9 @@ describe('OpenApiImporter', () => {
     try {
       new OpenApiImporter('')
       expect.fail()
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error)
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error)
+      const error = err as Error
       expect(error.message).toBe('path is empty')
     }
   })
@@ -16,8 +17,9 @@ describe('OpenApiImporter', () => {
     try {
       new OpenApiImporter('invalid.json')
       expect.fail()
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error)
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error)
+      const error = err as Error
       expect(error.message).toBe('path is invalid')
     }
   })
@@ -26,8 +28,9 @@ describe('OpenApiImporter', () => {
     try {
       new OpenApiImporter('./test/fixtures/invalid')
       expect.fail()
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error)
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error)
+      const error = err as Error
       expect(error.message).toBe('Invalid file type')
     }
   })
@@ -44,8 +47,9 @@ describe('OpenApiImporter', () => {
     try {
       const importer = new OpenApiImporter('./test/fixtures/invalid.json')
       importer.import()
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error)
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error)
+      const error = err as Error
       expect(error.message).toBe('Invalid JSON file')
     }
   })
@@ -54,8 +58,9 @@ describe('OpenApiImporter', () => {
     try {
       const importer = new OpenApiImporter('./test/fixtures/invalid.yaml')
       importer.import()
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error)
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error)
+      const error = err as Error
       expect(error.message).toBe('Invalid YAML file')
     }
   })
@@ -75,12 +80,14 @@ describe('OpenApiImporter', () => {
       expect(element).toHaveProperty('type')
       expect(element.type).toBe('collection')
       expect(element).toHaveProperty('request')
-      expect(element.request).toHaveProperty('url')
-      expect(element.request).toHaveProperty('method')
-      if (element.request.method.value === 'GET') {
-        expect(element.request.url).toBe('http://localhost:3000/')
-      } else if (element.request.method.value === 'POST') {
-        expect(element.request.url).toBe('http://localhost:3000/otherPath')
+      const requestElement = element as RequestType
+      const request = requestElement.request
+      expect(request).toHaveProperty('url')
+      expect(request).toHaveProperty('method')
+      if (request.method.value === 'GET') {
+        expect(request.url).toBe('http://localhost:3000/')
+      } else if (request.method.value === 'POST') {
+        expect(request.url).toBe('http://localhost:3000/otherPath')
       }
     }
   })
