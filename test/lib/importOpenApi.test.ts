@@ -1,6 +1,5 @@
-import { describe, it, expect, expectTypeOf } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import OpenApiImporter from '../../src/lib/importOpenApi'
-import { Collection } from 'yaml/dist/nodes/Collection'
 
 describe('OpenApiImporter', () => {
   it('should throw an error when path is empty', () => {

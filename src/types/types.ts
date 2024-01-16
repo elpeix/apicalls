@@ -160,3 +160,25 @@ type AppSettings = {
   maxHistory: number
   timeout: number
 }
+
+type CallRequest = {
+  url: string
+  method?: string
+  queryParams?: URLSearchParams
+  headers?: Headers
+}
+
+type CallResponse = {
+  result: string | undefined
+  status: {
+    code: number
+    text: string
+  }
+  contentLength: number
+  responseTime: {
+    all: number
+    data: number
+    response: number
+  }
+  responseHeaders: Headers
+}

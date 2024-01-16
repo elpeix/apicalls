@@ -23,7 +23,7 @@
 
     "typeRoots": ["node_modules/@types", "src/types"],
   },
-  "include": ["src", "declarations.d.ts"],
+  "include": ["src", "declarations.d.ts", "test"],
   "exclude": [
     "node_modules",
     "**/node_modules/*"
