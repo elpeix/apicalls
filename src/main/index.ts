@@ -1,9 +1,8 @@
-import { app, shell, BrowserWindow, nativeTheme, ipcMain, dialog } from 'electron'
+import { app, shell, BrowserWindow, nativeTheme, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png'
 import Store from 'electron-store'
-import OpenApiImporter from '../lib/importOpenApi'
 
 const store = new Store()
 
@@ -23,9 +22,7 @@ function createWindow() {
     }
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
+  mainWindow.on('ready-to-show', () => mainWindow.show())
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -46,7 +43,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('com.francescrequesens.apicalls')
 
   // Set theme source for nativeTheme
   nativeTheme.themeSource = store.get('settings.theme', 'system') as 'light' | 'dark' | 'system'
@@ -79,36 +76,9 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('get-settings', (event) => {
-  event.reply(
-    'settings',
-    store.get('settings', {
-      theme: 'system',
-      proxy: ''
-    })
-  )
+  event.reply('settings', store.get('settings', { theme: 'system', proxy: '' }))
 })
 
-ipcMain.on('save-settings', (_, settings) => {
-  store.set('settings', settings)
-})
+ipcMain.on('save-settings', (_, settings) => store.set('settings', settings))
 
-ipcMain.on('import-openapi', async (event, options: Electron.OpenDialogSyncOptions) => {
-  dialog.showOpenDialog(options).then(async (result) => {
-    if (result.canceled) {
-      event.reply('import-openapi-canceled')
-      return
-    }
-    event.reply('import-openapi-progress', 0)
-    const importer = new OpenApiImporter(result.filePaths[0])
-    for await (const status of importer.import()) {
-      event.reply('import-openapi-progress', status)
-    }
-    event.reply('import-openapi-progress', 100)
-    const collection = importer.getCollection()
-
-    event.reply('import-openapi-result', {
-      filePath: result.filePaths[0],
-      collection
-    })
-  })
-})
+import './ipcActions'

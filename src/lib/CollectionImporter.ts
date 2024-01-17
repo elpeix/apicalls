@@ -1,7 +1,7 @@
 import fs from 'fs'
 import YAML from 'yaml'
 
-class OpenApiImporter {
+class CollectionImporter {
   private collection: Collection | undefined
 
   constructor(private path: string) {
@@ -126,7 +126,7 @@ class OpenApiImporter {
   }
 }
 
-export default OpenApiImporter
+export default CollectionImporter
 
 /*
 export const importOpenApi = async function* (

@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import OpenApiImporter from '../../src/lib/importOpenApi'
+import CollectionImporter from '../../src/lib/CollectionImporter'
 
-describe('OpenApiImporter', () => {
+describe('CollectionImporter', () => {
   it('should throw an error when path is empty', () => {
     try {
-      new OpenApiImporter('')
+      new CollectionImporter('')
       expect.fail()
     } catch (err) {
       expect(err).toBeInstanceOf(Error)
@@ -15,7 +15,7 @@ describe('OpenApiImporter', () => {
 
   it('should throw an error when path is invalid', () => {
     try {
-      new OpenApiImporter('invalid.json')
+      new CollectionImporter('invalid.json')
       expect.fail()
     } catch (err) {
       expect(err).toBeInstanceOf(Error)
@@ -26,7 +26,7 @@ describe('OpenApiImporter', () => {
 
   it('should throw an error when file type is invalid', async () => {
     try {
-      new OpenApiImporter('./test/fixtures/invalid')
+      new CollectionImporter('./test/fixtures/invalid')
       expect.fail()
     } catch (err) {
       expect(err).toBeInstanceOf(Error)
@@ -38,14 +38,14 @@ describe('OpenApiImporter', () => {
   it('should return an OpenApiImporter object', async () => {
     const fileNames = ['openapi.json', 'openapi.yaml', 'openapi.yml']
     for (const fileName of fileNames) {
-      const result = new OpenApiImporter(`./test/fixtures/${fileName}`)
-      expect(result).toBeInstanceOf(OpenApiImporter)
+      const result = new CollectionImporter(`./test/fixtures/${fileName}`)
+      expect(result).toBeInstanceOf(CollectionImporter)
     }
   })
 
   it('should throw an error when JSON file is invalid', async () => {
     try {
-      const importer = new OpenApiImporter('./test/fixtures/invalid.json')
+      const importer = new CollectionImporter('./test/fixtures/invalid.json')
       importer.import()
     } catch (err) {
       expect(err).toBeInstanceOf(Error)
@@ -56,7 +56,7 @@ describe('OpenApiImporter', () => {
 
   it('should throw an error when YAML file is invalid', async () => {
     try {
-      const importer = new OpenApiImporter('./test/fixtures/invalid.yaml')
+      const importer = new CollectionImporter('./test/fixtures/invalid.yaml')
       importer.import()
     } catch (err) {
       expect(err).toBeInstanceOf(Error)
@@ -66,7 +66,7 @@ describe('OpenApiImporter', () => {
   })
 
   it('should return a collection when JSON file is valid', async () => {
-    const importer = new OpenApiImporter('./test/fixtures/openapi.json')
+    const importer = new CollectionImporter('./test/fixtures/openapi.json')
     for await (const progress of importer.import()) {
       expect(progress).toBeTypeOf('number')
     }

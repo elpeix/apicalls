@@ -9,7 +9,6 @@ export default function CollectionItem({
   collection: Collection
   selectCollection: (collection: Collection) => void
 }) {
-  console.log('collection', collection)
   return (
     <div
       className={`sidePanel-content-item ${styles.item}`}

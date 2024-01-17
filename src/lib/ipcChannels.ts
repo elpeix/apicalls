@@ -1,0 +1,6 @@
+export const IMPORT_COLLECTION = 'import-collection'
+export const IMPORT_COLLECTION_SUCCESS = 'import-collection-success'
+export const IMPORT_COLLECTION_FAILURE = 'import-collection-failure'
+export const IMPORT_COLLECTION_CANCELED = 'import-collection-canceled'
+export const IMPORT_COLLECTION_PROGRESS = 'import-collection-progress'
+export const IMPORT_COLLECTION_RESULT = 'import-collection-result'

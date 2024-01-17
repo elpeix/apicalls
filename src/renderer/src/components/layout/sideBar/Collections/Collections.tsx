@@ -3,6 +3,7 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import { AppContext } from '../../../../context/AppContext'
 import CollectionItem from './CollectionItem'
 import Collection from './Collection'
+import { IMPORT_COLLECTION, IMPORT_COLLECTION_RESULT } from '../../../../../../lib/ipcChannels'
 
 export default function Collections() {
   const { collections } = useContext(AppContext)
@@ -11,13 +12,12 @@ export default function Collections() {
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
     ipcRenderer.on(
-      'import-openapi-result',
+      IMPORT_COLLECTION_RESULT,
       (_: any, result: { filePath: string; collection: Collection }) => {
-        console.log('files', result)
         collections?.add(result.collection)
       }
     )
-    return () => ipcRenderer.removeAllListeners('import-openapi-result')
+    return () => ipcRenderer.removeAllListeners(IMPORT_COLLECTION_RESULT)
   }, [])
 
   const add = () => {
@@ -39,17 +39,7 @@ export default function Collections() {
 
   const importHanlder = () => {
     if (!collections) return
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send('import-openapi', {
-      title: 'Import Collection',
-      properties: ['openFile'],
-      fileTypes: [
-        {
-          name: 'JSON',
-          extensions: ['json']
-        }
-      ]
-    })
+    window.electron.ipcRenderer.send(IMPORT_COLLECTION)
   }
 
   return (
