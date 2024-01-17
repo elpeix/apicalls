@@ -1,6 +1,10 @@
 import { ipcMain, dialog } from 'electron'
 import CollectionImporter from '../lib/CollectionImporter'
+import { restCall } from '../../src/lib/restCaller'
 import {
+  CALL_API,
+  CALL_API_FAILURE,
+  CALL_API_RESPONSE,
   IMPORT_COLLECTION,
   IMPORT_COLLECTION_CANCELED,
   IMPORT_COLLECTION_FAILURE,
@@ -40,4 +44,13 @@ ipcMain.on(IMPORT_COLLECTION, async (event) => {
       event.reply(IMPORT_COLLECTION_FAILURE, error)
     }
   })
+})
+
+ipcMain.on(CALL_API, async (event, callRequest: CallRequest) => {
+  try {
+    const response = await restCall(callRequest)
+    event.reply(CALL_API_RESPONSE, response)
+  } catch (error) {
+    event.reply(CALL_API_FAILURE, error)
+  }
 })

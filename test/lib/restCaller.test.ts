@@ -1,9 +1,7 @@
 import { describe, it, expect, vi, assert } from 'vitest'
 import { restCall } from '../../src/lib/restCaller'
-// import { CallResponse } from '../../src/types/types'
 
 const stubFetch = vi.fn()
-
 global.fetch = stubFetch
 
 describe('restCaller', () => {

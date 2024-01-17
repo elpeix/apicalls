@@ -4,3 +4,7 @@ export const IMPORT_COLLECTION_FAILURE = 'import-collection-failure'
 export const IMPORT_COLLECTION_CANCELED = 'import-collection-canceled'
 export const IMPORT_COLLECTION_PROGRESS = 'import-collection-progress'
 export const IMPORT_COLLECTION_RESULT = 'import-collection-result'
+
+export const CALL_API = 'call-api'
+export const CALL_API_FAILURE = 'call-api-failure'
+export const CALL_API_RESPONSE = 'call-api-response'

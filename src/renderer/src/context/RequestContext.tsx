@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
+import { CALL_API, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
 
 export const RequestContext = createContext<{
   request: RequestContextRequest | null
@@ -125,75 +126,44 @@ export default function RequestContextProvider({
 
     // TODO Pre-request scripts
 
-    const headers: Record<string, string> = requestHeaders.reduce(
-      (headers: Record<string, string>, header) => {
-        headers[getValue(header.name)] = getValue(header.value)
-        return headers
-      },
-      {}
-    )
+    const url = getValue(requestUrl)
 
-    const queryParams: Record<string, string> = requestParams.reduce(
-      (params: Record<string, string>, param) => {
-        if (param.enabled) params[getValue(param.name)] = getValue(param.value)
-        return params
-      },
-      {}
-    )
-
-    const url = getUrl({})
-    url.search = new URLSearchParams(queryParams).toString()
-
-    const requestParameters = {
-      method: requestMethod.value,
-      headers: headers,
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer'
-    } as RequestInit
-    if (requestBody && requestMethod.body) requestParameters.body = getValue(requestBody)
+    const headers: Headers = new Headers()
+    requestHeaders.forEach((header) => {
+      headers.append(getValue(header.name), getValue(header.value))
+    })
+    const queryParams = new URLSearchParams()
+    requestParams.forEach((param) => {
+      if (param.enabled) queryParams.append(getValue(param.name), getValue(param.value))
+    })
 
     saveHistory()
 
-    let fetchResponseSize: number = 0
-    const time = new Date().getTime()
-    fetch(url, requestParameters)
-      .then((res) => {
-        const fetchTime = new Date().getTime() - time
-        setResponseTime(fetchTime)
-        const headers = [...res.headers].map((header) => ({
-          name: header[0],
-          value: header[1]
-        }))
-        const contentLength = headers.find((header) => header.name === 'content-length')
-        if (contentLength) {
-          fetchResponseSize = Number(contentLength.value)
+    window.electron.ipcRenderer.send(CALL_API, {
+      url,
+      method: requestMethod.value,
+      headers,
+      queryParams,
+      body: requestBody
+    })
+    window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: any, callResponse: CallResponse) => {
+      setFetched(true)
+      setResponseTime(callResponse.responseTime.all)
+      setResponseStatus(callResponse.status.code)
+      setResponseSize(callResponse.contentLength)
+      setFetchedHeaders(callResponse.responseHeaders)
+      setResponseBody(callResponse.result || '')
+      setConsoleLogs([
+        ...consoleLogs,
+        {
+          method: requestMethod.value,
+          url: url,
+          status: callResponse.status.code,
+          time: callResponse.responseTime.all
         }
-        setFetched(true)
-        setResponseStatus(res.status)
-        setFetchedHeaders(headers)
-        setConsoleLogs([
-          ...consoleLogs,
-          {
-            method: requestMethod.value,
-            url: url.href,
-            status: res.status,
-            time: fetchTime
-          }
-        ])
-        return res.text()
-      })
-      .then((text) => {
-        if (fetchResponseSize === null) {
-          fetchResponseSize = text.length
-        }
-        setResponseSize(fetchResponseSize)
-        setResponseBody(text)
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setFetching(false))
+      ])
+      setFetching(false)
+    })
   }
 
   const saveHistory = () => {

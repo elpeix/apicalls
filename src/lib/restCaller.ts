@@ -28,6 +28,10 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
     if (contentLength === 0) {
       contentLength = result.length
     }
+    const headers: KeyValue[] = []
+    response.headers.forEach((value, key) => {
+      headers.push({ name: key, value })
+    })
     return {
       result,
       status: {
@@ -36,7 +40,7 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
       },
       contentLength,
       responseTime,
-      responseHeaders: response.headers
+      responseHeaders: headers
     } as CallResponse
   } catch (error) {
     const err = new Error('Rest call error')

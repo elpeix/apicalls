@@ -166,6 +166,7 @@ type CallRequest = {
   method?: string
   queryParams?: URLSearchParams
   headers?: Headers
+  body?: string
 }
 
 type CallResponse = {
@@ -180,5 +181,5 @@ type CallResponse = {
     data: number
     response: number
   }
-  responseHeaders: Headers
+  responseHeaders: KeyValue[]
 }
