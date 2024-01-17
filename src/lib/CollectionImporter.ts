@@ -56,7 +56,7 @@ class CollectionImporter {
       name: data.info.title,
       elements: []
     }
-    let baseUrl = ''
+    let baseUrl = '{{baseUrl}}'
     if (data.servers) {
       baseUrl = data.servers[0].url
     }
