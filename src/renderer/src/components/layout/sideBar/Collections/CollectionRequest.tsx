@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styles from './Collections.module.css'
+import ButtonIcon from '../../../base/ButtonIcon'
 import { AppContext } from '../../../../context/AppContext'
 
 export default function CollectionRequest({
@@ -7,8 +8,10 @@ export default function CollectionRequest({
 }: {
   collectionRequest: RequestType
 }) {
-  const { tabs } = useContext(AppContext)
+  const { tabs, collections } = useContext(AppContext)
   const { request } = collectionRequest
+
+  const [editMode, setEditMode] = useState(false)
 
   const clickHandler = () => {
     if (tabs) {
@@ -16,12 +19,56 @@ export default function CollectionRequest({
     }
   }
 
+  const editHandler = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setEditMode(true)
+  }
+
   return (
-    <div className={styles.request} onClick={clickHandler}>
-      <div className={`${styles.requestMethod} ${request.method.value}`}>
-        {request.method.label}
-      </div>
-      <div className={styles.requestName}>{collectionRequest.name}</div>
-    </div>
+    <>
+      {!editMode && (
+        <div className={styles.request} onClick={clickHandler}>
+          <div className={`${styles.requestMethod} ${request.method.value}`}>
+            {request.method.label}
+          </div>
+          <div className={styles.requestName}>{collectionRequest.name}</div>
+          <div className={styles.edit}>
+            <ButtonIcon icon="edit" onClick={editHandler} />
+          </div>
+        </div>
+      )}
+      {editMode && (
+        <div className={`${styles.request} ${styles.edit}`}>
+          <div className={`${styles.requestMethod} ${request.method.value}`}>
+            {request.method.label}
+          </div>
+          <input
+            type="text"
+            className={styles.requestName}
+            value={collectionRequest.name}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setEditMode(false)
+                if (collections) {
+                  console.log('update collection request')
+                }
+                return
+              }
+              if (e.key === 'Escape') {
+                setEditMode(false)
+                return
+              }
+            }}
+            autoFocus
+            onBlur={() => {
+              setEditMode(false)
+              if (collections) {
+                console.log('update collection request')
+              }
+            }}
+          />
+        </div>
+      )}
+    </>
   )
 }

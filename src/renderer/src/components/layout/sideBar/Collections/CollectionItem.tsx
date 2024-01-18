@@ -1,5 +1,4 @@
 import React from 'react'
-import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Collections.module.css'
 
 export default function CollectionItem({
@@ -15,9 +14,6 @@ export default function CollectionItem({
       onClick={() => selectCollection(collection)}
     >
       <div className={styles.title}>{collection.name}</div>
-      <div className={styles.edit}>
-        <ButtonIcon icon="edit" onClick={() => selectCollection(collection)} />
-      </div>
     </div>
   )
 }
