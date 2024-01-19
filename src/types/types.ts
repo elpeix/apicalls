@@ -165,7 +165,7 @@ type CallRequest = {
   url: string
   method?: string
   queryParams?: URLSearchParams
-  headers?: Headers
+  headers?: HeadersInit
   body?: string
 }
 

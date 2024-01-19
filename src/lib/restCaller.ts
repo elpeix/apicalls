@@ -6,14 +6,19 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
   }
   try {
     let path = request.url
-    if (request.queryParams) {
+    if (request.queryParams && request.queryParams.toString() !== '') {
       path += `?${request.queryParams.toString()}`
     }
     const initTime = Date.now()
-    const response = await fetch(path, {
+    const requestInit: RequestInit = {
       method: request.method,
-      headers: request.headers ?? new Headers()
-    })
+      headers: request.headers,
+      cache: 'no-cache'
+    }
+    if (request.body) {
+      requestInit.body = request.body
+    }
+    const response = await fetch(path, requestInit)
     const requestTime = Date.now() - initTime
     const dataTime = Date.now()
 
