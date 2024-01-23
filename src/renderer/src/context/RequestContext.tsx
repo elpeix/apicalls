@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
-import { CALL_API, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
+import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
 
 export const RequestContext = createContext<{
   request: RequestContextRequest | null
@@ -128,13 +128,17 @@ export default function RequestContextProvider({
 
     const url = getValue(requestUrl)
 
-    const headers: Headers = new Headers()
+    const headers: HeadersInit = {}
     requestHeaders.forEach((header) => {
-      headers.append(getValue(header.name), getValue(header.value))
+      if (header.enabled) {
+        headers[getValue(header.name)] = getValue(header.value)
+      }
     })
     const queryParams = new URLSearchParams()
     requestParams.forEach((param) => {
-      if (param.enabled) queryParams.append(getValue(param.name), getValue(param.value))
+      if (param.enabled) {
+        queryParams.append(getValue(param.name), getValue(param.value))
+      }
     })
 
     saveHistory()
@@ -162,6 +166,11 @@ export default function RequestContextProvider({
           time: callResponse.responseTime.all
         }
       ])
+      setFetching(false)
+    })
+
+    window.electron.ipcRenderer.on(CALL_API_FAILURE, (_: any, error: Error) => {
+      console.log('error', error)
       setFetching(false)
     })
   }
