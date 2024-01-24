@@ -91,6 +91,7 @@ type RequestLog = {
 }
 
 type CollectionsHook = {
+  setCollections: (collections: Collection[]) => void
   create: () => Collection
   add: (collection: Collection) => void
   remove: (id: Identifier) => void

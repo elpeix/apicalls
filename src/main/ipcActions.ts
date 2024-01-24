@@ -1,4 +1,5 @@
 import { ipcMain, dialog } from 'electron'
+import Store from 'electron-store'
 import CollectionImporter from '../lib/CollectionImporter'
 import { restCall } from '../../src/lib/restCaller'
 import {
@@ -9,8 +10,30 @@ import {
   IMPORT_COLLECTION_CANCELED,
   IMPORT_COLLECTION_FAILURE,
   IMPORT_COLLECTION_PROGRESS,
-  IMPORT_COLLECTION_RESULT
+  IMPORT_COLLECTION_RESULT,
+  GET_COLLECTIONS,
+  COLLECTIONS_UPDATED,
+  REMOVE_COLLECTION
 } from '../lib/ipcChannels'
+
+const store = new Store()
+
+ipcMain.on('get-settings', (event) => {
+  event.reply('settings', store.get('settings', { theme: 'system', proxy: '' }))
+})
+
+ipcMain.on('save-settings', (_, settings) => store.set('settings', settings))
+
+ipcMain.on(GET_COLLECTIONS, (event) => {
+  event.reply(COLLECTIONS_UPDATED, store.get('collections', []))
+})
+
+ipcMain.on(REMOVE_COLLECTION, (event, collectionId: string) => {
+  const collections = store.get('collections', []) as Collection[]
+  const newCollections = collections.filter((collection) => collection.id !== collectionId)
+  store.set('collections', newCollections)
+  event.reply(COLLECTIONS_UPDATED, newCollections)
+})
 
 ipcMain.on(IMPORT_COLLECTION, async (event) => {
   const dialogOptions: Electron.OpenDialogSyncOptions = {
@@ -34,11 +57,14 @@ ipcMain.on(IMPORT_COLLECTION, async (event) => {
         event.reply(IMPORT_COLLECTION_PROGRESS, status)
       }
       event.reply(IMPORT_COLLECTION_PROGRESS, 100)
-
       event.reply(IMPORT_COLLECTION_RESULT, {
         filePath: result.filePaths[0],
         collection: importer.getCollection()
       })
+      const collections = store.get('collections', []) as Collection[]
+      collections.push(importer.getCollection())
+      store.set('collections', collections)
+      event.reply(COLLECTIONS_UPDATED, store.get('collections', collections))
     } catch (error) {
       console.error(error)
       event.reply(IMPORT_COLLECTION_FAILURE, error)

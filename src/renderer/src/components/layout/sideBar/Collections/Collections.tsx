@@ -3,7 +3,12 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import { AppContext } from '../../../../context/AppContext'
 import CollectionItem from './CollectionItem'
 import Collection from './Collection'
-import { IMPORT_COLLECTION, IMPORT_COLLECTION_RESULT } from '../../../../../../lib/ipcChannels'
+import {
+  GET_COLLECTIONS,
+  COLLECTIONS_UPDATED,
+  IMPORT_COLLECTION,
+  IMPORT_COLLECTION_RESULT
+} from '../../../../../../lib/ipcChannels'
 
 export default function Collections() {
   const { collections } = useContext(AppContext)
@@ -17,7 +22,15 @@ export default function Collections() {
         collections?.add(result.collection)
       }
     )
-    return () => ipcRenderer.removeAllListeners(IMPORT_COLLECTION_RESULT)
+    ipcRenderer.send(GET_COLLECTIONS)
+    ipcRenderer.on(COLLECTIONS_UPDATED, (_: any, collectionList: Collection[]) => {
+      collections?.setCollections(collectionList)
+    })
+
+    return () => {
+      ipcRenderer.removeAllListeners(IMPORT_COLLECTION_RESULT)
+      ipcRenderer.removeAllListeners(COLLECTIONS_UPDATED)
+    }
   }, [])
 
   const add = () => {

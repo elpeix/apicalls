@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, nativeTheme, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, nativeTheme } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png'
@@ -74,10 +74,4 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-ipcMain.on('get-settings', (event) => {
-  event.reply('settings', store.get('settings', { theme: 'system', proxy: '' }))
-})
-
-ipcMain.on('save-settings', (_, settings) => store.set('settings', settings))
-
 import './ipcActions'

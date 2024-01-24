@@ -8,3 +8,8 @@ export const IMPORT_COLLECTION_RESULT = 'import-collection-result'
 export const CALL_API = 'call-api'
 export const CALL_API_FAILURE = 'call-api-failure'
 export const CALL_API_RESPONSE = 'call-api-response'
+
+export const GET_COLLECTIONS = 'get-collections'
+export const COLLECTIONS_UPDATED = 'collections-updated'
+export const GET_COLLECTIONS_FAILURE = 'get-collections-failure'
+export const REMOVE_COLLECTION = 'remove-collection'
