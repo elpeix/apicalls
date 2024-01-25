@@ -4,6 +4,7 @@ import { AppContext } from '../../context/AppContext'
 import TabTitle from '../tabs/tabTitle/TabTitle'
 import NewTab from '../tabs/newTab/NewTab'
 import RequestPanel from '../request/RequestPanel'
+import Icon from '../base/Icon/Icon'
 
 export default function ContentTabs() {
   const { tabs } = useContext(AppContext)
@@ -24,28 +25,40 @@ export default function ContentTabs() {
   if (!tabs) return null
 
   return (
-    <div className="panel-tabs">
-      <Tabs onSelect={onSelect} selectedIndex={tabs.getSelectedTabIndex()}>
-        <div className="panel-tabs-header">
-          <div className="panel-tabs-header-list" onWheel={onWheel}>
-            <TabList>
+    <>
+      { tabs.hasTabs() && (
+        <div className="panel-tabs">
+          <Tabs onSelect={onSelect} selectedIndex={tabs.getSelectedTabIndex()}>
+            <div className="panel-tabs-header">
+              <div className="panel-tabs-header-list" onWheel={onWheel}>
+                <TabList>
+                  {tabs.getTabs().map((tab) => (
+                    <Tab key={tab.id} className="request-tab">
+                      <TabTitle tab={tab} />
+                    </Tab>
+                  ))}
+                </TabList>
+              </div>
+              <NewTab />
+            </div>
+            <div className="panel-tabs-content">
               {tabs.getTabs().map((tab) => (
-                <Tab key={tab.id} className="request-tab">
-                  <TabTitle tab={tab} />
-                </Tab>
+                <TabPanel key={tab.id} forceRender={true}>
+                  <RequestPanel tab={tab} />
+                </TabPanel>
               ))}
-            </TabList>
+            </div>
+          </Tabs>
+        </div>
+      )}
+      { !tabs.hasTabs() && (
+        <div className="panel-empty-tabs">
+          <div className="new-tab" onClick={() => tabs.newTab()}>
+            <Icon icon="more" /> 
+            <div className="new-tab-label">New Tab</div>
           </div>
-          <NewTab />
         </div>
-        <div className="panel-tabs-content">
-          {tabs.getTabs().map((tab) => (
-            <TabPanel key={tab.id} forceRender={true}>
-              <RequestPanel tab={tab} />
-            </TabPanel>
-          ))}
-        </div>
-      </Tabs>
-    </div>
+      )}
+    </>
   )
 }

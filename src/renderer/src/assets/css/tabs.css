@@ -91,3 +91,26 @@
     }
   }
 }
+
+.panel-empty-tabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & .new-tab {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: opacity 0.2s ease-in-out;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

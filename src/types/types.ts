@@ -77,6 +77,7 @@ type TabsHook = {
   removeTab: (tabId: Identifier) => void
   updateTab: (tabId: Identifier, tab: Tab) => void
   updateTabRequest: (tabId: Identifier, request: RequestBase) => void
+  hasTabs: () => boolean
   getTab: (tabId: Identifier) => Tab | undefined
   getTabs: () => Tab[]
   setActiveTab: (index: number) => void

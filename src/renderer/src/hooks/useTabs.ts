@@ -65,7 +65,7 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
   const updateTabRequest = (tabId: Identifier, request: RequestBase) => {
     setTabs(tabs.map((tab: Tab) => (tab.id === tabId ? { ...tab, request } : tab)))
   }
-
+  const hasTabs = () => tabs.length > 0
   const getTab = (tabId: Identifier) => tabs.find((t) => t.id === tabId)
   const getTabs = () => tabs
   const setActiveTab = (index: number) => setTabs(_setActiveTab(tabs, index))
@@ -92,6 +92,7 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
     removeTab,
     updateTab,
     updateTabRequest,
+    hasTabs,
     getTab,
     getTabs,
     setActiveTab,
