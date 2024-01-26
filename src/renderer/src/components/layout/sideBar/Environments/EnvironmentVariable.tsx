@@ -32,7 +32,7 @@ export default function EnvironmentVariable({
       <input value={name} onChange={changeName} />
       <input value={value} onChange={changeValue} />
       <div>
-        <ButtonIcon icon="delete" onClick={() => removeVariable(index)} />
+        <ButtonIcon icon="delete" onClick={() => removeVariable(index)} title="Remove variable" />
       </div>
     </div>
   )

@@ -36,7 +36,11 @@ export default function EnvironmentItem({
       </div>
       <div className={styles.title}>{environment.name}</div>
       <div className={styles.edit}>
-        <ButtonIcon icon="edit" onClick={() => selectEnvironment(environment)} />
+        <ButtonIcon
+          icon="edit"
+          onClick={() => selectEnvironment(environment)}
+          title="Edit environment"
+        />
       </div>
     </div>
   )

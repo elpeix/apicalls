@@ -5,7 +5,6 @@ import LinkedModal from '../base/linkedModal/LinkedModal'
 import Dialog from '../base/dialog/Dialog'
 
 export default function SaveButton() {
-
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
@@ -24,7 +23,9 @@ export default function SaveButton() {
   return (
     <>
       <button className={styles.save}>
-        <div className={styles.buttonIcon}><Icon icon="save" /></div>
+        <div className={styles.buttonIcon}>
+          <Icon icon="save" />
+        </div>
         <div className={styles.buttonText}>Save</div>
       </button>
       <div ref={arrowRef} className={styles.buttonArrow} onClick={openModal}>
@@ -41,7 +42,7 @@ export default function SaveButton() {
           <div onClick={openDialog}>Save as...</div>
         </LinkedModal>
       )}
-      { showDialog && (
+      {showDialog && (
         <Dialog onClose={() => setShowDialog(false)}>
           <div>Save as...</div>
         </Dialog>

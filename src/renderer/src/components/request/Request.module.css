@@ -52,7 +52,8 @@
   }
 }
 
-.send, .save {
+.send,
+.save {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,7 +94,8 @@
       margin-right: 0.5rem;
     }
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       opacity: 1;
     }
   }
@@ -103,7 +105,7 @@
     font-weight: 500;
     color: var(--base-color);
     text-transform: uppercase;
-  }  
+  }
 }
 
 .buttonArrow {
@@ -115,6 +117,7 @@
   height: 100%;
   align-items: center;
   opacity: 0.7;
+  cursor: pointer;
   transition:
     background-color 0.2s ease-in-out,
     border-color 0.2s ease-in-out,
@@ -142,16 +145,16 @@
   width: 100%;
   overflow: auto;
 
-  &>.add {
-    margin: 10px 8px;
+  & > .add {
+    display: flex;
   }
 
-  & [role="cell"]>div {
+  & [role='cell'] > div {
     opacity: 0.7;
     font-style: italic;
   }
 
-  & .rowEnabled [role="cell"]>div {
+  & .rowEnabled [role='cell'] > div {
     opacity: 1;
     font-style: normal;
   }
@@ -164,10 +167,14 @@
   width: 100%;
   overflow: hidden;
 
-  & .tabsContent{
+  & li {
+    cursor: pointer;
+  }
+
+  & .tabsContent {
     flex: 1;
     overflow: hidden;
-  
+
     & .response-headers {
       height: 100%;
       overflow: auto;
@@ -180,6 +187,7 @@
   flex-direction: row;
   align-items: center;
   gap: 0.6rem;
+  cursor: pointer;
 
   & .tabCount {
     font-size: 0.68rem;

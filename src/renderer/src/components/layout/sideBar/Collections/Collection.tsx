@@ -72,7 +72,7 @@ export default function Collection({
           {!editingName && coll.name}
         </div>
         <div className={styles.remove}>
-          <ButtonIcon icon="delete" onClick={remove} />
+          <ButtonIcon icon="delete" onClick={remove} title="Remove" />
         </div>
       </div>
       <div className={styles.collectionContent}>

@@ -38,7 +38,7 @@ export default function History() {
         <div className="sidePanel-header-title">History</div>
         {historyItems.length > 0 && (
           <div>
-            <ButtonIcon icon="clear" title="clear" onClick={clear} />
+            <ButtonIcon icon="clear" title="Clear history" onClick={clear} />
           </div>
         )}
       </div>

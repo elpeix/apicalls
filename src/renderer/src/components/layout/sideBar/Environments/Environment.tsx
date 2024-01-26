@@ -75,7 +75,7 @@ export default function Environment({
     <div className={`sidePanel-content ${styles.environment}`}>
       <div className={styles.header}>
         <div className={styles.back}>
-          <ButtonIcon icon="arrow" direction="west" onClick={back} />
+          <ButtonIcon icon="arrow" direction="west" onClick={back} title="Go back" />
         </div>
         <div className={styles.title} onClick={editName}>
           {editingName && (
@@ -92,7 +92,7 @@ export default function Environment({
           {!editingName && env.name}
         </div>
         <div className={styles.remove}>
-          <ButtonIcon icon="delete" onClick={remove} />
+          <ButtonIcon icon="delete" onClick={remove} title="Remove environment" />
         </div>
       </div>
       <div className={styles.content}>
@@ -109,7 +109,7 @@ export default function Environment({
       </div>
       <div className={styles.footer}>
         <div>
-          <ButtonIcon icon="more" onClick={addVariable} />
+          <ButtonIcon icon="more" onClick={addVariable} title="Add variable" />
         </div>
       </div>
     </div>

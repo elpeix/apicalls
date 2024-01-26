@@ -31,7 +31,7 @@ export default function Environments() {
         <div className="sidePanel-header-title">Environments</div>
         {!selectedEnvironment && (
           <div>
-            <ButtonIcon icon="more" onClick={add} />
+            <ButtonIcon icon="more" onClick={add} title="New environment" />
           </div>
         )}
       </div>

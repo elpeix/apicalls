@@ -22,7 +22,7 @@ export default function Folder({ folder }: { folder: CollectionFolder }) {
           {folder.name}
         </div>
         <div className={styles.folderEdit}>
-          <ButtonIcon icon="edit" onClick={() => editFolder} />
+          <ButtonIcon icon="edit" onClick={() => editFolder} title="Edit folder" />
         </div>
       </div>
       {expanded && folder.elements && (

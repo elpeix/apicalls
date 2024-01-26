@@ -62,10 +62,10 @@ export default function Collections() {
         {!selectedCollection && (
           <>
             <div>
-              <ButtonIcon icon="save" onClick={importHanlder} />
+              <ButtonIcon icon="save" onClick={importHanlder} title="Import collection" />
             </div>
             <div>
-              <ButtonIcon icon="more" onClick={add} />
+              <ButtonIcon icon="more" onClick={add} title="New collection" />
             </div>
           </>
         )}

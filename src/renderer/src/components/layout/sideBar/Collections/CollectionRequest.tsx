@@ -33,7 +33,7 @@ export default function CollectionRequest({
           </div>
           <div className={styles.requestName}>{collectionRequest.name}</div>
           <div className={styles.edit}>
-            <ButtonIcon icon="edit" onClick={editHandler} />
+            <ButtonIcon icon="edit" onClick={editHandler} title="Rename" />
           </div>
         </div>
       )}

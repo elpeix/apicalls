@@ -13,17 +13,16 @@ export default function Input({
   placeholder,
   fontSize = 14
 }: {
-  inputRef: any,
-  className?: string,
-  value: string,
-  onChange?: (value: string) => void,
-  onBlur?: (value: string) => void,
-  placeholder?: string,
+  inputRef: any
+  className?: string
+  value: string
+  onChange?: (value: string) => void
+  onBlur?: (value: string) => void
+  placeholder?: string
   fontSize?: number
 }) {
-
   type Variable = {
-    part: string,
+    part: string
     value: string
   }
 
@@ -35,7 +34,7 @@ export default function Input({
   const debouncedOnOver = useDebounce(onOver, 700)
   const debouncedValue = useDebounce(internalValue, 700)
   const [variableList, setVariableList] = useState<Variable[]>([])
-  
+
   useEffect(() => {
     setInternalValue(value)
   }, [value])
@@ -43,9 +42,9 @@ export default function Input({
   useEffect(() => {
     if (debouncedValue) {
       const variables: Variable[] = []
-      internalValue.split(REGEX).forEach(part => {
-        if (environments.variableIsDefined(part)) {
-          variables.push({part, value: environments.getVariableValue(part)})
+      internalValue.split(REGEX).forEach((part) => {
+        if (environments?.variableIsDefined(part)) {
+          variables.push({ part, value: environments.getVariableValue(part) })
         }
       })
       setVariableList(variables)
@@ -65,8 +64,10 @@ export default function Input({
   const highlight = () => {
     return internalValue.split(REGEX).map((part, index) => {
       if (index % 2 === 0) return part
-      const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined
-      return (<mark key={index} className={className}>{`{{${part}}}`}</mark>)
+      const className = environments?.variableIsDefined(part)
+        ? styles.variable
+        : styles.variableUndefined
+      return <mark key={index} className={className}>{`{{${part}}}`}</mark>
     })
   }
 
@@ -77,7 +78,11 @@ export default function Input({
 
   return (
     <>
-      <div className={`${styles.input} ${className}`} onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
+      <div
+        className={`${styles.input} ${className}`}
+        onMouseOver={mouseOverHandler}
+        onMouseOut={mouseOutHandler}
+      >
         <div style={style}>
           <div>{highlight()}</div>
         </div>
@@ -90,16 +95,26 @@ export default function Input({
           style={style}
         />
       </div>
-      { variableList.length > 0 && onOver && debouncedOnOver && (
+      {variableList.length > 0 && onOver && debouncedOnOver && (
         <LinkedModal parentRef={inputRef} topOffset={3}>
-          <div className={styles.variableList} onMouseOver={mouseOverHandler} onMouseOut={mouseOutHandler}>
+          <div
+            className={styles.variableList}
+            onMouseOver={mouseOverHandler}
+            onMouseOut={mouseOutHandler}
+          >
             {internalValue.split(REGEX).map((part, index) => {
               if (index % 2 === 0) return null
-              const className = environments.variableIsDefined(part) ? styles.variable : styles.variableUndefined
+              const className = environments?.variableIsDefined(part)
+                ? styles.variable
+                : styles.variableUndefined
               return (
                 <>
-                  <span key={`${index}_${part}`} className={className}>{part}</span>
-                  <span key={`${index}_${value}`} className={styles.variableValue}>{environments.getVariableValue(part)}</span>
+                  <span key={`${index}_${part}`} className={className}>
+                    {part}
+                  </span>
+                  <span key={`${index}_${value}`} className={styles.variableValue}>
+                    {environments?.getVariableValue(part)}
+                  </span>
                 </>
               )
             })}

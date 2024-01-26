@@ -9,7 +9,7 @@ export default function NewTab() {
 
   return (
     <div className={styles.newTab}>
-      <ButtonIcon icon="more" size={21} onClick={onClick} />
+      <ButtonIcon icon="more" size={21} onClick={onClick} title="New tab" />
     </div>
   )
 }
