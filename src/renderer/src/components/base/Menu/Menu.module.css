@@ -1,4 +1,9 @@
 .menu {
+  &.active {
+    .menuIcon {
+      visibility: visible !important;
+    }
+  }
   .menuModal {
     background-color: var(--background-content);
     border: 1px solid var(--border-color);

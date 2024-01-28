@@ -6,17 +6,24 @@ import { ReactMenuElement } from './MenuElement'
 
 export default function Menu({
   className = '',
+  iconClassName = '',
   children
 }: {
   className?: string
+  iconClassName?: string
   children: ReactMenuElement
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [showMenu, setShowMenu] = useState(false)
 
   return (
-    <div ref={menuRef} className={`${styles.menu} ${className}`}>
-      <ButtonIcon icon="menu" direction="west" onClick={() => setShowMenu(true)} />
+    <div ref={menuRef} className={`${styles.menu} ${className} ${showMenu ? styles.active : ''}`}>
+      <ButtonIcon
+        className={`${iconClassName} ${styles.menuIcon}`}
+        icon="menu"
+        direction="west"
+        onClick={() => setShowMenu(true)}
+      />
       {showMenu && (
         <LinkedModal
           parentRef={menuRef}
