@@ -8,6 +8,7 @@ export default function LinkedModal({
   closeModal = () => {},
   topOffset = 0,
   leftOffset = 0,
+  onClick = () => {},
   children
 }: {
   parentRef: React.RefObject<HTMLElement>
@@ -16,6 +17,7 @@ export default function LinkedModal({
   closeModal?: () => void
   topOffset?: number
   leftOffset?: number
+  onClick?: () => void
   children: React.ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -71,6 +73,7 @@ export default function LinkedModal({
     <div
       ref={ref}
       className={`${className} ${styles.linkedModal}`}
+      onClick={onClick}
       style={{
         top: `${getTop()}px`,
         left: `${getLeft()}px`,
