@@ -9,7 +9,7 @@
     color: var(--base-color);
     padding: 0.5rem;
     border: 1px solid var(--border-color);
-    box-shadow: 1px 1px 0.5rem var(--color-10);
+    box-shadow: 1px 1px 0.5rem var(--color-11);
 
     position: absolute;
     z-index: 1;

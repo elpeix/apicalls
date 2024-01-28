@@ -2,21 +2,25 @@
 @import './css/tabs.css';
 @import './css/sidePanel.css';
 
-
-input, progress {
+input,
+progress {
   accent-color: var(--accent-color);
 }
 
-input[type="text"],
-input[type="number"] {
+input[type='text'],
+input[type='number'] {
   width: 100%;
   border: 1px solid var(--border-color);
   background-color: transparent;
   color: var(--base-color);
   padding: 5px 10px;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     background-color: var(--hover-color);
     color: var(--base-color);
   }
@@ -39,12 +43,12 @@ input[type="number"] {
   }
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   appearance: none;
   width: 20px;
   height: 20px;
   border: 1px solid var(--border-color);
-  background-color: var(--color-9);
+  background-color: var(--color-10);
   cursor: pointer;
   position: relative;
   transition: border-color 0.2s ease-in-out;
@@ -84,10 +88,14 @@ button {
   cursor: pointer;
   user-select: none;
   text-transform: uppercase;
-  padding: 5px 10px;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  padding: 0.5rem 1rem;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     background-color: var(--hover-color);
     color: var(--base-color);
   }
@@ -106,7 +114,6 @@ button {
     background-color: transparent;
     color: var(--accent-color);
   }
-  
 
   &.button-icon {
     display: flex;
@@ -150,9 +157,13 @@ select {
   cursor: pointer;
   user-select: none;
   padding: 5px 10px;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     background-color: var(--hover-color);
     color: var(--base-color);
   }
@@ -209,7 +220,7 @@ select {
     display: flex;
     border: 1px solid var(--border-color);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    
+
     .select__option {
       padding: 8px 10px;
       cursor: pointer;
@@ -253,17 +264,17 @@ ul.versions {
   color: var(--method-post-color) !important;
 }
 .PUT {
-  color: var(--method-put-color)!important;
+  color: var(--method-put-color) !important;
 }
 .DELETE {
-  color: var(--method-delete-color)!important;
+  color: var(--method-delete-color) !important;
 }
 .PATCH {
-  color: var(--method-patch-color)!important;
+  color: var(--method-patch-color) !important;
 }
 .HEAD {
-  color: var(--method-head-color)!important;
+  color: var(--method-head-color) !important;
 }
 .OPTIONS {
-  color: var(--method-option-color)!important;
+  color: var(--method-option-color) !important;
 }

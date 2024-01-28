@@ -5,22 +5,23 @@
   --color-4: #999;
   --color-5: #777;
   --color-6: #666;
-  --color-7: #363636;
-  --color-8: #282828;
-  --color-9: #222;
-  --color-10: #1d1d1d;
-  --color-11: #000;
+  --color-7: #555;
+  --color-8: #363636;
+  --color-9: #282828;
+  --color-10: #222;
+  --color-11: #1d1d1d;
+  --color-12: #000;
 
-  --background-base: var(--color-9);
-  --background-content: var(--color-10);
+  --background-base: var(--color-10);
+  --background-content: var(--color-11);
 
   --selected-color: var(--color-1);
-  --base-color: var(--color-3);
+  --base-color: var(--color-2);
   --accent-color: var(--color-5);
-  --border-color: var(--color-7);
-  --hover-color: var(--color-8);
-  --sidePanel-color: var(--color-8);
-  --sidePanel-color-hover: var(--color-7);
+  --border-color: var(--color-8);
+  --hover-color: var(--color-9);
+  --sidePanel-color: var(--color-9);
+  --sidePanel-color-hover: var(--color-8);
   --highlight-color: #0cf;
   --success-background-color: rgba(0, 204, 255, 0.2);
   --error-background-color: rgba(223, 48, 48, 0.1);
@@ -71,18 +72,19 @@
     --color-4: #666;
     --color-5: #777;
     --color-6: #aaa;
-    --color-7: #ccc;
-    --color-8: #ddd;
-    --color-9: #eee;
-    --color-10: #fafafa;
-    --color-11: #fff;
+    --color-7: #bbb;
+    --color-8: #ccc;
+    --color-9: #ddd;
+    --color-10: #eee;
+    --color-11: #fafafa;
+    --color-12: #fff;
 
     --accent-color: var(--color-6);
-    --border-color: var(--color-7);
-    --hover-color: var(--color-8);
-    --sidePanel-color: var(--color-9);
-    --sidePanel-color-hover: var(--color-8);
-    --tab-panel-background-color: var(--color-10);
+    --border-color: var(--color-8);
+    --hover-color: var(--color-9);
+    --sidePanel-color: var(--color-10);
+    --sidePanel-color-hover: var(--color-9);
+    --tab-panel-background-color: var(--color-11);
 
     --highlight-color: #0088ff;
     --success-background-color: #69b9ff;
@@ -124,7 +126,7 @@
 }
 
 ::-webkit-scrollbar-corner {
-  background: var(--color-11);
+  background: var(--color-12);
 }
 
 body {

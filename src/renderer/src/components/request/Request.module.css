@@ -74,7 +74,7 @@
     box-shadow 0.2s ease-in-out;
 
   &:hover {
-    background-color: var(--color-9);
+    background-color: var(--color-10);
   }
 
   &:focus {
@@ -82,7 +82,7 @@
   }
 
   &:active {
-    background-color: var(--color-8);
+    background-color: var(--color-9);
   }
 
   &.save {
