@@ -1,6 +1,6 @@
 import React from 'react'
 import Dialog from '../dialog/Dialog'
-import styles from './Confirm.module.css'
+import styles from './PopupBoxes.module.css'
 
 export default function Confirm({
   message,
@@ -23,7 +23,7 @@ export default function Confirm({
   }
 
   return (
-    <Dialog className={styles.confirm} onClose={onCancel}>
+    <Dialog className={styles.popupBox} onClose={onCancel}>
       <div className={styles.message}>{message}</div>
       <div className={styles.buttons}>
         <button className={styles.cancel} onClick={onCancel}>
