@@ -20,8 +20,8 @@
   width: unset;
   height: unset;
 
-  min-width: 30rem;
-  min-height: 20rem;
+  min-width: 10rem;
+  min-height: 4rem;
   max-width: 80vw;
   max-height: 80vh;
   background-color: var(--background-base);

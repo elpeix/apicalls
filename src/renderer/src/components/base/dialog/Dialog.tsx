@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
 import styles from './Dialog.module.css'
 
-export default function Dialog({ children, onClose }: {
-  children: React.ReactNode,
+export default function Dialog({
+  children,
+  className = '',
+  onClose
+}: {
+  children: React.ReactNode
+  className?: string
   onClose?: () => void
 }) {
-
   const [show, setShow] = useState(true)
 
   const overlayClick = () => {
@@ -21,7 +25,7 @@ export default function Dialog({ children, onClose }: {
     <>
       {show && (
         <div className={styles.overlay} onClick={overlayClick}>
-          <dialog className={styles.dialog} onClick={dialogClick}>
+          <dialog className={`${styles.dialog} ${className}`} onClick={dialogClick}>
             {children}
           </dialog>
         </div>
