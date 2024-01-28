@@ -16,15 +16,22 @@ export function useCollections(): CollectionsHook {
   }
 
   const add = (collection: Collection) => setCollections([...collections, collection])
+
   const remove = (id: Identifier) => {
     setCollections(collections.filter((collection) => collection.id !== id))
     ipcRenderer.send(REMOVE_COLLECTION, id)
   }
-  const update = (collection: Collection) =>
+
+  const update = (collection: Collection) => {
     setCollections(collections.map((coll) => (coll.id === collection.id ? collection : coll)))
+  }
+
   const clear = () => setCollections([])
+
   const getAll = () => collections
+
   const get = (id: Identifier) => collections.find((collection) => collection.id === id)
+
   const addPreRequestData = (collectionId: Identifier, preRequestData: PreRequestData) => {
     const collection = get(collectionId)
     if (collection) {
@@ -32,6 +39,7 @@ export function useCollections(): CollectionsHook {
       update(collection)
     }
   }
+
   const removePreRequestData = (collectionId: Identifier) => {
     const collection = get(collectionId)
     if (collection) {

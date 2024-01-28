@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createRequest } from '../lib/factory'
 
 export default function useTabs(initialTabs: Tab[]): TabsHook {
   const [tabs, setTabs] = useState([...initialTabs])
@@ -13,29 +14,7 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
   }
 
   const newTab = (itemRequest?: RequestType) => {
-    const tabId: Identifier = String(
-      Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    )
-    console.log('newTab', itemRequest)
-
-    if (!itemRequest) {
-      itemRequest = {
-        type: 'draft',
-        id: tabId,
-        request: {
-          url: '',
-          method: {
-            label: 'GET',
-            value: 'GET',
-            body: false
-          },
-          headers: [],
-          params: []
-        }
-      }
-    }
-
-    console.log('newTab', itemRequest)
+    itemRequest = itemRequest || createRequest({ name: 'Draft' })
     const tab: Tab = { ...itemRequest, active: true }
     addTab(tab)
   }
