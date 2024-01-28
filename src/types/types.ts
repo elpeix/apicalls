@@ -50,6 +50,7 @@ type PreRequestData = {
 }
 
 type CollectionFolder = {
+  id: Identifier
   type: 'folder'
   name: string
   elements: (CollectionFolder | RequestType)[]
