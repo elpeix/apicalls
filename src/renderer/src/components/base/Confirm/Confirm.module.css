@@ -1,0 +1,45 @@
+.confirm {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 30rem;
+  max-width: 40rem;
+
+  .message {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    button {
+      min-width: 6rem;
+    }
+
+    .cancel {
+      color: var(--color-5);
+    }
+
+    .ok {
+      background-color: var(--color-9);
+      color: var(--color-3);
+
+      &:hover {
+        background-color: var(--color-7);
+      }
+
+      &:focus {
+        color: var(--highlight-color);
+      }
+
+      &:active {
+        background-color: var(--color-8);
+      }
+    }
+  }
+}
