@@ -3,24 +3,23 @@ import styles from './LinkedModal.module.css'
 
 export default function LinkedModal({
   parentRef,
-  zIndex=1,
-  className='', 
+  zIndex = 1,
+  className = '',
   closeModal = () => {},
-  topOffset=0,
-  leftOffset=0,
+  topOffset = 0,
+  leftOffset = 0,
   children
 }: {
-  parentRef: React.RefObject<HTMLElement>,
-  zIndex?: number,
-  className?: string,
-  closeModal?: () => void,
-  topOffset?: number,
-  leftOffset?: number,
+  parentRef: React.RefObject<HTMLElement>
+  zIndex?: number
+  className?: string
+  closeModal?: () => void
+  topOffset?: number
+  leftOffset?: number
   children: React.ReactNode
 }) {
-
   const ref = useRef<HTMLDivElement>(null)
-  const [dimensions, setDimensions] = useState({ width:0, height: 0 })
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [x, setX] = useState(0)
   const [y, setY] = useState(0)
 
@@ -52,6 +51,9 @@ export default function LinkedModal({
     if (y + dimensions.height > window.innerHeight) {
       return y - dimensions.height
     }
+    if (y < 0) {
+      return 0
+    }
     return y
   }
 
@@ -59,18 +61,22 @@ export default function LinkedModal({
     if (x + dimensions.width > window.innerWidth) {
       return x - dimensions.width + (parentRef.current ? parentRef.current.offsetWidth : 0)
     }
+    if (x < 0) {
+      return 0
+    }
     return x
   }
 
   return (
-    <div 
+    <div
       ref={ref}
       className={`${className} ${styles.linkedModal}`}
       style={{
         top: `${getTop()}px`,
         left: `${getLeft()}px`,
         zIndex: zIndex * 1000
-      }}>
+      }}
+    >
       {children}
     </div>
   )
