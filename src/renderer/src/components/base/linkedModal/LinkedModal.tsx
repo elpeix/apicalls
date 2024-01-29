@@ -17,7 +17,7 @@ export default function LinkedModal({
   closeModal?: () => void
   topOffset?: number
   leftOffset?: number
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<Element>) => void
   children: React.ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)

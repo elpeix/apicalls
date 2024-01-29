@@ -16,13 +16,22 @@ export default function Menu({
   const menuRef = useRef<HTMLDivElement>(null)
   const [showMenu, setShowMenu] = useState(false)
 
+  const handleOnClick = (e: React.MouseEvent<Element>) => {
+    e.stopPropagation()
+    setShowMenu(true)
+  }
+  const handleOnClickModal = (e: React.MouseEvent<Element>) => {
+    e.stopPropagation()
+    setShowMenu(false)
+  }
+
   return (
     <div ref={menuRef} className={`${styles.menu} ${className} ${showMenu ? styles.active : ''}`}>
       <ButtonIcon
         className={`${iconClassName} ${styles.menuIcon}`}
         icon="menu"
         direction="west"
-        onClick={() => setShowMenu(true)}
+        onClick={handleOnClick}
       />
       {showMenu && (
         <LinkedModal
@@ -32,7 +41,7 @@ export default function Menu({
           leftOffset={-136}
           className={styles.menuModal}
           closeModal={() => setShowMenu(false)}
-          onClick={() => setShowMenu(false)}
+          onClick={handleOnClickModal}
         >
           {children}
         </LinkedModal>
