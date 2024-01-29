@@ -9,7 +9,7 @@ export type ReactMenuElement =
   | Array<ReactElement<typeof MenuSeparator>>
 
 export function MenuElement({
-  icon,
+  icon = '',
   title,
   onClick
 }: {

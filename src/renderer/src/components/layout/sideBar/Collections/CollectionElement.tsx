@@ -3,16 +3,22 @@ import CollectionRequest from './CollectionRequest'
 import Folder from './Folder'
 
 export default function CollectionElement({
-  element
+  element,
+  update,
+  removeElement
 }: {
   element: CollectionFolder | RequestType
+  update: () => void
+  removeElement: (element: CollectionFolder | RequestType) => void
 }) {
   const isFolder = element.type === 'folder'
 
   return (
     <>
-      {isFolder && <Folder folder={element} />}
-      {!isFolder && <CollectionRequest collectionRequest={element} />}
+      {isFolder && <Folder folder={element} update={update} remove={removeElement} />}
+      {!isFolder && (
+        <CollectionRequest collectionRequest={element} update={update} remove={removeElement} />
+      )}
     </>
   )
 }

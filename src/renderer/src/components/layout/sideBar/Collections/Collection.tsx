@@ -1,7 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
-import CollectionElement from './CollectionElement'
+import { createFolder, createRequest } from '../../../../lib/factory'
+import Menu from '../../../base/Menu/Menu'
+import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
+import FolderCreator from './FolderCreator'
+import Confirm from '../../../base/PopupBoxes/Confirm'
+import CollectionElements from './CollectionElements'
+import EditableName from '../../../base/EditableName/EditableName'
+import { AppContext } from '../../../../context/AppContext'
+import RequestCreator from './RequestCreator'
 
 export default function Collection({
   collection,
@@ -14,9 +22,13 @@ export default function Collection({
   update: (collection: Collection) => void
   remove: () => void
 }) {
+  const { tabs } = useContext(AppContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [editingName, setEditingName] = useState(false)
+  const [showCreateFolder, setShowCreateFolder] = useState(false)
+  const [showCreateRequest, setShowCreateRequest] = useState(false)
+  const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => {
     setColl(collection)
@@ -30,6 +42,18 @@ export default function Collection({
     }
   }, [collection])
 
+  const createFolderHandler = (name: string) => {
+    setShowCreateFolder(false)
+    coll.elements.push(createFolder(name))
+    setColl({ ...coll })
+    update({ ...coll })
+  }
+
+  const handleUpdate = () => {
+    setColl({ ...coll })
+    update({ ...coll })
+  }
+
   const editName = () => {
     setEditingName(true)
     setTimeout(() => {
@@ -38,17 +62,25 @@ export default function Collection({
       nameRef.current.focus()
     }, 0)
   }
-  const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setColl({ ...coll, name: e.target.value })
-    update({ ...coll, name: e.target.value })
+  const changeName = (name: string) => {
+    setEditingName(false)
+    setColl({ ...coll, name })
+    update({ ...coll, name })
   }
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setEditingName(false)
-    }
-    if (e.key === 'Enter') {
-      setEditingName(false)
-    }
+
+  const handleAddRequest = () => {
+    setShowCreateRequest(true)
+  }
+
+  const createRequestHandler = (name: string) => {
+    setShowCreateRequest(false)
+    const request = createRequest({
+      name,
+      type: 'collection'
+    })
+    coll.elements.push(request)
+    handleUpdate()
+    tabs?.openTab(request)
   }
 
   return (
@@ -57,29 +89,46 @@ export default function Collection({
         <div className={styles.back}>
           <ButtonIcon icon="arrow" direction="west" onClick={back} />
         </div>
-        <div className={styles.title} onClick={editName}>
-          {editingName && (
-            <input
-              ref={nameRef}
-              className={styles.nameInput}
-              placeholder="Collection name"
-              value={coll.name}
-              onChange={changeName}
-              onBlur={() => setEditingName(false)}
-              onKeyDown={onKeyDown}
-            />
-          )}
-          {!editingName && coll.name}
-        </div>
-        <div className={styles.remove}>
-          <ButtonIcon icon="delete" onClick={remove} title="Remove" />
-        </div>
+        <EditableName
+          name={coll.name}
+          editMode={editingName}
+          update={changeName}
+          onBlur={() => setEditingName(false)}
+        />
+        <Menu>
+          <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
+          <MenuElement icon="folder" title="Add folder" onClick={() => setShowCreateFolder(true)} />
+          <MenuElement icon="edit" title="Edit collection" onClick={editName} />
+          <MenuSeparator />
+          <MenuElement
+            icon="delete"
+            title="Delete collection"
+            onClick={() => setShowDialog(true)}
+          />
+        </Menu>
       </div>
       <div className={styles.collectionContent}>
-        {coll.elements.map((element, i) => (
-          <CollectionElement key={i} element={element} />
-        ))}
+        <CollectionElements elements={coll.elements} update={handleUpdate} />
       </div>
+      {showDialog && (
+        <Confirm
+          message="Are you sure you want to remove this collection?"
+          confirmName="Remove"
+          onConfirm={remove}
+          onCancel={() => setShowDialog(false)}
+        />
+      )}
+
+      {showCreateFolder && (
+        <FolderCreator onCancel={() => setShowCreateFolder(false)} onCreate={createFolderHandler} />
+      )}
+
+      {showCreateRequest && (
+        <RequestCreator
+          onCancel={() => setShowCreateRequest(false)}
+          onCreate={createRequestHandler}
+        />
+      )}
     </div>
   )
 }

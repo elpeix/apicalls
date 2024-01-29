@@ -1,73 +1,66 @@
 import React, { useContext, useState } from 'react'
 import styles from './Collections.module.css'
-import ButtonIcon from '../../../base/ButtonIcon'
 import { AppContext } from '../../../../context/AppContext'
+import Menu from '../../../base/Menu/Menu'
+import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
+import EditableName from '../../../base/EditableName/EditableName'
+import Confirm from '../../../base/PopupBoxes/Confirm'
 
 export default function CollectionRequest({
-  collectionRequest
+  collectionRequest,
+  update,
+  remove
 }: {
   collectionRequest: RequestType
+  update: () => void
+  remove: (request: RequestType) => void
 }) {
-  const { tabs, collections } = useContext(AppContext)
+  const { tabs } = useContext(AppContext)
   const { request } = collectionRequest
-
-  const [editMode, setEditMode] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [showRemove, setShowRemove] = useState(false)
 
   const clickHandler = () => {
     if (tabs) {
       tabs.openTab(collectionRequest)
     }
   }
+  const changeName = (name: string) => {
+    collectionRequest.name = name
+    update()
+  }
 
-  const editHandler = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setEditMode(true)
+  const handleConfirmRemove = () => {
+    setShowRemove(false)
+    remove(collectionRequest)
   }
 
   return (
     <>
-      {!editMode && (
-        <div className={styles.request} onClick={clickHandler}>
-          <div className={`${styles.requestMethod} ${request.method.value}`}>
-            {request.method.label}
-          </div>
-          <div className={styles.requestName}>{collectionRequest.name}</div>
-          <div className={styles.edit}>
-            <ButtonIcon icon="edit" onClick={editHandler} title="Rename" />
-          </div>
+      <div className={styles.request} onClick={clickHandler}>
+        <div className={`${styles.requestMethod} ${request.method.value}`}>
+          {request.method.label}
         </div>
-      )}
-      {editMode && (
-        <div className={`${styles.request} ${styles.edit}`}>
-          <div className={`${styles.requestMethod} ${request.method.value}`}>
-            {request.method.label}
-          </div>
-          <input
-            type="text"
-            className={styles.requestName}
-            value={collectionRequest.name}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setEditMode(false)
-                if (collections) {
-                  console.log('update collection request')
-                }
-                return
-              }
-              if (e.key === 'Escape') {
-                setEditMode(false)
-                return
-              }
-            }}
-            autoFocus
-            onBlur={() => {
-              setEditMode(false)
-              if (collections) {
-                console.log('update collection request')
-              }
-            }}
-          />
-        </div>
+        <EditableName
+          name={collectionRequest.name || 'New request'}
+          editMode={editingName}
+          update={changeName}
+          onBlur={() => setEditingName(false)}
+        />
+        <Menu className={styles.menu} iconClassName={styles.menuIcon}>
+          <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
+          <MenuSeparator />
+          <MenuElement icon="delete" title="Remove" onClick={() => setShowRemove(true)} />
+        </Menu>
+      </div>
+
+      {showRemove && (
+        <Confirm
+          message={`Are you sure you want to remove request ${collectionRequest.name}?`}
+          confirmName="Remove"
+          onConfirm={handleConfirmRemove}
+          onCancel={() => setShowRemove(false)}
+        />
       )}
     </>
   )
