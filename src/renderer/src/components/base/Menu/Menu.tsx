@@ -6,10 +6,12 @@ import { ReactMenuElement } from './MenuElement'
 
 export default function Menu({
   className = '',
+  showMenuClassName = '',
   iconClassName = '',
   children
 }: {
   className?: string
+  showMenuClassName?: string
   iconClassName?: string
   children: ReactMenuElement
 }) {
@@ -18,15 +20,17 @@ export default function Menu({
 
   const handleOnClick = (e: React.MouseEvent<Element>) => {
     e.stopPropagation()
-    setShowMenu(true)
+    setShowMenu(!showMenu)
   }
   const handleOnClickModal = (e: React.MouseEvent<Element>) => {
     e.stopPropagation()
     setShowMenu(false)
   }
 
+  const menuClassName = `${styles.menu} ${className} ${showMenu ? `${styles.active} ${showMenuClassName}` : ''}`
+
   return (
-    <div ref={menuRef} className={`${styles.menu} ${className} ${showMenu ? styles.active : ''}`}>
+    <div ref={menuRef} className={menuClassName}>
       <ButtonIcon
         className={`${iconClassName} ${styles.menuIcon}`}
         icon="menu"

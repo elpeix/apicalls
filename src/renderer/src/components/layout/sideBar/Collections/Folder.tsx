@@ -85,16 +85,16 @@ export default function Folder({
               onBlur={() => setEditingName(false)}
             />
           </div>
-          <Menu className={styles.menu} iconClassName={styles.menuIcon}>
-            <MenuElement icon="edit" title="Edit folder" onClick={() => setEditingName(true)} />
+          <Menu
+            className={styles.menu}
+            iconClassName={styles.menuIcon}
+            showMenuClassName={styles.menuActive}
+          >
+            <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
             <MenuElement icon="folder" title="Add folder" onClick={handleAddFolder} />
             <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
             <MenuSeparator />
-            <MenuElement
-              icon="delete"
-              title="Delete folder"
-              onClick={() => setShowRemoveFolder(true)}
-            />
+            <MenuElement icon="delete" title="Remove" onClick={() => setShowRemoveFolder(true)} />
           </Menu>
         </div>
         {expanded && folder.elements && (

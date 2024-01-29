@@ -47,7 +47,11 @@ export default function CollectionRequest({
           update={changeName}
           onBlur={() => setEditingName(false)}
         />
-        <Menu className={styles.menu} iconClassName={styles.menuIcon}>
+        <Menu
+          className={styles.menu}
+          iconClassName={styles.menuIcon}
+          showMenuClassName={styles.menuActive}
+        >
           <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
           <MenuSeparator />
           <MenuElement icon="delete" title="Remove" onClick={() => setShowRemove(true)} />

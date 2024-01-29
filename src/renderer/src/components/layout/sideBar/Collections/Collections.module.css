@@ -74,6 +74,7 @@
       }
     }
 
+    &:has(.menuActive),
     &:hover {
       opacity: 1;
 
@@ -128,10 +129,6 @@
     text-overflow: ellipsis;
   }
 
-  &:hover {
-    opacity: 1;
-  }
-
   & .edit {
     visibility: hidden;
   }
@@ -142,6 +139,7 @@
     }
   }
 
+  &:has(.menuActive),
   &:hover {
     opacity: 1;
 

@@ -98,13 +98,9 @@ export default function Collection({
         <Menu>
           <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
           <MenuElement icon="folder" title="Add folder" onClick={() => setShowCreateFolder(true)} />
-          <MenuElement icon="edit" title="Edit collection" onClick={editName} />
+          <MenuElement icon="edit" title="Rename" onClick={editName} />
           <MenuSeparator />
-          <MenuElement
-            icon="delete"
-            title="Delete collection"
-            onClick={() => setShowDialog(true)}
-          />
+          <MenuElement icon="delete" title="Remove" onClick={() => setShowDialog(true)} />
         </Menu>
       </div>
       <div className={styles.collectionContent}>

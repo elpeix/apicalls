@@ -44,7 +44,11 @@ export default function LinkedModal({
   }, [ref, parentRef, topOffset, leftOffset])
 
   const handleOutsideClick = (e: MouseEvent) => {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
+    if (
+      ref.current &&
+      !ref.current.contains(e.target as Node) &&
+      !parentRef.current?.contains(e.target as Node)
+    ) {
       closeModal()
     }
   }
