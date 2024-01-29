@@ -89,8 +89,13 @@
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    width: 100%;
-    padding-left: 0.2rem;
+    margin-left: 0.86rem;
+    border-left: 1px solid var(--border-color);
+    transition: border-color 0.2s ease-in-out;
+
+    &:hover {
+      border-color: var(--accent-color);
+    }
   }
 }
 

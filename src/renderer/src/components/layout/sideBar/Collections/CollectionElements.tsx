@@ -15,7 +15,7 @@ export default function CollectionElements({
   }
 
   return (
-    <div>
+    <>
       {elements.map((element, i) => (
         <CollectionElement
           key={i}
@@ -24,6 +24,6 @@ export default function CollectionElements({
           removeElement={removeElement}
         />
       ))}
-    </div>
+    </>
   )
 }
