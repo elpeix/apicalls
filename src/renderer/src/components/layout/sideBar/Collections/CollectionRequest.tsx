@@ -9,11 +9,13 @@ import Confirm from '../../../base/PopupBoxes/Confirm'
 export default function CollectionRequest({
   collectionRequest,
   update,
+  addRequest,
   remove
 }: {
   collectionRequest: RequestType
   update: () => void
   remove: (request: RequestType) => void
+  addRequest: (request: RequestType) => void
 }) {
   const { tabs } = useContext(AppContext)
   const { request } = collectionRequest
@@ -35,6 +37,10 @@ export default function CollectionRequest({
     remove(collectionRequest)
   }
 
+  const duplicate = (request: RequestType) => {
+    addRequest({ ...request, id: Date.now().toString(), name: `${request.name} copy` })
+  }
+
   return (
     <>
       <div className={styles.request} onClick={clickHandler}>
@@ -53,6 +59,7 @@ export default function CollectionRequest({
           showMenuClassName={styles.menuActive}
         >
           <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
+          <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
           <MenuSeparator />
           <MenuElement icon="delete" title="Remove" onClick={() => setShowRemove(true)} />
         </Menu>

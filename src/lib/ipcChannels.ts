@@ -10,6 +10,12 @@ export const CALL_API_FAILURE = 'call-api-failure'
 export const CALL_API_RESPONSE = 'call-api-response'
 
 export const GET_COLLECTIONS = 'get-collections'
+export const CREATE_COLLECTION = 'create-collection'
+export const UPDATE_COLLECTION = 'update-collection'
+export const REMOVE_COLLECTION = 'remove-collection'
 export const COLLECTIONS_UPDATED = 'collections-updated'
 export const GET_COLLECTIONS_FAILURE = 'get-collections-failure'
-export const REMOVE_COLLECTION = 'remove-collection'
+
+export const GET_SETTINGS = 'get-settings'
+export const SAVE_SETTINGS = 'save-settings'
+export const SETTINGS_UPDATED = 'settings-updated'

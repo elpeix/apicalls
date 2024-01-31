@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Versions from './Versions'
 import styles from './Settings.module.css'
+import { GET_SETTINGS, SAVE_SETTINGS, SETTINGS_UPDATED } from '../../../../../../lib/ipcChannels'
 
 export default function Settings() {
   const [settings, setSettings] = useState<AppSettings>({
@@ -12,14 +13,14 @@ export default function Settings() {
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send('get-settings')
-    ipcRenderer.on('settings', (_: any, settings: AppSettings) => setSettings(settings))
-    return () => ipcRenderer.removeAllListeners('settings')
+    ipcRenderer.send(GET_SETTINGS)
+    ipcRenderer.on(SETTINGS_UPDATED, (_: any, settings: AppSettings) => setSettings(settings))
+    return () => ipcRenderer.removeAllListeners(SETTINGS_UPDATED)
   }, [])
 
   const saveSettings = () => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send('save-settings', settings)
+    ipcRenderer.send(SAVE_SETTINGS, settings)
   }
 
   const getThemeName = (value: string): Theme => {

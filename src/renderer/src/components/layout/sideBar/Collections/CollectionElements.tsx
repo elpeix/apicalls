@@ -14,6 +14,11 @@ export default function CollectionElements({
     update()
   }
 
+  const addRequest = (request: RequestType) => {
+    elements.push(request)
+    update()
+  }
+
   return (
     <>
       {elements.map((element, i) => (
@@ -22,6 +27,7 @@ export default function CollectionElements({
           element={element}
           update={update}
           removeElement={removeElement}
+          addRequest={addRequest}
         />
       ))}
     </>
