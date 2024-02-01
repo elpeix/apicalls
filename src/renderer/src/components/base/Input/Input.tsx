@@ -10,23 +10,29 @@ export default function Input({
   value,
   onChange,
   onBlur,
+  onKeyUp,
   placeholder,
-  fontSize = 14
+  fontSize = 14,
+  autoFocus = false,
+  showTip = false
 }: {
   inputRef: any
   className?: string
   value: string
   onChange?: (value: string) => void
   onBlur?: (value: string) => void
+  onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   placeholder?: string
   fontSize?: number
+  autoFocus?: boolean
+  showTip?: boolean
 }) {
   type Variable = {
     part: string
     value: string
   }
 
-  const REGEX = useMemo(() => /\{\{([^}]+)\}\}/g, []) // Get {{variable}} from string
+  const REGEX = useMemo(() => /\{\{([^}]+)\}\}/i, []) // Get {{variable}} from string
 
   const { environments } = useContext(AppContext)
   const [internalValue, setInternalValue] = useState(value)
@@ -62,6 +68,7 @@ export default function Input({
   }
 
   const highlight = () => {
+    if (!showTip) return internalValue
     return internalValue.split(REGEX).map((part, index) => {
       if (index % 2 === 0) return part
       const className = environments?.variableIsDefined(part)
@@ -73,6 +80,10 @@ export default function Input({
 
   const mouseOverHandler = () => setOnOver(true)
   const mouseOutHandler = () => setOnOver(false)
+
+  const showLinkedModal = () => {
+    return showTip && debouncedOnOver && variableList.length > 0 && REGEX.test(internalValue)
+  }
 
   const style = { fontSize: `${fontSize}px` }
 
@@ -91,11 +102,13 @@ export default function Input({
           placeholder={placeholder}
           onChange={handleChange}
           onBlur={handleBlur}
+          onKeyUp={onKeyUp}
           value={internalValue}
           style={style}
+          autoFocus={autoFocus}
         />
       </div>
-      {variableList.length > 0 && onOver && debouncedOnOver && (
+      {showLinkedModal() && (
         <LinkedModal parentRef={inputRef} topOffset={3}>
           <div
             className={styles.variableList}

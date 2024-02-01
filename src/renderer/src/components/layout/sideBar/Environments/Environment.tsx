@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Environment.module.css'
-import EnvironmentVariable from './EnvironmentVariable'
+import EnvironmentVariables from './EnvironmentVariables'
 
 export default function Environment({
   environment,
@@ -55,16 +55,6 @@ export default function Environment({
     const variables = [...env.variables, { name: '', value: '' }]
     updateVariables({ variables })
   }
-  const removeVariable = (index: number) => {
-    const variables = [...env.variables]
-    variables.splice(index, 1)
-    updateVariables({ variables })
-  }
-  const updateVariable = (index: number, variable: KeyValue) => {
-    const variables = [...env.variables]
-    variables[index] = { ...variables[index], ...variable }
-    updateVariables({ variables })
-  }
 
   const updateVariables = ({ variables }: { variables: KeyValue[] }) => {
     setEnv({ ...env, variables })
@@ -96,16 +86,7 @@ export default function Environment({
         </div>
       </div>
       <div className={styles.content}>
-        {env.variables.map((variable, index) => (
-          <EnvironmentVariable
-            key={index}
-            variable={variable}
-            index={index}
-            className={styles.variable}
-            removeVariable={removeVariable}
-            updateVariable={updateVariable}
-          />
-        ))}
+        <EnvironmentVariables variables={env.variables} update={updateVariables} />
       </div>
       <div className={styles.footer}>
         <div>

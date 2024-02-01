@@ -38,12 +38,27 @@
     }
   }
 
-  .header .cell {
-    font-weight: 500;
-    color: var(--base-color);
-  }
-
   .header {
     user-select: none;
+
+    .cell {
+      font-weight: 600;
+      color: var(--color-4);
+
+      &.draggable {
+        position: relative;
+        .resize {
+          width: 2px;
+          height: 100%;
+          position: absolute;
+          right: 0;
+          top: 0;
+          cursor: col-resize;
+          z-index: 10;
+          background: var(--border-color);
+          opacity: 0;
+        }
+      }
+    }
   }
 }

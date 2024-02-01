@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SimpleTable from '../base/SimpleTable/SimpleTable'
 import ButtonIcon from '../base/ButtonIcon'
 import styles from './Request.module.css'
@@ -12,15 +12,24 @@ export default function Headers({
   setHeaders: (params: KeyValue[]) => void
   addHeader: () => void
 }) {
+  const [nameSize, setNameSize] = useState(200)
+
+  const changeNameSize = (offset: number) => {
+    const newSize = nameSize + offset
+    setNameSize(Math.max(Math.min(newSize, 500), 100))
+  }
+
   return (
     <div className={styles.headers}>
       {headers && headers.length > 0 && (
-        <SimpleTable templateColumns="30px 1fr 1fr 40px">
+        <SimpleTable templateColumns={`1.9rem ${nameSize}px 1fr 2rem`}>
           <SimpleTable.Header>
             <SimpleTable.HeaderCell>
               <></>
             </SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell>Name</SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true} onDrag={changeNameSize}>
+              Name
+            </SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>Value</SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>
               <></>
@@ -50,6 +59,7 @@ export default function Headers({
                     newHeaders[index].name = value
                     setHeaders(newHeaders)
                   }}
+                  showTip={true}
                 />
                 <SimpleTable.Cell
                   editable
@@ -60,6 +70,7 @@ export default function Headers({
                     newHeaders[index].value = value
                     setHeaders(newHeaders)
                   }}
+                  showTip={true}
                 />
                 <SimpleTable.Cell
                   value={

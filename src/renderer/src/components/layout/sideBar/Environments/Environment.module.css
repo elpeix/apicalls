@@ -1,13 +1,11 @@
 .environment {
-
   & .header {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
     width: 100%;
     border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
   }
 
   & .title {
@@ -29,7 +27,7 @@
       border: none;
       outline: none;
       padding: 0.5rem;
-      transition: background-color 0.2s ease-in-out;;
+      transition: background-color 0.2s ease-in-out;
 
       &:focus {
         outline: none;
@@ -41,7 +39,7 @@
   & .variable {
     display: flex;
     flex-direction: row;
-  
+
     & > * {
       padding: 0.3rem 0.5rem;
       border: 1px solid var(--border-color);
@@ -52,7 +50,7 @@
         border-right: none;
       }
     }
-  
+
     & input {
       width: 100%;
       font-size: 13px;
@@ -60,11 +58,18 @@
       background-color: transparent;
       outline: none;
       padding: 0.3rem 0.5rem;
-      transition: background-color 0.2s ease-in-out;;
-  
+      transition: background-color 0.2s ease-in-out;
+
       &:focus {
         outline: none;
         box-shadow: inset 0 0 0 1px var(--accent-color);
+      }
+      &.variableName {
+        flex-grow: 1;
+        max-width: 10rem;
+      }
+      &.variableValue {
+        flex-grow: 1;
       }
     }
   }
@@ -74,7 +79,7 @@
     flex-direction: row;
     align-items: start;
     justify-content: space-between;
-    padding: .3rem;
+    padding: 0.3rem;
     width: 100%;
   }
 }
