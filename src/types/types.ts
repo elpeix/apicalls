@@ -166,6 +166,7 @@ type AppSettings = {
 }
 
 type CallRequest = {
+  id: Identifier
   url: string
   method?: string
   queryParams?: KeyValue[]
@@ -174,6 +175,7 @@ type CallRequest = {
 }
 
 type CallResponse = {
+  id: Identifier
   result: string | undefined
   status: {
     code: number

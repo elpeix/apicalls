@@ -7,11 +7,13 @@ import { RequestContext } from '../../context/RequestContext'
 import Loading from '../base/Loading/Loading'
 import styles from './Response.module.css'
 
-export default function Response({ consoleIsHidden, showConsole }: {
-  consoleIsHidden: boolean,
+export default function Response({
+  consoleIsHidden,
+  showConsole
+}: {
+  consoleIsHidden: boolean
   showConsole: () => void
 }) {
-
   const context = useContext(RequestContext)
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
@@ -33,16 +35,16 @@ export default function Response({ consoleIsHidden, showConsole }: {
 
   return (
     <>
-      {fetching && <Loading /> }
+      {fetching && <Loading />}
       {!fetching && fetched && (
         <div className={styles.response}>
           <div className={styles.content}>
-            <Tabs className='tabs'>
+            <Tabs className="tabs">
               <TabList>
                 <Tab>Response</Tab>
                 <Tab>Headers</Tab>
               </TabList>
-              <div className='tab-panel-wrapper'>
+              <div className="tab-panel-wrapper">
                 <TabPanel forceRender={true}>
                   <ResponseBody value={body} />
                 </TabPanel>
@@ -53,7 +55,7 @@ export default function Response({ consoleIsHidden, showConsole }: {
             </Tabs>
           </div>
           <div className={styles.footer}>
-            <ResponseStatus 
+            <ResponseStatus
               status={status}
               time={time}
               size={size}

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
 import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
+import { createMethod } from '../lib/factory'
 
 export const RequestContext = createContext<{
   request: RequestContextRequest | null
@@ -54,13 +55,13 @@ export default function RequestContextProvider({
 
   const methods = useMemo(
     () => [
-      { value: 'GET', label: 'GET', body: false },
-      { value: 'POST', label: 'POST', body: true },
-      { value: 'PUT', label: 'PUT', body: true },
-      { value: 'PATCH', label: 'PATCH', body: true },
-      { value: 'DELETE', label: 'DELETE', body: false },
-      { value: 'HEAD', label: 'HEAD', body: false },
-      { value: 'OPTIONS', label: 'OPTIONS', body: false }
+      createMethod('GET'),
+      createMethod('POST'),
+      createMethod('PUT'),
+      createMethod('PATCH'),
+      createMethod('DELETE'),
+      createMethod('HEAD'),
+      createMethod('OPTIONS')
     ],
     []
   )
@@ -138,6 +139,7 @@ export default function RequestContextProvider({
     saveHistory()
 
     const callApiRequest: CallRequest = {
+      id: tabId,
       url,
       method: requestMethod.value,
       headers,
@@ -146,6 +148,7 @@ export default function RequestContextProvider({
     }
     window.electron.ipcRenderer.send(CALL_API, callApiRequest)
     window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: any, callResponse: CallResponse) => {
+      if (callResponse.id !== tabId) return
       setFetched(true)
       setResponseTime(callResponse.responseTime.all)
       setResponseStatus(callResponse.status.code)

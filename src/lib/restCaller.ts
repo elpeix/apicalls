@@ -42,6 +42,7 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
       headers.push({ name: key, value })
     })
     return {
+      id: request.id,
       result,
       status: {
         code: response.status,
