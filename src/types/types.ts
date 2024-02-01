@@ -167,7 +167,7 @@ type AppSettings = {
 type CallRequest = {
   url: string
   method?: string
-  queryParams?: URLSearchParams
+  queryParams?: KeyValue[]
   headers?: HeadersInit
   body?: string
 }

@@ -6,8 +6,12 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
   }
   try {
     let path = request.url
-    if (request.queryParams && request.queryParams.toString() !== '') {
-      path += `?${request.queryParams.toString()}`
+    const queryParams = new URLSearchParams()
+    if (request.queryParams && request.queryParams.length > 0) {
+      request.queryParams.forEach((param) => {
+        queryParams.append(param.name, param.value)
+      })
+      path += `?${queryParams.toString()}`
     }
     const initTime = Date.now()
     const requestInit: RequestInit = {

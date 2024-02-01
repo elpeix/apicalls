@@ -134,22 +134,17 @@ export default function RequestContextProvider({
         headers[getValue(header.name)] = getValue(header.value)
       }
     })
-    const queryParams = new URLSearchParams()
-    requestParams.forEach((param) => {
-      if (param.enabled) {
-        queryParams.append(getValue(param.name), getValue(param.value))
-      }
-    })
 
     saveHistory()
 
-    window.electron.ipcRenderer.send(CALL_API, {
+    const callApiRequest: CallRequest = {
       url,
       method: requestMethod.value,
       headers,
-      queryParams,
+      queryParams: requestParams,
       body: requestBody
-    })
+    }
+    window.electron.ipcRenderer.send(CALL_API, callApiRequest)
     window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: any, callResponse: CallResponse) => {
       setFetched(true)
       setResponseTime(callResponse.responseTime.all)
