@@ -4,16 +4,15 @@ import { useOutsideClick } from '../../../hooks/useOutsideClick'
 import { AppContext } from '../../../context/AppContext'
 import ButtonIcon from '../../base/ButtonIcon'
 
-export default function TabTitle({ tab }: {
-  tab: Tab
-}) {
-
+export default function TabTitle({ tab }: { tab: RequestTab }) {
   const { tabs } = useContext(AppContext)
   const [editing, setEditing] = useState(false)
   const [tabName, setTabName] = useState<string>()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => setTabName(tab.name), [tab])
+  useEffect(() => {
+    setTabName(tab.name)
+  }, [tab])
 
   const getTabTitle = () => {
     if (tabName !== undefined) return tabName
@@ -48,20 +47,20 @@ export default function TabTitle({ tab }: {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
-    setTabName(target.value || '' )
+    setTabName(target.value || '')
   }
 
   const onClose = (e: React.MouseEvent) => {
     e.stopPropagation()
-    tabs.removeTab(tab.id)
+    tabs?.removeTab(tab.id)
   }
 
   const active = tab.active ? styles.active : ''
-  
+
   const onMouseDown = (e: React.MouseEvent) => {
     if (e.button === 1) {
       e.stopPropagation()
-      tabs.removeTab(tab.id)
+      tabs?.removeTab(tab.id)
     }
   }
 
@@ -75,19 +74,19 @@ export default function TabTitle({ tab }: {
           value={tabName}
           onKeyDown={onKeyDown}
           onChange={onChange}
-          placeholder='Request name'
+          placeholder="Request name"
         />
       )}
-      {! editing && (
+      {!editing && (
         <div className={styles.content}>
           <span className={styles.title} onDoubleClick={onDoubleClick}>
             {getTabTitle()}
           </span>
           <span className={styles.close}>
-            <ButtonIcon icon='close' size={15} onClick={onClose} />
+            <ButtonIcon icon="close" size={15} onClick={onClose} />
           </span>
         </div>
-      ) }
+      )}
     </div>
   )
 }

@@ -2,10 +2,7 @@ import React from 'react'
 import RequestContextProvider from '../../context/RequestContext'
 import RequestPanelContent from './RequestPanelContent'
 
-export default function RequestPanel({ tab }: {
-  tab: Tab
-}) {
-
+export default function RequestPanel({ tab }: { tab: RequestTab }) {
   return (
     <RequestContextProvider tabId={tab.id} definedRequest={tab.request}>
       <RequestPanelContent />

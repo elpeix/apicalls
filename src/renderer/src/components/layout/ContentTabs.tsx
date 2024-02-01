@@ -1,16 +1,27 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { AppContext } from '../../context/AppContext'
-import TabTitle from '../tabs/tabTitle/TabTitle'
-import NewTab from '../tabs/newTab/NewTab'
-import RequestPanel from '../request/RequestPanel'
 import Icon from '../base/Icon/Icon'
+import RequestPanel from '../request/RequestPanel'
+import NewTab from '../tabs/newTab/NewTab'
+import TabTitle from '../tabs/tabTitle/TabTitle'
 
 export default function ContentTabs() {
   const { tabs } = useContext(AppContext)
+
+  const [hasTabs, setHasTabs] = useState(false)
+  const [tabList, setTabList] = useState<RequestTab[]>([])
+  const [selectedTabIndex, setSelectedTabIndex] = useState(-1)
+
+  useEffect(() => {
+    if (!tabs) return
+    setHasTabs(tabs.tabs.length > 0)
+    setTabList(tabs.tabs)
+    setSelectedTabIndex(tabs.getSelectedTabIndex())
+  }, [tabs])
+
   const onSelect = (index: number, _: number, __: Event) => {
-    if (!tabs) return false
-    tabs.setActiveTab(index)
+    tabs?.setActiveTab(index)
     return true
   }
   const onWheel = (e: React.WheelEvent) => {
@@ -22,17 +33,15 @@ export default function ContentTabs() {
     })
   }
 
-  if (!tabs) return null
-
   return (
     <>
-      { tabs.hasTabs() && (
+      {hasTabs && (
         <div className="panel-tabs">
-          <Tabs onSelect={onSelect} selectedIndex={tabs.getSelectedTabIndex()}>
+          <Tabs onSelect={onSelect} selectedIndex={selectedTabIndex}>
             <div className="panel-tabs-header">
               <div className="panel-tabs-header-list" onWheel={onWheel}>
                 <TabList>
-                  {tabs.getTabs().map((tab) => (
+                  {tabList.map((tab) => (
                     <Tab key={tab.id} className="request-tab">
                       <TabTitle tab={tab} />
                     </Tab>
@@ -42,7 +51,7 @@ export default function ContentTabs() {
               <NewTab />
             </div>
             <div className="panel-tabs-content">
-              {tabs.getTabs().map((tab) => (
+              {tabList.map((tab) => (
                 <TabPanel key={tab.id} forceRender={true}>
                   <RequestPanel tab={tab} />
                 </TabPanel>
@@ -51,10 +60,10 @@ export default function ContentTabs() {
           </Tabs>
         </div>
       )}
-      { !tabs.hasTabs() && (
+      {!hasTabs && (
         <div className="panel-empty-tabs">
-          <div className="new-tab" onClick={() => tabs.newTab()}>
-            <Icon icon="more" /> 
+          <div className="new-tab" onClick={() => tabs?.newTab()}>
+            <Icon icon="more" />
             <div className="new-tab-label">New Tab</div>
           </div>
         </div>

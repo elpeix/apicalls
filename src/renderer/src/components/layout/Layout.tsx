@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { ImperativePanelHandle, Panel, PanelGroup } from 'react-resizable-panels'
 import { AppContext } from '../../context/AppContext'
 import SideMenu from './sideBar/SideMenu/SideMenu'
@@ -9,10 +9,15 @@ import Gutter from './Gutter'
 export default function Layout() {
   const { menu } = useContext(AppContext)
   const sidePanel = useRef<ImperativePanelHandle | null>(null)
-  const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false)
-  const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
 
-  const showSelected: boolean = !sidePanelCollapsed && menu != null && !!menu.selected
+  const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false)
+  const [showSelected, setShowSelected] = useState(false)
+
+  useEffect(() => {
+    setShowSelected(!sidePanelCollapsed && menu != null && !!menu.selected)
+  }, [sidePanelCollapsed, menu])
+
+  const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
 
   return (
     <PanelGroup direction="horizontal">

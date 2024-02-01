@@ -70,7 +70,6 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
       onChange={handleUrlChange}
       onBlur={handleUrlBlur}
       placeholder="Enter URL..."
-      autoFocus={true}
       showTip={true}
     />
   )

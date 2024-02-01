@@ -89,9 +89,9 @@ export default function RequestContextProvider({
   const [consoleLogs, setConsoleLogs] = useState<RequestLog[]>([])
 
   useEffect(() => {
-    if (changed && tabs) {
+    if (changed) {
       setChanged(false)
-      tabs.updateTabRequest(tabId, {
+      tabs?.updateTabRequest(tabId, {
         ...definedRequest,
         method: requestMethod,
         url: requestUrl,

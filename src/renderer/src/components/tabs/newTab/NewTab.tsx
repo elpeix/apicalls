@@ -5,7 +5,7 @@ import ButtonIcon from '../../base/ButtonIcon'
 
 export default function NewTab() {
   const { tabs } = useContext(AppContext)
-  const onClick = () => tabs && tabs.newTab()
+  const onClick = () => tabs?.newTab()
 
   return (
     <div className={styles.newTab}>

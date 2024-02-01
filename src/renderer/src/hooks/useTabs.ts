@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createRequest } from '../lib/factory'
 
-export default function useTabs(initialTabs: Tab[]): TabsHook {
+export default function useTabs(initialTabs: RequestTab[]): TabsHook {
   const [tabs, setTabs] = useState([...initialTabs])
 
   const openTab = (itemRequest: RequestType) => {
@@ -15,11 +15,11 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
 
   const newTab = (itemRequest?: RequestType) => {
     itemRequest = itemRequest || createRequest({ name: 'Draft' })
-    const tab: Tab = { ...itemRequest, active: true }
+    const tab: RequestTab = { ...itemRequest, active: true }
     addTab(tab)
   }
 
-  const addTab = (tab: Tab) => {
+  const addTab = (tab: RequestTab) => {
     const newTabs = [...tabs, tab]
     _setActiveTab(newTabs, tabs.length)
     setTabs(newTabs)
@@ -38,11 +38,11 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
     setTabs(tabs.filter((tab) => tab.id !== tabId))
   }
 
-  const updateTab = (tabId: Identifier, tab: Tab) => {
+  const updateTab = (tabId: Identifier, tab: RequestTab) => {
     setTabs(tabs.map((t) => (t.id === tabId ? tab : t)))
   }
   const updateTabRequest = (tabId: Identifier, request: RequestBase) => {
-    setTabs(tabs.map((tab: Tab) => (tab.id === tabId ? { ...tab, request } : tab)))
+    setTabs(tabs.map((tab: RequestTab) => (tab.id === tabId ? { ...tab, request } : tab)))
   }
   const hasTabs = () => tabs.length > 0
   const getTab = (tabId: Identifier) => tabs.find((t) => t.id === tabId)
@@ -75,6 +75,7 @@ export default function useTabs(initialTabs: Tab[]): TabsHook {
     getTab,
     getTabs,
     setActiveTab,
-    getSelectedTabIndex
+    getSelectedTabIndex,
+    tabs
   }
 }

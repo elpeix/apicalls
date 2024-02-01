@@ -29,7 +29,7 @@ type RequestType = {
   request: RequestBase
 }
 
-type Tab = RequestType & {
+type RequestTab = RequestType & {
   active: boolean
 }
 
@@ -74,15 +74,16 @@ type HistoryHook = {
 type TabsHook = {
   openTab: (itemRequest: RequestType) => void
   newTab: (itemRequest?: RequestType) => void
-  addTab: (tab: Tab) => void
+  addTab: (tab: RequestTab) => void
   removeTab: (tabId: Identifier) => void
-  updateTab: (tabId: Identifier, tab: Tab) => void
+  updateTab: (tabId: Identifier, tab: RequestTab) => void
   updateTabRequest: (tabId: Identifier, request: RequestBase) => void
   hasTabs: () => boolean
-  getTab: (tabId: Identifier) => Tab | undefined
-  getTabs: () => Tab[]
+  getTab: (tabId: Identifier) => RequestTab | undefined
+  getTabs: () => RequestTab[]
   setActiveTab: (index: number) => void
   getSelectedTabIndex: () => number
+  tabs: RequestTab[]
 }
 
 type RequestLog = {
