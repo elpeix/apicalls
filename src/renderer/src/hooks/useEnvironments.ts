@@ -1,20 +1,13 @@
 import { useState } from 'react'
+import {
+  CREATE_ENVIRONMENT,
+  REMOVE_ENVIRONMENT,
+  UPDATE_ENVIRONMENT
+} from '../../../lib/ipcChannels'
 
 export function useEnvironments(): EnvironmentsHook {
-  // TODO: use localStorage to persist environments
-
-  const [environments, setEnvironments] = useState<Environment[]>([
-    {
-      id: new Date().getTime(),
-      name: 'Development',
-      active: true,
-      variables: [
-        { name: 'baseUrl', value: 'http://localhost:3000' },
-        { name: 'appId', value: '1234567890' },
-        { name: 'appKey', value: 'abcdef' }
-      ]
-    }
-  ])
+  const [environments, setEnvironments] = useState<Environment[]>([])
+  const ipcRenderer = window.electron.ipcRenderer
 
   const create = () => {
     const newEnvironment = {
@@ -23,14 +16,24 @@ export function useEnvironments(): EnvironmentsHook {
       active: false,
       variables: []
     }
-    setEnvironments([...environments, newEnvironment])
+    add(newEnvironment)
     return newEnvironment
   }
-  const add = (environment: Environment) => setEnvironments([...environments, environment])
-  const remove = (id: Identifier) =>
+  const add = (environment: Environment) => {
+    setEnvironments([...environments, environment])
+    ipcRenderer.send(CREATE_ENVIRONMENT, environment)
+  }
+
+  const remove = (id: Identifier) => {
     setEnvironments(environments.filter((environment) => environment.id !== id))
-  const update = (environment: Environment) =>
+    ipcRenderer.send(REMOVE_ENVIRONMENT, id)
+  }
+
+  const update = (environment: Environment) => {
     setEnvironments(environments.map((env) => (env.id === environment.id ? environment : env)))
+    ipcRenderer.send(UPDATE_ENVIRONMENT, environment)
+  }
+
   const clear = () => setEnvironments([])
   const getAll = () => environments
   const get = (id: Identifier) => environments.find((environment) => environment.id === id)
@@ -39,6 +42,7 @@ export function useEnvironments(): EnvironmentsHook {
     setEnvironments(
       environments.map((environment) => {
         environment.active = environment.id === id
+        ipcRenderer.send(UPDATE_ENVIRONMENT, environment)
         return environment
       })
     )
@@ -46,6 +50,7 @@ export function useEnvironments(): EnvironmentsHook {
     setEnvironments(
       environments.map((environment) => {
         environment.active = false
+        ipcRenderer.send(UPDATE_ENVIRONMENT, environment)
         return environment
       })
     )
@@ -71,6 +76,7 @@ export function useEnvironments(): EnvironmentsHook {
   }
 
   return {
+    setEnvironments,
     getAll,
     create,
     add,

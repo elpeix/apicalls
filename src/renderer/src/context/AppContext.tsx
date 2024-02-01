@@ -1,9 +1,15 @@
-import React, { createContext } from 'react'
+import React, { createContext, useEffect } from 'react'
 import useTabs from '../hooks/useTabs'
 import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
 import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
+import {
+  COLLECTIONS_UPDATED,
+  ENVIRONMENTS_UPDATED,
+  GET_COLLECTIONS,
+  GET_ENVIRONMENTS
+} from '../../../lib/ipcChannels'
 
 export const AppContext = createContext<{
   menu: MenuHook | null
@@ -71,6 +77,25 @@ export default function AppContextProvider({ children }: { children: React.React
   const collections = useCollections()
   const environments = useEnvironments()
   const history = useHistory()
+
+  useEffect(() => {
+    const ipcRenderer = window.electron.ipcRenderer
+
+    ipcRenderer.send(GET_ENVIRONMENTS)
+    ipcRenderer.on(ENVIRONMENTS_UPDATED, (_: any, environmentList: Environment[]) => {
+      environments?.setEnvironments(environmentList)
+    })
+
+    ipcRenderer.send(GET_COLLECTIONS)
+    ipcRenderer.on(COLLECTIONS_UPDATED, (_: any, collectionList: Collection[]) => {
+      collections?.setCollections(collectionList)
+    })
+
+    return () => {
+      ipcRenderer.removeAllListeners(ENVIRONMENTS_UPDATED)
+      ipcRenderer.removeAllListeners(COLLECTIONS_UPDATED)
+    }
+  }, [])
 
   const contextValue = {
     menu,

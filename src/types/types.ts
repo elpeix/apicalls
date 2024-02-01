@@ -106,6 +106,7 @@ type CollectionsHook = {
 }
 
 type EnvironmentsHook = {
+  setEnvironments: (environments: Environment[]) => void
   create: () => Environment
   add: (environment: Environment) => void
   remove: (id: Identifier) => void

@@ -1,14 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import ButtonIcon from '../../../base/ButtonIcon'
+import { IMPORT_COLLECTION, IMPORT_COLLECTION_RESULT } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
-import CollectionItem from './CollectionItem'
+import ButtonIcon from '../../../base/ButtonIcon'
 import Collection from './Collection'
-import {
-  GET_COLLECTIONS,
-  COLLECTIONS_UPDATED,
-  IMPORT_COLLECTION,
-  IMPORT_COLLECTION_RESULT
-} from '../../../../../../lib/ipcChannels'
+import CollectionItem from './CollectionItem'
 
 export default function Collections() {
   const { collections } = useContext(AppContext)
@@ -22,15 +17,8 @@ export default function Collections() {
         collections?.add(result.collection)
       }
     )
-    ipcRenderer.send(GET_COLLECTIONS)
-    ipcRenderer.on(COLLECTIONS_UPDATED, (_: any, collectionList: Collection[]) => {
-      collections?.setCollections(collectionList)
-    })
 
-    return () => {
-      ipcRenderer.removeAllListeners(IMPORT_COLLECTION_RESULT)
-      ipcRenderer.removeAllListeners(COLLECTIONS_UPDATED)
-    }
+    return () => ipcRenderer.removeAllListeners(IMPORT_COLLECTION_RESULT)
   }, [])
 
   const add = () => {
