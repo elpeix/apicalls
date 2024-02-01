@@ -82,7 +82,6 @@ class CollectionImporter {
           params: []
         }
       }
-      // TODO parse headers and params and body
       collectionRequests.push(collectionRequest)
     }
     return collectionRequests
@@ -127,88 +126,3 @@ class CollectionImporter {
 }
 
 export default CollectionImporter
-
-/*
-export const importOpenApi = async function* (
-  path: string
-): AsyncGenerator<number, Collection, unknown> {
-  validatePath(path)
-  const data = await readFile(path)
-
-  // Do a Partial return for progress bar
-  yield 33.33 // 33.33% progress
-
-  const parsedData = path.endsWith('.json') ? parseJson(data) : parseYaml(data)
-
-  yield 66.66 // 66.66% progress
-
-  const collection = parseCollection(parsedData)
-
-  yield 100 // 100% progress
-
-  return collection
-}
-
-const validatePath = (path: string) => {
-  if (!path) {
-    throw new Error('path is empty')
-  }
-  if (!path.endsWith('.json') && !path.endsWith('.yaml') && !path.endsWith('.yml')) {
-    throw new Error('Invalid file type')
-  }
-  if (!fs.existsSync(path)) {
-    throw new Error('path is invalid')
-  }
-}
-
-const readFile = async (path: string): Promise<string> => {
-  try {
-    return await fs.promises.readFile(path, 'utf-8')
-  } catch (error) {
-    throw new Error('path is invalid')
-  }
-}
-
-const parseJson = (data: string): Object => {
-  try {
-    return JSON.parse(data)
-  } catch (error) {
-    throw new Error('Invalid JSON file')
-  }
-}
-
-const parseYaml = (data: string): Object => {
-  try {
-    return YAML.parse(data)
-  } catch (error) {
-    throw new Error('Invalid YAML file')
-  }
-}
-
-const parseCollection = (data: any): Collection => {
-  const collection: Collection = {
-    id: 0,
-    name: data.info.title,
-    elements: []
-  }
-  if (data.paths) {
-    collection.elements.push(...parsePaths(data.paths))
-  }
-  return collection
-}
-
-const parsePaths = (paths: any): CollectionFolder[] => {
-  const collectionFolders: CollectionFolder[] = []
-  for (const path in paths) {
-    const collectionFolder: CollectionFolder = {
-      type: 'folder',
-      name: path,
-      elements: []
-    }
-    collectionFolders.push(collectionFolder)
-  }
-
-  return collectionFolders
-}
-
-*/
