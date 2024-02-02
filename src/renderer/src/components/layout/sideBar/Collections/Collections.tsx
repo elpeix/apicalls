@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { IMPORT_COLLECTION, IMPORT_COLLECTION_RESULT } from '../../../../../../lib/ipcChannels'
+import React, { useContext, useState } from 'react'
+import { IMPORT_COLLECTION } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Collection from './Collection'
@@ -8,18 +8,6 @@ import CollectionItem from './CollectionItem'
 export default function Collections() {
   const { collections } = useContext(AppContext)
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
-
-  useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(
-      IMPORT_COLLECTION_RESULT,
-      (_: any, result: { filePath: string; collection: Collection }) => {
-        collections?.add(result.collection)
-      }
-    )
-
-    return () => ipcRenderer.removeAllListeners(IMPORT_COLLECTION_RESULT)
-  }, [])
 
   const add = () => {
     if (!collections) return

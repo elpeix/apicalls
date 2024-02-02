@@ -11,7 +11,7 @@ export function useCollections(): CollectionsHook {
       name: '',
       elements: []
     }
-    setCollections([...collections, newCollection])
+    add(newCollection)
     return newCollection
   }
 
