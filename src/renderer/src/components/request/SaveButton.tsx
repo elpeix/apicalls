@@ -1,13 +1,21 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import styles from './Request.module.css'
 import Icon from '../base/Icon/Icon'
 import LinkedModal from '../base/linkedModal/LinkedModal'
 import Dialog from '../base/dialog/Dialog'
+import { RequestContext } from '../../context/RequestContext'
 
 export default function SaveButton() {
+  const { path } = useContext(RequestContext)
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!path) return
+    console.log('Save', path)
+  }
 
   const openModal = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -22,7 +30,7 @@ export default function SaveButton() {
 
   return (
     <>
-      <button className={styles.save}>
+      <button className={styles.save} onClick={handleClick}>
         <div className={styles.buttonIcon}>
           <Icon icon="save" />
         </div>

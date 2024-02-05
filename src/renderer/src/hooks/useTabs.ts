@@ -4,18 +4,18 @@ import { createRequest } from '../lib/factory'
 export default function useTabs(initialTabs: RequestTab[]): TabsHook {
   const [tabs, setTabs] = useState([...initialTabs])
 
-  const openTab = (itemRequest: RequestType) => {
+  const openTab = (itemRequest: RequestType, path?: PathItem[]) => {
     const tab = getTab(itemRequest.id)
     if (tab) {
       setActiveTab(tabs.indexOf(tab))
     } else {
-      newTab(itemRequest)
+      newTab(itemRequest, path)
     }
   }
 
-  const newTab = (itemRequest?: RequestType) => {
+  const newTab = (itemRequest?: RequestType, path?: PathItem[]) => {
     itemRequest = itemRequest || createRequest({ name: 'Draft' })
-    const tab: RequestTab = { ...itemRequest, active: true }
+    const tab: RequestTab = { ...itemRequest, active: true, path }
     addTab(tab)
   }
 

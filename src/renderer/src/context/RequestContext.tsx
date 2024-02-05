@@ -4,6 +4,7 @@ import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcC
 import { createMethod } from '../lib/factory'
 
 export const RequestContext = createContext<{
+  path: PathItem[]
   request: RequestContextRequest | null
   fetching: boolean
   fetched: boolean
@@ -21,6 +22,7 @@ export const RequestContext = createContext<{
     clear: () => void
   } | null
 }>({
+  path: [],
   request: null,
   fetching: false,
   fetched: false,
@@ -42,6 +44,7 @@ export default function RequestContextProvider({
   requestId = 0,
   definedRequest,
   collectionId,
+  path,
   children
 }: {
   tabId: Identifier
@@ -49,6 +52,7 @@ export default function RequestContextProvider({
   requestId?: Identifier
   collectionId?: Identifier | null
   definedRequest: RequestBase
+  path?: PathItem[]
   children: React.ReactNode
 }) {
   const { history, environments, tabs, collections } = useContext(AppContext)
@@ -276,6 +280,7 @@ export default function RequestContextProvider({
   }
 
   const contextValue = {
+    path: path || [],
     request: {
       methods,
       method: requestMethod,
@@ -306,10 +311,6 @@ export default function RequestContextProvider({
       status: responseStatus,
       time: responseTime,
       size: responseSize
-      // setBody: setResponseBody, // TODO Use when loading saved request
-      // setHeaders: setHeaders,
-      // setStatus: setResponseStatus,
-      // setTime: setResponseTime
     },
     save: saveRequest,
     console: {

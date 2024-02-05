@@ -31,6 +31,7 @@ type RequestType = {
 
 type RequestTab = RequestType & {
   active: boolean
+  path?: PathItem[]
 }
 
 type Environment = {
@@ -63,6 +64,12 @@ type Collection = {
   elements: (CollectionFolder | RequestType)[]
 }
 
+type PathItem = {
+  id: Identifier
+  name: string
+  type: 'folder' | 'request'
+}
+
 type HistoryHook = {
   getAll: () => RequestType[]
   add: (request: RequestType) => void
@@ -72,8 +79,8 @@ type HistoryHook = {
 }
 
 type TabsHook = {
-  openTab: (itemRequest: RequestType) => void
-  newTab: (itemRequest?: RequestType) => void
+  openTab: (itemRequest: RequestType, path?: PathItem[]) => void
+  newTab: (itemRequest?: RequestType, path?: PathItem[]) => void
   addTab: (tab: RequestTab) => void
   removeTab: (tabId: Identifier) => void
   updateTab: (tabId: Identifier, tab: RequestTab) => void
