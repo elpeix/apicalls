@@ -1,17 +1,22 @@
 .gutter {
   position: relative;
   background: var(--gutter-color);
-  transition: background-color var(--gutter-transition), box-shadow var(--gutter-transition);
-  
+  transition:
+    background-color var(--gutter-transition),
+    box-shadow var(--gutter-transition);
+
   & .inset {
     position: absolute;
     z-index: 1;
     inset: 0;
     background-color: var(--gutter-color);
-    transition: background-color var(--gutter-transition), inset var(--gutter-transition);
+    transition:
+      background-color var(--gutter-transition),
+      inset var(--gutter-transition);
   }
 
-  &:hover, &.drag {
+  &:hover,
+  &.drag {
     transition-delay: 0.2s;
     background-color: var(--gutter-color-drag);
 
@@ -26,27 +31,23 @@
     cursor: col-resize;
     width: 1px;
 
-    &:hover, &.drag {
-      box-shadow: 0 1px 0 0 var(--gutter-color-drag), 0 -1px 0 0 var(--gutter-color-drag);
-
+    &:hover,
+    &.drag {
       & .inset {
-        inset: 0 -2px;
+        inset: 0 -1px;
       }
     }
   }
-  
+
   &.horizontal {
     cursor: row-resize;
     height: 1px;
 
-    &:hover, &.drag {
-      box-shadow: 0 1px 0 0 var(--gutter-color-drag), 0 -1px 0 0 var(--gutter-color-drag);
-
+    &:hover,
+    &.drag {
       & .inset {
-        inset: -2px 0;
+        inset: -1px 0;
       }
     }
-
   }
-
 }
