@@ -8,23 +8,36 @@ import Confirm from '../../../base/PopupBoxes/Confirm'
 
 export default function CollectionRequest({
   collectionRequest,
+  path,
   update,
   addRequest,
+  move,
   remove
 }: {
   collectionRequest: RequestType
+  path: PathItem[]
   update: () => void
   remove: (request: RequestType) => void
+  move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   addRequest: (request: RequestType) => void
 }) {
   const { tabs } = useContext(AppContext)
   const { request } = collectionRequest
   const [editingName, setEditingName] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
+  const [dragOnOver, setDragOnOver] = useState(false)
+  const requestPath = [
+    ...path,
+    {
+      id: collectionRequest.id,
+      type: 'request',
+      name: collectionRequest.name
+    }
+  ] as PathItem[]
 
   const clickHandler = () => {
     if (tabs) {
-      tabs.openTab(collectionRequest)
+      tabs.openTab(collectionRequest, requestPath)
     }
   }
   const changeName = (name: string) => {
@@ -41,9 +54,36 @@ export default function CollectionRequest({
     addRequest({ ...request, id: Date.now().toString(), name: `${request.name} copy` })
   }
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setDragOnOver(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setDragOnOver(false)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragOnOver(false)
+    move({
+      from: JSON.parse(e.dataTransfer.getData('path')),
+      to: requestPath
+    })
+  }
+
   return (
     <>
-      <div className={styles.request} onClick={clickHandler}>
+      <div
+        className={`${styles.request} ${dragOnOver ? styles.dragOver : ''}`}
+        onClick={clickHandler}
+        onDragEnter={handleDragOver}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <div className={`${styles.requestMethod} ${request.method.value}`}>
           {request.method.label}
         </div>

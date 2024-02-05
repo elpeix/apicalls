@@ -104,7 +104,7 @@ export default function Collection({
         </Menu>
       </div>
       <div className={styles.collectionContent}>
-        <CollectionElements elements={coll.elements} update={handleUpdate} />
+        <CollectionElements elements={coll.elements} update={handleUpdate} path={[]} />
       </div>
       {showDialog && (
         <Confirm

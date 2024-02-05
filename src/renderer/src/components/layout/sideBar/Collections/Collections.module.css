@@ -119,14 +119,28 @@
     }
   }
 
-  & .requestMethod {
+  &.dragOver {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-bottom: 2px solid var(--accent-color);
+    }
+  }
+
+  .requestMethod {
     text-transform: uppercase;
     font-size: 0.6rem;
     font-weight: 600;
     min-width: 2rem;
   }
 
-  & .requestName {
+  .requestName {
     flex-grow: 1;
 
     white-space: nowrap;
@@ -134,7 +148,7 @@
     text-overflow: ellipsis;
   }
 
-  & .edit {
+  .edit {
     visibility: hidden;
   }
 

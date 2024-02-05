@@ -1,23 +1,28 @@
 import React, { useContext, useState } from 'react'
-import ButtonIcon from '../../../base/ButtonIcon'
-import styles from './Collections.module.css'
-import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
-import Menu from '../../../base/Menu/Menu'
-import FolderCreator from './FolderCreator'
+import { AppContext } from '../../../../context/AppContext'
+import { useDebounce } from '../../../../hooks/useDebounce'
 import { createFolder, createRequest } from '../../../../lib/factory'
+import ButtonIcon from '../../../base/ButtonIcon'
+import EditableName from '../../../base/EditableName/EditableName'
+import Menu from '../../../base/Menu/Menu'
+import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import CollectionElements from './CollectionElements'
-import EditableName from '../../../base/EditableName/EditableName'
-import { AppContext } from '../../../../context/AppContext'
+import styles from './Collections.module.css'
+import FolderCreator from './FolderCreator'
 import RequestCreator from './RequestCreator'
 
 export default function Folder({
   folder,
+  path,
   update,
+  move,
   remove
 }: {
   folder: CollectionFolder
+  path: PathItem[]
   update: () => void
+  move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   remove: (folder: CollectionFolder) => void
 }) {
   const { tabs } = useContext(AppContext)
@@ -26,6 +31,9 @@ export default function Folder({
   const [showCreateFolder, setShowCreateFolder] = useState(false)
   const [showRemoveFolder, setShowRemoveFolder] = useState(false)
   const [showCreateRequest, setShowCreateRequest] = useState(false)
+  const [dragOnOVer, setDragOnOver] = useState(false)
+  const debouncedDragOnOver = useDebounce(dragOnOVer, 500)
+  const folderPath = [...path, { id: folder.id, type: 'folder', name: folder.name }] as PathItem[]
 
   const toggleExpand = () => setExpanded(!expanded)
 
@@ -66,9 +74,42 @@ export default function Folder({
     tabs?.openTab(request)
   }
 
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setDragOnOver(true)
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setDragOnOver(true)
+    if (debouncedDragOnOver) {
+      setExpanded(true)
+    }
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setDragOnOver(false)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setDragOnOver(false)
+    move({
+      from: JSON.parse(e.dataTransfer.getData('path')),
+      to: folderPath
+    })
+  }
+
   return (
     <>
-      <div className={styles.folder}>
+      <div
+        className={`${styles.folder} ${dragOnOVer ? styles.dragOver : ''}`}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''}`}>
           <div>
             <ButtonIcon
@@ -99,7 +140,7 @@ export default function Folder({
         </div>
         {expanded && folder.elements && (
           <div className={styles.folderContent}>
-            <CollectionElements elements={folder.elements} update={update} />
+            <CollectionElements elements={folder.elements} update={update} path={folderPath} />
           </div>
         )}
       </div>

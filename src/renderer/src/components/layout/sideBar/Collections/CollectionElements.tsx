@@ -3,9 +3,11 @@ import CollectionElement from './CollectionElement'
 
 export default function CollectionElements({
   elements,
+  path,
   update
 }: {
   elements: (CollectionFolder | RequestType)[]
+  path: PathItem[]
   update: () => void
 }) {
   const removeElement = (element: CollectionFolder | RequestType) => {
@@ -19,15 +21,23 @@ export default function CollectionElements({
     update()
   }
 
+  const move = (moveAction: { from: PathItem[]; to: PathItem[] }) => {
+    console.log('move', moveAction)
+    // TODO: implement move
+  }
+
   return (
     <>
       {elements.map((element, i) => (
         <CollectionElement
           key={i}
+          index={i}
           element={element}
           update={update}
-          removeElement={removeElement}
           addRequest={addRequest}
+          move={move}
+          removeElement={removeElement}
+          path={path}
         />
       ))}
     </>
