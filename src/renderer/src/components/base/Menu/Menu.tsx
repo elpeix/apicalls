@@ -30,7 +30,15 @@ export default function Menu({
   const menuClassName = `${styles.menu} ${className} ${showMenu ? `${styles.active} ${showMenuClassName}` : ''}`
 
   return (
-    <div ref={menuRef} className={menuClassName}>
+    <div
+      ref={menuRef}
+      className={menuClassName}
+      draggable={true}
+      onDragStart={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+      }}
+    >
       <ButtonIcon
         className={`${iconClassName} ${styles.menuIcon}`}
         icon="menu"
