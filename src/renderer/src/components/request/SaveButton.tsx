@@ -43,7 +43,7 @@ export default function SaveButton() {
         <LinkedModal
           parentRef={arrowRef}
           zIndex={1}
-          topOffset={-1}
+          topOffset={43}
           className={styles.saveAsModal}
           closeModal={() => setShowModal(false)}
         >

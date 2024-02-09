@@ -49,7 +49,7 @@ export default function Menu({
         <LinkedModal
           parentRef={menuRef}
           zIndex={1}
-          topOffset={3}
+          topOffset={23}
           leftOffset={-136}
           className={styles.menuModal}
           closeModal={() => setShowMenu(false)}

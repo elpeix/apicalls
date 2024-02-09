@@ -38,8 +38,9 @@ export default function LinkedModal({
       })
     }
     if (parentRef.current) {
-      setX(parentRef.current.offsetLeft + leftOffset)
-      setY(parentRef.current.offsetTop + parentRef.current.offsetHeight + topOffset)
+      const rect = parentRef.current.getBoundingClientRect()
+      setX(rect.left + leftOffset)
+      setY(rect.top + topOffset)
     }
   }, [ref, parentRef, topOffset, leftOffset])
 
