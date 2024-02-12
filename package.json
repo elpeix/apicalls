@@ -31,7 +31,7 @@
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
-    "@types/react-dom": "^18.2.18",
+    "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
     "electron": "^28.2.1",
     "electron-builder": "^24.9.1",
