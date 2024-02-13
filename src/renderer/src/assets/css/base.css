@@ -44,7 +44,7 @@
   --gutter-color: var(--border-color);
   --gutter-color-drag: var(--highlight-color);
   --gutter-transition: 0.2s;
-  --gutter-transition-delay: 0.1s;
+  --gutter-transition-delay: 0.2s;
 
   --tab-color: var(--base-color);
   --tab-background-color: transparent;

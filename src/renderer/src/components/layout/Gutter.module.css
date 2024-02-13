@@ -15,13 +15,14 @@
       inset var(--gutter-transition);
   }
 
+  &[data-resize-handle-state='hover'],
   &.drag {
-    transition-delay: 0.2s;
+    transition-delay: var(--gutter-transition-delay);
     background-color: var(--gutter-color-drag);
 
     & .inset {
       z-index: 2;
-      transition-delay: 0.2s;
+      transition-delay: var(--gutter-transition-delay);
       background-color: var(--gutter-color-drag);
     }
   }
@@ -30,6 +31,7 @@
     cursor: col-resize;
     width: 1px;
 
+    &[data-resize-handle-state='hover'],
     &.drag {
       & .inset {
         inset: 0 -1px;
@@ -41,6 +43,7 @@
     cursor: row-resize;
     height: 1px;
 
+    &[data-resize-handle-state='hover'],
     &.drag {
       & .inset {
         inset: -1px 0;
