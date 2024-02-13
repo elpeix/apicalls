@@ -42,7 +42,7 @@
   --method-option-color: rgb(158, 78, 248);
 
   --gutter-color: var(--border-color);
-  --gutter-color-drag: var(--color-7);
+  --gutter-color-drag: var(--highlight-color);
   --gutter-transition: 0.2s;
   --gutter-transition-delay: 0.1s;
 
