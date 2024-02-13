@@ -12,7 +12,8 @@ export default function CollectionRequest({
   update,
   addRequest,
   move,
-  remove
+  remove,
+  scrolling
 }: {
   collectionRequest: RequestType
   path: PathItem[]
@@ -20,6 +21,7 @@ export default function CollectionRequest({
   remove: (request: RequestType) => void
   move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   addRequest: (request: RequestType) => void
+  scrolling: boolean
 }) {
   const { tabs } = useContext(AppContext)
   const { request } = collectionRequest
@@ -97,6 +99,7 @@ export default function CollectionRequest({
           className={styles.menu}
           iconClassName={styles.menuIcon}
           showMenuClassName={styles.menuActive}
+          isMoving={scrolling}
         >
           <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
           <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />

@@ -9,7 +9,8 @@ export default function CollectionElement({
   update,
   addRequest,
   move,
-  removeElement
+  removeElement,
+  scrolling
 }: {
   element: CollectionFolder | RequestType
   index: number
@@ -18,6 +19,7 @@ export default function CollectionElement({
   addRequest: (request: RequestType) => void
   move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   removeElement: (element: CollectionFolder | RequestType) => void
+  scrolling: boolean
 }) {
   const isFolder = element.type === 'folder'
 
@@ -35,7 +37,14 @@ export default function CollectionElement({
   return (
     <div draggable={true} onDragStart={handleDragStart}>
       {isFolder && (
-        <Folder folder={element} path={path} update={update} move={move} remove={removeElement} />
+        <Folder
+          folder={element}
+          path={path}
+          update={update}
+          move={move}
+          remove={removeElement}
+          scrolling={scrolling}
+        />
       )}
       {!isFolder && (
         <CollectionRequest
@@ -45,6 +54,7 @@ export default function CollectionElement({
           addRequest={addRequest}
           move={move}
           remove={removeElement}
+          scrolling={scrolling}
         />
       )}
     </div>

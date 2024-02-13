@@ -17,13 +17,15 @@ export default function Folder({
   path,
   update,
   move,
-  remove
+  remove,
+  scrolling
 }: {
   folder: CollectionFolder
   path: PathItem[]
   update: () => void
   move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   remove: (folder: CollectionFolder) => void
+  scrolling: boolean
 }) {
   const { tabs } = useContext(AppContext)
   const [expanded, setExpanded] = useState(false)
@@ -130,6 +132,7 @@ export default function Folder({
             className={styles.menu}
             iconClassName={styles.menuIcon}
             showMenuClassName={styles.menuActive}
+            isMoving={scrolling}
           >
             <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
             <MenuElement icon="folder" title="Add folder" onClick={handleAddFolder} />
@@ -140,7 +143,12 @@ export default function Folder({
         </div>
         {expanded && folder.elements && (
           <div className={styles.folderContent}>
-            <CollectionElements elements={folder.elements} update={update} path={folderPath} />
+            <CollectionElements
+              elements={folder.elements}
+              update={update}
+              path={folderPath}
+              scrolling={scrolling}
+            />
           </div>
         )}
       </div>

@@ -4,11 +4,13 @@ import CollectionElement from './CollectionElement'
 export default function CollectionElements({
   elements,
   path,
-  update
+  update,
+  scrolling
 }: {
   elements: (CollectionFolder | RequestType)[]
   path: PathItem[]
   update: () => void
+  scrolling: boolean
 }) {
   const removeElement = (element: CollectionFolder | RequestType) => {
     const index = elements.indexOf(element)
@@ -38,6 +40,7 @@ export default function CollectionElements({
           move={move}
           removeElement={removeElement}
           path={path}
+          scrolling={scrolling}
         />
       ))}
     </>

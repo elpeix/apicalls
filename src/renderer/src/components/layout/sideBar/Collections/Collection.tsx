@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import { createFolder, createRequest } from '../../../../lib/factory'
@@ -29,6 +29,7 @@ export default function Collection({
   const [showCreateFolder, setShowCreateFolder] = useState(false)
   const [showCreateRequest, setShowCreateRequest] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
+  const [isScrolling, setIsScrolling] = useState(false)
 
   useEffect(() => {
     setColl(collection)
@@ -83,6 +84,21 @@ export default function Collection({
     tabs?.openTab(request)
   }
 
+  const handleEndScroll = useMemo(() => {
+    let timeout: NodeJS.Timeout
+    return () => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        setIsScrolling(false)
+      }, 100)
+    }
+  }, [])
+
+  const handleScroll = () => {
+    setIsScrolling(true)
+    handleEndScroll()
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -103,8 +119,13 @@ export default function Collection({
           <MenuElement icon="delete" title="Remove" onClick={() => setShowDialog(true)} />
         </Menu>
       </div>
-      <div className={styles.collectionContent}>
-        <CollectionElements elements={coll.elements} update={handleUpdate} path={[]} />
+      <div className={styles.collectionContent} onScroll={handleScroll}>
+        <CollectionElements
+          elements={coll.elements}
+          update={handleUpdate}
+          path={[]}
+          scrolling={isScrolling}
+        />
       </div>
       {showDialog && (
         <Confirm

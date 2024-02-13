@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../ButtonIcon'
 import LinkedModal from '../linkedModal/LinkedModal'
 import styles from './Menu.module.css'
@@ -8,15 +8,23 @@ export default function Menu({
   className = '',
   showMenuClassName = '',
   iconClassName = '',
+  isMoving = false,
   children
 }: {
   className?: string
   showMenuClassName?: string
   iconClassName?: string
+  isMoving?: boolean
   children: ReactMenuElement
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [showMenu, setShowMenu] = useState(false)
+
+  useEffect(() => {
+    if (showMenu && isMoving) {
+      setShowMenu(false)
+    }
+  }, [showMenu, isMoving])
 
   const handleOnClick = (e: React.MouseEvent<Element>) => {
     e.stopPropagation()
