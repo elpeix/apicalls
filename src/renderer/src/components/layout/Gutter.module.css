@@ -15,7 +15,6 @@
       inset var(--gutter-transition);
   }
 
-  &:hover,
   &.drag {
     transition-delay: 0.2s;
     background-color: var(--gutter-color-drag);
@@ -31,7 +30,6 @@
     cursor: col-resize;
     width: 1px;
 
-    &:hover,
     &.drag {
       & .inset {
         inset: 0 -1px;
@@ -43,7 +41,6 @@
     cursor: row-resize;
     height: 1px;
 
-    &:hover,
     &.drag {
       & .inset {
         inset: -1px 0;
