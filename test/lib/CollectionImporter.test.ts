@@ -85,9 +85,37 @@ describe('CollectionImporter', () => {
       expect(request).toHaveProperty('url')
       expect(request).toHaveProperty('method')
       if (request.method.value === 'GET') {
-        expect(request.url).toBe('http://localhost:3000/')
+        expect(request.url).toBe('{{baseUrl}}/')
       } else if (request.method.value === 'POST') {
-        expect(request.url).toBe('http://localhost:3000/otherPath')
+        expect(request.url).toBe('{{baseUrl}}/otherPath')
+      }
+    }
+  })
+
+  it('should return a collection when JSON file is valid', async () => {
+    const importer = new CollectionImporter('./test/fixtures/openapi_folders.json')
+    for await (const progress of importer.import()) {
+      expect(progress).toBeTypeOf('number')
+    }
+    const collection = importer.getCollection()
+    console.log(collection)
+    expect(collection).toBeDefined()
+    expect(collection).not.toBeNull()
+    expect(collection.name).toBe('Openapi fixture')
+    expect(collection.elements).toHaveLength(2)
+    for (const element of collection.elements) {
+      if (element.type === 'folder') {
+        const folder = element as CollectionFolder
+        expect(folder).toHaveProperty('name')
+        expect(folder).toHaveProperty('elements')
+        expect(folder.elements).toHaveLength(1)
+        const requestElement = folder.elements[0] as RequestType
+        const request = requestElement.request
+        expect(request).toHaveProperty('url')
+      } else {
+        const requestElement = element as RequestType
+        const request = requestElement.request
+        expect(request).toHaveProperty('url')
       }
     }
   })
