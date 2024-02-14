@@ -64,18 +64,19 @@ class CollectionImporter {
   }
 
   private parsePaths(paths: any, baseUrl: string): (RequestType | CollectionFolder)[] {
-    this.sortPaths(paths)
+    const sortedPaths = this.sortPaths(paths)
+
     let count = 0
     const id = new Date().getTime()
     const collectionTree: (CollectionFolder | RequestType)[] = []
-    for (const path in paths) {
+    for (const path in sortedPaths) {
       const collectionRequest: RequestType = {
         type: 'collection',
         id: `${id}_${++count}`,
-        name: paths[path].summary || path,
+        name: sortedPaths[path].summary || path,
         request: {
           url: baseUrl + path,
-          method: this.getMethod(Object.keys(paths[path])[0]),
+          method: this.getMethod(Object.keys(sortedPaths[path])[0]),
           headers: [],
           params: []
         }
@@ -122,9 +123,8 @@ class CollectionImporter {
     const sortedPaths: any = {}
     Object.keys(paths)
       .sort()
-      .forEach((key) => {
-        sortedPaths[key] = paths[key]
-      })
+      .reverse()
+      .forEach((key) => (sortedPaths[key] = paths[key]))
     return sortedPaths
   }
 
