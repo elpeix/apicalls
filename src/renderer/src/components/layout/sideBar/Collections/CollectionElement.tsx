@@ -5,6 +5,7 @@ import Folder from './Folder'
 export default function CollectionElement({
   element,
   index,
+  collectionId,
   path,
   update,
   addRequest,
@@ -14,6 +15,7 @@ export default function CollectionElement({
 }: {
   element: CollectionFolder | RequestType
   index: number
+  collectionId: Identifier
   path: PathItem[]
   update: () => void
   addRequest: (request: RequestType) => void
@@ -39,6 +41,7 @@ export default function CollectionElement({
       {isFolder && (
         <Folder
           folder={element}
+          collectionId={collectionId}
           path={path}
           update={update}
           move={move}
@@ -49,6 +52,7 @@ export default function CollectionElement({
       {!isFolder && (
         <CollectionRequest
           collectionRequest={element}
+          collectionId={collectionId}
           path={path}
           update={update}
           addRequest={addRequest}

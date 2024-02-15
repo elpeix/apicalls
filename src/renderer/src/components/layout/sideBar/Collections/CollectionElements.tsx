@@ -3,11 +3,13 @@ import CollectionElement from './CollectionElement'
 
 export default function CollectionElements({
   elements,
+  collectionId,
   path,
   update,
   scrolling
 }: {
   elements: (CollectionFolder | RequestType)[]
+  collectionId: Identifier
   path: PathItem[]
   update: () => void
   scrolling: boolean
@@ -34,6 +36,7 @@ export default function CollectionElements({
         <CollectionElement
           key={i}
           index={i}
+          collectionId={collectionId}
           element={element}
           update={update}
           addRequest={addRequest}

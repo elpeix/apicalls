@@ -4,7 +4,7 @@ import RequestPanelContent from './RequestPanelContent'
 
 export default function RequestPanel({ tab }: { tab: RequestTab }) {
   return (
-    <RequestContextProvider path={tab.path} tabId={tab.id} definedRequest={tab.request}>
+    <RequestContextProvider tab={tab}>
       <RequestPanelContent />
     </RequestContextProvider>
   )

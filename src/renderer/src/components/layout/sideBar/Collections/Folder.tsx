@@ -14,6 +14,7 @@ import RequestCreator from './RequestCreator'
 
 export default function Folder({
   folder,
+  collectionId,
   path,
   update,
   move,
@@ -21,6 +22,7 @@ export default function Folder({
   scrolling
 }: {
   folder: CollectionFolder
+  collectionId: Identifier
   path: PathItem[]
   update: () => void
   move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
@@ -144,6 +146,7 @@ export default function Folder({
         {expanded && folder.elements && (
           <div className={styles.folderContent}>
             <CollectionElements
+              collectionId={collectionId}
               elements={folder.elements}
               update={update}
               path={folderPath}

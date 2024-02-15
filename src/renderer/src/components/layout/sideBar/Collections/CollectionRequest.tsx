@@ -8,6 +8,7 @@ import Confirm from '../../../base/PopupBoxes/Confirm'
 
 export default function CollectionRequest({
   collectionRequest,
+  collectionId,
   path,
   update,
   addRequest,
@@ -16,6 +17,7 @@ export default function CollectionRequest({
   scrolling
 }: {
   collectionRequest: RequestType
+  collectionId: Identifier
   path: PathItem[]
   update: () => void
   remove: (request: RequestType) => void
@@ -39,7 +41,7 @@ export default function CollectionRequest({
 
   const clickHandler = () => {
     if (tabs) {
-      tabs.openTab(collectionRequest, requestPath)
+      tabs.openTab(collectionRequest, collectionId, requestPath)
     }
   }
   const changeName = (name: string) => {

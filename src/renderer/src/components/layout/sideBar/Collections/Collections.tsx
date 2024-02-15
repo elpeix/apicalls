@@ -15,17 +15,6 @@ export default function Collections() {
     setSelectedCollection(collection)
   }
 
-  const update = (collection: Collection) => {
-    if (!collections) return
-    collections.update(collection)
-  }
-
-  const remove = () => {
-    if (!selectedCollection || !collections) return
-    collections.remove(selectedCollection.id)
-    setSelectedCollection(null)
-  }
-
   const importHanlder = () => {
     if (!collections) return
     window.electron.ipcRenderer.send(IMPORT_COLLECTION)
@@ -51,26 +40,23 @@ export default function Collections() {
         <Collection
           collection={selectedCollection}
           back={() => setSelectedCollection(null)}
-          update={update}
-          remove={remove}
+          onRemove={() => setSelectedCollection(null)}
         />
       )}
 
       {!selectedCollection && (
-        <>
-          <div className="sidePanel-content">
-            {collections != null &&
-              collections
-                .getAll()
-                .map((collection) => (
-                  <CollectionItem
-                    key={collection.id}
-                    collection={collection}
-                    selectCollection={setSelectedCollection}
-                  />
-                ))}
-          </div>
-        </>
+        <div className="sidePanel-content">
+          {collections != null &&
+            collections
+              .getAll()
+              .map((collection) => (
+                <CollectionItem
+                  key={collection.id}
+                  collection={collection}
+                  selectCollection={setSelectedCollection}
+                />
+              ))}
+        </div>
       )}
     </>
   )

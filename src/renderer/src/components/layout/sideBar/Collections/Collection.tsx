@@ -14,15 +14,15 @@ import RequestCreator from './RequestCreator'
 export default function Collection({
   collection,
   back,
-  update,
-  remove
+  onUpdate,
+  onRemove
 }: {
   collection: Collection
   back: () => void
-  update: (collection: Collection) => void
-  remove: () => void
+  onUpdate?: () => void
+  onRemove?: () => void
 }) {
-  const { tabs } = useContext(AppContext)
+  const { tabs, collections } = useContext(AppContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [editingName, setEditingName] = useState(false)
@@ -69,6 +69,11 @@ export default function Collection({
     update({ ...coll, name })
   }
 
+  const update = (collection: Collection) => {
+    collections?.update(collection)
+    onUpdate?.()
+  }
+
   const handleAddRequest = () => {
     setShowCreateRequest(true)
   }
@@ -99,6 +104,12 @@ export default function Collection({
     handleEndScroll()
   }
 
+  const handleRemove = () => {
+    collections?.remove(coll.id)
+    setShowDialog(false)
+    onRemove?.()
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -121,6 +132,7 @@ export default function Collection({
       </div>
       <div className={styles.collectionContent} onScroll={handleScroll}>
         <CollectionElements
+          collectionId={coll.id}
           elements={coll.elements}
           update={handleUpdate}
           path={[]}
@@ -131,7 +143,7 @@ export default function Collection({
         <Confirm
           message="Are you sure you want to remove this collection?"
           confirmName="Remove"
-          onConfirm={remove}
+          onConfirm={handleRemove}
           onCancel={() => setShowDialog(false)}
         />
       )}

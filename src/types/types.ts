@@ -31,6 +31,7 @@ type RequestType = {
 
 type RequestTab = RequestType & {
   active: boolean
+  collectionId?: Identifier
   path?: PathItem[]
 }
 
@@ -79,8 +80,8 @@ type HistoryHook = {
 }
 
 type TabsHook = {
-  openTab: (itemRequest: RequestType, path?: PathItem[]) => void
-  newTab: (itemRequest?: RequestType, path?: PathItem[]) => void
+  openTab: (itemRequest: RequestType, collectionId?: Identifier, path?: PathItem[]) => void
+  newTab: (itemRequest?: RequestType, collectionId?: Identifier, path?: PathItem[]) => void
   addTab: (tab: RequestTab) => void
   removeTab: (tabId: Identifier) => void
   updateTab: (tabId: Identifier, tab: RequestTab) => void

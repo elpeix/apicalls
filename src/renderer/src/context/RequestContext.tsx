@@ -5,6 +5,7 @@ import { createMethod } from '../lib/factory'
 
 export const RequestContext = createContext<{
   path: PathItem[]
+  collectionId?: Identifier | null
   request: RequestContextRequest | null
   fetching: boolean
   fetched: boolean
@@ -23,6 +24,7 @@ export const RequestContext = createContext<{
   } | null
 }>({
   path: [],
+  collectionId: null,
   request: null,
   fetching: false,
   fetched: false,
@@ -39,23 +41,18 @@ export const RequestContext = createContext<{
 })
 
 export default function RequestContextProvider({
-  tabId,
-  requestName = '',
-  requestId = 0,
-  definedRequest,
-  collectionId,
-  path,
+  tab,
   children
 }: {
-  tabId: Identifier
-  requestName?: string
-  requestId?: Identifier
-  collectionId?: Identifier | null
-  definedRequest: RequestBase
-  path?: PathItem[]
+  tab: RequestTab
   children: React.ReactNode
 }) {
   const { history, environments, tabs, collections } = useContext(AppContext)
+
+  const path = tab.path || []
+  const collectionId = tab.collectionId
+  const tabId = tab.id
+  const definedRequest = tab.request
 
   const methods = useMemo(
     () => [
@@ -183,7 +180,7 @@ export default function RequestContextProvider({
       type: 'history',
       date: new Date().toISOString(),
       id: new Date().getTime(),
-      name: requestName || `${requestMethod.value} - ${requestUrl}`,
+      name: `${requestMethod.value} - ${requestUrl}`,
       request: {
         method: requestMethod,
         url: requestUrl,
@@ -196,7 +193,16 @@ export default function RequestContextProvider({
 
   const saveRequest = () => {
     // TODO
-    console.log('saveRequest', requestId)
+    console.log(
+      'saveRequest',
+      path,
+      collectionId,
+      requestMethod,
+      requestUrl,
+      requestBody,
+      requestHeaders,
+      requestParams
+    )
   }
 
   const urlIsValid = ({ url = requestUrl }) => {
@@ -281,6 +287,7 @@ export default function RequestContextProvider({
 
   const contextValue = {
     path: path || [],
+    collectionId,
     request: {
       methods,
       method: requestMethod,

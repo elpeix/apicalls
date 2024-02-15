@@ -6,7 +6,7 @@ import Dialog from '../base/dialog/Dialog'
 import { RequestContext } from '../../context/RequestContext'
 
 export default function SaveButton() {
-  const { path } = useContext(RequestContext)
+  const { path, save } = useContext(RequestContext)
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
@@ -14,7 +14,7 @@ export default function SaveButton() {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (!path) return
-    console.log('Save', path)
+    save()
   }
 
   const openModal = (e: React.MouseEvent) => {
