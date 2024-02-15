@@ -109,7 +109,7 @@ export default function Input({
         />
       </div>
       {showLinkedModal() && (
-        <LinkedModal parentRef={inputRef} topOffset={3}>
+        <LinkedModal parentRef={inputRef} topOffset={30}>
           <div
             className={styles.variableList}
             onMouseOver={mouseOverHandler}
