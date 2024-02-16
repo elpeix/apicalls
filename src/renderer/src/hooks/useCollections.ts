@@ -52,6 +52,43 @@ export function useCollections(): CollectionsHook {
     }
   }
 
+  const saveRequest = ({ path, collectionId, request }: SaveRequest) => {
+    const collection = get(collectionId)
+    if (collection) {
+      addRequestToCollection({ collection, request, path })
+    }
+  }
+
+  const addRequestToCollection = ({
+    collection,
+    request,
+    path
+  }: {
+    collection: Collection
+    request: RequestType
+    path: PathItem[]
+  }) => {
+    let newCollection = { ...collection }
+    let elements = newCollection.elements
+    let pathCopy = [...path]
+    while (pathCopy.length > 0) {
+      const item = pathCopy.shift()
+      if (!item) {
+        throw new Error('Path item not found')
+      }
+      const index = elements.findIndex((element) => element.id === item.id)
+      if (index === -1) {
+        throw new Error('Element not found')
+      }
+      if (pathCopy.length === 0) {
+        elements.splice(index, 1, request)
+      } else {
+        elements = (elements[index] as CollectionFolder).elements
+      }
+    }
+    update(newCollection)
+  }
+
   return {
     setCollections,
     create,
@@ -62,6 +99,7 @@ export function useCollections(): CollectionsHook {
     getAll,
     get,
     addPreRequestData,
-    removePreRequestData
+    removePreRequestData,
+    saveRequest
   }
 }

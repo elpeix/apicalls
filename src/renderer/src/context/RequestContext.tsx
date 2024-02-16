@@ -192,17 +192,25 @@ export default function RequestContextProvider({
   }
 
   const saveRequest = () => {
-    // TODO
-    console.log(
-      'saveRequest',
-      path,
-      collectionId,
-      requestMethod,
-      requestUrl,
-      requestBody,
-      requestHeaders,
-      requestParams
-    )
+    if (!collections) return
+    if (!collectionId) {
+      console.error('No collection selected')
+      return
+    }
+    const request = {
+      type: 'collection',
+      id: tab.id,
+      name: tab.name,
+      date: new Date().toISOString(),
+      request: {
+        method: requestMethod,
+        url: requestUrl,
+        headers: requestHeaders,
+        params: requestParams,
+        body: requestBody
+      }
+    } as RequestType
+    collections.saveRequest({ path, collectionId, request })
   }
 
   const urlIsValid = ({ url = requestUrl }) => {

@@ -112,6 +112,7 @@ type CollectionsHook = {
   get: (id: Identifier) => Collection | undefined
   addPreRequestData: (collectionId: Identifier, preRequestData: PreRequestData) => void
   removePreRequestData: (collectionId: Identifier) => void
+  saveRequest: (saveRequest: SaveRequest) => void
 }
 
 type EnvironmentsHook = {
@@ -197,4 +198,10 @@ type CallResponse = {
     response: number
   }
   responseHeaders: KeyValue[]
+}
+
+type SaveRequest = {
+  path: PathItem[]
+  collectionId: Identifier
+  request: RequestType
 }
