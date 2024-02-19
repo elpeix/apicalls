@@ -28,7 +28,7 @@ describe('restCaller', () => {
     const response = await restCall({
       url: 'https://apicalls.dev/get',
       method: 'GET',
-      queryParams: new URLSearchParams({ name: 'John' }),
+      queryParams: [{ name: 'name', value: 'John' }],
       headers: new Headers({
         'Content-Type': 'application/json',
         'Content-Length': CONTENT_LENGTH.toString()
@@ -104,7 +104,7 @@ describe('restCaller', () => {
       await restCall({
         url: 'https://apicalls.dev/post',
         method: 'POST',
-        queryParams: new URLSearchParams(),
+        queryParams: [],
         headers: new Headers({
           'Content-Type': 'application/json',
           'Content-Length': CONTENT_LENGTH.toString()

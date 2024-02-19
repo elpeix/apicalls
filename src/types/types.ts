@@ -176,7 +176,7 @@ type AppSettings = {
 }
 
 type CallRequest = {
-  id: Identifier
+  id?: Identifier
   url: string
   method?: string
   queryParams?: KeyValue[]
