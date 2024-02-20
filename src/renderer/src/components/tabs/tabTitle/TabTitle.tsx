@@ -5,9 +5,10 @@ import { AppContext } from '../../../context/AppContext'
 import ButtonIcon from '../../base/ButtonIcon'
 
 export default function TabTitle({ tab }: { tab: RequestTab }) {
-  const { tabs } = useContext(AppContext)
+  const { tabs, collections } = useContext(AppContext)
   const [editing, setEditing] = useState(false)
   const [tabName, setTabName] = useState<string>()
+  const [editTabName, setEditTabName] = useState<string>()
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -24,8 +25,10 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   const onDoubleClick = () => {
     if (tab.type === 'history') return
     setEditing(true)
+    setEditTabName(tabName)
     setTimeout(() => {
       if (inputRef.current) {
+        inputRef.current.select()
         inputRef.current.focus()
       }
     }, 0)
@@ -37,17 +40,26 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
     if (e.key === 'Escape') {
       setEditing(false)
     }
-
-    // TODO: save tab name
     if (e.key === 'Enter') {
-      console.log('save tab name', tabName)
       setEditing(false)
+      if (editTabName === '') {
+        return
+      }
+      setTabName(editTabName)
+      if (tab.type !== 'collection' || tabName === editTabName || !tab.collectionId || !tab.path) {
+        return
+      }
+      collections?.saveRequest({
+        path: tab.path || [],
+        collectionId: tab.collectionId,
+        request: { ...tab, name: editTabName }
+      })
     }
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
-    setTabName(target.value || '')
+    setEditTabName(target.value || '')
   }
 
   const onClose = (e: React.MouseEvent) => {
@@ -71,7 +83,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
           type="text"
           ref={inputRef}
           className={styles.input}
-          value={tabName}
+          value={editTabName}
           onKeyDown={onKeyDown}
           onChange={onChange}
           placeholder="Request name"
