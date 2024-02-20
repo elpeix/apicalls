@@ -121,14 +121,14 @@ export default function Input({
                 ? styles.variable
                 : styles.variableUndefined
               return (
-                <>
+                <div key={index}>
                   <span key={`${index}_${part}`} className={className}>
                     {part}
                   </span>
                   <span key={`${index}_${value}`} className={styles.variableValue}>
                     {environments?.getVariableValue(part)}
                   </span>
-                </>
+                </div>
               )
             })}
           </div>
