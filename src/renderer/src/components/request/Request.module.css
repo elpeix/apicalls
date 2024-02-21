@@ -206,3 +206,20 @@
 .add {
   margin: 0.5rem;
 }
+
+.authorization {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+
+  select {
+    max-width: 10rem;
+  }
+
+  .authorizationInput {
+    flex-grow: 1;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+  }
+}

@@ -6,6 +6,7 @@ import Headers from './Headers'
 import RequestTab from './RequestTab'
 import Editor from '../base/Editor'
 import styles from './Request.module.css'
+import RequestAuth from './RequestAuth'
 
 export default function RequestTabs() {
   const { request } = useContext(RequestContext)
@@ -46,7 +47,9 @@ export default function RequestTabs() {
               addHeader={request.addHeader}
             />
           </TabPanel>
-          <TabPanel forceRender={true}>Authorization TODO</TabPanel>
+          <TabPanel forceRender={true}>
+            <RequestAuth />
+          </TabPanel>
           {showBody && (
             <TabPanel>
               <Editor language="json" onChange={handleBodyChange} value={request.body} />
