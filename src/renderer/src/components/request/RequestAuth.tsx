@@ -32,7 +32,7 @@ export default function RequestAuth() {
       {selectedOption.value !== options[0].value && (
         <Input
           value={authValue}
-          placeholder="Enter URL..."
+          placeholder="Your authorization token..."
           onChange={setAuthValue}
           inputRef={inputRef}
           showTip={true}
