@@ -20,6 +20,8 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
   const handleUrlChange = (value: string) => {
     const [url] = value.split('?')
     setUrlError(url.length > 0 && !request.urlIsValid({ url }))
+    setUrl(value)
+    request.setUrl(url)
   }
 
   const handleUrlBlur = (value: string) => {
@@ -58,9 +60,7 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
     request.setParams([...newParams, ...paramList])
   }
 
-  const getClassName = () => {
-    return `${styles.url} ${url.length && urlError ? styles.error : ''}`
-  }
+  const getClassName = () => `${styles.url} ${url.length && urlError ? styles.error : ''}`
 
   return (
     <Input
