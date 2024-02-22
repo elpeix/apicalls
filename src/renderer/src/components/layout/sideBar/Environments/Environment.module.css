@@ -1,5 +1,5 @@
 .environment {
-  & .header {
+  .header {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -8,7 +8,7 @@
     border-top: 1px solid var(--border-color);
   }
 
-  & .title {
+  .title {
     padding: 0rem 0.7rem;
     height: 2rem;
     flex-grow: 1;
@@ -19,7 +19,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    & input {
+    input {
       width: 100%;
       font-size: 14px;
       color: var(--base-color);
@@ -36,7 +36,7 @@
     }
   }
 
-  & .variable {
+  .variable {
     display: flex;
     flex-direction: row;
 
@@ -51,7 +51,7 @@
       }
     }
 
-    & input {
+    input {
       width: 100%;
       font-size: 13px;
       color: var(--base-color);
@@ -91,20 +91,19 @@
   align-items: center;
   width: 100%;
 
-  & .checkbox {
+  .checkbox {
     display: flex;
     align-items: center;
   }
 
-  & .title {
+  .title {
     flex-grow: 1;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  & .edit {
+  .edit {
     display: none;
   }
 

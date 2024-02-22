@@ -5,7 +5,7 @@
   height: 100%;
   gap: 1rem;
 
-  & .content {
+  .content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,7 +15,7 @@
     gap: 1rem;
     padding: 0 0.2rem;
 
-    & .main {
+    .main {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -23,26 +23,23 @@
       gap: 0.5rem;
       padding: 0 0.2rem;
 
-      & .group {
+      .group {
         display: flex;
         flex-direction: column;
         justify-content: center;
         width: 100%;
         gap: 0.5rem;
         padding: 0 0.2rem;
-    
-        & label {
+
+        label {
           text-transform: uppercase;
           font-size: 0.7rem;
         }
 
-        & button {
+        button {
           margin-top: 2rem;
         }
       }
- 
     }
-
   }
-
 }

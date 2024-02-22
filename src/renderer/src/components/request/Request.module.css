@@ -90,7 +90,7 @@
     border-right: 1px solid var(--border-color);
     opacity: 0.7;
 
-    & .icon {
+    .icon {
       margin-right: 0.5rem;
     }
 
@@ -100,7 +100,7 @@
     }
   }
 
-  & .buttonText {
+  .buttonText {
     font-size: 0.8rem;
     font-weight: 500;
     color: var(--base-color);
@@ -149,12 +149,12 @@
     display: flex;
   }
 
-  & [role='cell'] > div {
+  [role='cell'] > div {
     opacity: 0.7;
     font-style: italic;
   }
 
-  & .rowEnabled [role='cell'] > div {
+  .rowEnabled [role='cell'] > div {
     opacity: 1;
     font-style: normal;
   }
@@ -167,15 +167,15 @@
   width: 100%;
   overflow: hidden;
 
-  & li {
+  li {
     cursor: pointer;
   }
 
-  & .tabsContent {
+  .tabsContent {
     flex: 1;
     overflow: hidden;
 
-    & .response-headers {
+    .response-headers {
       height: 100%;
       overflow: auto;
     }
@@ -189,7 +189,7 @@
   gap: 0.6rem;
   cursor: pointer;
 
-  & .tabCount {
+  .tabCount {
     font-size: 0.68rem;
     line-height: 1rem;
     color: var(--color-3);

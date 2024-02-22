@@ -5,7 +5,7 @@
     background-color var(--gutter-transition),
     box-shadow var(--gutter-transition);
 
-  & .inset {
+  .inset {
     position: absolute;
     z-index: 1;
     inset: 0;
@@ -20,7 +20,7 @@
     transition-delay: var(--gutter-transition-delay);
     background-color: var(--gutter-color-drag);
 
-    & .inset {
+    .inset {
       z-index: 2;
       transition-delay: var(--gutter-transition-delay);
       background-color: var(--gutter-color-drag);
@@ -33,7 +33,7 @@
 
     &[data-resize-handle-state='hover'],
     &.drag {
-      & .inset {
+      .inset {
         inset: 0 -1px;
       }
     }
@@ -45,7 +45,7 @@
 
     &[data-resize-handle-state='hover'],
     &.drag {
-      & .inset {
+      .inset {
         inset: -1px 0;
       }
     }

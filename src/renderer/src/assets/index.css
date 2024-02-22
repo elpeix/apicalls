@@ -156,7 +156,7 @@ select {
   color: var(--base-color);
   cursor: pointer;
   user-select: none;
-  padding: 5px 10px;
+  padding: 0.4rem 0.2rem;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out,
@@ -166,10 +166,6 @@ select {
   &:active {
     background-color: var(--hover-color);
     color: var(--base-color);
-  }
-
-  &:active {
-    color: var(--highlight-color);
   }
 
   &:focus {

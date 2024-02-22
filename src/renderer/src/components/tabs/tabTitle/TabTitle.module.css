@@ -3,7 +3,7 @@
   padding: 0;
   border-right: 1px solid var(--border-color);
 
-  & .content {
+  .content {
     display: block;
     display: flex;
     flex-direction: row;
@@ -13,12 +13,12 @@
       background-color: var(--color-9);
       cursor: pointer;
 
-      & .close {
+      .close {
         visibility: visible;
       }
     }
 
-    & .title {
+    .title {
       padding: 0.5rem 0.1rem 0.5rem 0.7rem;
       white-space: nowrap;
       overflow: hidden;
@@ -32,12 +32,12 @@
     background-color: var(--tab-selected-background-color) !important;
     color: var(--tab-selected-color) !important;
 
-    & .close {
+    .close {
       visibility: visible;
     }
   }
 
-  & .close {
+  .close {
     color: var(--color-1);
     padding: 0.5rem 0.5rem;
     visibility: hidden;
@@ -56,7 +56,7 @@
     font-weight: 500;
   }
 
-  & .input {
+  .input {
     background: var(--color-9);
     font-weight: 500;
     font-size: 12px;

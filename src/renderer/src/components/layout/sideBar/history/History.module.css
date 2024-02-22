@@ -9,7 +9,7 @@
     font-size: 0.7rem;
   }
 
-  & .url {
+  .url {
     font-size: 0.78rem;
     font-weight: 500;
     color: var(--color-4);

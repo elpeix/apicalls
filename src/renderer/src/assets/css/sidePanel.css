@@ -9,7 +9,7 @@
   cursor: default;
   user-select: none;
 
-  & .sidePanel-header-title {
+  .sidePanel-header-title {
     width: 100%;
     font-size: 13px;
     font-weight: 500;
@@ -30,7 +30,7 @@
   width: 100%;
   flex-grow: 1;
 
-  & .sidePanel-content-item {
+  .sidePanel-content-item {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

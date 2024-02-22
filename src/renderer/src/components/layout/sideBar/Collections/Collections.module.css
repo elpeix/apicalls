@@ -1,6 +1,7 @@
 .collection {
   overflow: hidden;
-  & .header {
+
+  .header {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -20,7 +21,7 @@
   justify-content: start;
   width: 100%;
 
-  & .title {
+  .title {
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
@@ -55,7 +56,7 @@
     opacity: 0.7;
     transition: opacity 0.2s ease-in-out;
 
-    & .folderTitle {
+    .folderTitle {
       padding: 0rem 0.7rem;
       align-items: center;
       flex-grow: 1;
@@ -64,7 +65,7 @@
       text-overflow: ellipsis;
     }
 
-    & .folderEdit {
+    .folderEdit {
       visibility: hidden;
     }
 
@@ -82,7 +83,7 @@
     &:hover {
       opacity: 1;
 
-      & .folderEdit,
+      .folderEdit,
       .menuIcon {
         visibility: visible;
       }
@@ -146,7 +147,6 @@
 
   .requestName {
     flex-grow: 1;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -166,7 +166,7 @@
   &:hover {
     opacity: 1;
 
-    & .itemEdit,
+    .itemEdit,
     .menuIcon {
       visibility: visible;
     }

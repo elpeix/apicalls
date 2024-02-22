@@ -39,7 +39,7 @@
       color: var(--base-color);
       white-space: nowrap;
 
-      & mark {
+      mark {
         background: transparent;
         pointer-events: auto;
         height: 100%;
@@ -59,7 +59,7 @@
     }
   }
 
-  & input {
+  input {
     background-color: transparent;
     border: none;
     outline: none;
@@ -86,14 +86,14 @@
     gap: 0.5rem;
   }
 
-  & .variable {
+  .variable {
     color: var(--highlight-color);
   }
-  & .variableUndefined {
+  .variableUndefined {
     color: var(--accent-color);
   }
 
-  & .variableValue {
+  .variableValue {
     font-style: italic;
     max-width: 100%;
     overflow: hidden;

@@ -9,12 +9,12 @@
     display: grid;
   }
 
-  & .cell:first-child {
+  .cell:first-child {
     grid-row-start: 1;
     grid-row-end: 4;
   }
 
-  & .cell {
+  .cell {
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
