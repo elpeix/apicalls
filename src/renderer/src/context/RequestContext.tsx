@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
 import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
-import { createMethod } from '../lib/factory'
+import { createAuth, createAuthHeaderValue, createMethod } from '../lib/factory'
 
 export const RequestContext = createContext<{
   path: PathItem[]
@@ -74,6 +74,7 @@ export default function RequestContextProvider({
   const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])
   const [requestUrl, setRequestUrl] = useState(definedRequest.url || '')
   const [requestBody, setRequestBody] = useState(definedRequest.body || '')
+  const [requestAuth, setRequestAuth] = useState(definedRequest.auth || createAuth('none'))
   const [requestHeaders, setRequestHeaders] = useState(definedRequest.headers || [])
   const [requestParams, setRequestParams] = useState(definedRequest.params || [])
 
@@ -96,6 +97,7 @@ export default function RequestContextProvider({
         ...definedRequest,
         method: requestMethod,
         url: requestUrl,
+        auth: requestAuth,
         headers: requestHeaders,
         params: requestParams,
         body: requestBody
@@ -108,6 +110,7 @@ export default function RequestContextProvider({
     definedRequest,
     requestMethod,
     requestUrl,
+    requestAuth,
     requestBody,
     requestHeaders,
     requestParams
@@ -136,6 +139,12 @@ export default function RequestContextProvider({
         headers[getValue(header.name)] = getValue(header.value)
       }
     })
+    if (requestAuth.type !== 'none' && requestAuth.value) {
+      headers['Authorization'] = createAuthHeaderValue({
+        type: requestAuth.type,
+        value: getValue(requestAuth.value)
+      })
+    }
 
     saveHistory()
 
@@ -166,11 +175,15 @@ export default function RequestContextProvider({
         }
       ])
       setFetching(false)
+      window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
+      window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
     })
 
     window.electron.ipcRenderer.on(CALL_API_FAILURE, (_: any, error: Error) => {
-      console.log('error', error)
       setFetching(false)
+      console.log('error', error)
+      window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
+      window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
     })
   }
 
@@ -184,6 +197,7 @@ export default function RequestContextProvider({
       request: {
         method: requestMethod,
         url: requestUrl,
+        auth: requestAuth,
         headers: requestHeaders,
         params: requestParams,
         body: requestBody
@@ -205,11 +219,13 @@ export default function RequestContextProvider({
       request: {
         method: requestMethod,
         url: requestUrl,
+        auth: requestAuth,
         headers: requestHeaders,
         params: requestParams,
         body: requestBody
       }
     } as RequestType
+    console.log('saveRequest', request)
     collections.saveRequest({ path, collectionId, request })
   }
 
@@ -301,11 +317,13 @@ export default function RequestContextProvider({
       method: requestMethod,
       url: requestUrl,
       body: requestBody,
+      auth: requestAuth,
       headers: requestHeaders,
       params: requestParams,
       setMethod,
       setUrl,
       setBody,
+      setAuth: setRequestAuth,
       setHeaders,
       setParams,
       addParam,

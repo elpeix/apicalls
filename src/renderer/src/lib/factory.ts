@@ -25,16 +25,32 @@ export const createRequest = ({
     request: {
       url: '',
       method,
+      auth: createAuth('none'),
       headers: [],
       params: []
     }
   }
 }
 
+export const createAuth = (type: RequestAuthType, value = ''): RequestAuth => {
+  return { type, value }
+}
+
+export const createAuthHeaderValue = (requestAuth: RequestAuth): string => {
+  if (requestAuth.type === 'none' || !requestAuth.value) {
+    return ''
+  }
+  const types = {
+    bearer: 'Bearer',
+    basic: 'Basic'
+  }
+  return `${types[requestAuth.type]} ${requestAuth.value}`
+}
+
 export const createMethod = (method: string): Method => {
   return {
     value: method,
     label: method,
-    body: ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
+    body: ['POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'].includes(method)
   }
 }

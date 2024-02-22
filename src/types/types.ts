@@ -13,9 +13,17 @@ type KeyValue = {
   toBeRemoved?: boolean
 }
 
+type RequestAuthType = 'none' | 'bearer' | 'basic'
+
+type RequestAuth = {
+  type: RequestAuthType
+  value?: string
+}
+
 type RequestBase = {
   url: string
   method: Method
+  auth?: RequestAuth
   headers: KeyValue[]
   params: KeyValue[]
   body?: string
@@ -149,11 +157,13 @@ type RequestContextRequest = {
   method: Method
   url: string
   body: string
+  auth: RequestAuth
   headers: KeyValue[]
   params: KeyValue[]
   setMethod: (method: Method) => void
   setUrl: (url: string) => void
   setBody: (body: string) => void
+  setAuth: (auth: RequestAuth) => void
   setHeaders: (headers: KeyValue[]) => void
   setParams: (params: KeyValue[]) => void
   addParam: () => void
