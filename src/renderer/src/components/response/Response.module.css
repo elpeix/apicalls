@@ -9,7 +9,7 @@
     flex: 1;
     overflow: hidden;
 
-    & .headers {
+    .headers {
       height: 100%;
       overflow: auto;
     }
