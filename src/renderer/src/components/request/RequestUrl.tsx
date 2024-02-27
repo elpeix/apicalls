@@ -4,13 +4,12 @@ import styles from './Request.module.css'
 
 export default function RequestUrl({ request }: { request: RequestContextRequest }) {
   const urlRef = useRef()
-
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState(request.urlIsValid({}))
 
   useEffect(() => {
     const params = request.params
-      .filter((param) => param.enabled && param.value.length > 0)
+      .filter((param) => param.enabled)
       .map((param) => `${param.name}=${param.value}`)
       .join('&')
     setUrl(`${request.url}${params ? '?' + params : ''}`)
@@ -20,44 +19,18 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
   const handleUrlChange = (value: string) => {
     const [url] = value.split('?')
     setUrlError(url.length > 0 && !request.urlIsValid({ url }))
-    setUrl(value)
-    request.setUrl(url)
+    request.setFullUrl(value)
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.ctrlKey && event.key === 'Enter') {
+      const target = event.target as HTMLInputElement
+      request.setFullUrl(target.value)
+    }
   }
 
   const handleUrlBlur = (value: string) => {
-    const [url, params] = value.split('?')
-    setUrl(value)
-    request.setUrl(url)
-
-    const paramList: KeyValue[] = params
-      ? params
-          .split('&')
-          .map((param): KeyValue | undefined => {
-            const entry = param.split('=')
-            if (entry.length <= 2) {
-              const name = entry[0].trim()
-              const value = entry[1].trim()
-              return { name, value, enabled: true }
-            }
-          })
-          .filter((param): param is KeyValue => param !== undefined)
-      : []
-
-    const newParams = request.params
-      .map((param) => {
-        const paramIndex = paramList.findIndex((p) => p.name === param.name)
-        if (paramIndex > -1) {
-          const value = paramList[paramIndex].value
-          paramList.splice(paramIndex, 1)
-          return { ...param, value }
-        } else {
-          if (!param.enabled) return param
-          return { ...param, toBeRemoved: true }
-        }
-      })
-      .filter((param) => !param.toBeRemoved)
-
-    request.setParams([...newParams, ...paramList])
+    request.setFullUrl(value)
   }
 
   const getClassName = () => `${styles.url} ${url.length && urlError ? styles.error : ''}`
@@ -69,6 +42,7 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
       value={url}
       onChange={handleUrlChange}
       onBlur={handleUrlBlur}
+      onKeyDown={handleKeyDown}
       placeholder="Enter URL..."
       showTip={true}
     />

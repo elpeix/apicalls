@@ -12,7 +12,7 @@ export default function RequestAuth() {
     { value: 'bearer', label: 'Bearer' }
   ]
 
-  const [authType, setAuthType] = useState<RequestAuthType>('none')
+  const [authType, setAuthType] = useState<RequestAuthType>(authOptions[0].value)
   const [authValue, setAuthValue] = useState('')
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function RequestAuth() {
     <div className={styles.authorization}>
       <select onChange={handleSelectChange} value={authType}>
         {authOptions.map((option) => (
-          <option key={option.value} value={option.value} selected={authType === option.value}>
+          <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}

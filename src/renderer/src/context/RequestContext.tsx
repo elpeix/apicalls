@@ -78,6 +78,7 @@ export default function RequestContextProvider({
   const [requestHeaders, setRequestHeaders] = useState(definedRequest.headers || [])
   const [requestParams, setRequestParams] = useState(definedRequest.params || [])
 
+  const [launchRequest, setLaunchRequest] = useState(false)
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
 
@@ -102,6 +103,11 @@ export default function RequestContextProvider({
         params: requestParams,
         body: requestBody
       })
+      return
+    }
+    if (launchRequest) {
+      setLaunchRequest(false)
+      sendRequest()
     }
   }, [
     tabId,
@@ -113,7 +119,8 @@ export default function RequestContextProvider({
     requestAuth,
     requestBody,
     requestHeaders,
-    requestParams
+    requestParams,
+    launchRequest
   ])
 
   useEffect(() => {
@@ -124,6 +131,10 @@ export default function RequestContextProvider({
     if (!preRequestdata) return
     setPreRequestData(preRequestData)
   }, [collectionId, collections])
+
+  const fetch = () => {
+    setLaunchRequest(true)
+  }
 
   const sendRequest = () => {
     if (!requestUrl || !urlIsValid({})) return
@@ -169,7 +180,7 @@ export default function RequestContextProvider({
         ...consoleLogs,
         {
           method: requestMethod.value,
-          url: url,
+          url: getFullUrl(),
           status: callResponse.status.code,
           time: callResponse.responseTime.all
         }
@@ -178,6 +189,14 @@ export default function RequestContextProvider({
       window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
     })
+
+    const getFullUrl = () => {
+      const params = requestParams
+        .filter((param) => param.enabled)
+        .map((param) => `${param.name}=${param.value}`)
+        .join('&')
+      return `${url}${params ? '?' + params : ''}`
+    }
 
     window.electron.ipcRenderer.on(CALL_API_FAILURE, (_: any, error: Error) => {
       setFetching(false)
@@ -257,6 +276,42 @@ export default function RequestContextProvider({
     setChanged(true)
   }
 
+  const setFullUrl = (value: string) => {
+    const [url, params] = value.split('?')
+    setUrl(value)
+    setUrl(url)
+
+    const paramList: KeyValue[] = params
+      ? params
+          .split('&')
+          .map((param): KeyValue | undefined => {
+            const entry = param.split('=')
+            if (entry.length <= 2) {
+              const name = entry[0].trim()
+              const value = entry[1].trim()
+              return { name, value, enabled: true }
+            }
+          })
+          .filter((param): param is KeyValue => param !== undefined)
+      : []
+
+    const newParams = requestParams
+      .map((param) => {
+        const paramIndex = paramList.findIndex((p) => p.name === param.name)
+        if (paramIndex > -1) {
+          const value = paramList[paramIndex].value
+          paramList.splice(paramIndex, 1)
+          return { ...param, value }
+        } else {
+          if (!param.enabled) return param
+          return { ...param, toBeRemoved: true }
+        }
+      })
+      .filter((param) => !param.toBeRemoved)
+
+    setParams([...newParams, ...paramList])
+  }
+
   const setBody = (body: string) => {
     setRequestBody(body)
     setChanged(true)
@@ -322,6 +377,7 @@ export default function RequestContextProvider({
       params: requestParams,
       setMethod,
       setUrl,
+      setFullUrl,
       setBody,
       setAuth: setRequestAuth,
       setHeaders,
@@ -332,7 +388,7 @@ export default function RequestContextProvider({
       addHeader,
       removeHeader,
       getActiveHeadersLength,
-      fetch: sendRequest,
+      fetch,
       urlIsValid
     },
     fetching,

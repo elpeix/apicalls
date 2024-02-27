@@ -162,6 +162,7 @@ type RequestContextRequest = {
   params: KeyValue[]
   setMethod: (method: Method) => void
   setUrl: (url: string) => void
+  setFullUrl: (url: string) => void
   setBody: (body: string) => void
   setAuth: (auth: RequestAuth) => void
   setHeaders: (headers: KeyValue[]) => void
