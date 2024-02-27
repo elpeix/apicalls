@@ -144,8 +144,13 @@ function SimpleTableCell({
     }
   }
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && onChange) {
+    if (e.key === 'Escape') {
+      setEditableValue(value)
+    } else if (e.key === 'Enter' && onChange) {
       onChange(editableValue as string)
+      if (e.ctrlKey) {
+        inputRef.current?.blur()
+      }
     }
   }
 
