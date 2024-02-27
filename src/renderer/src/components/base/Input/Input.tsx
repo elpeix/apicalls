@@ -11,6 +11,7 @@ export default function Input({
   onChange,
   onBlur,
   onKeyUp,
+  onKeyDown,
   placeholder,
   fontSize = 14,
   autoFocus = false,
@@ -22,6 +23,7 @@ export default function Input({
   onChange?: (value: string) => void
   onBlur?: (value: string) => void
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   placeholder?: string
   fontSize?: number
   autoFocus?: boolean
@@ -103,6 +105,7 @@ export default function Input({
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyUp={onKeyUp}
+          onKeyDown={onKeyDown}
           value={internalValue}
           style={style}
           autoFocus={autoFocus}
