@@ -68,7 +68,7 @@ export default function CollectionElements({
         />
       ))}
       <div
-        className={`${styles.firstElement} ${dragOnOver ? styles.dragOver : ''}`}
+        className={`${styles.firstElement} ${styles.droppable} ${dragOnOver ? styles.dragOver : ''}`}
         onDragEnter={handleDragOver}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}

@@ -103,7 +103,7 @@ export default function Folder({
   return (
     <>
       <div
-        className={`${styles.folder} ${dragOnOVer ? styles.dragOver : ''}`}
+        className={`${styles.folder} ${styles.droppable} ${dragOnOVer ? styles.dragOver : ''}`}
         onDragEnter={handleDragOver}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}

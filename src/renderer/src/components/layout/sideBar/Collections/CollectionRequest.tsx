@@ -81,7 +81,7 @@ export default function CollectionRequest({
   return (
     <>
       <div
-        className={`${styles.request} ${dragOnOver ? styles.dragOver : ''}`}
+        className={`${styles.request} ${styles.droppable} ${dragOnOver ? styles.dragOver : ''}`}
         onClick={clickHandler}
         onDragEnter={handleDragOver}
         onDragOver={handleDragOver}
