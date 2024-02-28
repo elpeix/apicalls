@@ -14,12 +14,10 @@ import RequestCreator from './RequestCreator'
 export default function Collection({
   collection,
   back,
-  onUpdate,
   onRemove
 }: {
   collection: Collection
   back: () => void
-  onUpdate?: () => void
   onRemove?: () => void
 }) {
   const { tabs, collections } = useContext(AppContext)
@@ -46,12 +44,10 @@ export default function Collection({
   const createFolderHandler = (name: string) => {
     setShowCreateFolder(false)
     coll.elements.push(createFolder(name))
-    setColl({ ...coll })
     update({ ...coll })
   }
 
   const handleUpdate = () => {
-    setColl({ ...coll })
     update({ ...coll })
   }
 
@@ -65,13 +61,12 @@ export default function Collection({
   }
   const changeName = (name: string) => {
     setEditingName(false)
-    setColl({ ...coll, name })
     update({ ...coll, name })
   }
 
   const update = (collection: Collection) => {
+    setColl(collection)
     collections?.update(collection)
-    onUpdate?.()
   }
 
   const handleAddRequest = () => {
@@ -85,7 +80,7 @@ export default function Collection({
       type: 'collection'
     })
     coll.elements.push(request)
-    handleUpdate()
+    update({ ...coll })
     tabs?.openTab(request)
   }
 
