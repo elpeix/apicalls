@@ -78,11 +78,6 @@ export default function Folder({
     tabs?.openTab(request)
   }
 
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(true)
-  }
-
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setDragOnOver(true)
@@ -109,7 +104,7 @@ export default function Folder({
     <>
       <div
         className={`${styles.folder} ${dragOnOVer ? styles.dragOver : ''}`}
-        onDragEnter={handleDragEnter}
+        onDragEnter={handleDragOver}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
