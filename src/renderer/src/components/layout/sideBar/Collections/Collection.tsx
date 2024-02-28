@@ -105,6 +105,53 @@ export default function Collection({
     onRemove?.()
   }
 
+  const handleMove = ({ from, to }: { from: PathItem[]; to: PathItem[] }) => {
+    findElement(from, (elementsFrom, elementFrom) => {
+      const index = elementsFrom.indexOf(elementFrom)
+      elementsFrom.splice(index, 1)
+
+      if (to.length === 0) {
+        coll.elements.push(elementFrom)
+        update({ ...coll })
+        return
+      }
+      findElement(to, (elementsTo, elementTo) => {
+        if (elementTo.type === 'folder') {
+          elementTo.elements.push(elementFrom)
+        } else {
+          const index = elementsTo.indexOf(elementTo)
+          elementsTo.splice(index, 0, elementFrom)
+        }
+        update({ ...coll })
+      })
+    })
+  }
+
+  const findElement = (
+    path: PathItem[],
+    onFind: (
+      elements: (CollectionFolder | RequestType)[],
+      element: CollectionFolder | RequestType
+    ) => void
+  ) => {
+    const pathIds = path.map((item) => item.id)
+    let elements = coll.elements
+    let element: CollectionFolder | RequestType | undefined
+    while (pathIds.length) {
+      const id = pathIds.shift()
+      element = elements.find((element) => element.id === id)
+      if (!element) {
+        return
+      }
+      if (element.type === 'folder' && pathIds.length) {
+        elements = element.elements
+      }
+    }
+    if (element) {
+      onFind(elements, element)
+    }
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -130,6 +177,7 @@ export default function Collection({
           collectionId={coll.id}
           elements={coll.elements}
           update={handleUpdate}
+          move={handleMove}
           path={[]}
           scrolling={isScrolling}
         />

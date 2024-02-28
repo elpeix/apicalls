@@ -131,6 +131,7 @@ export default function Folder({
               collectionId={collectionId}
               elements={folder.elements}
               update={update}
+              move={move}
               path={folderPath}
               scrolling={scrolling}
             />

@@ -244,7 +244,6 @@ export default function RequestContextProvider({
         body: requestBody
       }
     } as RequestType
-    console.log('saveRequest', request)
     collections.saveRequest({ path, collectionId, request })
   }
 

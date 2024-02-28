@@ -26,6 +26,7 @@ export default function CollectionElement({
   const isFolder = element.type === 'folder'
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
     const elementPath = [
       ...path,
       { id: element.id, type: element.type, name: element.name }

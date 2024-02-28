@@ -8,12 +8,14 @@ export default function CollectionElements({
   collectionId,
   path,
   update,
+  move,
   scrolling
 }: {
   elements: (CollectionFolder | RequestType)[]
   collectionId: Identifier
   path: PathItem[]
   update: () => void
+  move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   scrolling: boolean
 }) {
   const removeElement = (element: CollectionFolder | RequestType) => {
@@ -27,15 +29,10 @@ export default function CollectionElements({
     update()
   }
 
-  const move = (moveAction: { from: PathItem[]; to: PathItem[] }) => {
-    console.log('move', moveAction)
-    // TODO: implement move
-  }
-
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     move({
       from: JSON.parse(e.dataTransfer.getData('path')),
-      to: []
+      to: path
     })
   }
 

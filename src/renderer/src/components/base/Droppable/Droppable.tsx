@@ -27,9 +27,6 @@ export default function Droppable({
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setDragOnOver(true)
-    // if (debouncedDragOnOver && onDragOverDebounced) {
-    //   onDragOverDebounced()
-    // }
     onDragEnter?.(e)
   }
 

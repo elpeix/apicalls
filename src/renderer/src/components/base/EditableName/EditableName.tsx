@@ -27,6 +27,10 @@ export default function EditableName({
     }
   }, [editMode])
 
+  useEffect(() => {
+    setNameValue(name)
+  }, [name])
+
   const editName = () => {
     setEditingName(true)
     setNameValue(name)
