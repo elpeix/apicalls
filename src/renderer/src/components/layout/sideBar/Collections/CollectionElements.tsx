@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import CollectionElement from './CollectionElement'
 import styles from './Collections.module.css'
+import Droppable from '../../../base/Droppable/Droppable'
 
 export default function CollectionElements({
   elements,
@@ -15,7 +16,6 @@ export default function CollectionElements({
   update: () => void
   scrolling: boolean
 }) {
-  const [dragOnOver, setDragOnOver] = useState(false)
   const removeElement = (element: CollectionFolder | RequestType) => {
     const index = elements.indexOf(element)
     elements.splice(index, 1)
@@ -32,19 +32,7 @@ export default function CollectionElements({
     // TODO: implement move
   }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(false)
-  }
-
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(false)
     move({
       from: JSON.parse(e.dataTransfer.getData('path')),
       to: []
@@ -67,13 +55,7 @@ export default function CollectionElements({
           scrolling={scrolling}
         />
       ))}
-      <div
-        className={`${styles.firstElement} ${styles.droppable} ${dragOnOver ? styles.dragOver : ''}`}
-        onDragEnter={handleDragOver}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      />
+      <Droppable onDrop={handleDrop} className={styles.firstElement} />
     </>
   )
 }

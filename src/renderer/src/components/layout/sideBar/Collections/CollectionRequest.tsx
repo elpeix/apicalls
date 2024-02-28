@@ -5,6 +5,7 @@ import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
 import Confirm from '../../../base/PopupBoxes/Confirm'
+import Droppable from '../../../base/Droppable/Droppable'
 
 export default function CollectionRequest({
   collectionRequest,
@@ -29,7 +30,6 @@ export default function CollectionRequest({
   const { request } = collectionRequest
   const [editingName, setEditingName] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
-  const [dragOnOver, setDragOnOver] = useState(false)
   const requestPath = [
     ...path,
     {
@@ -58,20 +58,9 @@ export default function CollectionRequest({
     addRequest({ ...request, id: Date.now().toString(), name: `${request.name} copy` })
   }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(false)
-  }
-
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    setDragOnOver(false)
     move({
       from: JSON.parse(e.dataTransfer.getData('path')),
       to: requestPath
@@ -80,14 +69,7 @@ export default function CollectionRequest({
 
   return (
     <>
-      <div
-        className={`${styles.request} ${styles.droppable} ${dragOnOver ? styles.dragOver : ''}`}
-        onClick={clickHandler}
-        onDragEnter={handleDragOver}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
+      <Droppable className={styles.request} onClick={clickHandler} onDrop={handleDrop}>
         <div className={`${styles.requestMethod} ${request.method.value}`}>
           {request.method.label}
         </div>
@@ -108,7 +90,7 @@ export default function CollectionRequest({
           <MenuSeparator />
           <MenuElement icon="delete" title="Remove" onClick={() => setShowRemove(true)} />
         </Menu>
-      </div>
+      </Droppable>
 
       {showRemove && (
         <Confirm

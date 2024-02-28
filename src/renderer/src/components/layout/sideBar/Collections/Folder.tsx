@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
-import { useDebounce } from '../../../../hooks/useDebounce'
 import { createFolder, createRequest } from '../../../../lib/factory'
 import ButtonIcon from '../../../base/ButtonIcon'
 import EditableName from '../../../base/EditableName/EditableName'
@@ -11,6 +10,7 @@ import CollectionElements from './CollectionElements'
 import styles from './Collections.module.css'
 import FolderCreator from './FolderCreator'
 import RequestCreator from './RequestCreator'
+import Droppable from '../../../base/Droppable/Droppable'
 
 export default function Folder({
   folder,
@@ -35,8 +35,7 @@ export default function Folder({
   const [showCreateFolder, setShowCreateFolder] = useState(false)
   const [showRemoveFolder, setShowRemoveFolder] = useState(false)
   const [showCreateRequest, setShowCreateRequest] = useState(false)
-  const [dragOnOVer, setDragOnOver] = useState(false)
-  const debouncedDragOnOver = useDebounce(dragOnOVer, 500)
+
   const folderPath = [...path, { id: folder.id, type: 'folder', name: folder.name }] as PathItem[]
 
   const toggleExpand = () => setExpanded(!expanded)
@@ -78,22 +77,12 @@ export default function Folder({
     tabs?.openTab(request)
   }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(true)
-    if (debouncedDragOnOver) {
-      setExpanded(true)
-    }
-  }
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setDragOnOver(false)
+  const handleDragOverDebounced = () => {
+    setExpanded(true)
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
-    setDragOnOver(false)
     move({
       from: JSON.parse(e.dataTransfer.getData('path')),
       to: folderPath
@@ -102,11 +91,9 @@ export default function Folder({
 
   return (
     <>
-      <div
-        className={`${styles.folder} ${styles.droppable} ${dragOnOVer ? styles.dragOver : ''}`}
-        onDragEnter={handleDragOver}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
+      <Droppable
+        className={styles.folder}
+        onDragOverDebounced={handleDragOverDebounced}
         onDrop={handleDrop}
       >
         <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''}`}>
@@ -149,7 +136,7 @@ export default function Folder({
             />
           </div>
         )}
-      </div>
+      </Droppable>
 
       {showCreateFolder && (
         <FolderCreator onCancel={() => setShowCreateFolder(false)} onCreate={createFolderHandler} />

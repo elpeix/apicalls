@@ -1,0 +1,22 @@
+.droppable {
+  width: 100%;
+
+  &.dragOver {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 0;
+      border-top: 2px solid var(--accent-color);
+    }
+
+    &:has(.dragOver) {
+      &::before {
+        border-top: none;
+      }
+    }
+  }
+}
