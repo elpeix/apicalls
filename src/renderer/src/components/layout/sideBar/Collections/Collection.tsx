@@ -106,24 +106,35 @@ export default function Collection({
   }
 
   const handleMove = ({ from, to }: { from: PathItem[]; to: PathItem[] }) => {
+    if (from.length === 0) return
+    if (from[from.length - 1].id === to[to.length - 1].id) {
+      console.log('same')
+      return
+    }
     findElement(from, (elementsFrom, elementFrom) => {
-      const index = elementsFrom.indexOf(elementFrom)
-      elementsFrom.splice(index, 1)
-
+      const indexFrom = elementsFrom.indexOf(elementFrom)
       if (to.length === 0) {
+        elementsFrom.splice(indexFrom, 1)
         coll.elements.push(elementFrom)
         update({ ...coll })
         return
       }
-      findElement(to, (elementsTo, elementTo) => {
-        if (to[to.length - 1].type === 'collection' && elementTo.type === 'folder') {
-          elementTo.elements.push(elementFrom)
-        } else {
-          const index = elementsTo.indexOf(elementTo)
-          elementsTo.splice(index, 0, elementFrom)
+      findElement(
+        to,
+        (elementsTo, elementTo) => {
+          elementsFrom.splice(indexFrom, 1)
+          if (to[to.length - 1].type === 'collection' && elementTo.type === 'folder') {
+            elementTo.elements.push(elementFrom)
+          } else {
+            const indexTo = elementsTo.indexOf(elementTo)
+            elementsTo.splice(indexTo, 0, elementFrom)
+          }
+          update({ ...coll })
+        },
+        () => {
+          elementsFrom.splice(indexFrom, 0, elementFrom)
         }
-        update({ ...coll })
-      })
+      )
     })
   }
 
@@ -132,7 +143,8 @@ export default function Collection({
     onFind: (
       elements: (CollectionFolder | RequestType)[],
       element: CollectionFolder | RequestType
-    ) => void
+    ) => void,
+    onNotFound?: () => void
   ) => {
     const pathIds = path.map((item) => item.id)
     let elements = coll.elements
@@ -141,6 +153,7 @@ export default function Collection({
       const id = pathIds.shift()
       element = elements.find((element) => element.id === id)
       if (!element) {
+        onNotFound?.()
         return
       }
       if (element.type === 'folder' && pathIds.length) {
@@ -149,7 +162,9 @@ export default function Collection({
     }
     if (element) {
       onFind(elements, element)
+      return
     }
+    onNotFound?.()
   }
 
   return (

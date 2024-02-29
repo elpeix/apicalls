@@ -30,6 +30,8 @@ export default function CollectionElements({
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
     const from = JSON.parse(e.dataTransfer.getData('path'))
     const to = [...path]
     to[to.length - 1] = { ...to[to.length - 1], type: 'collection' }

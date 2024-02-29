@@ -89,6 +89,7 @@ export default function Folder({
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
+    e.stopPropagation()
     move({
       from: JSON.parse(e.dataTransfer.getData('path')),
       to: folderPath
