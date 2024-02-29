@@ -116,7 +116,7 @@ export default function Collection({
         return
       }
       findElement(to, (elementsTo, elementTo) => {
-        if (elementTo.type === 'folder') {
+        if (to[to.length - 1].type === 'collection' && elementTo.type === 'folder') {
           elementTo.elements.push(elementFrom)
         } else {
           const index = elementsTo.indexOf(elementTo)

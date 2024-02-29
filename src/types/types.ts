@@ -76,7 +76,7 @@ type Collection = {
 type PathItem = {
   id: Identifier
   name: string
-  type: 'folder' | 'request'
+  type: 'folder' | 'request' | 'collection'
 }
 
 type HistoryHook = {

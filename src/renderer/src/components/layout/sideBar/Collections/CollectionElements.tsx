@@ -30,10 +30,10 @@ export default function CollectionElements({
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    move({
-      from: JSON.parse(e.dataTransfer.getData('path')),
-      to: path
-    })
+    const from = JSON.parse(e.dataTransfer.getData('path'))
+    const to = [...path]
+    to[to.length - 1] = { ...to[to.length - 1], type: 'collection' }
+    move({ from, to })
   }
 
   return (
