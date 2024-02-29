@@ -30,7 +30,7 @@ export default function Folder({
   scrolling: boolean
 }) {
   const { tabs } = useContext(AppContext)
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(folder.expanded || false)
   const [editingName, setEditingName] = useState(false)
   const [showCreateFolder, setShowCreateFolder] = useState(false)
   const [showRemoveFolder, setShowRemoveFolder] = useState(false)
@@ -38,10 +38,16 @@ export default function Folder({
 
   const folderPath = [...path, { id: folder.id, type: 'folder', name: folder.name }] as PathItem[]
 
-  const toggleExpand = () => setExpanded(!expanded)
+  const toggleExpand = () => expandFolder(!expanded)
+
+  const expandFolder = (expanded: boolean) => {
+    folder.expanded = expanded
+    update()
+    setExpanded(expanded)
+  }
 
   const handleAddFolder = () => {
-    setExpanded(true)
+    expandFolder(true)
     setShowCreateFolder(true)
   }
 
@@ -62,7 +68,7 @@ export default function Folder({
   }
 
   const handleAddRequest = () => {
-    setExpanded(true)
+    expandFolder(true)
     setShowCreateRequest(true)
   }
 
@@ -78,7 +84,7 @@ export default function Folder({
   }
 
   const handleDragOverDebounced = () => {
-    setExpanded(true)
+    expandFolder(true)
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {

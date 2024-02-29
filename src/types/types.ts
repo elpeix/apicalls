@@ -63,6 +63,7 @@ type CollectionFolder = {
   id: Identifier
   type: 'folder'
   name: string
+  expanded?: boolean
   elements: (CollectionFolder | RequestType)[]
 }
 
