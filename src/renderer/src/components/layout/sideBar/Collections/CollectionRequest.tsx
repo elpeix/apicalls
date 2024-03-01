@@ -34,8 +34,7 @@ export default function CollectionRequest({
     ...path,
     {
       id: collectionRequest.id,
-      type: 'request',
-      name: collectionRequest.name
+      type: 'request'
     }
   ] as PathItem[]
 

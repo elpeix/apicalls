@@ -36,7 +36,7 @@ export default function Folder({
   const [showRemoveFolder, setShowRemoveFolder] = useState(false)
   const [showCreateRequest, setShowCreateRequest] = useState(false)
 
-  const folderPath = [...path, { id: folder.id, type: 'folder', name: folder.name }] as PathItem[]
+  const folderPath = [...path, { id: folder.id, type: 'folder' }] as PathItem[]
 
   const toggleExpand = () => expandFolder(!expanded)
 

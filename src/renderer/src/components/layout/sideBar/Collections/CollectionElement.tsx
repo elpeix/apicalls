@@ -27,10 +27,7 @@ export default function CollectionElement({
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
-    const elementPath = [
-      ...path,
-      { id: element.id, type: element.type, name: element.name }
-    ] as PathItem[]
+    const elementPath = [...path, { id: element.id, type: element.type }] as PathItem[]
     e.dataTransfer.setData('index', index.toString())
     e.dataTransfer.setData('type', element.type)
     e.dataTransfer.setData('path', JSON.stringify(elementPath))

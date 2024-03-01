@@ -76,7 +76,6 @@ type Collection = {
 
 type PathItem = {
   id: Identifier
-  name: string
   type: 'folder' | 'request' | 'collection'
 }
 
