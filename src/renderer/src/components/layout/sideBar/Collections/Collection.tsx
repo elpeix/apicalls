@@ -106,6 +106,7 @@ export default function Collection({
   }
 
   const handleMove = ({ from, to }: { from: PathItem[]; to: PathItem[] }) => {
+    console.log('move', { from, to, elements: coll.elements })
     if (from.length === 0) return
     if (from[from.length - 1].id === to[to.length - 1].id) {
       console.log('same')
