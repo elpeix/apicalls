@@ -8,7 +8,7 @@ describe('Move collections', () => {
     const from: PathItem[] = []
     const to: PathItem[] = []
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(0)
+    expect(result.moved).toBe(false)
   })
 
   it('should do nothing if elements has only one element', () => {
@@ -16,8 +16,7 @@ describe('Move collections', () => {
     const from: PathItem[] = []
     const to: PathItem[] = []
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(1)
-    expect(result[0].id).toBe('1')
+    expect(result.moved).toBe(false)
   })
 
   it('should do nothing if from is empty', () => {
@@ -25,9 +24,7 @@ describe('Move collections', () => {
     const from: PathItem[] = []
     const to: PathItem[] = []
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(2)
-    expect(result[0].id).toBe('1')
-    expect(result[1].id).toBe('2')
+    expect(result.moved).toBe(false)
   })
 
   it('should do nothing if from and to are equal', () => {
@@ -35,9 +32,7 @@ describe('Move collections', () => {
     const from: PathItem[] = [{ id: '1', type: 'request' }]
     const to: PathItem[] = [{ id: '1', type: 'request' }]
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(2)
-    expect(result[0].id).toBe('1')
-    expect(result[1].id).toBe('2')
+    expect(result.moved).toBe(false)
   })
 
   it('should move element to the end', () => {
@@ -45,9 +40,10 @@ describe('Move collections', () => {
     const from: PathItem[] = [{ id: '1', type: 'request' }]
     const to: PathItem[] = []
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(2)
-    expect(result[0].id).toBe('2')
-    expect(result[1].id).toBe('1')
+    expect(result.moved).toBe(true)
+    expect(result.elements?.length).toBe(2)
+    expect(result.elements?.[0].id).toBe('2')
+    expect(result.elements?.[1].id).toBe('1')
   })
 
   it('should move element to up', () => {
@@ -55,9 +51,10 @@ describe('Move collections', () => {
     const from: PathItem[] = [{ id: '2', type: 'request' }]
     const to: PathItem[] = [{ id: '1', type: 'folder' }]
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(2)
-    expect(result[0].id).toBe('2')
-    expect(result[1].id).toBe('1')
+    expect(result.moved).toBe(true)
+    expect(result.elements?.length).toBe(2)
+    expect(result.elements?.[0].id).toBe('2')
+    expect(result.elements?.[1].id).toBe('1')
   })
 
   it('should move element to down', () => {
@@ -69,10 +66,11 @@ describe('Move collections', () => {
     const from: PathItem[] = [{ id: '1', type: 'request' }]
     const to: PathItem[] = [{ id: '3', type: 'request' }]
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(3)
-    expect(result[0].id).toBe('2')
-    expect(result[1].id).toBe('1')
-    expect(result[2].id).toBe('3')
+    expect(result.moved).toBe(true)
+    expect(result.elements?.length).toBe(3)
+    expect(result.elements?.[0].id).toBe('2')
+    expect(result.elements?.[1].id).toBe('1')
+    expect(result.elements?.[2].id).toBe('3')
   })
 
   it('should move element to folder', () => {
@@ -80,10 +78,11 @@ describe('Move collections', () => {
     const from: PathItem[] = [{ id: '1', type: 'request' }]
     const to: PathItem[] = [{ id: '2', type: 'collection' }]
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(1)
-    expect(result[0].id).toBe('2')
-    expect(result[0].type).toBe('folder')
-    const folder = result[0] as CollectionFolder
+    expect(result.moved).toBe(true)
+    expect(result.elements?.length).toBe(1)
+    expect(result.elements?.[0].id).toBe('2')
+    expect(result.elements?.[0].type).toBe('folder')
+    const folder = result.elements?.[0] as CollectionFolder
     expect(folder.elements.length).toBe(1)
     expect(folder.elements[0].id).toBe('1')
   })
@@ -94,11 +93,13 @@ describe('Move collections', () => {
     const from: PathItem[] = [{ id: '1', type: 'request' }]
     const to: PathItem[] = [{ id: '2', type: 'collection' }]
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(1)
-    expect(result[0].id).toBe('2')
-    expect(result[0].type).toBe('folder')
-    expect(folder.elements.length).toBe(1)
-    expect(folder.elements[0].id).toBe('1')
+    expect(result.moved).toBe(false)
+    expect(result.elements?.length).toBe(1)
+    expect(result.elements?.[0].id).toBe('2')
+    expect(result.elements?.[0].type).toBe('folder')
+    const resultFolder = result.elements?.[0] as CollectionFolder
+    expect(resultFolder.elements.length).toBe(1)
+    expect(resultFolder.elements[0].id).toBe('1')
   })
 
   it('should move element in the folder between other elements', () => {
@@ -110,12 +111,26 @@ describe('Move collections', () => {
       { id: '3', type: 'request' }
     ]
     const result = moveElements({ elements, from, to })
-    expect(result.length).toBe(1)
-    expect(result[0].id).toBe('2')
-    expect(folder.elements.length).toBe(3)
-    expect(folder.elements[0].id).toBe('1')
-    expect(folder.elements[1].id).toBe('4')
-    expect(folder.elements[2].id).toBe('3')
+    expect(result.moved).toBe(true)
+    expect(result.elements?.length).toBe(1)
+    expect(result.elements?.[0].id).toBe('2')
+    const resultFolder = result.elements?.[0] as CollectionFolder
+    expect(resultFolder.elements.length).toBe(3)
+    expect(resultFolder.elements[0].id).toBe('1')
+    expect(resultFolder.elements[1].id).toBe('4')
+    expect(resultFolder.elements[2].id).toBe('3')
+  })
+
+  it('should do nothing if folder is moved to its child', () => {
+    const folder = getFolder('001', [getFolder('002')])
+    const elements: (CollectionFolder | RequestType)[] = [folder]
+    const from: PathItem[] = [{ id: '001', type: 'folder' }]
+    const to: PathItem[] = [
+      { id: '001', type: 'folder' },
+      { id: '002', type: 'collection' }
+    ]
+    const result = moveElements({ elements, from, to })
+    expect(result.moved).toBe(false)
   })
 })
 

@@ -1,21 +1,35 @@
-export const moveElements = ({
-  elements,
-  from,
-  to
-}: {
+export const moveElements = (args: {
   elements: (CollectionFolder | RequestType)[]
   from: PathItem[]
   to: PathItem[]
-}): (CollectionFolder | RequestType)[] => {
-  if (elements.length <= 1 || from.length === 0) {
-    return elements
+}): {
+  moved: boolean
+  elements?: (CollectionFolder | RequestType)[]
+} => {
+  const {
+    elements,
+    from,
+    to
+  }: {
+    elements: (CollectionFolder | RequestType)[]
+    from: PathItem[]
+    to: PathItem[]
+  } = JSON.parse(JSON.stringify(args))
+  let moved = false
+
+  if (
+    elements.length < 1 ||
+    from.length === 0 ||
+    from[from.length - 1].id === to[to.length - 1]?.id ||
+    fromIsParentOfTo(from, to)
+  ) {
+    return { moved }
   }
-  if (from[from.length - 1].id === to[to.length - 1]?.id) {
-    return elements
-  }
+
   findElement(elements, from, (elementsFrom, elementFrom) => {
     const indexFrom = elementsFrom.indexOf(elementFrom)
     if (to.length === 0) {
+      moved = true
       elementsFrom.splice(indexFrom, 1)
       elements.push(elementFrom)
       return
@@ -23,6 +37,7 @@ export const moveElements = ({
     findElement(elements, from, (elementsFrom, elementFrom) => {
       const indexFrom = elementsFrom.indexOf(elementFrom)
       if (to.length === 0) {
+        moved = true
         elementsFrom.splice(indexFrom, 1)
         elements.push(elementFrom)
         return
@@ -31,6 +46,7 @@ export const moveElements = ({
         elements,
         to,
         (elementsTo, elementTo) => {
+          moved = true
           elementsFrom.splice(indexFrom, 1)
           if (to[to.length - 1].type === 'collection' && elementTo.type === 'folder') {
             elementTo.elements.push(elementFrom)
@@ -45,8 +61,20 @@ export const moveElements = ({
       )
     })
   })
+  return { moved, elements }
+}
 
-  return elements
+const fromIsParentOfTo = (from: PathItem[], to: PathItem[]): boolean => {
+  if (to.length > 1 && to[to.length - 1].type !== 'collection') {
+    return false
+  }
+  const lastFrom = from[from.length - 1]
+  for (let i = to.length - 1; i >= 0; i--) {
+    if (to[i].id === lastFrom.id) {
+      return true
+    }
+  }
+  return false
 }
 
 const findElement = (

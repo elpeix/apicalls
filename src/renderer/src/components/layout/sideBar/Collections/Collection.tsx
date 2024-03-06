@@ -10,6 +10,7 @@ import CollectionElements from './CollectionElements'
 import EditableName from '../../../base/EditableName/EditableName'
 import { AppContext } from '../../../../context/AppContext'
 import RequestCreator from './RequestCreator'
+import { moveElements } from '../../../../lib/moveElements'
 
 export default function Collection({
   collection,
@@ -106,66 +107,10 @@ export default function Collection({
   }
 
   const handleMove = ({ from, to }: { from: PathItem[]; to: PathItem[] }) => {
-    console.log('move', { from, to, elements: coll.elements })
-    if (from.length === 0) return
-    if (from[from.length - 1].id === to[to.length - 1].id) {
-      console.log('same')
-      return
+    const result = moveElements({ elements: coll.elements, from, to })
+    if (result.moved && result.elements) {
+      update({ ...coll, elements: result.elements })
     }
-    findElement(from, (elementsFrom, elementFrom) => {
-      const indexFrom = elementsFrom.indexOf(elementFrom)
-      if (to.length === 0) {
-        elementsFrom.splice(indexFrom, 1)
-        coll.elements.push(elementFrom)
-        update({ ...coll })
-        return
-      }
-      findElement(
-        to,
-        (elementsTo, elementTo) => {
-          elementsFrom.splice(indexFrom, 1)
-          if (to[to.length - 1].type === 'collection' && elementTo.type === 'folder') {
-            elementTo.elements.push(elementFrom)
-          } else {
-            const indexTo = elementsTo.indexOf(elementTo)
-            elementsTo.splice(indexTo, 0, elementFrom)
-          }
-          update({ ...coll })
-        },
-        () => {
-          elementsFrom.splice(indexFrom, 0, elementFrom)
-        }
-      )
-    })
-  }
-
-  const findElement = (
-    path: PathItem[],
-    onFind: (
-      elements: (CollectionFolder | RequestType)[],
-      element: CollectionFolder | RequestType
-    ) => void,
-    onNotFound?: () => void
-  ) => {
-    const pathIds = path.map((item) => item.id)
-    let elements = coll.elements
-    let element: CollectionFolder | RequestType | undefined
-    while (pathIds.length) {
-      const id = pathIds.shift()
-      element = elements.find((element) => element.id === id)
-      if (!element) {
-        onNotFound?.()
-        return
-      }
-      if (element.type === 'folder' && pathIds.length) {
-        elements = element.elements
-      }
-    }
-    if (element) {
-      onFind(elements, element)
-      return
-    }
-    onNotFound?.()
   }
 
   return (
