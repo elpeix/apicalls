@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { RequestContext } from '../../../context/RequestContext'
 import { getStatusName } from '../../../lib/status'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Console.module.css'
+import { AppContext } from '../../../context/AppContext'
 
 export default function Console({ collapse }: { collapse: () => void }) {
-  const { console } = useContext(RequestContext)
+  const { requestConsole } = useContext(AppContext)
 
-  if (!console) return null
+  if (!requestConsole) return null
 
   const endRef = useRef<HTMLDivElement>(null)
   const [logs, setLogs] = useState<RequestLog[]>([])
   useEffect(() => {
-    setLogs(console.logs)
+    setLogs(requestConsole.get())
     scrollToBottom()
-  }, [console.logs])
+  }, [requestConsole])
 
   const scrollToBottom = () => {
     if (endRef.current) {
@@ -29,8 +29,8 @@ export default function Console({ collapse }: { collapse: () => void }) {
         <div className={styles.clear}>
           <ButtonIcon
             icon="clear"
-            onClick={console.clear}
-            disabled={console.logs.length === 0}
+            onClick={requestConsole.clear}
+            disabled={logs.length === 0}
             title="Clear"
           />
         </div>
@@ -39,7 +39,7 @@ export default function Console({ collapse }: { collapse: () => void }) {
         </div>
       </div>
 
-      {console.logs.length === 0 && <div className={styles.noLogs}>No logs</div>}
+      {logs.length === 0 && <div className={styles.noLogs}>No logs</div>}
       <div className={styles.content}>
         {logs.map((log, index) => (
           <div key={index} className={styles.log}>

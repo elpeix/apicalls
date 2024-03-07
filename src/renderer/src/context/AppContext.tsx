@@ -10,6 +10,7 @@ import {
   GET_COLLECTIONS,
   GET_ENVIRONMENTS
 } from '../../../lib/ipcChannels'
+import { useConsole } from '../hooks/useConsole'
 
 export const AppContext = createContext<{
   menu: MenuHook | null
@@ -17,12 +18,14 @@ export const AppContext = createContext<{
   collections: CollectionsHook | null
   environments: EnvironmentsHook | null
   history: HistoryHook | null
+  requestConsole: ConsoleHook | null
 }>({
   menu: null,
   tabs: null,
   collections: null,
   environments: null,
-  history: null
+  history: null,
+  requestConsole: null
 })
 
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
@@ -77,6 +80,7 @@ export default function AppContextProvider({ children }: { children: React.React
   const collections = useCollections()
   const environments = useEnvironments()
   const history = useHistory()
+  const requestConsole = useConsole()
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
@@ -102,7 +106,8 @@ export default function AppContextProvider({ children }: { children: React.React
     tabs,
     collections,
     environments,
-    history
+    history,
+    requestConsole
   }
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

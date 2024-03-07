@@ -109,6 +109,12 @@ type RequestLog = {
   time: number
 }
 
+type ConsoleHook = {
+  get: () => RequestLog[]
+  add: (log: RequestLog) => void
+  clear: () => void
+}
+
 type CollectionsHook = {
   setCollections: (collections: Collection[]) => void
   create: () => Collection

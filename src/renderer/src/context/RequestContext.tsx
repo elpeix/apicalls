@@ -18,10 +18,6 @@ export const RequestContext = createContext<{
     size: number
   }
   save: () => void
-  console: {
-    logs: RequestLog[]
-    clear: () => void
-  } | null
 }>({
   path: [],
   collectionId: null,
@@ -36,8 +32,7 @@ export const RequestContext = createContext<{
     time: 0,
     size: 0
   },
-  save: () => {},
-  console: null
+  save: () => {}
 })
 
 export default function RequestContextProvider({
@@ -47,7 +42,7 @@ export default function RequestContextProvider({
   tab: RequestTab
   children: React.ReactNode
 }) {
-  const { history, environments, tabs, collections } = useContext(AppContext)
+  const { history, environments, tabs, collections, requestConsole } = useContext(AppContext)
 
   const path = tab.path || []
   const collectionId = tab.collectionId
@@ -88,8 +83,6 @@ export default function RequestContextProvider({
   const [responseStatus, setResponseStatus] = useState(0)
   const [responseTime, setResponseTime] = useState(0)
   const [responseSize, setResponseSize] = useState(0)
-
-  const [consoleLogs, setConsoleLogs] = useState<RequestLog[]>([])
 
   useEffect(() => {
     if (changed) {
@@ -176,15 +169,12 @@ export default function RequestContextProvider({
       setResponseSize(callResponse.contentLength)
       setFetchedHeaders(callResponse.responseHeaders)
       setResponseBody(callResponse.result || '')
-      setConsoleLogs([
-        ...consoleLogs,
-        {
-          method: requestMethod.value,
-          url: getFullUrl(),
-          status: callResponse.status.code,
-          time: callResponse.responseTime.all
-        }
-      ])
+      requestConsole?.add({
+        method: requestMethod.value,
+        url: getFullUrl(),
+        status: callResponse.status.code,
+        time: callResponse.responseTime.all
+      })
       setFetching(false)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
@@ -400,11 +390,7 @@ export default function RequestContextProvider({
       time: responseTime,
       size: responseSize
     },
-    save: saveRequest,
-    console: {
-      logs: consoleLogs,
-      clear: () => setConsoleLogs([])
-    }
+    save: saveRequest
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
