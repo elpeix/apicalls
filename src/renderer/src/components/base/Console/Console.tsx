@@ -12,7 +12,7 @@ export default function Console({ collapse }: { collapse: () => void }) {
   const endRef = useRef<HTMLDivElement>(null)
   const [logs, setLogs] = useState<RequestLog[]>([])
   useEffect(() => {
-    setLogs(requestConsole.get())
+    setLogs(requestConsole.logs)
     scrollToBottom()
   }, [requestConsole])
 

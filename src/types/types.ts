@@ -110,7 +110,7 @@ type RequestLog = {
 }
 
 type ConsoleHook = {
-  get: () => RequestLog[]
+  logs: RequestLog[]
   add: (log: RequestLog) => void
   clear: () => void
 }

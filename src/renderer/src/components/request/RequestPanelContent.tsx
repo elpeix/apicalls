@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import RequestBar from './RequestBar'
-import { Panel, PanelGroup } from 'react-resizable-panels'
+import { ImperativePanelHandle, Panel, PanelGroup } from 'react-resizable-panels'
 import RequestTabs from './RequestTabs'
 import Gutter from '../layout/Gutter'
 import Console from '../base/Console/Console'
@@ -13,9 +13,9 @@ export default function RequestPanelContent() {
 
   if (!request) return null
 
-  const requestPanel = useRef<any>()
+  const requestPanel = useRef<ImperativePanelHandle>(null)
   const [requestPanelCollapsed, setRequestPanelCollapsed] = useState(false)
-  const consolePanel = useRef<any>()
+  const consolePanel = useRef<ImperativePanelHandle>(null)
   const [consoleCollapsed, setConsoleCollapsed] = useState(true)
 
   const toggleRequestPanel = () => {
@@ -23,8 +23,8 @@ export default function RequestPanelContent() {
     if (requestPanelCollapsed) requestPanel.current.expand()
     else requestPanel.current.collapse()
   }
-  const collapseConsole = () => consolePanel.current.collapse()
-  const expandConsole = () => consolePanel.current.expand()
+  const collapseConsole = () => consolePanel?.current?.collapse()
+  const expandConsole = () => consolePanel?.current?.expand()
   const toggleConsole = () => {
     if (consoleCollapsed) expandConsole()
     else collapseConsole()
