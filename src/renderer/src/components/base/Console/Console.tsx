@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { getStatusName } from '../../../lib/status'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Console.module.css'
-import { AppContext } from '../../../context/AppContext'
+import { RequestContext } from '../../../context/RequestContext'
 
 export default function Console({ collapse }: { collapse: () => void }) {
-  const { requestConsole } = useContext(AppContext)
+  const { requestConsole } = useContext(RequestContext)
 
   if (!requestConsole) return null
 

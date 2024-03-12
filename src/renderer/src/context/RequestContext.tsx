@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { AppContext } from './AppContext'
 import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
 import { createAuth, createAuthHeaderValue, createMethod } from '../lib/factory'
+import { useConsole } from '../hooks/useConsole'
 
 export const RequestContext = createContext<{
   path: PathItem[]
@@ -18,6 +19,7 @@ export const RequestContext = createContext<{
     size: number
   }
   save: () => void
+  requestConsole?: ConsoleHook | null
 }>({
   path: [],
   collectionId: null,
@@ -32,7 +34,8 @@ export const RequestContext = createContext<{
     time: 0,
     size: 0
   },
-  save: () => {}
+  save: () => {},
+  requestConsole: null
 })
 
 export default function RequestContextProvider({
@@ -42,7 +45,7 @@ export default function RequestContextProvider({
   tab: RequestTab
   children: React.ReactNode
 }) {
-  const { history, environments, tabs, collections, requestConsole } = useContext(AppContext)
+  const { history, environments, tabs, collections } = useContext(AppContext)
 
   const path = tab.path || []
   const collectionId = tab.collectionId
@@ -83,6 +86,7 @@ export default function RequestContextProvider({
   const [responseStatus, setResponseStatus] = useState(0)
   const [responseTime, setResponseTime] = useState(0)
   const [responseSize, setResponseSize] = useState(0)
+  const requestConsole = useConsole()
 
   useEffect(() => {
     if (changed) {
@@ -191,6 +195,12 @@ export default function RequestContextProvider({
     window.electron.ipcRenderer.on(CALL_API_FAILURE, (_: any, error: Error) => {
       setFetching(false)
       console.log('error', error)
+      requestConsole?.add({
+        method: requestMethod.value,
+        url: getFullUrl(),
+        status: 0,
+        time: 0
+      })
       window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
     })
@@ -390,7 +400,8 @@ export default function RequestContextProvider({
       time: responseTime,
       size: responseSize
     },
-    save: saveRequest
+    save: saveRequest,
+    requestConsole
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
