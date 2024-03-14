@@ -1,3 +1,5 @@
+import { RestCallerError } from './RestCallerError'
+
 const defaultMethod = 'GET'
 
 export const restCall = async (request: CallRequest): Promise<CallResponse> => {
@@ -53,7 +55,7 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
       responseHeaders: headers
     } as CallResponse
   } catch (error) {
-    const err = new Error('Rest call error')
+    const err = new RestCallerError('Rest call error', request, null)
     if (error instanceof Error) {
       err.stack = error.stack
     }

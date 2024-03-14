@@ -107,6 +107,9 @@ type RequestLog = {
   url: string
   status: number
   time: number
+  request?: CallRequest
+  response?: CallResponse
+  failure?: CallResponseFailure
 }
 
 type ConsoleHook = {
@@ -215,6 +218,12 @@ type CallResponse = {
     response: number
   }
   responseHeaders: KeyValue[]
+}
+
+type CallResponseFailure = {
+  message: string
+  request: CallRequest
+  response: CallResponse | null
 }
 
 type SaveRequest = {

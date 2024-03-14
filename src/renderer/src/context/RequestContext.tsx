@@ -177,7 +177,9 @@ export default function RequestContextProvider({
         method: requestMethod.value,
         url: getFullUrl(),
         status: callResponse.status.code,
-        time: callResponse.responseTime.all
+        time: callResponse.responseTime.all,
+        request: callApiRequest,
+        response: callResponse
       })
       setFetching(false)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
@@ -192,14 +194,15 @@ export default function RequestContextProvider({
       return `${url}${params ? '?' + params : ''}`
     }
 
-    window.electron.ipcRenderer.on(CALL_API_FAILURE, (_: any, error: Error) => {
+    window.electron.ipcRenderer.on(CALL_API_FAILURE, (_: any, response: CallResponseFailure) => {
       setFetching(false)
-      console.log('error', error)
       requestConsole?.add({
         method: requestMethod.value,
         url: getFullUrl(),
-        status: 0,
-        time: 0
+        status: 999,
+        time: 0,
+        request: callApiRequest,
+        failure: response
       })
       window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)

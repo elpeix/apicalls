@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron'
 import Store from 'electron-store'
 import { restCall } from '../../src/lib/restCaller'
+import { RestCallerError } from '../lib/RestCallerError'
 import {
   CALL_API,
   CALL_API_FAILURE,
@@ -22,7 +23,12 @@ ipcMain.on(CALL_API, async (event, callRequest: CallRequest) => {
   try {
     const response = await restCall(callRequest)
     event.reply(CALL_API_RESPONSE, response)
-  } catch (error) {
-    event.reply(CALL_API_FAILURE, error)
+  } catch (error: unknown) {
+    const restCallerError = error as RestCallerError
+    event.reply(CALL_API_FAILURE, {
+      message: restCallerError.message,
+      request: restCallerError.request,
+      response: restCallerError.response
+    } as CallResponseFailure)
   }
 })
