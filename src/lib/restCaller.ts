@@ -1,4 +1,5 @@
 import { RestCallerError } from './RestCallerError'
+import { getSettings } from './settings'
 
 const defaultMethod = 'GET'
 
@@ -7,6 +8,12 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
     request.method = defaultMethod
   }
   try {
+    const abortController = new AbortController()
+    const settings = getSettings()
+    if (settings.timeout > 0) {
+      setTimeout(() => abortController.abort(), settings.timeout)
+    }
+
     let path = request.url
     const queryParams = new URLSearchParams()
     if (request.queryParams && request.queryParams.length > 0) {
@@ -19,7 +26,8 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
     const requestInit: RequestInit = {
       method: request.method,
       headers: request.headers,
-      cache: 'no-cache'
+      cache: 'no-cache',
+      signal: abortController.signal
     }
     if (request.body) {
       requestInit.body = request.body

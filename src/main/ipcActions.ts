@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
-import Store from 'electron-store'
 import { restCall } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
+import { getSettings, setSettings } from '../lib/settings'
 import {
   CALL_API,
   CALL_API_FAILURE,
@@ -11,13 +11,11 @@ import {
   SETTINGS_UPDATED
 } from '../lib/ipcChannels'
 
-const store = new Store()
-
 ipcMain.on(GET_SETTINGS, (event) => {
-  event.reply(SETTINGS_UPDATED, store.get('settings', { theme: 'system', proxy: '' }))
+  event.reply(SETTINGS_UPDATED, getSettings())
 })
 
-ipcMain.on(SAVE_SETTINGS, (_, settings) => store.set('settings', settings))
+ipcMain.on(SAVE_SETTINGS, (_, settings) => setSettings(settings))
 
 ipcMain.on(CALL_API, async (event, callRequest: CallRequest) => {
   try {
