@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import Versions from './Versions'
 import styles from './Settings.module.css'
-import { GET_SETTINGS, SAVE_SETTINGS, SETTINGS_UPDATED } from '../../../../../../lib/ipcChannels'
+import {
+  CLEAR_SETTINGS,
+  GET_SETTINGS,
+  SAVE_SETTINGS,
+  SETTINGS_UPDATED
+} from '../../../../../../lib/ipcChannels'
+import Confirm from '../../../base/PopupBoxes/Confirm'
 
 export default function Settings() {
-  const [settings, setSettings] = useState<AppSettings>({
-    theme: 'light',
-    maxHistory: 100,
-    timeout: 1000,
-    proxy: ''
-  })
+  const [settings, setSettings] = useState<AppSettings | null>(null)
+
+  const [showClearSettings, setShowClearSettings] = useState(false)
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
@@ -23,6 +26,12 @@ export default function Settings() {
     ipcRenderer.send(SAVE_SETTINGS, settings)
   }
 
+  const clearSettings = () => {
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.send(CLEAR_SETTINGS)
+    setShowClearSettings(false)
+  }
+
   const getThemeName = (value: string): Theme => {
     switch (value) {
       case 'light':
@@ -33,6 +42,8 @@ export default function Settings() {
         return 'system'
     }
   }
+
+  if (!settings) return null
 
   return (
     <div className={styles.settings}>
@@ -78,7 +89,9 @@ export default function Settings() {
             />
           </div>
           <div className={styles.group}>
-            <label htmlFor="proxy">Proxy</label>
+            <label htmlFor="proxy">
+              <span>Proxy</span> <small>(Not implemented yet)</small>
+            </label>
             <input
               id="proxy"
               type="text"
@@ -90,10 +103,20 @@ export default function Settings() {
 
           <div className={styles.group}>
             <button onClick={saveSettings}>Save</button>
+            <a className={styles.clearSettings} onClick={() => setShowClearSettings(true)}>
+              Clear settings
+            </a>
           </div>
         </div>
       </div>
       <Versions />
+      {showClearSettings && (
+        <Confirm
+          message="Are you sure you want to clear settings?"
+          onConfirm={clearSettings}
+          onCancel={() => setShowClearSettings(false)}
+        ></Confirm>
+      )}
     </div>
   )
 }
