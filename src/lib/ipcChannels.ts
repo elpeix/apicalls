@@ -6,6 +6,7 @@ export const IMPORT_COLLECTION_PROGRESS = 'import-collection-progress'
 export const IMPORT_COLLECTION_RESULT = 'import-collection-result'
 
 export const CALL_API = 'call-api'
+export const CALL_API_ABORT = 'call-api-abort'
 export const CALL_API_FAILURE = 'call-api-failure'
 export const CALL_API_RESPONSE = 'call-api-response'
 
@@ -19,6 +20,7 @@ export const GET_COLLECTIONS_FAILURE = 'get-collections-failure'
 export const GET_SETTINGS = 'get-settings'
 export const SAVE_SETTINGS = 'save-settings'
 export const SETTINGS_UPDATED = 'settings-updated'
+export const CLEAR_SETTINGS = 'clear-settings'
 
 export const GET_ENVIRONMENTS = 'get-environments'
 export const CREATE_ENVIRONMENT = 'create-environment'
