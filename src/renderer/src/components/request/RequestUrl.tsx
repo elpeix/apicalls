@@ -17,8 +17,11 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
   }, [request])
 
   useEffect(() => {
+    if (request.url) {
+      return
+    }
     urlRef.current?.focus()
-  }, [urlRef])
+  }, [urlRef, request.url])
 
   const handleUrlChange = (value: string) => {
     const [url] = value.split('?')
