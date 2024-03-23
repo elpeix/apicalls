@@ -3,7 +3,7 @@ import Input from '../base/Input/Input'
 import styles from './Request.module.css'
 
 export default function RequestUrl({ request }: { request: RequestContextRequest }) {
-  const urlRef = useRef()
+  const urlRef = useRef<HTMLInputElement>()
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState(request.urlIsValid({}))
 
@@ -15,6 +15,10 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
     setUrl(`${request.url}${params ? '?' + params : ''}`)
     setUrlError(!request.urlIsValid({}))
   }, [request])
+
+  useEffect(() => {
+    urlRef.current?.focus()
+  }, [urlRef])
 
   const handleUrlChange = (value: string) => {
     const [url] = value.split('?')
