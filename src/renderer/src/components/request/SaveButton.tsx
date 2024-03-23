@@ -29,7 +29,7 @@ export default function SaveButton() {
   }
 
   return (
-    <>
+    <div className={styles.saveButton}>
       <button className={styles.save} onClick={handleClick}>
         <div className={styles.buttonIcon}>
           <Icon icon="save" />
@@ -55,6 +55,6 @@ export default function SaveButton() {
           <div>Save as...</div>
         </Dialog>
       )}
-    </>
+    </div>
   )
 }

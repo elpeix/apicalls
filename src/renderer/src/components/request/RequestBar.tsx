@@ -21,7 +21,7 @@ export default function RequestBar() {
   }
 
   return (
-    <div className={styles.content}>
+    <div className={styles.requestBar}>
       <div className={styles.method}>
         <Select
           className="select"
@@ -40,7 +40,9 @@ export default function RequestBar() {
         />
       </div>
       <RequestUrl request={request} />
-      <SendButton />
+      <div>
+        <SendButton />
+      </div>
       <SaveButton />
     </div>
   )
