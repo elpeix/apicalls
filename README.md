@@ -1,19 +1,19 @@
-# api-calls
+# API Calls
 
-Call Rest apis
+Call Rest APIs
 
 ## Project Setup
 
 ### Install
 
 ```bash
-$ npm install
+npm install
 ```
 
 ### Development
 
 ```bash
-$ npm run dev
+npm run dev
 ```
 
 ### Build
@@ -22,7 +22,7 @@ $ npm run dev
 # For windows
 $ npm run build:win
 
-# For macOS
+# For mac
 $ npm run build:mac
 
 # For Linux
