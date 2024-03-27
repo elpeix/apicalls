@@ -162,7 +162,7 @@ type MenuHook = {
   select: (id: Identifier) => void
 }
 
-type requestItem = {
+type RequestItem = {
   items: KeyValue[]
   set: (item: KeyValue[]) => void
   add: () => void
@@ -176,9 +176,9 @@ type RequestContextRequest = {
   url: string
   body: string
   auth: RequestAuth
-  headers: requestItem
-  queryParams: requestItem
-  pathParams?: requestItem
+  headers: RequestItem
+  queryParams: RequestItem
+  pathParams?: RequestItem
   setMethod: (method: Method) => void
   setUrl: (url: string) => void
   setFullUrl: (url: string) => void
