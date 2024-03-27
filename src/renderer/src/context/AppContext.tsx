@@ -40,7 +40,7 @@ export default function AppContextProvider({ children }: { children: React.React
           { name: 'Content-Type', value: 'application/json', enabled: true },
           { name: 'Accept', value: 'application/json', enabled: true }
         ],
-        params: [
+        queryParams: [
           { name: 'userId', value: '1', enabled: true },
           { name: 'id', value: '1', enabled: true }
         ]
@@ -59,7 +59,7 @@ export default function AppContextProvider({ children }: { children: React.React
           { name: 'Accept', value: 'application/json', enabled: true },
           { name: 'x-app-id', value: '{{appId}}', enabled: true }
         ],
-        params: []
+        queryParams: []
       }
     },
     {
@@ -70,7 +70,7 @@ export default function AppContextProvider({ children }: { children: React.React
         url: '',
         method: { value: 'GET', label: 'GET', body: false },
         headers: [],
-        params: []
+        queryParams: []
       }
     }
   ])

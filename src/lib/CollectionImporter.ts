@@ -78,7 +78,8 @@ class CollectionImporter {
           url: baseUrl + path,
           method: this.getMethod(Object.keys(sortedPaths[path])[0]),
           headers: [],
-          params: []
+          pathParams: [],
+          queryParams: []
         }
       }
       const splitPath = path.split('/')

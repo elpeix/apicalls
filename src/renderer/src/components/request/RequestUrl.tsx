@@ -8,11 +8,11 @@ export default function RequestUrl({ request }: { request: RequestContextRequest
   const [urlError, setUrlError] = useState(request.urlIsValid({}))
 
   useEffect(() => {
-    const params = request.params
+    const queryParams = request.queryParams.items
       .filter((param) => param.enabled)
       .map((param) => `${param.name}=${param.value}`)
       .join('&')
-    setUrl(`${request.url}${params ? '?' + params : ''}`)
+    setUrl(`${request.url}${queryParams ? '?' + queryParams : ''}`)
     setUrlError(!request.urlIsValid({}))
   }, [request])
 

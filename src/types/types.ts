@@ -25,7 +25,8 @@ type RequestBase = {
   method: Method
   auth?: RequestAuth
   headers: KeyValue[]
-  params: KeyValue[]
+  pathParams?: KeyValue[]
+  queryParams: KeyValue[]
   body?: string
 }
 
@@ -161,27 +162,28 @@ type MenuHook = {
   select: (id: Identifier) => void
 }
 
+type requestItem = {
+  items: KeyValue[]
+  set: (item: KeyValue[]) => void
+  add: () => void
+  remove: (index: number) => void
+  getActiveLength: () => number
+}
+
 type RequestContextRequest = {
   methods: Method[]
   method: Method
   url: string
   body: string
   auth: RequestAuth
-  headers: KeyValue[]
-  params: KeyValue[]
+  headers: requestItem
+  queryParams: requestItem
+  pathParams?: requestItem
   setMethod: (method: Method) => void
   setUrl: (url: string) => void
   setFullUrl: (url: string) => void
   setBody: (body: string) => void
   setAuth: (auth: RequestAuth) => void
-  setHeaders: (headers: KeyValue[]) => void
-  setParams: (params: KeyValue[]) => void
-  addParam: () => void
-  removeParam: (index: number) => void
-  getActiveParamsLength: () => number
-  addHeader: () => void
-  removeHeader: (index: number) => void
-  getActiveHeadersLength: () => number
   fetch: () => void
   urlIsValid: ({ url }: { url?: string }) => boolean
 }
@@ -199,8 +201,8 @@ type CallRequest = {
   id?: Identifier
   url: string
   method?: string
-  queryParams?: KeyValue[]
   headers?: HeadersInit
+  queryParams?: KeyValue[]
   body?: string
 }
 

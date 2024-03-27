@@ -74,7 +74,7 @@ export default function RequestContextProvider({
   const [requestBody, setRequestBody] = useState(definedRequest.body || '')
   const [requestAuth, setRequestAuth] = useState(definedRequest.auth || createAuth('none'))
   const [requestHeaders, setRequestHeaders] = useState(definedRequest.headers || [])
-  const [requestParams, setRequestParams] = useState(definedRequest.params || [])
+  const [requestQueryParams, setRequestQueryParams] = useState(definedRequest.queryParams || [])
 
   const [launchRequest, setLaunchRequest] = useState(false)
   const [fetching, setFetching] = useState(false)
@@ -97,7 +97,7 @@ export default function RequestContextProvider({
         url: requestUrl,
         auth: requestAuth,
         headers: requestHeaders,
-        params: requestParams,
+        queryParams: requestQueryParams,
         body: requestBody
       })
       return
@@ -116,7 +116,7 @@ export default function RequestContextProvider({
     requestAuth,
     requestBody,
     requestHeaders,
-    requestParams,
+    requestQueryParams,
     launchRequest
   ])
 
@@ -161,7 +161,7 @@ export default function RequestContextProvider({
       url,
       method: requestMethod.value,
       headers,
-      queryParams: requestParams,
+      queryParams: requestQueryParams,
       body: requestBody
     }
     window.electron.ipcRenderer.send(CALL_API, callApiRequest)
@@ -187,7 +187,7 @@ export default function RequestContextProvider({
     })
 
     const getFullUrl = () => {
-      const params = requestParams
+      const params = requestQueryParams
         .filter((param) => param.enabled)
         .map((param) => `${param.name}=${param.value}`)
         .join('&')
@@ -221,7 +221,7 @@ export default function RequestContextProvider({
         url: requestUrl,
         auth: requestAuth,
         headers: requestHeaders,
-        params: requestParams,
+        queryParams: requestQueryParams,
         body: requestBody
       }
     })
@@ -243,7 +243,7 @@ export default function RequestContextProvider({
         url: requestUrl,
         auth: requestAuth,
         headers: requestHeaders,
-        params: requestParams,
+        queryParams: requestQueryParams,
         body: requestBody
       }
     } as RequestType
@@ -297,7 +297,7 @@ export default function RequestContextProvider({
           .filter((param): param is KeyValue => param !== undefined)
       : []
 
-    const newParams = requestParams
+    const newParams = requestQueryParams
       .map((param) => {
         const paramIndex = paramList.findIndex((p) => p.name === param.name)
         if (paramIndex > -1) {
@@ -311,7 +311,7 @@ export default function RequestContextProvider({
       })
       .filter((param) => !param.toBeRemoved)
 
-    setParams([...newParams, ...paramList])
+    setQueryParams([...newParams, ...paramList])
   }
 
   const setBody = (body: string) => {
@@ -324,8 +324,8 @@ export default function RequestContextProvider({
     setChanged(true)
   }
 
-  const setParams = (params: KeyValue[]) => {
-    setRequestParams(params)
+  const setQueryParams = (params: KeyValue[]) => {
+    setRequestQueryParams(params)
     setChanged(true)
   }
 
@@ -338,18 +338,18 @@ export default function RequestContextProvider({
     setResponseCookies(cookies)
   }
 
-  const addParam = () => {
-    setRequestParams([...requestParams, { enabled: true, name: '', value: '' }])
+  const addQueryParam = () => {
+    setRequestQueryParams([...requestQueryParams, { enabled: true, name: '', value: '' }])
   }
 
-  const removeParam = (index: number) => {
-    const params = [...requestParams]
+  const removeQueryParam = (index: number) => {
+    const params = [...requestQueryParams]
     params.splice(index, 1)
-    setParams(params)
+    setQueryParams(params)
   }
 
-  const getActiveParamsLength = () => {
-    return requestParams.filter((param: KeyValue) => param.enabled).length
+  const getActiveQueryParamsLength = () => {
+    return requestQueryParams.filter((param: KeyValue) => param.enabled).length
   }
 
   const addHeader = () => {
@@ -375,21 +375,25 @@ export default function RequestContextProvider({
       url: requestUrl,
       body: requestBody,
       auth: requestAuth,
-      headers: requestHeaders,
-      params: requestParams,
+      headers: {
+        items: requestHeaders,
+        set: setHeaders,
+        add: addHeader,
+        remove: removeHeader,
+        getActiveLength: getActiveHeadersLength
+      },
+      queryParams: {
+        items: requestQueryParams,
+        set: setQueryParams,
+        add: addQueryParam,
+        remove: removeQueryParam,
+        getActiveLength: getActiveQueryParamsLength
+      },
       setMethod,
       setUrl,
       setFullUrl,
       setBody,
       setAuth: setRequestAuth,
-      setHeaders,
-      setParams,
-      addParam,
-      removeParam,
-      getActiveParamsLength,
-      addHeader,
-      removeHeader,
-      getActiveHeadersLength,
       fetch,
       urlIsValid
     },

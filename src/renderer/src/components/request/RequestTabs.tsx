@@ -14,8 +14,8 @@ export default function RequestTabs() {
   if (!request) return null
 
   const showBody = request.method.body
-  const activeParams = request.getActiveParamsLength()
-  const activeHeaders = request.getActiveHeadersLength()
+  const activeQueryParams = request.queryParams.getActiveLength()
+  const activeHeaders = request.headers.getActiveLength()
 
   const handleBodyChange = (value: string) => request.setBody(value)
 
@@ -24,7 +24,7 @@ export default function RequestTabs() {
       <Tabs className="tabs">
         <TabList>
           <Tab>
-            <RequestTab name="Params" count={activeParams} />
+            <RequestTab name="Params" count={activeQueryParams} />
           </Tab>
           <Tab>
             <RequestTab name="Headers" count={activeHeaders} />
@@ -33,18 +33,19 @@ export default function RequestTabs() {
           {showBody && <Tab>Body</Tab>}
         </TabList>
         <div className="tab-panel-wrapper">
+          {request.pathParams && <TabPanel forceRender={true}>pathParams</TabPanel>}
           <TabPanel forceRender={true}>
             <Params
-              params={request.params}
-              setParams={request.setParams}
-              addParam={request.addParam}
+              params={request.queryParams.items}
+              setParams={request.queryParams.set}
+              addParam={request.queryParams.add}
             />
           </TabPanel>
           <TabPanel forceRender={true}>
             <Headers
-              headers={request.headers}
-              setHeaders={request.setHeaders}
-              addHeader={request.addHeader}
+              headers={request.headers.items}
+              setHeaders={request.headers.set}
+              addHeader={request.headers.add}
             />
           </TabPanel>
           <TabPanel forceRender={true}>
