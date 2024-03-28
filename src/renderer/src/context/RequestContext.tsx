@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { AppContext } from './AppContext'
 import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
 import { createAuth, createAuthHeaderValue, createMethod } from '../lib/factory'
+import { getPathParamsFromUrl, getQueryParamsFromUrl } from '../lib/paramsCapturer'
 import { useConsole } from '../hooks/useConsole'
 
 export const RequestContext = createContext<{
@@ -74,6 +75,7 @@ export default function RequestContextProvider({
   const [requestBody, setRequestBody] = useState(definedRequest.body || '')
   const [requestAuth, setRequestAuth] = useState(definedRequest.auth || createAuth('none'))
   const [requestHeaders, setRequestHeaders] = useState(definedRequest.headers || [])
+  const [requestPathParams, setRequestPathParams] = useState(definedRequest.pathParams || [])
   const [requestQueryParams, setRequestQueryParams] = useState(definedRequest.queryParams || [])
 
   const [launchRequest, setLaunchRequest] = useState(false)
@@ -282,36 +284,8 @@ export default function RequestContextProvider({
     const [url, params] = value.split('?')
     setUrl(value)
     setUrl(url)
-
-    const paramList: KeyValue[] = params
-      ? params
-          .split('&')
-          .map((param): KeyValue | undefined => {
-            const entry = param.split('=')
-            if (entry.length <= 2) {
-              const name = entry[0].trim()
-              const value = entry[1].trim()
-              return { name, value, enabled: true }
-            }
-          })
-          .filter((param): param is KeyValue => param !== undefined)
-      : []
-
-    const newParams = requestQueryParams
-      .map((param) => {
-        const paramIndex = paramList.findIndex((p) => p.name === param.name)
-        if (paramIndex > -1) {
-          const value = paramList[paramIndex].value
-          paramList.splice(paramIndex, 1)
-          return { ...param, value }
-        } else {
-          if (!param.enabled) return param
-          return { ...param, toBeRemoved: true }
-        }
-      })
-      .filter((param) => !param.toBeRemoved)
-
-    setQueryParams([...newParams, ...paramList])
+    setPathParams(getPathParamsFromUrl(url))
+    setQueryParams(getQueryParamsFromUrl(params, requestQueryParams))
   }
 
   const setBody = (body: string) => {
@@ -319,37 +293,10 @@ export default function RequestContextProvider({
     setChanged(true)
   }
 
+  // Headers
   const setHeaders = (headers: KeyValue[]) => {
     setRequestHeaders(headers)
     setChanged(true)
-  }
-
-  const setQueryParams = (params: KeyValue[]) => {
-    setRequestQueryParams(params)
-    setChanged(true)
-  }
-
-  const setFetchedHeaders = (headers: KeyValue[]) => {
-    setResponseHeaders(headers)
-    const cookies = headers
-      .filter((header: KeyValue) => header.name === 'set-cookie')
-      .map((cookie) => cookie.value.split(';'))
-      .map((cookie) => cookie[0].split('='))
-    setResponseCookies(cookies)
-  }
-
-  const addQueryParam = () => {
-    setRequestQueryParams([...requestQueryParams, { enabled: true, name: '', value: '' }])
-  }
-
-  const removeQueryParam = (index: number) => {
-    const params = [...requestQueryParams]
-    params.splice(index, 1)
-    setQueryParams(params)
-  }
-
-  const getActiveQueryParamsLength = () => {
-    return requestQueryParams.filter((param: KeyValue) => param.enabled).length
   }
 
   const addHeader = () => {
@@ -364,6 +311,51 @@ export default function RequestContextProvider({
 
   const getActiveHeadersLength = () => {
     return requestHeaders.filter((header: KeyValue) => header.enabled).length
+  }
+
+  const setFetchedHeaders = (headers: KeyValue[]) => {
+    setResponseHeaders(headers)
+    const cookies = headers
+      .filter((header: KeyValue) => header.name === 'set-cookie')
+      .map((cookie) => cookie.value.split(';'))
+      .map((cookie) => cookie[0].split('='))
+    setResponseCookies(cookies)
+  }
+
+  // Path params
+  const setPathParams = (pathParams: KeyValue[]) => {
+    setRequestPathParams(pathParams)
+    setChanged(true)
+  }
+
+  const removePathParam = (index: number) => {
+    const params = [...requestPathParams]
+    params.splice(index, 1)
+    setPathParams(params)
+  }
+
+  const getActivePathParamsLength = () => {
+    return requestPathParams.filter((param: KeyValue) => param.enabled).length
+  }
+
+  // Query params
+  const setQueryParams = (params: KeyValue[]) => {
+    setRequestQueryParams(params)
+    setChanged(true)
+  }
+
+  const addQueryParam = () => {
+    setRequestQueryParams([...requestQueryParams, { enabled: true, name: '', value: '' }])
+  }
+
+  const removeQueryParam = (index: number) => {
+    const params = [...requestQueryParams]
+    params.splice(index, 1)
+    setQueryParams(params)
+  }
+
+  const getActiveQueryParamsLength = () => {
+    return requestQueryParams.filter((param: KeyValue) => param.enabled).length
   }
 
   const contextValue = {
@@ -381,6 +373,12 @@ export default function RequestContextProvider({
         add: addHeader,
         remove: removeHeader,
         getActiveLength: getActiveHeadersLength
+      },
+      pathParams: {
+        items: requestPathParams,
+        set: setPathParams,
+        remove: removePathParam,
+        getActiveLength: getActivePathParamsLength
       },
       queryParams: {
         items: requestQueryParams,

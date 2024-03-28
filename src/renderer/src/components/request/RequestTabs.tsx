@@ -23,8 +23,13 @@ export default function RequestTabs() {
     <div className={styles.tabs}>
       <Tabs className="tabs">
         <TabList>
+          {request.pathParams.items.length > 0 && (
+            <Tab>
+              <RequestTab name="Path params" />
+            </Tab>
+          )}
           <Tab>
-            <RequestTab name="Params" count={activeQueryParams} />
+            <RequestTab name="Query params" count={activeQueryParams} />
           </Tab>
           <Tab>
             <RequestTab name="Headers" count={activeHeaders} />
@@ -33,7 +38,9 @@ export default function RequestTabs() {
           {showBody && <Tab>Body</Tab>}
         </TabList>
         <div className="tab-panel-wrapper">
-          {request.pathParams && <TabPanel forceRender={true}>pathParams</TabPanel>}
+          {request.pathParams.items.length > 0 && (
+            <TabPanel forceRender={true}>pathParams</TabPanel>
+          )}
           <TabPanel forceRender={true}>
             <Params
               params={request.queryParams.items}

@@ -9,7 +9,7 @@ export default function Params({
   setParams
 }: {
   params: KeyValue[]
-  addParam: () => void
+  addParam?: () => void
   setParams: (params: KeyValue[]) => void
 }) {
   const [nameSize, setNameSize] = useState(200)

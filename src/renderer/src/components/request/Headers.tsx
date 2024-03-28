@@ -10,7 +10,7 @@ export default function Headers({
 }: {
   headers: KeyValue[]
   setHeaders: (params: KeyValue[]) => void
-  addHeader: () => void
+  addHeader?: () => void
 }) {
   const [nameSize, setNameSize] = useState(200)
 
