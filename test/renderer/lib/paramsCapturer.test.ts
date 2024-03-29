@@ -20,6 +20,10 @@ describe('Params Capturer Test', () => {
     expect(getPathParamsFromUrl('https://example.com/{/}')).toEqual([])
   })
 
+  it('should return an empty array if url has param with /{any}a', () => {
+    expect(getPathParamsFromUrl('/{any}a')).toEqual([])
+  })
+
   it('should return an array if url has params with /{any}/', () => {
     const params = getPathParamsFromUrl('/{any}/')
     expect(params).toEqual([getKeyValue('any')])

@@ -1,7 +1,8 @@
 export const getPathParamsFromUrl = (url: string): KeyValue[] => {
-  const pathParams = url
-    .match(/{([^}]+)}/g)
-    ?.filter((p) => p.length > 2 && /^{[a-z0-9]+}$/i.test(p))
+  if (!url || !url.includes('/')) return []
+  return url
+    .split('/')
+    .filter((p) => p.length > 2 && /^{[a-z0-9]+}$/i.test(p))
     .map((p) => {
       return {
         name: p.slice(1, -1),
@@ -9,7 +10,6 @@ export const getPathParamsFromUrl = (url: string): KeyValue[] => {
         enabled: true
       } as KeyValue
     })
-  return pathParams || []
 }
 
 export const getQueryParamsFromUrl = (
