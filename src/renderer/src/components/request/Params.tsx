@@ -88,11 +88,13 @@ export default function Params({
           </SimpleTable.Body>
         </SimpleTable>
       )}
-      <div className={styles.add}>
-        <div>
-          <ButtonIcon icon="more" onClick={addParam} title="Add param" />
+      {addParam && (
+        <div className={styles.add}>
+          <div>
+            <ButtonIcon icon="more" onClick={addParam} title="Add param" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
