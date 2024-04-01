@@ -2,7 +2,11 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { AppContext } from './AppContext'
 import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
 import { createAuth, createAuthHeaderValue, createMethod } from '../lib/factory'
-import { getPathParamsFromUrl, getQueryParamsFromUrl } from '../lib/paramsCapturer'
+import {
+  getPathParamsFromUrl,
+  getQueryParamsFromUrl,
+  replacePathParams
+} from '../lib/paramsCapturer'
 import { useConsole } from '../hooks/useConsole'
 
 export const RequestContext = createContext<{
@@ -223,6 +227,7 @@ export default function RequestContextProvider({
         url: requestUrl,
         auth: requestAuth,
         headers: requestHeaders,
+        pathParams: requestPathParams,
         queryParams: requestQueryParams,
         body: requestBody
       }
@@ -245,6 +250,7 @@ export default function RequestContextProvider({
         url: requestUrl,
         auth: requestAuth,
         headers: requestHeaders,
+        pathParams: requestPathParams,
         queryParams: requestQueryParams,
         body: requestBody
       }
@@ -263,8 +269,13 @@ export default function RequestContextProvider({
 
   const getUrl = ({ url = requestUrl }) => new URL(getValue(url))
   const getValue = (value: string): string => {
-    if (!environments) return value
-    return environments.replaceVariables(value)
+    if (requestPathParams) {
+      value = replacePathParams(value, requestPathParams)
+    }
+    if (environments) {
+      value = environments.replaceVariables(value)
+    }
+    return value
   }
 
   const setMethod = (method: Method) => {

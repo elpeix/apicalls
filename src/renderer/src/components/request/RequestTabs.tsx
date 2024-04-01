@@ -40,7 +40,12 @@ export default function RequestTabs() {
         <div className="tab-panel-wrapper">
           {request.pathParams.items.length > 0 && (
             <TabPanel forceRender={true}>
-              <Params params={request.pathParams.items} setParams={request.pathParams.set} />
+              <Params
+                params={request.pathParams.items}
+                setParams={request.pathParams.set}
+                editableName={false}
+                showDelete={false}
+              />
             </TabPanel>
           )}
           <TabPanel forceRender={true}>

@@ -6,11 +6,15 @@ import styles from './Request.module.css'
 export default function Params({
   params,
   addParam,
-  setParams
+  setParams,
+  editableName = true,
+  showDelete = true
 }: {
   params: KeyValue[]
   addParam?: () => void
   setParams: (params: KeyValue[]) => void
+  editableName?: boolean
+  showDelete?: boolean
 }) {
   const [nameSize, setNameSize] = useState(200)
 
@@ -19,10 +23,12 @@ export default function Params({
     setNameSize(Math.max(Math.min(newSize, 500), 100))
   }
 
+  const templateColumns = showDelete ? `1.9rem ${nameSize}px 1fr 2rem` : `1.9rem ${nameSize}px 1fr`
+
   return (
     <div className={styles.params}>
       {params && params.length > 0 && (
-        <SimpleTable templateColumns={`1.9rem ${nameSize}px 1fr 2rem`}>
+        <SimpleTable templateColumns={templateColumns}>
           <SimpleTable.Header>
             <SimpleTable.HeaderCell>
               <></>
@@ -31,9 +37,11 @@ export default function Params({
               Name
             </SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>Value</SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell>
-              <></>
-            </SimpleTable.HeaderCell>
+            {showDelete && (
+              <SimpleTable.HeaderCell>
+                <></>
+              </SimpleTable.HeaderCell>
+            )}
           </SimpleTable.Header>
           <SimpleTable.Body>
             {params.map((param: KeyValue, index: number) => (
@@ -50,7 +58,7 @@ export default function Params({
                   />
                 </SimpleTable.Cell>
                 <SimpleTable.Cell
-                  editable
+                  editable={editableName}
                   autoFocus={param.name === ''}
                   value={param.name}
                   placeholder="Name"
@@ -72,17 +80,19 @@ export default function Params({
                   }}
                   showTip={true}
                 />
-                <SimpleTable.Cell>
-                  <ButtonIcon
-                    icon="delete"
-                    onClick={() => {
-                      const newParams = [...params]
-                      newParams.splice(index, 1)
-                      setParams(newParams)
-                    }}
-                    title="Remove param"
-                  />
-                </SimpleTable.Cell>
+                {showDelete && (
+                  <SimpleTable.Cell>
+                    <ButtonIcon
+                      icon="delete"
+                      onClick={() => {
+                        const newParams = [...params]
+                        newParams.splice(index, 1)
+                        setParams(newParams)
+                      }}
+                      title="Remove param"
+                    />
+                  </SimpleTable.Cell>
+                )}
               </SimpleTable.Row>
             ))}
           </SimpleTable.Body>

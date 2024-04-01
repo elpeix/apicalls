@@ -1,5 +1,8 @@
 import { it, describe, expect } from 'vitest'
-import { getPathParamsFromUrl } from '../../../src/renderer/src/lib/paramsCapturer'
+import {
+  getPathParamsFromUrl,
+  replacePathParams
+} from '../../../src/renderer/src/lib/paramsCapturer'
 
 describe('Params Capturer Test', () => {
   it('should return an empty array if url is empty', () => {
@@ -45,6 +48,48 @@ describe('Params Capturer Test', () => {
   })
 })
 
-const getKeyValue = (name: string): KeyValue => {
-  return { name, value: '', enabled: true }
+const getKeyValue = (name: string, value = '', enabled = true): KeyValue => {
+  return { name, value, enabled }
 }
+
+describe('Replace path params', () => {
+  it('should return an empty string if url is empty', () => {
+    expect(replacePathParams('', [])).toEqual('')
+    expect(replacePathParams('  ', [])).toEqual('')
+  })
+
+  it('should return the url if no params', () => {
+    expect(replacePathParams('/test', [])).toEqual('/test')
+    expect(replacePathParams('https://example.com', [])).toEqual('https://example.com')
+    expect(replacePathParams('https://example.com/test', [])).toEqual('https://example.com/test')
+    expect(replacePathParams('https://example.com/test/', [])).toEqual('https://example.com/test/')
+    expect(replacePathParams('https://example.com/{test}', [])).toEqual(
+      'https://example.com/{test}'
+    )
+  })
+
+  it('should return the url without replace disabled params', () => {
+    const params = [getKeyValue('test', 'value', false)]
+    expect(replacePathParams('/{test}', params)).toEqual('/{test}')
+    expect(params.length).toBe(1)
+    expect(params[0].enabled).toBe(false)
+  })
+
+  it('should replace the params', () => {
+    const params = [getKeyValue('test', 'value')]
+    expect(replacePathParams('/{test}', params)).toEqual('/value')
+    expect(params.length).toBe(1)
+    expect(params[0].enabled).toBe(true)
+    expect(params[0].value).toBe('value')
+  })
+
+  it('should replace once', () => {
+    const params = [getKeyValue('test', 'value')]
+    expect(replacePathParams('/{test}/{test}', params)).toEqual('/value/{test}')
+  })
+
+  it('should not replace env variables', () => {
+    const params = [getKeyValue('test', 'value'), getKeyValue('env', 'nops')]
+    expect(replacePathParams('/{{env}}/{test}', params)).toEqual('/{{env}}/value')
+  })
+})

@@ -2,7 +2,7 @@ export const getPathParamsFromUrl = (url: string): KeyValue[] => {
   if (!url || !url.includes('/')) return []
   return url
     .split('/')
-    .filter((p) => p.length > 2 && /^{[a-z0-9]+}$/i.test(p))
+    .filter((p) => canBeParam(p))
     .map((p) => {
       return {
         name: p.slice(1, -1),
@@ -11,6 +11,32 @@ export const getPathParamsFromUrl = (url: string): KeyValue[] => {
       } as KeyValue
     })
 }
+
+export const replacePathParams = (url: string, params: KeyValue[]): string => {
+  url = url.trim()
+  params = params.filter((p) => p.enabled)
+  if (!url || !url.includes('/') || !params.length) {
+    return url
+  }
+  return url
+    .split('/')
+    .map((p: string, _: number) => {
+      if (canBeParam(p)) {
+        const name = p.slice(1, -1)
+        for (let j = 0; j < params.length; j++) {
+          if (params[j].name === name) {
+            const value = params[j].value
+            params.splice(j, 1)
+            return value
+          }
+        }
+      }
+      return p
+    })
+    .join('/')
+}
+
+const canBeParam = (p: string): boolean => p.length > 2 && /^{[a-z0-9]+}$/i.test(p)
 
 export const getQueryParamsFromUrl = (
   params: string,
