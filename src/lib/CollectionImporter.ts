@@ -1,5 +1,6 @@
 import fs from 'fs'
 import YAML from 'yaml'
+import { getPathParamsFromUrl } from '../renderer/src/lib/paramsCapturer'
 
 class CollectionImporter {
   private collection: Collection | undefined
@@ -78,7 +79,7 @@ class CollectionImporter {
           url: baseUrl + path,
           method: this.getMethod(Object.keys(sortedPaths[path])[0]),
           headers: [],
-          pathParams: [],
+          pathParams: this.getPathParams(path),
           queryParams: []
         }
       }
@@ -118,6 +119,10 @@ class CollectionImporter {
     }
     this.sortTree(collectionTree)
     return collectionTree
+  }
+
+  private getPathParams(path: string): KeyValue[] {
+    return getPathParamsFromUrl(path)
   }
 
   private sortPaths(paths: any) {
