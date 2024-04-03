@@ -80,7 +80,7 @@ class CollectionImporter {
           method: this.getMethod(Object.keys(sortedPaths[path])[0]),
           headers: [],
           pathParams: this.getPathParams(path),
-          queryParams: []
+          queryParams: this.getQueryParams(sortedPaths[path])
         }
       }
       const splitPath = path.split('/')
@@ -123,6 +123,26 @@ class CollectionImporter {
 
   private getPathParams(path: string): KeyValue[] {
     return getPathParamsFromUrl(path)
+  }
+
+  private getQueryParams(path: any): KeyValue[] {
+    // Update type to openAPI path object
+    const method = Object.keys(path)[0]
+    const parameters = path[method].parameters ?? []
+    if (!parameters) {
+      return []
+    }
+    const queryParams: KeyValue[] = []
+    for (const parameter of parameters) {
+      if (parameter.in === 'query') {
+        queryParams.push({
+          name: parameter.name,
+          value: '',
+          enabled: false
+        })
+      }
+    }
+    return queryParams
   }
 
   private sortPaths(paths: any) {

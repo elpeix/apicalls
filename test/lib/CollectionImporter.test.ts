@@ -110,9 +110,13 @@ describe('CollectionImporter', () => {
     const requestElement = folder.elements[0] as RequestType
     const request = requestElement.request
     expect(request).toHaveProperty('url')
+    expect(request.queryParams?.length).toBe(1)
+    const queryParam = request.queryParams?.[0]
+    expect(queryParam?.name).toBe('type')
 
-    const requestElement2 = folder.elements[1] as RequestType
-    expect(requestElement2.request.pathParams?.length).toBe(1)
+    // Path Params
+    const requestElementWithPathParams = folder.elements[1] as RequestType
+    expect(requestElementWithPathParams.request.pathParams?.length).toBe(1)
 
     for (const element of folder.elements) {
       const requestElement = element as RequestType
