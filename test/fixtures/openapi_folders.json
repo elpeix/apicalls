@@ -26,6 +26,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "someHeader",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ]
       }

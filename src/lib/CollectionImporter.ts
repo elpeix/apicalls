@@ -71,6 +71,7 @@ class CollectionImporter {
     const id = new Date().getTime()
     const collectionTree: (CollectionFolder | RequestType)[] = []
     for (const path in sortedPaths) {
+      const params = this.getParams(sortedPaths[path])
       const collectionRequest: RequestType = {
         type: 'collection',
         id: `${id}_${++count}`,
@@ -78,9 +79,9 @@ class CollectionImporter {
         request: {
           url: baseUrl + path,
           method: this.getMethod(Object.keys(sortedPaths[path])[0]),
-          headers: [],
+          headers: params.headers,
           pathParams: this.getPathParams(path),
-          queryParams: this.getQueryParams(sortedPaths[path])
+          queryParams: params.queryParams
         }
       }
       const splitPath = path.split('/')
@@ -125,14 +126,15 @@ class CollectionImporter {
     return getPathParamsFromUrl(path)
   }
 
-  private getQueryParams(path: any): KeyValue[] {
+  private getParams(path: any): { headers: KeyValue[]; queryParams: KeyValue[] } {
     // Update type to openAPI path object
     const method = Object.keys(path)[0]
     const parameters = path[method].parameters ?? []
-    if (!parameters) {
-      return []
-    }
     const queryParams: KeyValue[] = []
+    const headers: KeyValue[] = []
+    if (!parameters) {
+      return { headers, queryParams }
+    }
     for (const parameter of parameters) {
       if (parameter.in === 'query') {
         queryParams.push({
@@ -140,9 +142,15 @@ class CollectionImporter {
           value: '',
           enabled: false
         })
+      } else if (parameter.in === 'header') {
+        headers.push({
+          name: parameter.name,
+          value: '',
+          enabled: false
+        })
       }
     }
-    return queryParams
+    return { headers, queryParams }
   }
 
   private sortPaths(paths: any) {
