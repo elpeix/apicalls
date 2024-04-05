@@ -1,14 +1,14 @@
 .name {
   padding: 0.5rem 0;
   flex: 1;
-  align-items: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.8rem;
 
   &.editable {
-    padding: 0 0.5rem;
+    padding: 0;
+    margin-left: -0.5rem;
   }
 
   input {

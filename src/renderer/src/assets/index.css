@@ -24,6 +24,7 @@ input[type='number'] {
   &:active {
     background-color: var(--hover-color);
     color: var(--base-color);
+    border-color: var(--color-7);
   }
 
   &:focus {
@@ -101,6 +102,7 @@ button {
   &:active {
     background-color: var(--hover-color);
     color: var(--base-color);
+    border-color: var(--color-7);
   }
 
   &:focus {

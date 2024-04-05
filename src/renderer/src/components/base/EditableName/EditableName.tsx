@@ -5,12 +5,14 @@ export default function EditableName({
   name,
   editMode = false,
   update,
-  onBlur
+  onBlur,
+  editOnDoubleClick
 }: {
   name: string
   editMode: boolean
   update: (name: string) => void
   onBlur?: () => void
+  editOnDoubleClick?: boolean
 }) {
   const [editingName, setEditingName] = useState(false)
   const [nameValue, setNameValue] = useState(name)
@@ -32,6 +34,7 @@ export default function EditableName({
   }, [name])
 
   const editName = () => {
+    if (!editOnDoubleClick) return
     setEditingName(true)
     setNameValue(name)
     setTimeout(() => {

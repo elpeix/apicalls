@@ -91,7 +91,7 @@ type HistoryHook = {
 type TabsHook = {
   openTab: (
     itemRequest: RequestType,
-    shiftKey: boolean,
+    shiftKey?: boolean,
     collectionId?: Identifier,
     path?: PathItem[]
   ) => void

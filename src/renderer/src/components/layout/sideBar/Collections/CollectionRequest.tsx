@@ -77,6 +77,7 @@ export default function CollectionRequest({
           editMode={editingName}
           update={changeName}
           onBlur={() => setEditingName(false)}
+          editOnDoubleClick={true}
         />
         <Menu
           className={styles.menu}

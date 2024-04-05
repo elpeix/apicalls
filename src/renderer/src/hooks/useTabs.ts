@@ -6,7 +6,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHook {
 
   const openTab = (
     itemRequest: RequestType,
-    shiftKey: boolean = false,
+    shiftKey?: boolean,
     collectionId?: Identifier,
     path?: PathItem[]
   ) => {
