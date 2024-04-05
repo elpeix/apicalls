@@ -4,11 +4,19 @@ import { createRequest } from '../lib/factory'
 export default function useTabs(initialTabs: RequestTab[]): TabsHook {
   const [tabs, setTabs] = useState([...initialTabs])
 
-  const openTab = (itemRequest: RequestType, collectionId?: Identifier, path?: PathItem[]) => {
+  const openTab = (
+    itemRequest: RequestType,
+    shiftKey: boolean = false,
+    collectionId?: Identifier,
+    path?: PathItem[]
+  ) => {
     const tab = getTab(itemRequest.id)
-    if (tab) {
+    if (tab && !shiftKey) {
       setActiveTab(tabs.indexOf(tab))
     } else {
+      if (shiftKey) {
+        itemRequest.id = itemRequest.id + new Date().getTime().toString()
+      }
       newTab(itemRequest, collectionId, path)
     }
   }

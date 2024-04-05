@@ -23,6 +23,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   }
 
   const onDoubleClick = () => {
+    return
     if (tab.type === 'history') return
     setEditing(true)
     setEditTabName(tabName)

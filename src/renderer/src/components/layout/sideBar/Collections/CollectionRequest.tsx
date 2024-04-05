@@ -38,9 +38,9 @@ export default function CollectionRequest({
     }
   ] as PathItem[]
 
-  const clickHandler = () => {
+  const clickHandler = (e: React.MouseEvent) => {
     if (tabs) {
-      tabs.openTab(collectionRequest, collectionId, requestPath)
+      tabs.openTab(collectionRequest, e.shiftKey, collectionId, requestPath)
     }
   }
   const changeName = (name: string) => {
