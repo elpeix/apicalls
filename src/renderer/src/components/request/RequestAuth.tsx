@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import Input from '../base/Input/Input'
 import styles from './Request.module.css'
 import { RequestContext } from '../../context/RequestContext'
+import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 
 export default function RequestAuth() {
   const { request } = useContext(RequestContext)
@@ -37,13 +38,12 @@ export default function RequestAuth() {
 
   return (
     <div className={styles.authorization}>
-      <select onChange={handleSelectChange} value={authType}>
-        {authOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <SimpleSelect
+        options={authOptions}
+        value={authType}
+        onChange={handleSelectChange}
+        className={styles.select}
+      />
       {authType !== authOptions[0].value && (
         <Input
           value={authValue}

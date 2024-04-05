@@ -1,0 +1,54 @@
+.simpleSelect {
+  width: 100%;
+  position: relative;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    right: 0.6rem;
+    top: 45%;
+    border-left: 0.3rem solid transparent;
+    border-right: 0.3rem solid transparent;
+    border-top: 0.3rem solid var(--color-7);
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  &:hover::after {
+    border-top-color: var(--base-color);
+  }
+
+  & .select {
+    appearance: none;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    color: var(--base-color);
+    cursor: pointer;
+    user-select: none;
+    padding: 0.54rem 0.45rem;
+    position: relative;
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out;
+
+    &:hover,
+    &:active {
+      background-color: var(--hover-color);
+      color: var(--base-color);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border: 1px solid var(--border-color);
+      background-color: transparent;
+      color: var(--accent-color);
+    }
+  }
+}

@@ -8,6 +8,7 @@ import {
   SETTINGS_UPDATED
 } from '../../../../../../lib/ipcChannels'
 import Confirm from '../../../base/PopupBoxes/Confirm'
+import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 
 export default function Settings() {
   const [settings, setSettings] = useState<AppSettings | null>(null)
@@ -45,6 +46,21 @@ export default function Settings() {
 
   if (!settings) return null
 
+  const options = [
+    {
+      value: 'light',
+      label: 'Light'
+    },
+    {
+      value: 'dark',
+      label: 'Dark'
+    },
+    {
+      value: 'system',
+      label: 'Auto'
+    }
+  ]
+
   return (
     <div className={styles.settings}>
       <div className="sidePanel-header">
@@ -54,15 +70,11 @@ export default function Settings() {
         <div className={styles.main}>
           <div className={styles.group}>
             <label htmlFor="theme">Theme</label>
-            <select
-              id="theme"
+            <SimpleSelect
               value={settings.theme}
               onChange={(e) => setSettings({ ...settings, theme: getThemeName(e.target.value) })}
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="system">Auto</option>
-            </select>
+              options={options}
+            />
           </div>
           <div className={styles.group}>
             <label htmlFor="maxHistory">Max History</label>
@@ -70,8 +82,8 @@ export default function Settings() {
               id="maxHistory"
               type="number"
               value={settings.maxHistory}
-              min={10}
-              max={1000}
+              min={3}
+              max={100}
               placeholder="100"
               onChange={(e) => setSettings({ ...settings, maxHistory: Number(e.target.value) })}
             />

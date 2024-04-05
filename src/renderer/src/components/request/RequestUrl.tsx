@@ -1,16 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Input from '../base/Input/Input'
 import styles from './Request.module.css'
+import { RequestContext } from '../../context/RequestContext'
 
-export default function RequestUrl({ request }: { request: RequestContextRequest }) {
+export default function RequestUrl() {
+  const { request } = useContext(RequestContext)
+
+  if (!request) {
+    return null
+  }
+
   const urlRef = useRef<HTMLInputElement>()
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState(request.urlIsValid({}))
 
   useEffect(() => {
     const queryParams = request.queryParams.items
-      .filter((param) => param.enabled)
-      .map((param) => `${param.name}=${param.value}`)
+      .filter((param: KeyValue) => param.enabled)
+      .map((param: KeyValue) => `${param.name}=${param.value}`)
       .join('&')
     setUrl(`${request.url}${queryParams ? '?' + queryParams : ''}`)
     setUrlError(!request.urlIsValid({}))
