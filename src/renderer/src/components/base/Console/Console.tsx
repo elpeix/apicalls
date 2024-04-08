@@ -7,14 +7,15 @@ import { RequestContext } from '../../../context/RequestContext'
 export default function Console({ collapse }: { collapse: () => void }) {
   const { requestConsole } = useContext(RequestContext)
 
-  if (!requestConsole) return null
-
   const endRef = useRef<HTMLDivElement>(null)
   const [logs, setLogs] = useState<RequestLog[]>([])
   useEffect(() => {
+    if (!requestConsole) return
     setLogs(requestConsole.logs)
     scrollToBottom()
   }, [requestConsole])
+
+  if (!requestConsole) return null
 
   const scrollToBottom = () => {
     if (endRef.current) {

@@ -3,11 +3,11 @@ import { defaultSettings } from './defaults'
 
 const store = new Store()
 
-export const getSettings = (): AppSettings => {
-  return store.get('settings', defaultSettings) as AppSettings
+export const getSettings = (): AppSettingsType => {
+  return store.get('settings', defaultSettings) as AppSettingsType
 }
 
-export const setSettings = (settings: AppSettings) => {
+export const setSettings = (settings: AppSettingsType) => {
   store.set('settings', settings)
 }
 

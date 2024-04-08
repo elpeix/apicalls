@@ -22,7 +22,7 @@ export const formatSource = (source: string) => {
 const isJson = (str: string) => {
   try {
     JSON.parse(str)
-  } catch (e) {
+  } catch (_error) {
     return false
   }
   return true

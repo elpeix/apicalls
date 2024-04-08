@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { CREATE_COLLECTION, REMOVE_COLLECTION, UPDATE_COLLECTION } from '../../../lib/ipcChannels'
 
-export function useCollections(): CollectionsHook {
+export function useCollections(): CollectionsHookType {
   const [collections, setCollections] = useState<Collection[]>([])
   const ipcRenderer = window.electron.ipcRenderer
 
@@ -68,9 +68,9 @@ export function useCollections(): CollectionsHook {
     request: RequestType
     path: PathItem[]
   }) => {
-    let newCollection = { ...collection }
+    const newCollection = { ...collection }
     let elements = newCollection.elements
-    let pathCopy = [...path]
+    const pathCopy = [...path]
     while (pathCopy.length > 0) {
       const item = pathCopy.shift()
       if (!item) {

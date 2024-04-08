@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import Select from 'react-select'
+import Select, { OnChangeValue, PropsValue } from 'react-select'
 import { RequestContext } from '../../context/RequestContext'
 import styles from './Request.module.css'
 
@@ -8,7 +8,11 @@ export default function RequestMethod() {
 
   if (!request) return null
 
-  const onChange = (value: any) => {
+  type IsMulti = boolean
+
+  const onChange = (value: OnChangeValue<Method, IsMulti>) => {
+    if (!value) return
+    if (value instanceof Array) return // This should never happen
     const method: Method = {
       value: value.value,
       label: value.label,
@@ -24,8 +28,10 @@ export default function RequestMethod() {
         classNamePrefix="select"
         classNames={{
           option: ({ data }) => data.value,
-          singleValue: ({ selectProps }: { selectProps: { value: any } }) =>
-            selectProps.value?.value || ''
+          singleValue: ({ selectProps }: { selectProps: { value: PropsValue<Method> } }) => {
+            if (!selectProps.value || selectProps.value instanceof Array) return ''
+            return selectProps.value?.value || ''
+          }
         }}
         onChange={onChange}
         defaultValue={request.method}

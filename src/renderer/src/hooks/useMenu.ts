@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export function useMenu(): MenuHook {
+export function useMenu(): MenuHookType {
   const items: MenuItem[] = [
     { id: 'collection', title: 'Collections' },
     { id: 'environment', title: 'Environments' },

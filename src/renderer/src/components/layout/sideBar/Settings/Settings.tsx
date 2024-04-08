@@ -11,14 +11,16 @@ import Confirm from '../../../base/PopupBoxes/Confirm'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 
 export default function Settings() {
-  const [settings, setSettings] = useState<AppSettings | null>(null)
+  const [settings, setSettings] = useState<AppSettingsType | null>(null)
 
   const [showClearSettings, setShowClearSettings] = useState(false)
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
     ipcRenderer.send(GET_SETTINGS)
-    ipcRenderer.on(SETTINGS_UPDATED, (_: any, settings: AppSettings) => setSettings(settings))
+    ipcRenderer.on(SETTINGS_UPDATED, (_: unknown, settings: AppSettingsType) =>
+      setSettings(settings)
+    )
     return () => ipcRenderer.removeAllListeners(SETTINGS_UPDATED)
   }, [])
 
@@ -34,14 +36,9 @@ export default function Settings() {
   }
 
   const getThemeName = (value: string): Theme => {
-    switch (value) {
-      case 'light':
-        return 'light'
-      case 'dark':
-        return 'dark'
-      default:
-        return 'system'
-    }
+    const allowed = ['light', 'dark', 'system']
+    if (!allowed.includes(value)) return 'system'
+    return value as Theme
   }
 
   if (!settings) return null

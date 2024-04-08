@@ -111,7 +111,7 @@ describe('restCaller', () => {
         }),
         body: JSON.stringify({ name: 'John' })
       })
-    } catch (error) {
+    } catch (_error) {
       assert.fail('should not throw an error')
     }
     const url = mockFetch.mock.calls[0][0]

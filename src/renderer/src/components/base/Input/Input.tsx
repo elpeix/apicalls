@@ -17,7 +17,7 @@ export default function Input({
   autoFocus = false,
   showTip = false
 }: {
-  inputRef: any
+  inputRef: React.RefObject<HTMLInputElement>
   className?: string
   value: string
   onChange?: (value: string) => void

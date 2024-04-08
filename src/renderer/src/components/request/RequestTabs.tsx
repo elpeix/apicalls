@@ -17,7 +17,10 @@ export default function RequestTabs() {
   const activeQueryParams = request.queryParams.getActiveLength()
   const activeHeaders = request.headers.getActiveLength()
 
-  const handleBodyChange = (value: string) => request.setBody(value)
+  const handleBodyChange = (value: string | undefined) => {
+    if (value === undefined) return
+    request.setBody(value)
+  }
 
   return (
     <div className={styles.tabs}>
@@ -67,7 +70,12 @@ export default function RequestTabs() {
           </TabPanel>
           {showBody && (
             <TabPanel>
-              <Editor language="json" onChange={handleBodyChange} value={request.body} />
+              <Editor
+                language="json"
+                onChange={handleBodyChange}
+                value={request.body}
+                readOnly={false}
+              />
             </TabPanel>
           )}
         </div>

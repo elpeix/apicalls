@@ -12,11 +12,11 @@ import {
 } from '../../../lib/ipcChannels'
 
 export const AppContext = createContext<{
-  menu: MenuHook | null
-  tabs: TabsHook | null
-  collections: CollectionsHook | null
-  environments: EnvironmentsHook | null
-  history: HistoryHook | null
+  menu: MenuHookType | null
+  tabs: TabsHookType | null
+  collections: CollectionsHookType | null
+  environments: EnvironmentsHookType | null
+  history: HistoryHookType | null
 }>({
   menu: null,
   tabs: null,
@@ -82,12 +82,12 @@ export default function AppContextProvider({ children }: { children: React.React
     const ipcRenderer = window.electron.ipcRenderer
 
     ipcRenderer.send(GET_ENVIRONMENTS)
-    ipcRenderer.on(ENVIRONMENTS_UPDATED, (_: any, environmentList: Environment[]) => {
+    ipcRenderer.on(ENVIRONMENTS_UPDATED, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
     })
 
     ipcRenderer.send(GET_COLLECTIONS)
-    ipcRenderer.on(COLLECTIONS_UPDATED, (_: any, collectionList: Collection[]) => {
+    ipcRenderer.on(COLLECTIONS_UPDATED, (_: unknown, collectionList: Collection[]) => {
       collections?.setCollections(collectionList)
     })
 
@@ -95,7 +95,7 @@ export default function AppContextProvider({ children }: { children: React.React
       ipcRenderer.removeAllListeners(ENVIRONMENTS_UPDATED)
       ipcRenderer.removeAllListeners(COLLECTIONS_UPDATED)
     }
-  }, [])
+  }, [collections, environments])
 
   const contextValue = {
     menu,

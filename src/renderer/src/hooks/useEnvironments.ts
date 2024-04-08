@@ -5,7 +5,7 @@ import {
   UPDATE_ENVIRONMENT
 } from '../../../lib/ipcChannels'
 
-export function useEnvironments(): EnvironmentsHook {
+export function useEnvironments(): EnvironmentsHookType {
   const [environments, setEnvironments] = useState<Environment[]>([])
   const ipcRenderer = window.electron.ipcRenderer
 

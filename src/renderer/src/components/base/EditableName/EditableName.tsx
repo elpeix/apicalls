@@ -27,7 +27,7 @@ export default function EditableName({
         nameRef.current.focus()
       }, 0)
     }
-  }, [editMode])
+  }, [editMode, nameValue.length])
 
   useEffect(() => {
     setNameValue(name)

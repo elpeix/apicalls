@@ -27,7 +27,8 @@ export const createRequest = ({
       method,
       auth: createAuth('none'),
       headers: [],
-      params: []
+      pathParams: [],
+      queryParams: []
     }
   }
 }

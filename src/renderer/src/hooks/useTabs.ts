@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createRequest } from '../lib/factory'
 
-export default function useTabs(initialTabs: RequestTab[]): TabsHook {
+export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const [tabs, setTabs] = useState([...initialTabs])
 
   const openTab = (
@@ -57,8 +57,8 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHook {
   const getTabs = () => tabs
   const setActiveTab = (index: number) => setTabs(_setActiveTab(tabs, index))
 
-  const _setActiveTab = (_tabs: any, index: number) => {
-    return _tabs.map((tab: any, i: number) => {
+  const _setActiveTab = (_tabs: RequestTab[], index: number) => {
+    return _tabs.map((tab: RequestTab, i: number) => {
       tab.active = i === index
       return tab
     })

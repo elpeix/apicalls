@@ -5,30 +5,29 @@ import { RequestContext } from '../../context/RequestContext'
 
 export default function RequestUrl() {
   const { request } = useContext(RequestContext)
+  const urlRef = useRef<HTMLInputElement>()
+  const [url, setUrl] = useState('')
+  const [urlError, setUrlError] = useState(request?.urlIsValid({}))
+
+  useEffect(() => {
+    const queryParams = request?.queryParams.items
+      .filter((param: KeyValue) => param.enabled)
+      .map((param: KeyValue) => `${param.name}=${param.value}`)
+      .join('&')
+    setUrl(`${request?.url}${queryParams ? '?' + queryParams : ''}`)
+    setUrlError(!request?.urlIsValid({}))
+  }, [request])
+
+  useEffect(() => {
+    if (request?.url) {
+      return
+    }
+    urlRef.current?.focus()
+  }, [urlRef, request?.url])
 
   if (!request) {
     return null
   }
-
-  const urlRef = useRef<HTMLInputElement>()
-  const [url, setUrl] = useState('')
-  const [urlError, setUrlError] = useState(request.urlIsValid({}))
-
-  useEffect(() => {
-    const queryParams = request.queryParams.items
-      .filter((param: KeyValue) => param.enabled)
-      .map((param: KeyValue) => `${param.name}=${param.value}`)
-      .join('&')
-    setUrl(`${request.url}${queryParams ? '?' + queryParams : ''}`)
-    setUrlError(!request.urlIsValid({}))
-  }, [request])
-
-  useEffect(() => {
-    if (request.url) {
-      return
-    }
-    urlRef.current?.focus()
-  }, [urlRef, request.url])
 
   const handleUrlChange = (value: string) => {
     const [url] = value.split('?')

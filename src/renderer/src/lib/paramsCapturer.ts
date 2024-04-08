@@ -42,19 +42,20 @@ export const getQueryParamsFromUrl = (
   params: string,
   previousQueryParams: KeyValue[]
 ): KeyValue[] => {
-  const queryParamList: KeyValue[] = params
-    ? params
-        .split('&')
-        .map((param): KeyValue | undefined => {
-          const entry = param.split('=')
-          if (entry.length <= 2) {
-            const name = entry[0].trim()
-            const value = entry[1].trim()
-            return { name, value, enabled: true }
-          }
-        })
-        .filter((param): param is KeyValue => param !== undefined)
-    : []
+  let queryParamList: KeyValue[] = []
+  if (params) {
+    queryParamList = params
+      .split('&')
+      .map((param: string): KeyValue | undefined => {
+        const entry = param.split('=')
+        if (entry.length <= 2) {
+          const name = entry[0].trim()
+          const value = entry[1].trim()
+          return { name, value, enabled: true }
+        }
+      })
+      .filter((param): param is KeyValue => param !== undefined)
+  }
 
   const newQueryParams = previousQueryParams
     .map((param) => {

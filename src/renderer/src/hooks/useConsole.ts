@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export function useConsole(): ConsoleHook {
+export function useConsole(): ConsoleHookType {
   const [logs, setLogs] = useState<RequestLog[]>([])
 
   const add = (log: RequestLog) => setLogs([...logs, log])

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// TODO Create openAPI types
 import fs from 'fs'
 import YAML from 'yaml'
 import { getPathParamsFromUrl } from '../renderer/src/lib/paramsCapturer'
@@ -29,23 +31,23 @@ class CollectionImporter {
   private readFile(): string {
     try {
       return fs.readFileSync(this.path, 'utf-8')
-    } catch (error) {
+    } catch (_error) {
       throw new Error('path is invalid')
     }
   }
 
-  private parseJson(data: string): Object {
+  private parseJson(data: string): object {
     try {
       return JSON.parse(data)
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Invalid JSON file')
     }
   }
 
-  private parseYaml(data: string): Object {
+  private parseYaml(data: string): object {
     try {
       return YAML.parse(data)
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Invalid YAML file')
     }
   }
@@ -57,7 +59,7 @@ class CollectionImporter {
       name: data.info.title,
       elements: []
     }
-    let baseUrl = '{{baseUrl}}'
+    const baseUrl = '{{baseUrl}}'
     if (data.paths) {
       collection.elements.push(...this.parsePaths(data.paths, baseUrl))
     }
@@ -188,24 +190,16 @@ class CollectionImporter {
   }
 
   private getMethod(method: string): Method {
-    switch (method) {
-      case 'get':
-        return { value: 'GET', label: 'GET', body: false }
-      case 'post':
-        return { value: 'POST', label: 'POST', body: true }
-      case 'put':
-        return { value: 'PUT', label: 'PUT', body: true }
-      case 'patch':
-        return { value: 'PATCH', label: 'PATCH', body: true }
-      case 'delete':
-        return { value: 'DELETE', label: 'DELETE', body: false }
-      case 'head':
-        return { value: 'HEAD', label: 'HEAD', body: false }
-      case 'options':
-        return { value: 'OPTIONS', label: 'OPTIONS', body: false }
-      default:
-        return { value: 'GET', label: 'GET', body: false }
+    const methods: { [key: string]: Method } = {
+      get: { value: 'GET', label: 'GET', body: false },
+      post: { value: 'POST', label: 'POST', body: true },
+      put: { value: 'PUT', label: 'PUT', body: true },
+      patch: { value: 'PATCH', label: 'PATCH', body: true },
+      delete: { value: 'DELETE', label: 'DELETE', body: false },
+      head: { value: 'HEAD', label: 'HEAD', body: false },
+      options: { value: 'OPTIONS', label: 'OPTIONS', body: false }
     }
+    return methods[method] || methods['get']
   }
 
   public async *import(): AsyncGenerator<number> {

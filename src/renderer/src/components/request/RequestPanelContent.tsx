@@ -11,12 +11,12 @@ import styles from './Request.module.css'
 export default function RequestPanelContent() {
   const { request, fetching } = useContext(RequestContext)
 
-  if (!request) return null
-
   const requestPanel = useRef<ImperativePanelHandle>(null)
   const [requestPanelCollapsed, setRequestPanelCollapsed] = useState(false)
   const consolePanel = useRef<ImperativePanelHandle>(null)
   const [consoleCollapsed, setConsoleCollapsed] = useState(true)
+
+  if (!request) return null
 
   const toggleRequestPanel = () => {
     if (!requestPanel.current) return

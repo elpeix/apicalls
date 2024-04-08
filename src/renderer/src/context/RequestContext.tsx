@@ -9,23 +9,7 @@ import {
 } from '../lib/paramsCapturer'
 import { useConsole } from '../hooks/useConsole'
 
-export const RequestContext = createContext<{
-  path: PathItem[]
-  collectionId?: Identifier | null
-  request: RequestContextRequest | null
-  fetching: boolean
-  fetched: boolean
-  response: {
-    body: string
-    headers: KeyValue[]
-    cookies: String[][]
-    status: number
-    time: number
-    size: number
-  }
-  save: () => void
-  requestConsole?: ConsoleHook | null
-}>({
+export const RequestContext = createContext<RequestContestType>({
   path: [],
   collectionId: null,
   request: null,
@@ -88,7 +72,7 @@ export default function RequestContextProvider({
 
   const [responseBody, setResponseBody] = useState('')
   const [responseHeaders, setResponseHeaders] = useState<KeyValue[]>([])
-  const [responseCookies, setResponseCookies] = useState<String[][]>([])
+  const [responseCookies, setResponseCookies] = useState<string[][]>([])
   const [responseStatus, setResponseStatus] = useState(0)
   const [responseTime, setResponseTime] = useState(0)
   const [responseSize, setResponseSize] = useState(0)
@@ -112,6 +96,7 @@ export default function RequestContextProvider({
       setLaunchRequest(false)
       sendRequest()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     tabId,
     tabs,
@@ -133,7 +118,7 @@ export default function RequestContextProvider({
     const preRequestdata = collection.preRequestData
     if (!preRequestdata) return
     setPreRequestData(preRequestData)
-  }, [collectionId, collections])
+  }, [collectionId, collections, preRequestData])
 
   const fetch = () => {
     setLaunchRequest(true)
@@ -171,7 +156,7 @@ export default function RequestContextProvider({
       body: requestBody
     }
     window.electron.ipcRenderer.send(CALL_API, callApiRequest)
-    window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: any, callResponse: CallResponse) => {
+    window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       setFetched(true)
       setResponseTime(callResponse.responseTime.all)
@@ -200,19 +185,22 @@ export default function RequestContextProvider({
       return `${url}${params ? '?' + params : ''}`
     }
 
-    window.electron.ipcRenderer.on(CALL_API_FAILURE, (_: any, response: CallResponseFailure) => {
-      setFetching(false)
-      requestConsole?.add({
-        method: requestMethod.value,
-        url: getFullUrl(),
-        status: 999,
-        time: 0,
-        request: callApiRequest,
-        failure: response
-      })
-      window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
-      window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
-    })
+    window.electron.ipcRenderer.on(
+      CALL_API_FAILURE,
+      (_: unknown, response: CallResponseFailure) => {
+        setFetching(false)
+        requestConsole?.add({
+          method: requestMethod.value,
+          url: getFullUrl(),
+          status: 999,
+          time: 0,
+          request: callApiRequest,
+          failure: response
+        })
+        window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
+        window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
+      }
+    )
   }
 
   const saveHistory = () => {
@@ -262,7 +250,7 @@ export default function RequestContextProvider({
     try {
       getUrl({ url })
       return true
-    } catch (err) {
+    } catch (_err) {
       return false
     }
   }

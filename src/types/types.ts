@@ -80,7 +80,7 @@ type PathItem = {
   type: 'folder' | 'request' | 'collection'
 }
 
-type HistoryHook = {
+type HistoryHookType = {
   getAll: () => RequestType[]
   add: (request: RequestType) => void
   remove: (id: string) => void
@@ -88,7 +88,7 @@ type HistoryHook = {
   get: (id: Identifier) => RequestType | undefined
 }
 
-type TabsHook = {
+type TabsHookType = {
   openTab: (
     itemRequest: RequestType,
     shiftKey?: boolean,
@@ -118,13 +118,13 @@ type RequestLog = {
   failure?: CallResponseFailure
 }
 
-type ConsoleHook = {
+type ConsoleHookType = {
   logs: RequestLog[]
   add: (log: RequestLog) => void
   clear: () => void
 }
 
-type CollectionsHook = {
+type CollectionsHookType = {
   setCollections: (collections: Collection[]) => void
   create: () => Collection
   add: (collection: Collection) => void
@@ -138,7 +138,7 @@ type CollectionsHook = {
   saveRequest: (saveRequest: SaveRequest) => void
 }
 
-type EnvironmentsHook = {
+type EnvironmentsHookType = {
   setEnvironments: (environments: Environment[]) => void
   create: () => Environment
   add: (environment: Environment) => void
@@ -161,7 +161,7 @@ type MenuItem = {
   spacer?: boolean
 }
 
-type MenuHook = {
+type MenuHookType = {
   items: MenuItem[]
   selected: MenuItem
   select: (id: Identifier) => void
@@ -175,7 +175,7 @@ type RequestItem = {
   getActiveLength: () => number
 }
 
-type RequestContextRequest = {
+type RequestContextRequestType = {
   methods: Method[]
   method: Method
   url: string
@@ -193,9 +193,27 @@ type RequestContextRequest = {
   urlIsValid: ({ url }: { url?: string }) => boolean
 }
 
+type RequestContestType = {
+  path: PathItem[]
+  collectionId?: Identifier | null
+  request: RequestContextRequestType | null
+  fetching: boolean
+  fetched: boolean
+  response: {
+    body: string
+    headers: KeyValue[]
+    cookies: string[][]
+    status: number
+    time: number
+    size: number
+  }
+  save: () => void
+  requestConsole?: ConsoleHookType | null
+}
+
 type Theme = 'light' | 'dark' | 'system'
 
-type AppSettings = {
+type AppSettingsType = {
   theme: Theme
   proxy: string
   maxHistory: number

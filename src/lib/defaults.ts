@@ -1,4 +1,4 @@
-export const defaultSettings: AppSettings = {
+export const defaultSettings: AppSettingsType = {
   theme: 'system',
   timeout: 30000,
   maxHistory: 100,

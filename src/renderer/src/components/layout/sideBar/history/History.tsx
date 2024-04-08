@@ -19,7 +19,7 @@ export default function History() {
     day = day < 10 ? `0${day}` : day
     let month: string | number = date.getMonth() + 1
     month = month < 10 ? `0${month}` : month
-    let year = date.getFullYear()
+    const year = date.getFullYear()
     let hours: string | number = date.getHours()
     hours = hours < 10 ? `0${hours}` : hours
     let minutes: string | number = date.getMinutes()
