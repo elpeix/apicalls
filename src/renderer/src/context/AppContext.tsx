@@ -82,7 +82,7 @@ export default function AppContextProvider({ children }: { children: React.React
     const ipcRenderer = window.electron.ipcRenderer
     ipcRenderer.send(GET_ENVIRONMENTS)
     ipcRenderer.send(GET_COLLECTIONS)
-    ipcRenderer.once(ENVIRONMENTS_UPDATED, (_: unknown, environmentList: Environment[]) => {
+    ipcRenderer.on(ENVIRONMENTS_UPDATED, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
     })
 
@@ -94,7 +94,7 @@ export default function AppContextProvider({ children }: { children: React.React
       ipcRenderer.removeAllListeners(ENVIRONMENTS_UPDATED)
       ipcRenderer.removeAllListeners(COLLECTIONS_UPDATED)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const contextValue = {
     menu,
