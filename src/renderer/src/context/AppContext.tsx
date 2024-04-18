@@ -80,13 +80,12 @@ export default function AppContextProvider({ children }: { children: React.React
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
-
     ipcRenderer.send(GET_ENVIRONMENTS)
-    ipcRenderer.on(ENVIRONMENTS_UPDATED, (_: unknown, environmentList: Environment[]) => {
+    ipcRenderer.send(GET_COLLECTIONS)
+    ipcRenderer.once(ENVIRONMENTS_UPDATED, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
     })
 
-    ipcRenderer.send(GET_COLLECTIONS)
     ipcRenderer.on(COLLECTIONS_UPDATED, (_: unknown, collectionList: Collection[]) => {
       collections?.setCollections(collectionList)
     })
@@ -95,7 +94,7 @@ export default function AppContextProvider({ children }: { children: React.React
       ipcRenderer.removeAllListeners(ENVIRONMENTS_UPDATED)
       ipcRenderer.removeAllListeners(COLLECTIONS_UPDATED)
     }
-  }, [collections, environments])
+  }, [])
 
   const contextValue = {
     menu,
