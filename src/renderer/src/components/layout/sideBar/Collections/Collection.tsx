@@ -11,6 +11,7 @@ import EditableName from '../../../base/EditableName/EditableName'
 import { AppContext } from '../../../../context/AppContext'
 import RequestCreator from './RequestCreator'
 import { moveElements } from '../../../../lib/moveElements'
+import { FilterInput } from '../../../base/FilterInput/FilterInput'
 
 export default function Collection({
   collection,
@@ -29,6 +30,8 @@ export default function Collection({
   const [showCreateRequest, setShowCreateRequest] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
+  const [showFilter, setShowFilter] = useState(false)
+  const [filter, setFilter] = useState('')
 
   useEffect(() => {
     setColl(collection)
@@ -113,6 +116,10 @@ export default function Collection({
     }
   }
 
+  const handleShowFilter = () => {
+    setShowFilter(!showFilter)
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -125,14 +132,26 @@ export default function Collection({
           update={changeName}
           onBlur={() => setEditingName(false)}
         />
-        <Menu>
-          <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
-          <MenuElement icon="folder" title="Add folder" onClick={() => setShowCreateFolder(true)} />
-          <MenuElement icon="edit" title="Rename" onClick={editName} />
-          <MenuSeparator />
-          <MenuElement icon="delete" title="Remove" onClick={() => setShowDialog(true)} />
-        </Menu>
+        <div className={styles.actions}>
+          <ButtonIcon icon="filter" title="Filter" onClick={handleShowFilter} />
+          <Menu>
+            <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
+            <MenuElement
+              icon="folder"
+              title="Add folder"
+              onClick={() => setShowCreateFolder(true)}
+            />
+            <MenuElement icon="edit" title="Rename" onClick={editName} />
+            <MenuSeparator />
+            <MenuElement icon="delete" title="Remove" onClick={() => setShowDialog(true)} />
+          </Menu>
+        </div>
       </div>
+      {showFilter && (
+        <div className={styles.filter}>
+          <FilterInput onClear={handleShowFilter} onFilter={setFilter} />
+        </div>
+      )}
       <div className={styles.collectionContent} onScroll={handleScroll}>
         <CollectionElements
           collectionId={coll.id}
@@ -140,6 +159,7 @@ export default function Collection({
           update={handleUpdate}
           move={handleMove}
           path={[]}
+          filter={filter}
           scrolling={isScrolling}
         />
       </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import { createFolder, createRequest } from '../../../../lib/factory'
 import ButtonIcon from '../../../base/ButtonIcon'
@@ -19,6 +19,7 @@ export default function Folder({
   update,
   move,
   remove,
+  filter,
   scrolling
 }: {
   folder: CollectionFolder
@@ -27,14 +28,24 @@ export default function Folder({
   update: () => void
   move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   remove: (folder: CollectionFolder) => void
+  filter: string
   scrolling: boolean
 }) {
   const { tabs } = useContext(AppContext)
-  const [expanded, setExpanded] = useState(folder.expanded || false)
+  const [expanded, setExpanded] = useState(folder.expanded || filter !== '' || false)
   const [editingName, setEditingName] = useState(false)
   const [showCreateFolder, setShowCreateFolder] = useState(false)
   const [showRemoveFolder, setShowRemoveFolder] = useState(false)
   const [showCreateRequest, setShowCreateRequest] = useState(false)
+
+  useEffect(() => {
+    if (filter !== '') {
+      setExpanded(true)
+      return
+    } else {
+      setExpanded(folder.expanded || false)
+    }
+  }, [filter, folder.expanded])
 
   const folderPath = [...path, { id: folder.id, type: 'folder' }] as PathItem[]
 
@@ -140,6 +151,7 @@ export default function Folder({
               update={update}
               move={move}
               path={folderPath}
+              filter={filter}
               scrolling={scrolling}
             />
           </div>

@@ -9,6 +9,7 @@ export default function CollectionElements({
   path,
   update,
   move,
+  filter,
   scrolling
 }: {
   elements: (CollectionFolder | RequestType)[]
@@ -16,6 +17,7 @@ export default function CollectionElements({
   path: PathItem[]
   update: () => void
   move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
+  filter: string
   scrolling: boolean
 }) {
   const removeElement = (element: CollectionFolder | RequestType) => {
@@ -51,6 +53,7 @@ export default function CollectionElements({
           move={move}
           removeElement={removeElement}
           path={path}
+          filter={filter}
           scrolling={scrolling}
         />
       ))}
