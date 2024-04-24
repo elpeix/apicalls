@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { moveElements } from '../../src/renderer/src/lib/moveElements'
-import { createMethod } from '../../src/renderer/src/lib/factory'
+import { getFolder, getRequest } from '../data/data'
 
 describe('Move collections', () => {
   it('should do nothing if elements are empty', () => {
@@ -133,29 +133,3 @@ describe('Move collections', () => {
     expect(result.moved).toBe(false)
   })
 })
-
-const getRequest = (id: Identifier): RequestType => {
-  return {
-    id,
-    type: 'collection',
-    name: `request-${id}`,
-    request: {
-      url: 'anyUrl',
-      method: createMethod('GET'),
-      headers: [],
-      params: []
-    }
-  }
-}
-
-const getFolder = (
-  id: Identifier,
-  elements: (CollectionFolder | RequestType)[] = []
-): CollectionFolder => {
-  return {
-    id,
-    type: 'folder',
-    name: 'folder',
-    elements
-  }
-}
