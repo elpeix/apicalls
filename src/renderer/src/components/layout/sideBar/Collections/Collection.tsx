@@ -12,6 +12,7 @@ import { AppContext } from '../../../../context/AppContext'
 import RequestCreator from './RequestCreator'
 import { moveElements } from '../../../../lib/moveElements'
 import { FilterInput } from '../../../base/FilterInput/FilterInput'
+import { filterCollectionElements } from '../../../../lib/collectionFilter'
 
 export default function Collection({
   collection,
@@ -31,10 +32,11 @@ export default function Collection({
   const [showDialog, setShowDialog] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
-  const [filter, setFilter] = useState('')
+  const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
 
   useEffect(() => {
     setColl(collection)
+    setFilteredElements(collection.elements)
 
     if (!collection.name) {
       setEditingName(true)
@@ -120,6 +122,15 @@ export default function Collection({
     setShowFilter(!showFilter)
   }
 
+  const handleFilter = (filter: string) => {
+    if (filter === '') {
+      setFilteredElements(coll.elements)
+      return
+    }
+    const filtered = filterCollectionElements(coll.elements, filter)
+    setFilteredElements(filtered)
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -149,17 +160,16 @@ export default function Collection({
       </div>
       {showFilter && (
         <div className={styles.filter}>
-          <FilterInput onClear={handleShowFilter} onFilter={setFilter} />
+          <FilterInput onClear={handleShowFilter} onFilter={handleFilter} />
         </div>
       )}
       <div className={styles.collectionContent} onScroll={handleScroll}>
         <CollectionElements
           collectionId={coll.id}
-          elements={coll.elements}
+          elements={filteredElements}
           update={handleUpdate}
           move={handleMove}
           path={[]}
-          filter={filter}
           scrolling={isScrolling}
         />
       </div>

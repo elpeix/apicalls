@@ -11,7 +11,6 @@ export default function CollectionElement({
   addRequest,
   move,
   removeElement,
-  filter,
   scrolling
 }: {
   element: CollectionFolder | RequestType
@@ -22,7 +21,6 @@ export default function CollectionElement({
   addRequest: (request: RequestType) => void
   move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   removeElement: (element: CollectionFolder | RequestType) => void
-  filter: string
   scrolling: boolean
 }) {
   const isFolder = element.type === 'folder'
@@ -46,11 +44,10 @@ export default function CollectionElement({
           update={update}
           move={move}
           remove={removeElement}
-          filter={filter}
           scrolling={scrolling}
         />
       )}
-      {!isFolder && (filter === '' || element.name?.includes(filter)) && (
+      {!isFolder && (
         <CollectionRequest
           collectionRequest={element}
           collectionId={collectionId}
