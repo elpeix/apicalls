@@ -22,5 +22,17 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+
+    .sidePanel {
+      & > div {
+        display: none;
+      }
+      &.collection > .collections,
+      &.environment > .environment,
+      &.history > .history,
+      &.settings > .settings {
+        display: block;
+      }
+    }
   }
 }
