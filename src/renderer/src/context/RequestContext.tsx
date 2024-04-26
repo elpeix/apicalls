@@ -44,7 +44,7 @@ export default function RequestContextProvider({
   const methods = useMemo(() => getMethods(), [])
 
   // Pre-request scripts will be executed before the request is sent
-  const [preRequestData, setPreRequestData] = useState<PreRequestData | null>(null)
+  const [preRequestData, setPreRequestData] = useState<PreRequest | null>(null)
 
   const [changed, setChanged] = useState(false)
   const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])
@@ -104,7 +104,7 @@ export default function RequestContextProvider({
     if (!collectionId || !collections) return
     const collection = collections.get(collectionId)
     if (!collection) return
-    const preRequestdata = collection.preRequestData
+    const preRequestdata = collection.preRequest
     if (!preRequestdata) return
     setPreRequestData(preRequestData)
   }, [collectionId, collections, preRequestData])
