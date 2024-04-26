@@ -176,7 +176,6 @@ type RequestItem = {
 }
 
 type RequestContextRequestType = {
-  methods: Method[]
   method: Method
   url: string
   body: string

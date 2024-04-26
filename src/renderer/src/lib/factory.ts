@@ -55,3 +55,13 @@ export const createMethod = (method: string): Method => {
     body: ['POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'].includes(method)
   }
 }
+
+export const getMethods = (): Method[] => [
+  createMethod('GET'),
+  createMethod('POST'),
+  createMethod('PUT'),
+  createMethod('PATCH'),
+  createMethod('DELETE'),
+  createMethod('HEAD'),
+  createMethod('OPTIONS')
+]

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
 import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
-import { createAuth, createAuthHeaderValue, createMethod } from '../lib/factory'
+import { createAuth, createAuthHeaderValue, getMethods } from '../lib/factory'
 import {
   getPathParamsFromUrl,
   getQueryParamsFromUrl,
@@ -41,18 +41,7 @@ export default function RequestContextProvider({
   const tabId = tab.id
   const definedRequest = tab.request
 
-  const methods = useMemo(
-    () => [
-      createMethod('GET'),
-      createMethod('POST'),
-      createMethod('PUT'),
-      createMethod('PATCH'),
-      createMethod('DELETE'),
-      createMethod('HEAD'),
-      createMethod('OPTIONS')
-    ],
-    []
-  )
+  const methods = useMemo(() => getMethods(), [])
 
   // Pre-request scripts will be executed before the request is sent
   const [preRequestData, setPreRequestData] = useState<PreRequestData | null>(null)
@@ -361,7 +350,6 @@ export default function RequestContextProvider({
     path: path || [],
     collectionId,
     request: {
-      methods,
       method: requestMethod,
       url: requestUrl,
       body: requestBody,
