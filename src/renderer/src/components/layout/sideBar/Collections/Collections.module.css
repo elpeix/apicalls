@@ -16,6 +16,10 @@
       gap: 0.2rem;
     }
   }
+
+  .filter {
+    border-bottom: 1px solid var(--border-color);
+  }
 }
 
 .item {

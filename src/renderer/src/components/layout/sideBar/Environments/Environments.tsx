@@ -3,10 +3,14 @@ import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Environment from './Environment'
 import EnvironmentItem from './EnvironmentItem'
+import styles from './Environment.module.css'
+import { FilterInput } from '../../../base/FilterInput/FilterInput'
 
 export default function Environments() {
   const { environments } = useContext(AppContext)
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
+  const [showFilter, setShowFilter] = useState(false)
+  const [filter, setFilter] = useState('')
 
   const add = () => {
     if (!environments) return
@@ -25,14 +29,28 @@ export default function Environments() {
     setSelectedEnvironment(null)
   }
 
+  const handleShowFilter = () => {
+    filter && setFilter('')
+    setShowFilter(!showFilter)
+  }
+
+  const handleFilter = (filter: string) => {
+    setFilter(filter)
+  }
+
   return (
     <>
       <div className="sidePanel-header">
         <div className="sidePanel-header-title">Environments</div>
         {!selectedEnvironment && (
-          <div>
-            <ButtonIcon icon="more" onClick={add} title="New environment" />
-          </div>
+          <>
+            <div>
+              <ButtonIcon icon="filter" onClick={() => setShowFilter(!showFilter)} title="Filter" />
+            </div>
+            <div>
+              <ButtonIcon icon="more" onClick={add} title="New environment" />
+            </div>
+          </>
         )}
       </div>
       {selectedEnvironment && (
@@ -45,9 +63,15 @@ export default function Environments() {
       )}
       {!selectedEnvironment && (
         <div className="sidePanel-content">
+          {showFilter && (
+            <div className={styles.filter}>
+              <FilterInput onClear={handleShowFilter} onFilter={handleFilter} />
+            </div>
+          )}
           {environments &&
             environments
               .getAll()
+              .filter((environment) => !showFilter || environment.name.toLowerCase().includes(filter.toLowerCase()))
               .map((environment) => (
                 <EnvironmentItem
                   key={environment.id}

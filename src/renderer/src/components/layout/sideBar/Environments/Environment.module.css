@@ -1,3 +1,6 @@
+.filter {
+  border-top: 1px solid var(--border-color);
+}
 .environment {
   .header {
     display: flex;

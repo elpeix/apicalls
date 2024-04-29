@@ -2,7 +2,6 @@
   display: flex;
   width: 100%;
   background-color: var(--color-10);
-  border-bottom: 1px solid var(--border-color);
 
   .input {
     flex-grow: 1;
