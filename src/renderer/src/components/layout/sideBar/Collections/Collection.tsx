@@ -32,6 +32,7 @@ export default function Collection({
   const [showDialog, setShowDialog] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
+  const [filter, setFilter] = useState('')
   const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
 
   useEffect(() => {
