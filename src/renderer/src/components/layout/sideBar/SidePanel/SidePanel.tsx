@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import styles from './SidePanel.module.css'
 import { AppContext } from '../../../../context/AppContext'
 import History from '../history/History'
@@ -8,15 +8,6 @@ import Collections from '../Collections/Collections'
 
 export default function SidePanel() {
   const { menu } = useContext(AppContext)
-  let elements = {}
-
-  useEffect(() => {
-    const collections = <Collections />
-    const environments = <Environments />
-    const history = <History />
-    const settings = <Settings />
-    elements = { collections, environments, history, settings }
-  }, [])
 
   const classNameSelected = menu?.selected?.id || ''
 
@@ -25,10 +16,18 @@ export default function SidePanel() {
       <div className={styles.content}>
         {menu && (
           <div className={`${styles.sidePanel} ${styles[classNameSelected]}`}>
-            <div className={styles.collections}><Collections /></div>
-            <div className={styles.environment}><Environments /></div>
-            <div className={styles.history}><History /></div>
-            <div className={styles.settings}><Settings /></div>
+            <div className={styles.collections}>
+              <Collections />
+            </div>
+            <div className={styles.environment}>
+              <Environments />
+            </div>
+            <div className={styles.history}>
+              <History />
+            </div>
+            <div className={styles.settings}>
+              <Settings />
+            </div>
           </div>
         )}
       </div>

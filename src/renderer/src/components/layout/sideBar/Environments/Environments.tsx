@@ -62,7 +62,7 @@ export default function Environments() {
         />
       )}
       {!selectedEnvironment && (
-        <div className="sidePanel-content">
+        <div className={`sidePanel-content ${styles.content}`}>
           {showFilter && (
             <div className={styles.filter}>
               <FilterInput onClear={handleShowFilter} onFilter={handleFilter} />
@@ -71,7 +71,10 @@ export default function Environments() {
           {environments &&
             environments
               .getAll()
-              .filter((environment) => !showFilter || environment.name.toLowerCase().includes(filter.toLowerCase()))
+              .filter(
+                (environment) =>
+                  !showFilter || environment.name.toLowerCase().includes(filter.toLowerCase())
+              )
               .map((environment) => (
                 <EnvironmentItem
                   key={environment.id}

@@ -42,7 +42,7 @@ export default function History() {
           </div>
         )}
       </div>
-      <div className="sidePanel-content">
+      <div className={`sidePanel-content ${styles.content}`}>
         {historyItems.map((historyItem, index) => (
           <div
             key={index}
