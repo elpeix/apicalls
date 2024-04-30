@@ -115,19 +115,26 @@ export default function Collection({
     const result = moveElements({ elements: coll.elements, from, to })
     if (result.moved && result.elements) {
       update({ ...coll, elements: result.elements })
+      filterElements(filter, result.elements)
     }
   }
 
   const handleShowFilter = () => {
+    setFilter('')
     setShowFilter(!showFilter)
   }
 
   const handleFilter = (filter: string) => {
+    filterElements(filter, coll.elements)
+  }
+
+  const filterElements = (filter: string, elements: (CollectionFolder | RequestType)[]) => {
+    setFilter(filter)
     if (filter === '') {
-      setFilteredElements(coll.elements)
+      setFilteredElements(elements)
       return
     }
-    const filtered = filterCollectionElements(coll.elements, filter)
+    const filtered = filterCollectionElements(elements, filter)
     setFilteredElements(filtered)
   }
 
