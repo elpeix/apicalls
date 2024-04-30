@@ -36,7 +36,7 @@ export default function Collection({
 
   useEffect(() => {
     setColl(collection)
-    setFilteredElements(collection.elements)
+    filterElements(filter, collection.elements)
 
     if (!collection.name) {
       setEditingName(true)
@@ -73,6 +73,7 @@ export default function Collection({
   const update = (collection: Collection) => {
     setColl(collection)
     collections?.update(collection)
+    filterElements(filter, collection.elements)
   }
 
   const handleAddRequest = () => {
@@ -115,7 +116,6 @@ export default function Collection({
     const result = moveElements({ elements: coll.elements, from, to })
     if (result.moved && result.elements) {
       update({ ...coll, elements: result.elements })
-      filterElements(filter, result.elements)
     }
   }
 
