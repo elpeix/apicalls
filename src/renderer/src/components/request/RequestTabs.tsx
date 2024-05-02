@@ -1,12 +1,11 @@
 import React, { useContext } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-import Params from './Params'
-import Headers from './Headers'
 import RequestTab from './RequestTab'
 import Editor from '../base/Editor'
 import styles from './Request.module.css'
 import RequestAuth from './RequestAuth'
+import Params from '../base/Params/Params'
 
 export default function RequestTabs() {
   const { request } = useContext(RequestContext)
@@ -44,8 +43,8 @@ export default function RequestTabs() {
           {request.pathParams.items.length > 0 && (
             <TabPanel forceRender={true}>
               <Params
-                params={request.pathParams.items}
-                setParams={request.pathParams.set}
+                items={request.pathParams.items}
+                onSave={request.pathParams.set}
                 editableName={false}
                 showDelete={false}
               />
@@ -53,16 +52,18 @@ export default function RequestTabs() {
           )}
           <TabPanel forceRender={true}>
             <Params
-              params={request.queryParams.items}
-              setParams={request.queryParams.set}
-              addParam={request.queryParams.add}
+              items={request.queryParams.items}
+              onSave={request.queryParams.set}
+              onAdd={request.queryParams.add}
             />
           </TabPanel>
           <TabPanel forceRender={true}>
-            <Headers
-              headers={request.headers.items}
-              setHeaders={request.headers.set}
-              addHeader={request.headers.add}
+            <Params
+              items={request.headers.items}
+              onSave={request.headers.set}
+              onAdd={request.headers.add}
+              addCaption="Add header"
+              removeCaption="Remove header"
             />
           </TabPanel>
           <TabPanel forceRender={true}>

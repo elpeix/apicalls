@@ -149,27 +149,6 @@
   }
 }
 
-.params,
-.headers {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-
-  & > .add {
-    display: flex;
-  }
-
-  [role='cell'] > div {
-    opacity: 0.7;
-    font-style: italic;
-  }
-
-  .rowEnabled [role='cell'] > div {
-    opacity: 1;
-    font-style: normal;
-  }
-}
-
 .tabs {
   display: flex;
   flex-direction: column;
@@ -211,10 +190,6 @@
     user-select: none;
     opacity: 0.7;
   }
-}
-
-.add {
-  margin: 0.5rem;
 }
 
 .authorization {
