@@ -12,6 +12,7 @@ export default function FolderCreator({
     <Prompt
       message="Folder name:"
       placeholder="Folder name"
+      confirmName="Add"
       onConfirm={onCreate}
       onCancel={onCancel}
     />

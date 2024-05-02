@@ -12,6 +12,7 @@ export default function RequestCreator({
     <Prompt
       message="Request name:"
       placeholder="Request name"
+      confirmName="Add"
       onConfirm={onCreate}
       onCancel={onCancel}
     />
