@@ -5,7 +5,7 @@ import { RequestContext } from '../../context/RequestContext'
 
 export default function RequestUrl() {
   const { request } = useContext(RequestContext)
-  const urlRef = useRef<HTMLInputElement>()
+  const urlRef = useRef<HTMLInputElement>(null)
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState(request?.urlIsValid({}))
 
