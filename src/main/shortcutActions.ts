@@ -1,17 +1,100 @@
-import { BrowserWindow, globalShortcut } from 'electron'
+import { BrowserWindow, Event, Input } from 'electron'
 import { CLOSE_TAB, NEW_REQUEST, NEXT_TAB, PREV_TAB } from '../lib/ipcChannels'
 
-export const registerGlobalShortcuts = (mainWindow: BrowserWindow) => {
-  globalShortcut.register('CommandOrControl+N', () => {
-    mainWindow.webContents.send(NEW_REQUEST)
-  })
-  globalShortcut.register('CommandOrControl+Tab', () => {
-    mainWindow.webContents.send(NEXT_TAB)
-  })
-  globalShortcut.register('CommandOrControl+Shift+Tab', () => {
-    mainWindow.webContents.send(PREV_TAB)
-  })
-  globalShortcut.register('CommandOrControl+W', () => {
-    mainWindow.webContents.send(CLOSE_TAB)
-  })
+type ShortcutKey = {
+  control?: boolean
+  alt?: boolean
+  shift?: boolean
+  key: string
+}
+
+export const registerShortcuts = (mainWindow: BrowserWindow) => {
+  const windowShortcut = new WindowShortcut(mainWindow)
+
+  windowShortcut.register(
+    {
+      control: true,
+      key: 'n'
+    },
+    () => {
+      mainWindow.webContents.send(NEW_REQUEST)
+    }
+  )
+  windowShortcut.register(
+    {
+      control: true,
+      key: 'Tab'
+    },
+    () => {
+      mainWindow.webContents.send(NEXT_TAB)
+    }
+  )
+  windowShortcut.register(
+    {
+      control: true,
+      shift: true,
+      key: 'Tab'
+    },
+    () => {
+      mainWindow.webContents.send(PREV_TAB)
+    }
+  )
+  windowShortcut.register(
+    {
+      control: true,
+      key: 'w'
+    },
+    () => {
+      mainWindow.webContents.send(CLOSE_TAB)
+    }
+  )
+}
+
+class WindowShortcut {
+  shortcuts: Map<string, () => void>
+  constructor(private mainWindow: BrowserWindow) {
+    this.mainWindow = mainWindow
+    this.shortcuts = new Map()
+    this.mainWindow.webContents.once('dom-ready', this.enable.bind(this))
+  }
+
+  public register(shortcut: ShortcutKey, callback: () => void): void {
+    const baseKeys = Object.keys(shortcut)
+      .filter((v) => v !== 'key')
+      .sort()
+    baseKeys.push(shortcut.key)
+    const shortcutKey = baseKeys.join('+')
+    if (!this.shortcuts.has(shortcutKey)) {
+      this.shortcuts.set(shortcutKey, callback)
+    }
+  }
+
+  private enable() {
+    this.mainWindow.webContents.on('before-input-event', (event: Event, input: Input) => {
+      if (input.type !== 'keyDown') {
+        return
+      }
+      const shortcutKey = this.getShortcutKey(input)
+      if (!this.shortcuts.has(shortcutKey)) {
+        return
+      }
+      event.preventDefault()
+      const callback = this.shortcuts.get(shortcutKey)
+      if (callback) {
+        callback()
+      }
+    })
+  }
+
+  private getShortcutKey(input: Electron.Input) {
+    let baseKeys = []
+    if (process.platform === 'darwin') {
+      if (input.meta) baseKeys.push('control')
+    } else if (input.control) baseKeys.push('control')
+    if (input.shift) baseKeys.push('shift')
+    if (input.alt) baseKeys.push('alt')
+    baseKeys = baseKeys.sort()
+    baseKeys.push(input.key)
+    return baseKeys.join('+')
+  }
 }
