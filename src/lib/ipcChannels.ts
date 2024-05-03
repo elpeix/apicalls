@@ -28,3 +28,8 @@ export const UPDATE_ENVIRONMENT = 'update-environment'
 export const REMOVE_ENVIRONMENT = 'remove-environment'
 export const ENVIRONMENTS_UPDATED = 'environments-updated'
 export const GET_ENVIRONMENTS_FAILURE = 'get-environments-failure'
+
+export const NEW_REQUEST = 'new-request'
+export const NEXT_TAB = 'next-tab'
+export const PREV_TAB = 'previous-tab'
+export const CLOSE_TAB = 'close-tab'

@@ -1,5 +1,29 @@
 .newTab {
   margin: 0 0.4rem;
   width: 1.36rem;
-  aspect-ratio: 1;
+
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out;
+
+  &.withLabel {
+    width: unset;
+  }
+
+  button {
+    opacity: 1;
+  }
+
+  .label {
+    font-size: 1.24rem;
+    color: var(--text-color);
+    flex: 1;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
 }

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { AppContext } from '../../context/AppContext'
-import Icon from '../base/Icon/Icon'
 import RequestPanel from '../request/RequestPanel'
 import NewTab from '../tabs/newTab/NewTab'
 import TabTitle from '../tabs/tabTitle/TabTitle'
+import { CLOSE_TAB, NEXT_TAB, PREV_TAB } from '../../../../lib/ipcChannels'
 
 export default function ContentTabs() {
   const { tabs } = useContext(AppContext)
@@ -18,6 +18,30 @@ export default function ContentTabs() {
     setHasTabs(tabs.tabs.length > 0)
     setTabList(tabs.tabs)
     setSelectedTabIndex(tabs.getSelectedTabIndex())
+
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(CLOSE_TAB, () => {
+      const tab = tabs.tabs[tabs.getSelectedTabIndex()]
+      if (tab) {
+        tabs.removeTab(tab.id)
+      }
+    })
+
+    ipcRenderer.on(NEXT_TAB, () => {
+      const nextTabIndex = (tabs.getSelectedTabIndex() + 1) % tabs.tabs.length
+      tabs.setActiveTab(nextTabIndex)
+    })
+
+    ipcRenderer.on(PREV_TAB, () => {
+      const prevTabIndex = (tabs.getSelectedTabIndex() - 1 + tabs.tabs.length) % tabs.tabs.length
+      tabs.setActiveTab(prevTabIndex)
+    })
+
+    return () => {
+      ipcRenderer.removeAllListeners(CLOSE_TAB)
+      ipcRenderer.removeAllListeners(NEXT_TAB)
+      ipcRenderer.removeAllListeners(PREV_TAB)
+    }
   }, [tabs])
 
   const onSelect = (index: number, _: number, __: Event) => {
@@ -62,10 +86,7 @@ export default function ContentTabs() {
       )}
       {!hasTabs && (
         <div className="panel-empty-tabs">
-          <div className="new-tab" onClick={() => tabs?.newTab()}>
-            <Icon icon="more" />
-            <div className="new-tab-label">New Tab</div>
-          </div>
+          <NewTab showLabel={true} />
         </div>
       )}
     </>

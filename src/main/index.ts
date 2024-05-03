@@ -1,8 +1,9 @@
-import { app, shell, BrowserWindow, nativeTheme } from 'electron'
+import { app, shell, BrowserWindow, nativeTheme, globalShortcut } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png'
 import Store from 'electron-store'
+import { registerGlobalShortcuts } from './shortcutActions'
 
 const store = new Store()
 
@@ -35,6 +36,8 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  registerGlobalShortcuts(mainWindow)
 }
 
 // This method will be called when Electron has finished
@@ -70,6 +73,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll()
 })
 
 // In this file you can include the rest of your app"s specific main process
