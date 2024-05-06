@@ -95,9 +95,8 @@ class WindowShortcut {
 
   private getShortcutKey(input: Electron.Input) {
     let baseKeys = []
-    if (process.platform === 'darwin') {
-      if (input.meta) baseKeys.push('control')
-    } else if (input.control) baseKeys.push('control')
+    if (input.meta) baseKeys.push('meta')
+    if (input.control) baseKeys.push('control')
     if (input.shift) baseKeys.push('shift')
     if (input.alt) baseKeys.push('alt')
     baseKeys = baseKeys.sort()
