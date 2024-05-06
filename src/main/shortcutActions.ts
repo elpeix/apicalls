@@ -5,6 +5,7 @@ type ShortcutKey = {
   control?: boolean
   alt?: boolean
   shift?: boolean
+  commandOrControl?: boolean
   key: string
 }
 
@@ -13,8 +14,8 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
 
   windowShortcut.register(
     {
-      control: true,
-      key: 'n'
+      commandOrControl: true,
+      key: 't'
     },
     () => {
       mainWindow.webContents.send(NEW_REQUEST)
@@ -41,7 +42,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
   )
   windowShortcut.register(
     {
-      control: true,
+      commandOrControl: true,
       key: 'w'
     },
     () => {
@@ -61,6 +62,12 @@ class WindowShortcut {
   public register(shortcut: ShortcutKey, callback: () => void): void {
     const baseKeys = Object.keys(shortcut)
       .filter((v) => v !== 'key')
+      .map((v) => {
+        if (v === 'commandOrControl') {
+          return process.platform === 'darwin' ? 'meta' : 'control'
+        }
+        return v
+      })
       .sort()
     baseKeys.push(shortcut.key)
     const shortcutKey = baseKeys.join('+')
