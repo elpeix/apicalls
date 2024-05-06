@@ -24,9 +24,9 @@ type RequestBase = {
   url: string
   method: Method
   auth?: RequestAuth
-  headers: KeyValue[]
+  headers?: KeyValue[]
   pathParams?: KeyValue[]
-  queryParams: KeyValue[]
+  queryParams?: KeyValue[]
   body?: string
 }
 
@@ -51,14 +51,17 @@ type Environment = {
   variables: KeyValue[]
 }
 
+type PreRequestDataToCapture = {
+  id: Identifier
+  type: 'header' | 'body'
+  path: string
+  setEnvironmentVariable: string
+}
+
 type PreRequest = {
   request: RequestBase
   type: 'authorization' | 'data'
-  dataToCapture: {
-    type: 'header' | 'body'
-    path: string
-    setEnvironmentVariable: string
-  }[]
+  dataToCapture: PreRequestDataToCapture[]
 }
 
 type CollectionFolder = {

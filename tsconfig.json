@@ -8,7 +8,7 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
@@ -27,5 +27,10 @@
   "exclude": [
     "node_modules",
     "**/node_modules/*"
-  ]
+  ],
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "experimentalResolver": true
+  }
 }
