@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { AppContext } from '../../../context/AppContext'
 import styles from './NewTab.module.css'
-import { NEW_REQUEST } from '../../../../../lib/ipcChannels'
+import { ACTION_NEW_TAB } from '../../../../../lib/ipcChannels'
 import Icon from '../../base/Icon/Icon'
 
 export default function NewTab({ showLabel = false }: { showLabel?: boolean }) {
@@ -10,10 +10,10 @@ export default function NewTab({ showLabel = false }: { showLabel?: boolean }) {
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(NEW_REQUEST, () => {
+    ipcRenderer.on(ACTION_NEW_TAB, () => {
       tabs?.newTab()
     })
-    return () => ipcRenderer.removeAllListeners(NEW_REQUEST)
+    return () => ipcRenderer.removeAllListeners(ACTION_NEW_TAB)
   }, [tabs])
 
   const className = `${styles.newTab} ${showLabel ? styles.withLabel : ''}`

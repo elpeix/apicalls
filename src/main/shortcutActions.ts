@@ -1,76 +1,75 @@
 import { BrowserWindow, Event, Input } from 'electron'
-import { CLOSE_TAB, NEW_REQUEST, NEXT_TAB, PREV_TAB } from '../lib/ipcChannels'
+import {
+  ACTION_CLOSE_TAB,
+  ACTION_NEW_TAB,
+  ACTION_NEXT_TAB,
+  ACTION_PREV_TAB,
+  ACTION_TOGGLE_SIDEBAR
+} from '../lib/ipcChannels'
 
 type ShortcutKey = {
   control?: boolean
   alt?: boolean
   shift?: boolean
+  command?: boolean
   commandOrControl?: boolean
   key: string
 }
 
-export const registerShortcuts = (mainWindow: BrowserWindow) => {
-  const windowShortcut = new WindowShortcut(mainWindow)
+const isMac = process.platform === 'darwin'
 
-  windowShortcut.register(
-    {
-      commandOrControl: true,
-      key: 't'
-    },
-    () => {
-      mainWindow.webContents.send(NEW_REQUEST)
-    }
-  )
-  windowShortcut.register(
-    {
-      control: true,
-      key: 'Tab'
-    },
-    () => {
-      mainWindow.webContents.send(NEXT_TAB)
-    }
-  )
-  windowShortcut.register(
-    {
-      control: true,
-      shift: true,
-      key: 'Tab'
-    },
-    () => {
-      mainWindow.webContents.send(PREV_TAB)
-    }
-  )
-  windowShortcut.register(
-    {
-      commandOrControl: true,
-      key: 'w'
-    },
-    () => {
-      mainWindow.webContents.send(CLOSE_TAB)
-    }
-  )
+export const registerShortcuts = (mainWindow: BrowserWindow) => {
+  const ws = new WindowShortcut(mainWindow)
+  ws.register('commandOrControl+t', () => mainWindow.webContents.send(ACTION_NEW_TAB))
+  ws.register('control+Tab', () => mainWindow.webContents.send(ACTION_NEXT_TAB))
+  ws.register('control+shift+Tab', () => mainWindow.webContents.send(ACTION_PREV_TAB))
+  ws.register('commandOrControl+w', () => mainWindow.webContents.send(ACTION_CLOSE_TAB))
+  ws.register('commandOrControl+b', () => mainWindow.webContents.send(ACTION_TOGGLE_SIDEBAR))
 }
 
 class WindowShortcut {
   shortcuts: Map<string, () => void>
+
   constructor(private mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow
     this.shortcuts = new Map()
     this.mainWindow.webContents.once('dom-ready', this.enable.bind(this))
   }
 
-  public register(shortcut: ShortcutKey, callback: () => void): void {
-    const baseKeys = Object.keys(shortcut)
-      .filter((v) => v !== 'key')
+  public register(shortcut: string, callback: () => void): void {
+    const baseKeys = shortcut.split('+')
+    if (baseKeys.length === 1) {
+      baseKeys.unshift(isMac ? 'meta' : 'control')
+    }
+    if (['control', 'shift', 'alt', 'meta'].includes(baseKeys[baseKeys.length - 1])) {
+      return
+    }
+    const key = baseKeys.pop()
+    if (!key) {
+      return
+    }
+    this.registerShortcut(baseKeys, key, callback)
+  }
+
+  public registerAdvanced(shortcut: ShortcutKey, callback: () => void): void {
+    const modifierKeys = Object.keys(shortcut).filter((v) => v !== 'key')
+    this.registerShortcut(modifierKeys, shortcut.key, callback)
+  }
+
+  private registerShortcut(modifierKeys: string[], key: string, callback: () => void) {
+    modifierKeys = modifierKeys
       .map((v) => {
         if (v === 'commandOrControl') {
-          return process.platform === 'darwin' ? 'meta' : 'control'
+          return isMac ? 'meta' : 'control'
+        } else if (v === 'command') {
+          return 'meta'
         }
         return v
       })
       .sort()
-    baseKeys.push(shortcut.key)
-    const shortcutKey = baseKeys.join('+')
+    modifierKeys = modifierKeys.sort()
+    modifierKeys.push(key)
+    const shortcutKey = modifierKeys.join('+')
     if (!this.shortcuts.has(shortcutKey)) {
       this.shortcuts.set(shortcutKey, callback)
     }

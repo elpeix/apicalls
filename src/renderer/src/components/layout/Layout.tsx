@@ -5,6 +5,7 @@ import SideMenu from './sideBar/SideMenu/SideMenu'
 import SidePanel from './sideBar/SidePanel/SidePanel'
 import ContentTabs from './ContentTabs'
 import Gutter from './Gutter'
+import { ACTION_TOGGLE_SIDEBAR } from '../../../../lib/ipcChannels'
 
 export default function Layout() {
   const { menu } = useContext(AppContext)
@@ -16,6 +17,18 @@ export default function Layout() {
   useEffect(() => {
     setShowSelected(!sidePanelCollapsed && menu != null && !!menu.selected)
   }, [sidePanelCollapsed, menu])
+
+  useEffect(() => {
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTION_TOGGLE_SIDEBAR, () => {
+      if (sidePanelCollapsed) {
+        sidePanel.current && sidePanel.current?.expand()
+      } else {
+        sidePanel.current && sidePanel.current?.collapse()
+      }
+    })
+    return () => ipcRenderer.removeAllListeners(ACTION_TOGGLE_SIDEBAR)
+  }, [sidePanelCollapsed])
 
   const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
 
