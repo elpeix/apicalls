@@ -1,0 +1,100 @@
+.preRequest {
+  width: 40rem;
+  min-height: 20rem;
+  display: flex;
+  flex-direction: column;
+
+  .bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+
+    .method {
+      display: flex;
+      width: 7rem;
+      font-size: 14px;
+      line-height: 17px;
+    }
+
+    .url {
+      flex: 1;
+      padding: 0.82rem;
+      border-left: 1px solid var(--border-color);
+
+      &:has(*:focus) {
+        box-shadow: inset 0 0 0 1px var(--accent-color);
+      }
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .save {
+        padding: 0.85rem;
+        border-top: 0;
+        border-bottom: 0;
+      }
+
+      .close {
+        width: 2.7rem;
+        height: 2.7rem;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+          background-color: var(--color-8);
+        }
+      }
+    }
+  }
+
+  .tabs {
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+    min-height: 20rem;
+    max-height: 20rem;
+    overflow-y: auto;
+
+    .dataToCapture {
+      select {
+        border: none;
+        padding: 0.32rem 0;
+
+        &:hover {
+          background-color: var(--color-11);
+        }
+      }
+      .add {
+        display: flex;
+        margin: 0.5rem;
+      }
+    }
+  }
+
+  .footer {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+
+    button:focus {
+      box-shadow: 0 0 0 1px var(--accent-color);
+    }
+
+    .cancel {
+      color: var(--color-5);
+    }
+
+    .save {
+      color: var(--color-3);
+      background-color: var(--color-9);
+
+      &:focus {
+        color: var(--highlight-color);
+      }
+    }
+  }
+}

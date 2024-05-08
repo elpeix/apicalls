@@ -51,9 +51,11 @@ type Environment = {
   variables: KeyValue[]
 }
 
+type PreRequestDataToCaptureType = 'header' | 'body'
+
 type PreRequestDataToCapture = {
   id: Identifier
-  type: 'header' | 'body'
+  type: PreRequestDataToCaptureType
   path: string
   setEnvironmentVariable: string
 }

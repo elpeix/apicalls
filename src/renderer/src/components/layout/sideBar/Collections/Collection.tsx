@@ -13,6 +13,7 @@ import RequestCreator from './RequestCreator'
 import { moveElements } from '../../../../lib/moveElements'
 import { FilterInput } from '../../../base/FilterInput/FilterInput'
 import { filterCollectionElements } from '../../../../lib/collectionFilter'
+import PreRequestEditor from './PreRequest/PreRequestEditor'
 
 export default function Collection({
   collection,
@@ -33,6 +34,7 @@ export default function Collection({
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
+  const [showPreRequest, setShowPreRequest] = useState(false)
   const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
 
   useEffect(() => {
@@ -139,6 +141,14 @@ export default function Collection({
     setFilteredElements(filtered)
   }
 
+  const handlePreRequest = () => {
+    setShowPreRequest(true)
+  }
+
+  const preRequestSave = (data: PreRequest) => {
+    update({ ...coll, preRequest: data })
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -154,6 +164,7 @@ export default function Collection({
         <div className={styles.actions}>
           <ButtonIcon icon="filter" title="Filter" onClick={handleShowFilter} />
           <Menu>
+            <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
             <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
             <MenuElement
               icon="folder"
@@ -198,6 +209,14 @@ export default function Collection({
         <RequestCreator
           onCancel={() => setShowCreateRequest(false)}
           onCreate={createRequestHandler}
+        />
+      )}
+
+      {showPreRequest && (
+        <PreRequestEditor
+          preRequest={coll.preRequest}
+          onSave={preRequestSave}
+          onClose={() => setShowPreRequest(false)}
         />
       )}
     </div>
