@@ -104,9 +104,9 @@ export default function RequestContextProvider({
     if (!collectionId || !collections) return
     const collection = collections.get(collectionId)
     if (!collection) return
-    const preRequestdata = collection.preRequest
-    if (!preRequestdata) return
-    setPreRequestData(preRequestData)
+    if (collection.preRequest) {
+      setPreRequestData(collection.preRequest)
+    }
   }, [collectionId, collections, preRequestData])
 
   const fetch = () => {
@@ -117,8 +117,14 @@ export default function RequestContextProvider({
     if (!requestUrl || !urlIsValid({})) return
     setFetching(true)
 
-    // TODO Pre-request scripts
+    if (preRequestData) {
+      sendPreRequest()
+    } else {
+      sendMainRequest()
+    }
+  }
 
+  const sendMainRequest = (requestLogs: RequestLog[] = []) => {
     const url = getValue(requestUrl)
 
     const headers: HeadersInit = {}
@@ -153,14 +159,17 @@ export default function RequestContextProvider({
       setResponseSize(callResponse.contentLength)
       setFetchedHeaders(callResponse.responseHeaders)
       setResponseBody(callResponse.result || '')
-      requestConsole?.add({
-        method: requestMethod.value,
-        url: getFullUrl(),
-        status: callResponse.status.code,
-        time: callResponse.responseTime.all,
-        request: callApiRequest,
-        response: callResponse
-      })
+      requestConsole?.addAll([
+        ...requestLogs,
+        {
+          method: requestMethod.value,
+          url: getFullUrl(),
+          status: callResponse.status.code,
+          time: callResponse.responseTime.all,
+          request: callApiRequest,
+          response: callResponse
+        }
+      ])
       setFetching(false)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
       window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
@@ -178,9 +187,78 @@ export default function RequestContextProvider({
       CALL_API_FAILURE,
       (_: unknown, response: CallResponseFailure) => {
         setFetching(false)
+        requestConsole?.addAll([
+          ...requestLogs,
+          {
+            method: requestMethod.value,
+            url: getFullUrl(),
+            status: 999,
+            time: 0,
+            request: callApiRequest,
+            failure: response
+          }
+        ])
+        window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
+        window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
+      }
+    )
+  }
+
+  const sendPreRequest = () => {
+    if (!preRequestData) {
+      return
+    }
+    const environment = environments?.getActive()
+    if (!environment) {
+      return
+    }
+    const request = preRequestData.request
+    const url = getValue(request.url)
+    const headers: HeadersInit = {}
+    request.headers?.forEach((header) => {
+      if (header.enabled) {
+        headers[getValue(header.name)] = getValue(header.value)
+      }
+    })
+    const callApiRequest: CallRequest = {
+      id: tabId,
+      url,
+      method: request.method.value,
+      headers: headers,
+      queryParams: request.queryParams,
+      body: request.body
+    }
+    window.electron.ipcRenderer.send(CALL_API, callApiRequest)
+    window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: unknown, callResponse: CallResponse) => {
+      if (callResponse.id !== tabId) return
+      try {
+        preRequestData.dataToCapture.forEach((dataToCapture) => {
+          setDataToCapture(callResponse, dataToCapture, environment)
+        })
+        environments?.update(environment)
+      } catch (e) {
+        console.error(e)
+      }
+      const requestLog = {
+        method: requestMethod.value,
+        url,
+        status: callResponse.status.code,
+        time: callResponse.responseTime.all,
+        request: callApiRequest,
+        response: callResponse
+      }
+      window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
+      window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
+      sendMainRequest([requestLog])
+    })
+    window.electron.ipcRenderer.on(
+      CALL_API_FAILURE,
+      (_: unknown, response: CallResponseFailure) => {
+        console.log(response)
+        setFetching(false)
         requestConsole?.add({
           method: requestMethod.value,
-          url: getFullUrl(),
+          url,
           status: 999,
           time: 0,
           request: callApiRequest,
@@ -190,6 +268,36 @@ export default function RequestContextProvider({
         window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
       }
     )
+  }
+
+  const setDataToCapture = (
+    callResponse: CallResponse,
+    dataToCapture: PreRequestDataToCapture,
+    environment: Environment
+  ) => {
+    const name = dataToCapture.setEnvironmentVariable
+    let value = ''
+    if (dataToCapture.type === 'body') {
+      const jsonResult = JSON.parse(callResponse.result || '{}')
+      value = jsonResult[dataToCapture.path] // FIXME: Real path is not implemented
+    } else if (dataToCapture.type === 'header') {
+      value =
+        callResponse.responseHeaders
+          .find((header) => header.name === dataToCapture.path)
+          ?.value.toString() || ''
+    }
+    const variable = environment.variables.find((variable) => variable.name === name)
+    if (variable) {
+      variable.value = value
+    } else {
+      environment.variables = [
+        ...environment.variables,
+        {
+          name: name,
+          value: value
+        }
+      ]
+    }
   }
 
   const saveHistory = () => {
