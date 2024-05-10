@@ -127,6 +127,7 @@ type RequestLog = {
 type ConsoleHookType = {
   logs: RequestLog[]
   add: (log: RequestLog) => void
+  addAll: (logs: RequestLog[]) => void
   clear: () => void
 }
 
