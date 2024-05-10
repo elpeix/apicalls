@@ -17,7 +17,8 @@
 
   --selected-color: var(--color-1);
   --base-color: var(--color-2);
-  --accent-color: var(--color-5);
+  --accent-color: rgba(0, 204, 255, 0.2);
+  --focus-color: var(--color-5);
   --border-color: var(--color-8);
   --hover-color: var(--color-9);
   --sidePanel-color: var(--color-9);
@@ -79,7 +80,7 @@
     --color-11: #fafafa;
     --color-12: #fff;
 
-    --accent-color: var(--color-6);
+    --accent-color: #69b9ff;
     --border-color: var(--color-8);
     --hover-color: var(--color-9);
     --sidePanel-color: var(--color-10);
@@ -122,7 +123,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent-color);
+  background-color: var(--color-5);
 }
 
 ::-webkit-scrollbar-corner {

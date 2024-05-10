@@ -41,7 +41,7 @@
 
     &:focus {
       outline: none;
-      border-color: var(--accent-color);
+      border-color: var(--focus-color);
     }
 
     &:disabled {
@@ -49,7 +49,7 @@
       cursor: not-allowed;
       border: 1px solid var(--border-color);
       background-color: transparent;
-      color: var(--accent-color);
+      color: var(--color-5);
     }
   }
 }

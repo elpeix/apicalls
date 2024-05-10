@@ -41,7 +41,7 @@
 
       &:focus {
         outline: none;
-        box-shadow: inset 0 0 0 1px var(--accent-color);
+        box-shadow: inset 0 0 0 1px var(--focus-color);
       }
     }
   }
@@ -72,7 +72,7 @@
 
       &:focus {
         outline: none;
-        box-shadow: inset 0 0 0 1px var(--accent-color);
+        box-shadow: inset 0 0 0 1px var(--focus-color);
       }
       &.variableName {
         flex-grow: 1;

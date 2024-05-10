@@ -49,7 +49,7 @@
         }
 
         &.variableUndefined {
-          color: var(--accent-color);
+          color: var(--color-5);
         }
 
         &:hover {
@@ -68,7 +68,7 @@
     width: 100%;
 
     &::placeholder {
-      color: var(--accent-color);
+      color: var(--color-5);
     }
   }
 }
@@ -90,7 +90,7 @@
     color: var(--highlight-color);
   }
   .variableUndefined {
-    color: var(--accent-color);
+    color: var(--color-5);
   }
 
   .variableValue {

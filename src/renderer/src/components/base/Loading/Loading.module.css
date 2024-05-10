@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-color);
+  color: var(--color-5);
   user-select: none;
   gap: 0.5rem;
 }

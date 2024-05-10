@@ -14,7 +14,7 @@
     box-shadow: inset 0 0 0 1px transparent;
 
     &:has(*:focus) {
-      box-shadow: inset 0 0 0 1px var(--accent-color);
+      box-shadow: inset 0 0 0 1px var(--focus-color);
     }
   }
 }
@@ -85,7 +85,7 @@
   }
 
   &:focus {
-    box-shadow: inset 0 0 0 1px var(--accent-color);
+    box-shadow: inset 0 0 0 1px var(--focus-color);
   }
 
   &:active {

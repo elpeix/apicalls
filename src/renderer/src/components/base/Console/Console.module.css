@@ -14,7 +14,6 @@
     padding: 0 10px;
     border-bottom: 1px solid var(--border-color);
 
-
     & > .title {
       font-size: 12px;
       font-weight: 500;
@@ -35,7 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-color);
+    color: var(--color-5);
     font-size: 14px;
   }
 
@@ -81,7 +80,7 @@
       }
 
       & > .method {
-        color: var(--accent-color);
+        color: var(--color-5);
         font-weight: 500;
       }
 
@@ -91,9 +90,8 @@
       }
 
       & > .log-time {
-        color: var(--accent-color);
+        color: var(--color-5);
       }
     }
   }
-
 }

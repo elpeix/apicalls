@@ -1,6 +1,6 @@
 .interruptor {
   position: relative;
-  color: var(--accent-color);
+  color: var(--color-5);
   cursor: pointer;
   box-shadow: inset 0 0 0 1px transparent;
   transition: color 0.2s ease-in-out;
@@ -25,7 +25,7 @@
     left: 40px;
     width: 12px;
     height: 12px;
-    background-color: var(--accent-color);
+    background-color: var(--color-5);
     border-radius: 10px;
     transition:
       background-color 0.2s ease-in-out,

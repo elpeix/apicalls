@@ -109,7 +109,7 @@
     transition: border-color 0.2s ease-in-out;
 
     &:hover {
-      border-color: var(--accent-color);
+      border-color: var(--focus-color);
     }
   }
 }

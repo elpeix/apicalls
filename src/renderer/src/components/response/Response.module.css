@@ -36,7 +36,7 @@
     user-select: none;
 
     .copy {
-      color: var(--accent-color);
+      color: var(--color-5);
       cursor: pointer;
       transition: color 0.2s ease-in-out;
 
@@ -64,7 +64,7 @@
   justify-content: center;
   height: 100%;
   width: 100%;
-  color: var(--accent-color);
+  color: var(--color-5);
 }
 
 .footer {
@@ -84,7 +84,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-color);
+  color: var(--color-5);
   font-size: 14px;
   user-select: none;
 
