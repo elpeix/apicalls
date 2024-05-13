@@ -80,3 +80,4 @@ app.on('window-all-closed', () => {
 import './ipcActions'
 import './ipcCollectionActions'
 import './ipcEnvironmentActions'
+import './ipcTabsActions'

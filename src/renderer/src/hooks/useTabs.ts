@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { createRequest } from '../lib/factory'
+import { TABS_UPDATE } from '../../../lib/ipcChannels'
 
 export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
+  const ipcRenderer = window.electron.ipcRenderer
   const [tabs, setTabs] = useState([...initialTabs])
 
   const openTab = (
@@ -30,7 +32,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const addTab = (tab: RequestTab) => {
     const newTabs = [...tabs, tab]
     _setActiveTab(newTabs, tabs.length)
-    setTabs(newTabs)
+    updateTabs(newTabs)
   }
 
   const removeTab = (tabId: Identifier) => {
@@ -43,19 +45,19 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
         _setActiveTab(tabs, index - 1)
       }
     }
-    setTabs(tabs.filter((tab) => tab.id !== tabId))
+    updateTabs(tabs.filter((tab) => tab.id !== tabId))
   }
 
   const updateTab = (tabId: Identifier, tab: RequestTab) => {
-    setTabs(tabs.map((t) => (t.id === tabId ? tab : t)))
+    updateTabs(tabs.map((t) => (t.id === tabId ? tab : t)))
   }
   const updateTabRequest = (tabId: Identifier, request: RequestBase) => {
-    setTabs(tabs.map((tab: RequestTab) => (tab.id === tabId ? { ...tab, request } : tab)))
+    updateTabs(tabs.map((tab: RequestTab) => (tab.id === tabId ? { ...tab, request } : tab)))
   }
   const hasTabs = () => tabs.length > 0
   const getTab = (tabId: Identifier) => tabs.find((t) => t.id === tabId)
   const getTabs = () => tabs
-  const setActiveTab = (index: number) => setTabs(_setActiveTab(tabs, index))
+  const setActiveTab = (index: number) => updateTabs(_setActiveTab(tabs, index))
 
   const _setActiveTab = (_tabs: RequestTab[], index: number) => {
     return _tabs.map((tab: RequestTab, i: number) => {
@@ -72,6 +74,11 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     return index
   }
 
+  const updateTabs = (newTabs: RequestTab[]) => {
+    setTabs(newTabs)
+    ipcRenderer.send(TABS_UPDATE, newTabs)
+  }
+
   return {
     openTab,
     newTab,
@@ -84,6 +91,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     getTabs,
     setActiveTab,
     getSelectedTabIndex,
+    setTabs,
     tabs
   }
 }

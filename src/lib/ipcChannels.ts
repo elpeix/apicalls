@@ -34,3 +34,7 @@ export const ACTION_NEXT_TAB = 'action:next-tab'
 export const ACTION_PREV_TAB = 'action:prev-tab'
 export const ACTION_CLOSE_TAB = 'action:close-tab'
 export const ACTION_TOGGLE_SIDEBAR = 'action:toggle-sidebar'
+
+export const TABS_UPDATE = 'tabs-update'
+export const TABS_LOAD = 'tabs-load'
+export const TABS_LOAD_SUCCESS = 'tabs-load-success'

@@ -95,6 +95,7 @@ type HistoryHookType = {
 }
 
 type TabsHookType = {
+  setTabs: (tabs: RequestTab[]) => void
   openTab: (
     itemRequest: RequestType,
     shiftKey?: boolean,
