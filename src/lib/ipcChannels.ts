@@ -38,3 +38,6 @@ export const ACTION_TOGGLE_SIDEBAR = 'action:toggle-sidebar'
 export const TABS_UPDATE = 'tabs-update'
 export const TABS_LOAD = 'tabs-load'
 export const TABS_LOAD_SUCCESS = 'tabs-load-success'
+
+export const VERSION_GET = 'version-get'
+export const VERSION_GET_SUCCESS = 'version-get-success'

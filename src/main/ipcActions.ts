@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { app, ipcMain } from 'electron'
 import { restCall } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
@@ -9,7 +9,9 @@ import {
   GET_SETTINGS,
   SAVE_SETTINGS,
   SETTINGS_UPDATED,
-  CLEAR_SETTINGS
+  CLEAR_SETTINGS,
+  VERSION_GET_SUCCESS,
+  VERSION_GET
 } from '../lib/ipcChannels'
 
 ipcMain.on(GET_SETTINGS, (event) => event.reply(SETTINGS_UPDATED, getSettings()))
@@ -32,3 +34,5 @@ ipcMain.on(CALL_API, async (event, callRequest: CallRequest) => {
     } as CallResponseFailure)
   }
 })
+
+ipcMain.on(VERSION_GET, (event) => event.reply(VERSION_GET_SUCCESS, app.getVersion()))
