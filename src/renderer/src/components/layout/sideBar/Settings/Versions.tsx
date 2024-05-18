@@ -16,7 +16,6 @@ function Versions() {
       ipcRenderer.removeAllListeners(VERSION_GET)
     }
   }, [setAppVersion])
-  console.log(window.electron.version)
 
   return (
     <ul className="versions">
