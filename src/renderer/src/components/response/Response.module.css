@@ -9,6 +9,39 @@
     flex: 1;
     overflow: hidden;
 
+    .tabsList {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .responseActions {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: end;
+        gap: 20px;
+        font-size: 13px;
+        padding: 0 10px;
+        text-transform: uppercase;
+        user-select: none;
+
+        .copy {
+          color: var(--color-5);
+          cursor: pointer;
+          transition: color 0.2s ease-in-out;
+
+          &:hover {
+            color: var(--base-color);
+          }
+
+          &:active {
+            color: var(--highlight-color);
+          }
+        }
+      }
+    }
+
     .headers {
       height: 100%;
       overflow: auto;
@@ -18,37 +51,7 @@
 
 .body {
   height: 100%;
-  display: grid;
-  grid-template-rows: 30px 1fr;
-  flex-direction: column;
-
-  .bodyHeader {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: end;
-    gap: 20px;
-    font-size: 13px;
-    padding: 0 10px;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border-color);
-    user-select: none;
-
-    .copy {
-      color: var(--color-5);
-      cursor: pointer;
-      transition: color 0.2s ease-in-out;
-
-      &:hover {
-        color: var(--base-color);
-      }
-
-      &:active {
-        color: var(--highlight-color);
-      }
-    }
-  }
+  border-top: 1px solid var(--border-color);
 
   .bodyContent {
     height: 100%;
