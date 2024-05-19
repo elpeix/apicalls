@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Environment.module.css'
 import EnvironmentVariables from './EnvironmentVariables'
 import EditableName from '../../../base/EditableName/EditableName'
+import Confirm from '../../../base/PopupBoxes/Confirm'
+import { AppContext } from '../../../../context/AppContext'
 
 export default function Environment({
   environment,
@@ -15,9 +17,12 @@ export default function Environment({
   update: (environment: Environment) => void
   remove: () => void
 }) {
+  const { environments } = useContext(AppContext)
+
   const nameRef = useRef<HTMLInputElement>(null)
   const [env, setEnv] = useState(environment)
   const [editingName, setEditingName] = useState(false)
+  const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => {
     setEnv(environment)
@@ -30,6 +35,15 @@ export default function Environment({
       }, 0)
     }
   }, [environment])
+
+  const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const active = e.target.checked
+    if (active) {
+      environments?.active(env.id)
+    } else {
+      environments?.deactive()
+    }
+  }
 
   const changeName = (value: string) => {
     setEnv({ ...env, name: value })
@@ -52,6 +66,14 @@ export default function Environment({
         <div className={styles.back}>
           <ButtonIcon icon="arrow" direction="west" onClick={back} title="Go back" />
         </div>
+        <div className={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={environment.active}
+            onClick={(e) => e.stopPropagation()}
+            onChange={handleCheckbox}
+          />
+        </div>
         <EditableName
           name={env.name}
           editMode={editingName}
@@ -61,7 +83,11 @@ export default function Environment({
           editOnDoubleClick={true}
         />
         <div className={styles.remove}>
-          <ButtonIcon icon="delete" onClick={remove} title="Remove environment" />
+          <ButtonIcon
+            icon="delete"
+            onClick={() => setShowDialog(true)}
+            title="Remove environment"
+          />
         </div>
       </div>
       <div className={styles.content}>
@@ -72,6 +98,13 @@ export default function Environment({
           <ButtonIcon icon="more" onClick={addVariable} title="Add variable" />
         </div>
       </div>
+      {showDialog && (
+        <Confirm
+          message="Are you sure you want to remove this environment?"
+          onConfirm={remove}
+          onCancel={() => setShowDialog(false)}
+        />
+      )}
     </div>
   )
 }
