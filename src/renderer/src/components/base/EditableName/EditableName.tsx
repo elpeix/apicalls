@@ -1,15 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './EditableName.module.css'
+import Name from '../Name'
 
 export default function EditableName({
   name,
   editMode = false,
+  placeholder = 'Name',
+  className = '',
   update,
   onBlur,
   editOnDoubleClick
 }: {
   name: string
   editMode: boolean
+  placeholder?: string
+  className?: string
   update: (name: string) => void
   onBlur?: () => void
   editOnDoubleClick?: boolean
@@ -22,12 +27,12 @@ export default function EditableName({
     if (editMode) {
       setEditingName(true)
       setTimeout(() => {
-        if (!nameRef.current) return
+        if (!nameRef.current || name.length === 0) return
         nameRef.current.setSelectionRange(0, nameValue.length)
         nameRef.current.focus()
       }, 0)
     }
-  }, [editMode, nameValue.length])
+  }, [editMode, nameValue.length, name])
 
   useEffect(() => {
     setNameValue(name)
@@ -65,12 +70,15 @@ export default function EditableName({
   }
 
   return (
-    <div className={`${styles.name} ${editingName && styles.editable}`} onDoubleClick={editName}>
+    <div
+      className={`${styles.name} ${className} ${editingName && styles.editable}`}
+      onDoubleClick={editName}
+    >
       {editingName && (
         <input
           ref={nameRef}
           className={styles.nameInput}
-          placeholder="Collection name"
+          placeholder={placeholder}
           value={nameValue}
           onChange={changeName}
           onBlur={handleOnBlur}
@@ -78,7 +86,7 @@ export default function EditableName({
           autoFocus
         />
       )}
-      {!editingName && nameValue}
+      {!editingName && <Name name={name} />}
     </div>
   )
 }

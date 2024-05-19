@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './Collections.module.css'
+import Name from '../../../base/Name'
 
 export default function CollectionItem({
   collection,
@@ -13,7 +14,7 @@ export default function CollectionItem({
       className={`sidePanel-content-item ${styles.item}`}
       onClick={() => selectCollection(collection)}
     >
-      <div className={styles.title}>{collection.name}</div>
+      <Name className={styles.title} name={collection.name} />
     </div>
   )
 }

@@ -159,6 +159,7 @@ export default function Collection({
           name={coll.name}
           editMode={editingName}
           update={changeName}
+          editOnDoubleClick={true}
           onBlur={() => setEditingName(false)}
         />
         <div className={styles.actions}>

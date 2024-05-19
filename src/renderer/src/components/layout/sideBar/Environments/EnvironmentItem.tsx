@@ -1,6 +1,7 @@
 import React from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Environment.module.css'
+import Name from '../../../base/Name'
 
 export default function EnvironmentItem({
   environment,
@@ -34,7 +35,7 @@ export default function EnvironmentItem({
           onChange={onChange}
         />
       </div>
-      <div className={styles.title}>{environment.name}</div>
+      <Name className={styles.title} name={environment.name} />
       <div className={styles.edit}>
         <ButtonIcon
           icon="edit"

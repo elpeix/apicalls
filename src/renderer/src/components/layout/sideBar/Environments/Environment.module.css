@@ -13,13 +13,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 0.5rem;
     padding: 0 0.3rem;
     width: 100%;
     border-top: 1px solid var(--border-color);
   }
 
   .title {
-    padding: 0rem 0.7rem;
     height: 2rem;
     flex-grow: 1;
     cursor: text;

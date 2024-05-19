@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Environment.module.css'
 import EnvironmentVariables from './EnvironmentVariables'
+import EditableName from '../../../base/EditableName/EditableName'
 
 export default function Environment({
   environment,
@@ -30,25 +31,9 @@ export default function Environment({
     }
   }, [environment])
 
-  const editName = () => {
-    setEditingName(true)
-    setTimeout(() => {
-      if (!nameRef.current) return
-      nameRef.current.setSelectionRange(0, env.name.length)
-      nameRef.current.focus()
-    }, 0)
-  }
-  const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEnv({ ...env, name: e.target.value })
-    update({ ...env, name: e.target.value })
-  }
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setEditingName(false)
-    }
-    if (e.key === 'Enter') {
-      setEditingName(false)
-    }
+  const changeName = (value: string) => {
+    setEnv({ ...env, name: value })
+    update({ ...env, name: value })
   }
 
   const addVariable = () => {
@@ -67,20 +52,14 @@ export default function Environment({
         <div className={styles.back}>
           <ButtonIcon icon="arrow" direction="west" onClick={back} title="Go back" />
         </div>
-        <div className={styles.title} onClick={editName}>
-          {editingName && (
-            <input
-              ref={nameRef}
-              className={styles.nameInput}
-              placeholder="Environment name"
-              value={env.name}
-              onChange={changeName}
-              onBlur={() => setEditingName(false)}
-              onKeyDown={onKeyDown}
-            />
-          )}
-          {!editingName && env.name}
-        </div>
+        <EditableName
+          name={env.name}
+          editMode={editingName}
+          className={styles.title}
+          update={changeName}
+          onBlur={() => setEditingName(false)}
+          editOnDoubleClick={true}
+        />
         <div className={styles.remove}>
           <ButtonIcon icon="delete" onClick={remove} title="Remove environment" />
         </div>
