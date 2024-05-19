@@ -25,7 +25,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
 
   const newTab = (itemRequest?: RequestType, collectionId?: Identifier, path?: PathItem[]) => {
     itemRequest = itemRequest || createRequest({ name: 'Draft' })
-    const tab: RequestTab = { ...itemRequest, active: true, collectionId, path }
+    const tab: RequestTab = { ...itemRequest, active: true, collectionId, path, saved: true }
     addTab(tab)
   }
 
@@ -79,6 +79,18 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     ipcRenderer.send(TABS_UPDATE, newTabs)
   }
 
+  const renameTab = (tabId: Identifier, name: string) => {
+    const tab = getTab(tabId)
+    if (!tab) return
+    updateTab(tabId, { ...tab, name })
+  }
+
+  const setSaved = (tabId: Identifier, saved: boolean) => {
+    const tab = getTab(tabId)
+    if (!tab) return
+    updateTab(tabId, { ...tab, saved })
+  }
+
   return {
     openTab,
     newTab,
@@ -92,6 +104,8 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     setActiveTab,
     getSelectedTabIndex,
     setTabs,
-    tabs
+    renameTab,
+    tabs,
+    setSaved
   }
 }

@@ -17,6 +17,11 @@
     padding: 0 0.3rem;
     width: 100%;
     border-top: 1px solid var(--border-color);
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+    }
   }
 
   .title {

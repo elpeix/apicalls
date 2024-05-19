@@ -40,6 +40,7 @@ type RequestType = {
 
 type RequestTab = RequestType & {
   active: boolean
+  saved?: boolean
   collectionId?: Identifier
   path?: PathItem[]
 }
@@ -112,6 +113,8 @@ type TabsHookType = {
   getTabs: () => RequestTab[]
   setActiveTab: (index: number) => void
   getSelectedTabIndex: () => number
+  renameTab: (tabId: Identifier, name: string) => void
+  setSaved: (tabId: Identifier, saved: boolean) => void
   tabs: RequestTab[]
 }
 

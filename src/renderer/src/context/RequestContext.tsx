@@ -47,6 +47,7 @@ export default function RequestContextProvider({
   const [preRequestData, setPreRequestData] = useState<PreRequest | null>(null)
 
   const [changed, setChanged] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])
   const [requestUrl, setRequestUrl] = useState(definedRequest.url || '')
   const [requestBody, setRequestBody] = useState(definedRequest.body || '')
@@ -79,6 +80,7 @@ export default function RequestContextProvider({
         queryParams: requestQueryParams,
         body: requestBody
       })
+      tabs?.setSaved(tabId, saved)
       return
     }
     if (launchRequest) {
@@ -320,6 +322,7 @@ export default function RequestContextProvider({
   }
 
   const saveRequest = () => {
+    console.log('Save request', saved)
     if (!collections) return
     if (!collectionId) {
       console.error('No collection selected')
@@ -341,6 +344,8 @@ export default function RequestContextProvider({
       }
     } as RequestType
     collections.saveRequest({ path, collectionId, request })
+    setSaved(true)
+    setChanged(true)
   }
 
   const urlIsValid = ({ url = requestUrl }) => {
@@ -369,11 +374,13 @@ export default function RequestContextProvider({
     if (!definedMethod) return
     setRequestMethod(definedMethod)
     setChanged(true)
+    setSaved(false)
   }
 
   const setUrl = (url: string) => {
     setRequestUrl(url)
     setChanged(true)
+    setSaved(false)
   }
 
   const setFullUrl = (value: string) => {
@@ -387,12 +394,14 @@ export default function RequestContextProvider({
   const setBody = (body: string) => {
     setRequestBody(body)
     setChanged(true)
+    setSaved(false)
   }
 
   // Headers
   const setHeaders = (headers: KeyValue[]) => {
     setRequestHeaders(headers)
     setChanged(true)
+    setSaved(false)
   }
 
   const addHeader = () => {
@@ -422,6 +431,7 @@ export default function RequestContextProvider({
   const setPathParams = (pathParams: KeyValue[]) => {
     setRequestPathParams(pathParams)
     setChanged(true)
+    setSaved(false)
   }
 
   const removePathParam = (index: number) => {
@@ -438,6 +448,7 @@ export default function RequestContextProvider({
   const setQueryParams = (params: KeyValue[]) => {
     setRequestQueryParams(params)
     setChanged(true)
+    setSaved(false)
   }
 
   const addQueryParam = () => {
@@ -501,6 +512,7 @@ export default function RequestContextProvider({
       size: responseSize
     },
     save: saveRequest,
+    saved,
     requestConsole
   }
 

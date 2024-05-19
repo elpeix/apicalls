@@ -8,11 +8,13 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   const { tabs, collections } = useContext(AppContext)
   const [editing, setEditing] = useState(false)
   const [tabName, setTabName] = useState<string>()
-  const [editTabName, setEditTabName] = useState<string>()
+  const [editTabName, setEditTabName] = useState<string>(tab.name || '')
+  const [saved, setSaved] = useState(tab.saved)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setTabName(tab.name)
+    setSaved(tab.saved || false)
   }, [tab])
 
   const getTabTitle = () => {
@@ -24,15 +26,15 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
 
   const onDoubleClick = () => {
     return
-    if (tab.type === 'history') return
-    setEditing(true)
-    setEditTabName(tabName)
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.select()
-        inputRef.current.focus()
-      }
-    }, 0)
+    // if (tab.type === 'history') return
+    // setEditing(true)
+    // setEditTabName(tabName)
+    // setTimeout(() => {
+    //   if (inputRef.current) {
+    //     inputRef.current.select()
+    //     inputRef.current.focus()
+    //   }
+    // }, 0)
   }
 
   useOutsideClick(inputRef, () => setEditing(false))
@@ -77,8 +79,10 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
     }
   }
 
+  const className = `${styles.tabTitle} ${styles[tab.type]} ${active} ${saved ? styles.saved : styles.unsaved}`
+
   return (
-    <div className={`${styles.tabTitle} ${styles[tab.type]} ${active}`} onMouseDown={onMouseDown}>
+    <div className={className} onMouseDown={onMouseDown}>
       {editing && (
         <input
           type="text"

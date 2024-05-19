@@ -45,6 +45,7 @@ export default function CollectionRequest({
   }
   const changeName = (name: string) => {
     collectionRequest.name = name
+    tabs?.renameTab(collectionRequest.id, name)
     update()
   }
 

@@ -56,6 +56,24 @@
     font-weight: 500;
   }
 
+  &.unsaved {
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      background: var(--highlight-color);
+      height: 0.4rem;
+      width: 0.4rem;
+      inset: 0.8rem 0.4rem;
+
+      border-radius: 50%;
+    }
+    span.title {
+      font-style: italic;
+      padding-left: 1.2rem;
+    }
+  }
+
   .input {
     background: var(--color-9);
     font-weight: 500;
