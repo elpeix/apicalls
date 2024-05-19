@@ -6,27 +6,35 @@ import styles from './Params.module.css'
 export default function Params({
   items,
   onAdd,
-  onSave,
+  onSave = () => {},
   showEnable = true,
   editableName = true,
   showDelete = true,
   addCaption = 'Add param',
-  removeCaption = 'Remove param'
+  removeCaption = 'Remove param',
+  maxNameSize = 500,
+  minNameSize = 100,
+  defaultNameSize = 200
 }: {
   items: KeyValue[]
   onAdd?: () => void
-  onSave: (params: KeyValue[]) => void
+  onSave?: (params: KeyValue[]) => void
   editableName?: boolean
   showEnable?: boolean
   showDelete?: boolean
   addCaption?: string
   removeCaption?: string
+  maxNameSize?: number
+  minNameSize?: number
+  defaultNameSize?: number
 }) {
-  const [nameSize, setNameSize] = useState(200)
+  const [nameSize, setNameSize] = useState(
+    Math.max(Math.min(defaultNameSize, maxNameSize), minNameSize)
+  )
 
   const changeNameSize = (offset: number) => {
     const newSize = nameSize + offset
-    setNameSize(Math.max(Math.min(newSize, 500), 100))
+    setNameSize(Math.max(Math.min(newSize, maxNameSize), minNameSize))
   }
 
   const enableColumn = showEnable ? '1.9rem' : ''
