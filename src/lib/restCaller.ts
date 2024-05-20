@@ -17,9 +17,11 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
     let path = request.url
     const queryParams = new URLSearchParams()
     if (request.queryParams && request.queryParams.length > 0) {
-      request.queryParams.forEach((param) => {
-        queryParams.append(param.name, param.value)
-      })
+      request.queryParams
+        .filter((param) => param.enabled)
+        .forEach((param) => {
+          queryParams.append(param.name, param.value)
+        })
       path += `?${queryParams.toString()}`
     }
     const initTime = Date.now()
@@ -29,6 +31,7 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
       cache: 'no-cache',
       signal: abortController.signal
     }
+    console.log('Request init:', path, requestInit)
     if (request.body) {
       requestInit.body = request.body
     }
