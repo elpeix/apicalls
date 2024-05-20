@@ -31,7 +31,6 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
       cache: 'no-cache',
       signal: abortController.signal
     }
-    console.log('Request init:', path, requestInit)
     if (request.body) {
       requestInit.body = request.body
     }
