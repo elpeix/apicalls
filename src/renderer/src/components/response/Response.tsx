@@ -23,7 +23,6 @@ export default function Response({
   const [time, setTime] = useState(0)
   const [size, setSize] = useState(0)
   const [headers, setHeaders] = useState<KeyValue[]>([])
-  const [body, setBody] = useState('')
 
   const [showRaw, setShowRaw] = useState(true)
   const [raw, setRaw] = useState(false)
@@ -37,7 +36,6 @@ export default function Response({
     setStatus(context.response.status)
     setTime(context.response.time)
     setHeaders(context.response.headers)
-    setBody(context.response.body)
     setSize(context.response.size)
     setRawValue(context.response.body)
     setParsedValue(formatSource(context.response.body))
