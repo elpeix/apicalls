@@ -87,7 +87,11 @@ export default function Response({
               </div>
               <div className="tab-panel-wrapper">
                 <TabPanel forceRender={true}>
-                  <ResponseBody value={body} raw={raw} language={language} />
+                  <ResponseBody
+                    value={raw ? rawValue : parsedValue}
+                    raw={raw}
+                    language={language}
+                  />
                 </TabPanel>
                 <TabPanel async forceRender={true}>
                   <ResponseHeaders headers={headers} />
