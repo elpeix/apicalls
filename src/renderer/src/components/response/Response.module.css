@@ -80,7 +80,7 @@
   user-select: none;
 }
 
-.noResponse {
+.noResponse, .error {
   width: 100%;
   height: 100%;
   flex-grow: 1;
@@ -91,22 +91,26 @@
   font-size: 14px;
   user-select: none;
 
-  & > .noResponseContent {
+  & > .content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 20px;
 
-    & > .noResponseTitle {
+    & > .title {
       font-size: 16px;
       font-weight: 500;
     }
 
-    & > .noResponseMessage {
+    & > .message {
       font-size: 12px;
     }
   }
+}
+
+.error .title {
+  color: var(--status-500-color);
 }
 
 .statusBar {

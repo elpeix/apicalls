@@ -209,6 +209,7 @@ type RequestContestType = {
   request: RequestContextRequestType | null
   fetching: boolean
   fetched: boolean
+  fetchError: string
   response: {
     body: string
     headers: KeyValue[]

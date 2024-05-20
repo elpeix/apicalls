@@ -15,6 +15,7 @@ export const RequestContext = createContext<RequestContestType>({
   request: null,
   fetching: false,
   fetched: false,
+  fetchError: '',
   response: {
     body: '',
     headers: [],
@@ -59,6 +60,7 @@ export default function RequestContextProvider({
   const [launchRequest, setLaunchRequest] = useState(false)
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
+  const [fetchError, setFetchError] = useState('')
 
   const [responseBody, setResponseBody] = useState('')
   const [responseHeaders, setResponseHeaders] = useState<KeyValue[]>([])
@@ -118,6 +120,8 @@ export default function RequestContextProvider({
   const sendRequest = () => {
     if (!requestUrl || !urlIsValid({})) return
     setFetching(true)
+    setFetched(false)
+    setFetchError('')
 
     if (preRequestData) {
       sendPreRequest()
@@ -189,6 +193,8 @@ export default function RequestContextProvider({
       CALL_API_FAILURE,
       (_: unknown, response: CallResponseFailure) => {
         setFetching(false)
+        setFetched(true)
+        setFetchError(response.message)
         requestConsole?.addAll([
           ...requestLogs,
           {
@@ -256,8 +262,9 @@ export default function RequestContextProvider({
     window.electron.ipcRenderer.on(
       CALL_API_FAILURE,
       (_: unknown, response: CallResponseFailure) => {
-        console.log(response)
         setFetching(false)
+        setFetched(true)
+        setFetchError(response.message)
         requestConsole?.add({
           method: requestMethod.value,
           url,
@@ -503,6 +510,7 @@ export default function RequestContextProvider({
     },
     fetching,
     fetched,
+    fetchError,
     response: {
       body: responseBody,
       headers: responseHeaders,

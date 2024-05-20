@@ -19,6 +19,7 @@ export default function Response({
   const context = useContext(RequestContext)
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
+  const [fetchError, setFetchError] = useState('')
   const [status, setStatus] = useState(0)
   const [time, setTime] = useState(0)
   const [size, setSize] = useState(0)
@@ -33,6 +34,7 @@ export default function Response({
   useEffect(() => {
     setFetching(context.fetching)
     setFetched(context.fetched)
+    setFetchError(context.fetchError)
     setStatus(context.response.status)
     setTime(context.response.time)
     setHeaders(context.response.headers)
@@ -67,7 +69,7 @@ export default function Response({
   return (
     <>
       {fetching && <Loading />}
-      {!fetching && fetched && (
+      {!fetching && fetched && fetchError.length === 0 && (
         <div className={styles.response}>
           <div className={styles.content}>
             <Tabs className="tabs" onSelect={handleSelectTab}>
@@ -108,11 +110,19 @@ export default function Response({
           </div>
         </div>
       )}
-      {!fetching && !fetched && (
+      {!fetching && !fetched && fetchError.length === 0 && (
         <div className={styles.noResponse}>
-          <div className={styles.noResponseContent}>
-            <div className={styles.noResponseTitle}>No response</div>
-            <div className={styles.noResponseMessage}>Send a request to get a response</div>
+          <div className={styles.content}>
+            <div className={styles.title}>No response</div>
+            <div className={styles.message}>Send a request to get a response</div>
+          </div>
+        </div>
+      )}
+      {!fetching && fetched && fetchError.length > 0 && (
+        <div className={styles.error}>
+          <div className={styles.content}>
+            <div className={styles.title}>Error</div>
+            <div className={styles.message}>{fetchError}</div>
           </div>
         </div>
       )}
