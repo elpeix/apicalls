@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { getStatusName } from '../../../lib/status'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Console.module.css'
 import { RequestContext } from '../../../context/RequestContext'
+import Log from './Log'
 
 export default function Console({ collapse }: { collapse: () => void }) {
   const { requestConsole } = useContext(RequestContext)
@@ -43,14 +43,7 @@ export default function Console({ collapse }: { collapse: () => void }) {
       {logs.length === 0 && <div className={styles.noLogs}>No logs</div>}
       <div className={styles.content}>
         {logs.map((log, index) => (
-          <div key={index} className={styles.log}>
-            <div className={`${styles.status} ${styles[getStatusName(log.status)]}`}>
-              {log.status}
-            </div>
-            <div className={`${styles.method} ${log.method}`}>{log.method}</div>
-            <div className={styles.url}>{log.url}</div>
-            <div className={styles.time}>{log.time} ms</div>
-          </div>
+          <Log log={log} key={index} />
         ))}
         <div ref={endRef} />
       </div>
