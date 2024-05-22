@@ -83,7 +83,6 @@ class WindowShortcut {
         return
       }
       const shortcutKey = this.getShortcutKey(input)
-      console.log(shortcutKey)
       if (!this.shortcuts.has(shortcutKey)) {
         return
       }
