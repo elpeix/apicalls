@@ -248,7 +248,7 @@ export default function RequestContextProvider({
         console.error(e)
       }
       const requestLog = {
-        method: requestMethod.value,
+        method: request.method.value,
         url,
         status: callResponse.status.code,
         time: callResponse.responseTime.all,
