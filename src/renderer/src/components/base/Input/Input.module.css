@@ -66,6 +66,7 @@
     color: transparent !important;
     caret-color: var(--base-color);
     width: 100%;
+    --selected-color: transparent;
 
     &::placeholder {
       color: var(--color-5);
