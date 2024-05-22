@@ -52,7 +52,7 @@ export default function RequestPanelContent() {
         <Panel
           defaultSize={20}
           minSize={10}
-          maxSize={50}
+          maxSize={46}
           collapsible={true}
           ref={requestPanel}
           onCollapse={() => setRequestPanelCollapsed(true)}
@@ -69,7 +69,7 @@ export default function RequestPanelContent() {
         <Panel
           defaultSize={0}
           minSize={10}
-          maxSize={35}
+          maxSize={48}
           collapsible={true}
           ref={consolePanel}
           onCollapse={() => setConsoleCollapsed(true)}

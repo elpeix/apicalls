@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getStatusName } from '../../lib/status'
 import ButtonIcon from '../base/ButtonIcon'
 import styles from './Response.module.css'
+import { stringifySize } from '../../lib/utils'
 
 export default function ResponseStatus({
   status,
@@ -19,13 +20,7 @@ export default function ResponseStatus({
   const [textSize, setTextSize] = useState('0 bytes')
 
   useEffect(() => {
-    if (size < 1024) {
-      setTextSize(`${size} bytes`)
-    } else if (size < 1024 * 1024) {
-      setTextSize(`${(size / 1024).toFixed(2)} KB`)
-    } else {
-      setTextSize(`${(size / 1024 / 1024).toFixed(2)} MB`)
-    }
+    setTextSize(stringifySize(size))
   }, [size])
 
   return (

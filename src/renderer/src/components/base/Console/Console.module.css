@@ -3,7 +3,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  user-select: none;
 
   & > .header {
     display: flex;
@@ -13,6 +12,7 @@
     gap: 20px;
     padding: 0 10px;
     border-bottom: 1px solid var(--border-color);
+    user-select: none;
 
     & > .title {
       font-size: 12px;
@@ -36,6 +36,7 @@
     justify-content: center;
     color: var(--color-5);
     font-size: 14px;
+    user-select: none;
   }
 
   & > .content {
@@ -47,50 +48,115 @@
 
     & > .log {
       width: 100%;
-      height: 20px;
-      line-height: 20px;
-      padding: 1px 5px 0;
       border-bottom: 1px solid var(--border-color);
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      gap: 10px;
-      font-size: 12px;
-      user-select: none;
 
-      & > .status.ok {
-        color: var(--status-200-color);
+      .header {
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+        padding: 1px 5px 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        font-size: 12px;
+        user-select: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+        &.expanded {
+          background-color: var(--color-11);
+        }
+        & > .status.ok {
+          color: var(--status-200-color);
+        }
+
+        & > .status.redirect {
+          color: var(--status-300-color);
+        }
+
+        & > .status.client-error {
+          color: var(--status-400-color);
+        }
+
+        & > .status.server-error {
+          color: var(--status-500-color);
+        }
+
+        & > .status.unknown {
+          color: var(--status-unkonwn-color);
+        }
+
+        & > .method {
+          color: var(--color-5);
+          font-weight: 500;
+        }
+
+        & > .url {
+          color: var(--base-color);
+          flex-grow: 1;
+        }
+
+        & > .log-time {
+          color: var(--color-5);
+        }
       }
 
-      & > .status.redirect {
-        color: var(--status-300-color);
-      }
+      .details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background-color: var(--color-11);
+        width: 100%;
 
-      & > .status.client-error {
-        color: var(--status-400-color);
-      }
+        .title {
+          font-weight: 800;
+        }
 
-      & > .status.server-error {
-        color: var(--status-500-color);
-      }
+        .content {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          border-bottom: 1px solid var(--border-color);
 
-      & > .status.unknown {
-        color: var(--status-unkonwn-color);
-      }
+          .row {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            border-top: 1px solid var(--border-color);
+            padding: 0.3rem 0;
+            min-height: 1.4rem;
+            width: 100%;
 
-      & > .method {
-        color: var(--color-5);
-        font-weight: 500;
-      }
+            > * {
+              display: flex;
+            }
 
-      & > .url {
-        color: var(--base-color);
-        flex-grow: 1;
-      }
+            .label {
+              color: var(--color-5);
+            }
 
-      & > .log-time {
-        color: var(--color-5);
+            .value {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 0.1rem;
+              width: 100%;
+              overflow-x: auto;
+
+              .valueItem {
+                width: 100%;
+              }
+            }
+          }
+        }
       }
     }
   }
