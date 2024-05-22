@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Console.module.css'
 import { RequestContext } from '../../../context/RequestContext'
@@ -9,19 +9,21 @@ export default function Console({ collapse }: { collapse: () => void }) {
 
   const endRef = useRef<HTMLDivElement>(null)
   const [logs, setLogs] = useState<RequestLog[]>([])
+
+  const scrollToBottom = useCallback(() => {
+    setTimeout(() => {
+      if (endRef.current) {
+        endRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 0)
+  }, [])
+
   useEffect(() => {
-    if (!requestConsole) return
-    setLogs(requestConsole.logs)
+    setLogs(requestConsole?.logs || [])
     scrollToBottom()
-  }, [requestConsole])
+  }, [requestConsole?.logs, scrollToBottom])
 
   if (!requestConsole) return null
-
-  const scrollToBottom = () => {
-    if (endRef.current) {
-      endRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
 
   return (
     <div className={styles.console}>
