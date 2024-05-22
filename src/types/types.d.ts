@@ -205,6 +205,7 @@ type RequestContextRequestType = {
 
 type RequestContestType = {
   path: PathItem[]
+  isActive: boolean
   collectionId?: Identifier | null
   request: RequestContextRequestType | null
   fetching: boolean

@@ -35,13 +35,6 @@ export default function RequestUrl() {
     request.setFullUrl(value)
   }
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.ctrlKey && event.key === 'Enter') {
-      const target = event.target as HTMLInputElement
-      request.setFullUrl(target.value)
-    }
-  }
-
   const handleUrlBlur = (value: string) => {
     request.setFullUrl(value)
   }
@@ -55,7 +48,6 @@ export default function RequestUrl() {
       value={url}
       onChange={handleUrlChange}
       onBlur={handleUrlBlur}
-      onKeyDown={handleKeyDown}
       placeholder="Enter URL..."
       showTip={true}
     />

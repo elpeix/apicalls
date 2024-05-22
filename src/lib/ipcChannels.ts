@@ -43,7 +43,9 @@ export const ACTIONS = {
   closeTab: 'action:close-tab',
   toggleSidebar: 'action:toggle-sidebar',
   sendRequest: 'action:send-request',
-  saveRequest: 'action:save-request'
+  saveRequest: 'action:save-request',
+  toggleRequestPanel: 'action:toggle-request-panel',
+  toggleConsole: 'action:toggle-console'
 }
 
 export const TABS = {

@@ -14,12 +14,20 @@ const isMac = process.platform === 'darwin'
 
 export const registerShortcuts = (mainWindow: BrowserWindow) => {
   const ws = new WindowShortcut(mainWindow)
-  ws.register('commandOrControl+t', () => mainWindow.webContents.send(ACTIONS.newTab))
-  ws.register('control+Tab', () => mainWindow.webContents.send(ACTIONS.nextTab))
-  ws.register('control+shift+Tab', () => mainWindow.webContents.send(ACTIONS.prevTab))
-  ws.register('commandOrControl+w', () => mainWindow.webContents.send(ACTIONS.closeTab))
-  ws.register('commandOrControl+b', () => mainWindow.webContents.send(ACTIONS.toggleSidebar))
-  ws.register('commandOrControl+Enter', () => mainWindow.webContents.send(ACTIONS.sendRequest))
+  ws.register('commandOrControl+t', ACTIONS.newTab, mainWindow)
+  ws.register('control+Tab', ACTIONS.nextTab, mainWindow)
+  ws.register('control+shift+Tab', ACTIONS.prevTab, mainWindow)
+  ws.register('commandOrControl+w', ACTIONS.closeTab, mainWindow)
+  ws.register('commandOrControl+b', ACTIONS.toggleSidebar, mainWindow)
+  ws.register('commandOrControl+Enter', ACTIONS.sendRequest, mainWindow)
+  ws.register('commandOrControl+s', ACTIONS.saveRequest, mainWindow)
+  if (isMac) {
+    ws.register('command+alt+c', ACTIONS.toggleConsole, mainWindow)
+    ws.register('command+alt+p', ACTIONS.toggleRequestPanel, mainWindow)
+  } else {
+    ws.register('control+shift+C', ACTIONS.toggleConsole, mainWindow)
+    ws.register('control+shift+P', ACTIONS.toggleRequestPanel, mainWindow)
+  }
 }
 
 class WindowShortcut {
@@ -31,7 +39,11 @@ class WindowShortcut {
     this.mainWindow.webContents.once('dom-ready', this.enable.bind(this))
   }
 
-  public register(shortcut: string, callback: () => void): void {
+  public register(shortcut: string, action: string, mainWindow: BrowserWindow): void {
+    this.registerCallback(shortcut, () => mainWindow.webContents.send(action))
+  }
+
+  public registerCallback(shortcut: string, callback: () => void): void {
     const baseKeys = shortcut.split('+')
     if (baseKeys.length === 1) {
       baseKeys.unshift(isMac ? 'meta' : 'control')
@@ -76,6 +88,7 @@ class WindowShortcut {
         return
       }
       const shortcutKey = this.getShortcutKey(input)
+      console.log(shortcutKey)
       if (!this.shortcuts.has(shortcutKey)) {
         return
       }

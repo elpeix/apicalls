@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import RequestBar from './RequestBar'
 import { ImperativePanelHandle, Panel, PanelGroup } from 'react-resizable-panels'
@@ -7,14 +7,58 @@ import Gutter from '../layout/Gutter'
 import Console from '../base/Console/Console'
 import Response from '../response/Response'
 import styles from './Request.module.css'
+import { ACTIONS } from '../../../../lib/ipcChannels'
 
 export default function RequestPanelContent() {
-  const { request, fetching } = useContext(RequestContext)
+  const { isActive, request, fetching, save } = useContext(RequestContext)
 
   const requestPanel = useRef<ImperativePanelHandle>(null)
   const [requestPanelCollapsed, setRequestPanelCollapsed] = useState(false)
   const consolePanel = useRef<ImperativePanelHandle>(null)
   const [consoleCollapsed, setConsoleCollapsed] = useState(true)
+
+  useEffect(() => {
+    if (!isActive || fetching) return
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.sendRequest, () => request?.fetch())
+    return () => {
+      ipcRenderer.removeAllListeners(ACTIONS.sendRequest)
+    }
+  }, [isActive, request, fetching])
+
+  useEffect(() => {
+    if (!isActive) return
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.saveRequest, () => save())
+    return () => {
+      ipcRenderer.removeAllListeners(ACTIONS.saveRequest)
+    }
+  }, [isActive, save])
+
+  useEffect(() => {
+    if (!isActive) return
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.toggleRequestPanel, () => {
+      if (!requestPanel.current) return
+      if (requestPanelCollapsed) requestPanel.current.expand()
+      else requestPanel.current.collapse()
+    })
+    return () => {
+      ipcRenderer.removeAllListeners(ACTIONS.toggleRequestPanel)
+    }
+  }, [isActive, requestPanelCollapsed])
+
+  useEffect(() => {
+    if (!isActive) return
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.toggleConsole, () => {
+      if (consoleCollapsed) consolePanel?.current?.expand()
+      else consolePanel?.current?.collapse()
+    })
+    return () => {
+      ipcRenderer.removeAllListeners(ACTIONS.toggleConsole)
+    }
+  }, [isActive, consoleCollapsed])
 
   if (!request) return null
 
@@ -30,23 +74,8 @@ export default function RequestPanelContent() {
     else collapseConsole()
   }
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.ctrlKey && event.key === 'Enter' && !fetching) {
-      request.fetch()
-      return
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'C') {
-      toggleConsole()
-    }
-    if (event.ctrlKey && event.shiftKey && event.key === 'P') {
-      event.preventDefault()
-      event.stopPropagation()
-      toggleRequestPanel()
-    }
-  }
-
   return (
-    <div className={styles.panel} onKeyDown={handleKeyDown}>
+    <div className={styles.panel}>
       <RequestBar />
       <PanelGroup direction="vertical">
         <Panel

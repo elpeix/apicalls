@@ -11,6 +11,7 @@ import { useConsole } from '../hooks/useConsole'
 
 export const RequestContext = createContext<RequestContestType>({
   path: [],
+  isActive: false,
   collectionId: null,
   request: null,
   fetching: false,
@@ -398,7 +399,6 @@ export default function RequestContextProvider({
     setSaved(false)
   }
 
-  // Headers
   const setHeaders = (headers: KeyValue[]) => {
     setRequestHeaders(headers)
     setChanged(true)
@@ -428,7 +428,6 @@ export default function RequestContextProvider({
     setResponseCookies(cookies)
   }
 
-  // Path params
   const setPathParams = (pathParams: KeyValue[]) => {
     setRequestPathParams(pathParams)
     setChanged(true)
@@ -445,7 +444,6 @@ export default function RequestContextProvider({
     return requestPathParams.filter((param: KeyValue) => param.enabled).length
   }
 
-  // Query params
   const setQueryParams = (params: KeyValue[]) => {
     setRequestQueryParams(params)
     setChanged(true)
@@ -468,6 +466,7 @@ export default function RequestContextProvider({
 
   const contextValue = {
     path: path || [],
+    isActive: tab.active,
     collectionId,
     request: {
       method: requestMethod,
