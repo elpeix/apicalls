@@ -4,7 +4,7 @@ import { AppContext } from '../../context/AppContext'
 import RequestPanel from '../request/RequestPanel'
 import NewTab from '../tabs/newTab/NewTab'
 import TabTitle from '../tabs/tabTitle/TabTitle'
-import { ACTION_CLOSE_TAB, ACTION_NEXT_TAB, ACTION_PREV_TAB } from '../../../../lib/ipcChannels'
+import { ACTIONS } from '../../../../lib/ipcChannels'
 
 export default function ContentTabs() {
   const { tabs } = useContext(AppContext)
@@ -20,27 +20,27 @@ export default function ContentTabs() {
     setSelectedTabIndex(tabs.getSelectedTabIndex())
 
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTION_CLOSE_TAB, () => {
+    ipcRenderer.on(ACTIONS.closeTab, () => {
       const tab = tabs.tabs[tabs.getSelectedTabIndex()]
       if (tab) {
         tabs.removeTab(tab.id)
       }
     })
 
-    ipcRenderer.on(ACTION_NEXT_TAB, () => {
+    ipcRenderer.on(ACTIONS.nextTab, () => {
       const nextTabIndex = (tabs.getSelectedTabIndex() + 1) % tabs.tabs.length
       tabs.setActiveTab(nextTabIndex)
     })
 
-    ipcRenderer.on(ACTION_PREV_TAB, () => {
+    ipcRenderer.on(ACTIONS.prevTab, () => {
       const prevTabIndex = (tabs.getSelectedTabIndex() - 1 + tabs.tabs.length) % tabs.tabs.length
       tabs.setActiveTab(prevTabIndex)
     })
 
     return () => {
-      ipcRenderer.removeAllListeners(ACTION_CLOSE_TAB)
-      ipcRenderer.removeAllListeners(ACTION_NEXT_TAB)
-      ipcRenderer.removeAllListeners(ACTION_PREV_TAB)
+      ipcRenderer.removeAllListeners(ACTIONS.closeTab)
+      ipcRenderer.removeAllListeners(ACTIONS.nextTab)
+      ipcRenderer.removeAllListeners(ACTIONS.prevTab)
     }
   }, [tabs])
 

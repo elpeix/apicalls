@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createRequest } from '../lib/factory'
-import { TABS_UPDATE } from '../../../lib/ipcChannels'
+import { TABS } from '../../../lib/ipcChannels'
 
 export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const ipcRenderer = window.electron.ipcRenderer
@@ -77,7 +77,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
 
   const updateTabs = (newTabs: RequestTab[]) => {
     setTabs(newTabs)
-    ipcRenderer.send(TABS_UPDATE, newTabs)
+    ipcRenderer.send(TABS.update, newTabs)
   }
 
   const renameTab = (tabId: Identifier, name: string) => {

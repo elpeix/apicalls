@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CREATE_COLLECTION, REMOVE_COLLECTION, UPDATE_COLLECTION } from '../../../lib/ipcChannels'
+import { COLLECTIONS } from '../../../lib/ipcChannels'
 
 export function useCollections(): CollectionsHookType {
   const [collections, setCollections] = useState<Collection[]>([])
@@ -17,17 +17,17 @@ export function useCollections(): CollectionsHookType {
 
   const add = (collection: Collection) => {
     setCollections([...collections, collection])
-    ipcRenderer.send(CREATE_COLLECTION, collection)
+    ipcRenderer.send(COLLECTIONS.create, collection)
   }
 
   const remove = (id: Identifier) => {
     setCollections(collections.filter((collection) => collection.id !== id))
-    ipcRenderer.send(REMOVE_COLLECTION, id)
+    ipcRenderer.send(COLLECTIONS.remove, id)
   }
 
   const update = (collection: Collection) => {
     setCollections(collections.map((coll) => (coll.id === collection.id ? collection : coll)))
-    ipcRenderer.send(UPDATE_COLLECTION, collection)
+    ipcRenderer.send(COLLECTIONS.update, collection)
   }
 
   const clear = () => setCollections([])

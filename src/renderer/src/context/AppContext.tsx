@@ -4,14 +4,7 @@ import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
 import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
-import {
-  COLLECTIONS_UPDATED,
-  ENVIRONMENTS_UPDATED,
-  GET_COLLECTIONS,
-  GET_ENVIRONMENTS,
-  TABS_LOAD,
-  TABS_LOAD_SUCCESS
-} from '../../../lib/ipcChannels'
+import { COLLECTIONS, ENVIRONMENTS, TABS } from '../../../lib/ipcChannels'
 
 export const AppContext = createContext<{
   menu: MenuHookType | null
@@ -36,25 +29,25 @@ export default function AppContextProvider({ children }: { children: React.React
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(GET_ENVIRONMENTS)
-    ipcRenderer.send(GET_COLLECTIONS)
-    ipcRenderer.send(TABS_LOAD)
-    ipcRenderer.on(ENVIRONMENTS_UPDATED, (_: unknown, environmentList: Environment[]) => {
+    ipcRenderer.send(ENVIRONMENTS.get)
+    ipcRenderer.send(COLLECTIONS.get)
+    ipcRenderer.send(TABS.load)
+    ipcRenderer.on(ENVIRONMENTS.updated, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
     })
 
-    ipcRenderer.on(COLLECTIONS_UPDATED, (_: unknown, collectionList: Collection[]) => {
+    ipcRenderer.on(COLLECTIONS.updated, (_: unknown, collectionList: Collection[]) => {
       collections?.setCollections(collectionList)
     })
 
-    ipcRenderer.on(TABS_LOAD_SUCCESS, (_: unknown, tabList: RequestTab[]) => {
+    ipcRenderer.on(TABS.loadSuccess, (_: unknown, tabList: RequestTab[]) => {
       tabs?.setTabs(tabList)
     })
 
     return () => {
-      ipcRenderer.removeAllListeners(ENVIRONMENTS_UPDATED)
-      ipcRenderer.removeAllListeners(COLLECTIONS_UPDATED)
-      ipcRenderer.removeAllListeners(TABS_LOAD_SUCCESS)
+      ipcRenderer.removeAllListeners(ENVIRONMENTS.updated)
+      ipcRenderer.removeAllListeners(COLLECTIONS.updated)
+      ipcRenderer.removeAllListeners(TABS.loadSuccess)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

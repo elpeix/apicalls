@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Versions from './Versions'
 import styles from './Settings.module.css'
-import {
-  CLEAR_SETTINGS,
-  GET_SETTINGS,
-  SAVE_SETTINGS,
-  SETTINGS_UPDATED
-} from '../../../../../../lib/ipcChannels'
+import { SETTINGS } from '../../../../../../lib/ipcChannels'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 
@@ -17,21 +12,21 @@ export default function Settings() {
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(GET_SETTINGS)
-    ipcRenderer.on(SETTINGS_UPDATED, (_: unknown, settings: AppSettingsType) =>
+    ipcRenderer.send(SETTINGS.get)
+    ipcRenderer.on(SETTINGS.updated, (_: unknown, settings: AppSettingsType) =>
       setSettings(settings)
     )
-    return () => ipcRenderer.removeAllListeners(SETTINGS_UPDATED)
+    return () => ipcRenderer.removeAllListeners(SETTINGS.updated)
   }, [])
 
   const saveSettings = () => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(SAVE_SETTINGS, settings)
+    ipcRenderer.send(SETTINGS.save, settings)
   }
 
   const clearSettings = () => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(CLEAR_SETTINGS)
+    ipcRenderer.send(SETTINGS.clear)
     setShowClearSettings(false)
   }
 

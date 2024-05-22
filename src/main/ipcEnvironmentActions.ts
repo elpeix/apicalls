@@ -1,38 +1,32 @@
 import { ipcMain } from 'electron'
 import Store from 'electron-store'
-import {
-  CREATE_ENVIRONMENT,
-  ENVIRONMENTS_UPDATED,
-  GET_ENVIRONMENTS,
-  REMOVE_ENVIRONMENT,
-  UPDATE_ENVIRONMENT
-} from '../lib/ipcChannels'
+import { ENVIRONMENTS } from '../lib/ipcChannels'
 
 const store = new Store()
 
-const ENVIRONMENTS = 'environments'
+const ENVIRONMENTS_KEY = 'environments'
 
-ipcMain.on(CREATE_ENVIRONMENT, (event, environment: Environment) => {
-  const environments = store.get(ENVIRONMENTS, []) as Environment[]
+ipcMain.on(ENVIRONMENTS.create, (event, environment: Environment) => {
+  const environments = store.get(ENVIRONMENTS_KEY, []) as Environment[]
   environments.push(environment)
-  store.set(ENVIRONMENTS, environments)
-  event.reply(ENVIRONMENTS_UPDATED, environments)
+  store.set(ENVIRONMENTS_KEY, environments)
+  event.reply(ENVIRONMENTS.updated, environments)
 })
 
-ipcMain.on(UPDATE_ENVIRONMENT, (event, environment: Environment) => {
-  const environments = store.get(ENVIRONMENTS, []) as Environment[]
+ipcMain.on(ENVIRONMENTS.update, (event, environment: Environment) => {
+  const environments = store.get(ENVIRONMENTS_KEY, []) as Environment[]
   const newEnvironments = environments.map((c) => (c.id === environment.id ? environment : c))
-  store.set(ENVIRONMENTS, newEnvironments)
-  event.reply(ENVIRONMENTS_UPDATED, newEnvironments)
+  store.set(ENVIRONMENTS_KEY, newEnvironments)
+  event.reply(ENVIRONMENTS.updated, newEnvironments)
 })
 
-ipcMain.on(GET_ENVIRONMENTS, (event) => {
-  event.reply(ENVIRONMENTS_UPDATED, store.get(ENVIRONMENTS, []))
+ipcMain.on(ENVIRONMENTS.get, (event) => {
+  event.reply(ENVIRONMENTS.updated, store.get(ENVIRONMENTS_KEY, []))
 })
 
-ipcMain.on(REMOVE_ENVIRONMENT, (event, envionmentId: string) => {
-  const environments = store.get(ENVIRONMENTS, []) as Environment[]
+ipcMain.on(ENVIRONMENTS.remove, (event, envionmentId: string) => {
+  const environments = store.get(ENVIRONMENTS_KEY, []) as Environment[]
   const newEnvironments = environments.filter((collection) => collection.id !== envionmentId)
-  store.set(ENVIRONMENTS, newEnvironments)
-  event.reply(ENVIRONMENTS_UPDATED, newEnvironments)
+  store.set(ENVIRONMENTS_KEY, newEnvironments)
+  event.reply(ENVIRONMENTS.updated, newEnvironments)
 })

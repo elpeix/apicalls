@@ -1,47 +1,36 @@
 import { dialog, ipcMain } from 'electron'
 import Store from 'electron-store'
 import CollectionImporter from '../lib/CollectionImporter'
-import {
-  COLLECTIONS_UPDATED,
-  CREATE_COLLECTION,
-  GET_COLLECTIONS,
-  IMPORT_COLLECTION,
-  IMPORT_COLLECTION_CANCELED,
-  IMPORT_COLLECTION_FAILURE,
-  IMPORT_COLLECTION_PROGRESS,
-  IMPORT_COLLECTION_RESULT,
-  REMOVE_COLLECTION,
-  UPDATE_COLLECTION
-} from '../lib/ipcChannels'
+import { COLLECTIONS } from '../lib/ipcChannels'
 
 const store = new Store()
 
-ipcMain.on(CREATE_COLLECTION, (event, collection: Collection) => {
+ipcMain.on(COLLECTIONS.create, (event, collection: Collection) => {
   const collections = store.get('collections', []) as Collection[]
   collections.push(collection)
   store.set('collections', collections)
-  event.reply(COLLECTIONS_UPDATED, collections)
+  event.reply(COLLECTIONS.updated, collections)
 })
 
-ipcMain.on(UPDATE_COLLECTION, (event, collection: Collection) => {
+ipcMain.on(COLLECTIONS.update, (event, collection: Collection) => {
   const collections = store.get('collections', []) as Collection[]
   const newCollections = collections.map((c) => (c.id === collection.id ? collection : c))
   store.set('collections', newCollections)
-  event.reply(COLLECTIONS_UPDATED, newCollections)
+  event.reply(COLLECTIONS.updated, newCollections)
 })
 
-ipcMain.on(GET_COLLECTIONS, (event) => {
-  event.reply(COLLECTIONS_UPDATED, store.get('collections', []))
+ipcMain.on(COLLECTIONS.get, (event) => {
+  event.reply(COLLECTIONS.updated, store.get('collections', []))
 })
 
-ipcMain.on(REMOVE_COLLECTION, (event, collectionId: string) => {
+ipcMain.on(COLLECTIONS.remove, (event, collectionId: string) => {
   const collections = store.get('collections', []) as Collection[]
   const newCollections = collections.filter((collection) => collection.id !== collectionId)
   store.set('collections', newCollections)
-  event.reply(COLLECTIONS_UPDATED, newCollections)
+  event.reply(COLLECTIONS.updated, newCollections)
 })
 
-ipcMain.on(IMPORT_COLLECTION, async (event) => {
+ipcMain.on(COLLECTIONS.import, async (event) => {
   const dialogOptions: Electron.OpenDialogSyncOptions = {
     title: 'Import Collection',
     properties: ['openFile'],
@@ -53,27 +42,27 @@ ipcMain.on(IMPORT_COLLECTION, async (event) => {
   }
   dialog.showOpenDialog(dialogOptions).then(async (result) => {
     if (result.canceled) {
-      event.reply(IMPORT_COLLECTION_CANCELED)
+      event.reply(COLLECTIONS.importCanceled)
       return
     }
-    event.reply(IMPORT_COLLECTION_PROGRESS, 0)
+    event.reply(COLLECTIONS.importProgress, 0)
     try {
       const importer = new CollectionImporter(result.filePaths[0])
       for await (const status of importer.import()) {
-        event.reply(IMPORT_COLLECTION_PROGRESS, status)
+        event.reply(COLLECTIONS.importProgress, status)
       }
-      event.reply(IMPORT_COLLECTION_PROGRESS, 100)
-      event.reply(IMPORT_COLLECTION_RESULT, {
+      event.reply(COLLECTIONS.importProgress, 100)
+      event.reply(COLLECTIONS.importResult, {
         filePath: result.filePaths[0],
         collection: importer.getCollection()
       })
       const collections = store.get('collections', []) as Collection[]
       collections.push(importer.getCollection())
       store.set('collections', collections)
-      event.reply(COLLECTIONS_UPDATED, store.get('collections', collections))
+      event.reply(COLLECTIONS.updated, store.get('collections', collections))
     } catch (error) {
       console.error(error)
-      event.reply(IMPORT_COLLECTION_FAILURE, error)
+      event.reply(COLLECTIONS.importFailure, error)
     }
   })
 })

@@ -1,43 +1,58 @@
-export const IMPORT_COLLECTION = 'import-collection'
-export const IMPORT_COLLECTION_SUCCESS = 'import-collection-success'
-export const IMPORT_COLLECTION_FAILURE = 'import-collection-failure'
-export const IMPORT_COLLECTION_CANCELED = 'import-collection-canceled'
-export const IMPORT_COLLECTION_PROGRESS = 'import-collection-progress'
-export const IMPORT_COLLECTION_RESULT = 'import-collection-result'
+export const COLLECTIONS = {
+  get: 'collections:get',
+  create: 'collections:create',
+  update: 'collections:update',
+  remove: 'collections:remove',
+  updated: 'collections:updated',
+  getFailure: 'collections:get-failure',
+  import: 'collections:import',
+  importSuccess: 'collections:import-success',
+  importFailure: 'collections:import-failure',
+  importCanceled: 'collections:import-canceled',
+  importProgress: 'collections:import-progress',
+  importResult: 'collections:import-result'
+}
 
-export const CALL_API = 'call-api'
-export const CALL_API_ABORT = 'call-api-abort'
-export const CALL_API_FAILURE = 'call-api-failure'
-export const CALL_API_RESPONSE = 'call-api-response'
+export const REQUEST = {
+  call: 'request:call',
+  cancel: 'request:cancel',
+  failure: 'request:failure',
+  response: 'request:response'
+}
 
-export const GET_COLLECTIONS = 'get-collections'
-export const CREATE_COLLECTION = 'create-collection'
-export const UPDATE_COLLECTION = 'update-collection'
-export const REMOVE_COLLECTION = 'remove-collection'
-export const COLLECTIONS_UPDATED = 'collections-updated'
-export const GET_COLLECTIONS_FAILURE = 'get-collections-failure'
+export const SETTINGS = {
+  get: 'settings:get',
+  save: 'settings:save',
+  clear: 'settings:clear',
+  updated: 'settings:updated'
+}
 
-export const GET_SETTINGS = 'get-settings'
-export const SAVE_SETTINGS = 'save-settings'
-export const SETTINGS_UPDATED = 'settings-updated'
-export const CLEAR_SETTINGS = 'clear-settings'
+export const ENVIRONMENTS = {
+  get: 'environments:get',
+  create: 'environments:create',
+  update: 'environments:update',
+  remove: 'environments:remove',
+  updated: 'environments:updated',
+  getFailure: 'environments:get-failure'
+}
 
-export const GET_ENVIRONMENTS = 'get-environments'
-export const CREATE_ENVIRONMENT = 'create-environment'
-export const UPDATE_ENVIRONMENT = 'update-environment'
-export const REMOVE_ENVIRONMENT = 'remove-environment'
-export const ENVIRONMENTS_UPDATED = 'environments-updated'
-export const GET_ENVIRONMENTS_FAILURE = 'get-environments-failure'
+export const ACTIONS = {
+  newTab: 'action:new-tab',
+  nextTab: 'action:next-tab',
+  prevTab: 'action:prev-tab',
+  closeTab: 'action:close-tab',
+  toggleSidebar: 'action:toggle-sidebar',
+  sendRequest: 'action:send-request',
+  saveRequest: 'action:save-request'
+}
 
-export const ACTION_NEW_TAB = 'action:new-tab'
-export const ACTION_NEXT_TAB = 'action:next-tab'
-export const ACTION_PREV_TAB = 'action:prev-tab'
-export const ACTION_CLOSE_TAB = 'action:close-tab'
-export const ACTION_TOGGLE_SIDEBAR = 'action:toggle-sidebar'
+export const TABS = {
+  update: 'tabs:update',
+  load: 'tabs:load',
+  loadSuccess: 'tabs:load-success'
+}
 
-export const TABS_UPDATE = 'tabs-update'
-export const TABS_LOAD = 'tabs-load'
-export const TABS_LOAD_SUCCESS = 'tabs-load-success'
-
-export const VERSION_GET = 'version-get'
-export const VERSION_GET_SUCCESS = 'version-get-success'
+export const VERSION = {
+  get: 'version:get',
+  getSuccess: 'version:get-success'
+}

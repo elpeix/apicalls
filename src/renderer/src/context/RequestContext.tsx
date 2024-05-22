@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
-import { CALL_API, CALL_API_FAILURE, CALL_API_RESPONSE } from '../../../lib/ipcChannels'
+import { REQUEST } from '../../../lib/ipcChannels'
 import { createAuth, createAuthHeaderValue, getMethods } from '../lib/factory'
 import {
   getPathParamsFromUrl,
@@ -156,8 +156,8 @@ export default function RequestContextProvider({
       queryParams: requestQueryParams,
       body: requestBody
     }
-    window.electron.ipcRenderer.send(CALL_API, callApiRequest)
-    window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: unknown, callResponse: CallResponse) => {
+    window.electron.ipcRenderer.send(REQUEST.call, callApiRequest)
+    window.electron.ipcRenderer.on(REQUEST.response, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       setFetched(true)
       setResponseTime(callResponse.responseTime.all)
@@ -177,8 +177,8 @@ export default function RequestContextProvider({
         }
       ])
       setFetching(false)
-      window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
-      window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
     })
 
     const getFullUrl = () => {
@@ -189,27 +189,24 @@ export default function RequestContextProvider({
       return `${url}${params ? '?' + params : ''}`
     }
 
-    window.electron.ipcRenderer.on(
-      CALL_API_FAILURE,
-      (_: unknown, response: CallResponseFailure) => {
-        setFetching(false)
-        setFetched(true)
-        setFetchError(response.message)
-        requestConsole?.addAll([
-          ...requestLogs,
-          {
-            method: requestMethod.value,
-            url: getFullUrl(),
-            status: 999,
-            time: 0,
-            request: callApiRequest,
-            failure: response
-          }
-        ])
-        window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
-        window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
-      }
-    )
+    window.electron.ipcRenderer.on(REQUEST.failure, (_: unknown, response: CallResponseFailure) => {
+      setFetching(false)
+      setFetched(true)
+      setFetchError(response.message)
+      requestConsole?.addAll([
+        ...requestLogs,
+        {
+          method: requestMethod.value,
+          url: getFullUrl(),
+          status: 999,
+          time: 0,
+          request: callApiRequest,
+          failure: response
+        }
+      ])
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+    })
   }
 
   const sendPreRequest = () => {
@@ -236,8 +233,8 @@ export default function RequestContextProvider({
       queryParams: request.queryParams,
       body: request.body
     }
-    window.electron.ipcRenderer.send(CALL_API, callApiRequest)
-    window.electron.ipcRenderer.on(CALL_API_RESPONSE, (_: unknown, callResponse: CallResponse) => {
+    window.electron.ipcRenderer.send(REQUEST.call, callApiRequest)
+    window.electron.ipcRenderer.on(REQUEST.response, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       try {
         preRequestData.dataToCapture.forEach((dataToCapture) => {
@@ -255,28 +252,25 @@ export default function RequestContextProvider({
         request: callApiRequest,
         response: callResponse
       }
-      window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
-      window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
       sendMainRequest([requestLog])
     })
-    window.electron.ipcRenderer.on(
-      CALL_API_FAILURE,
-      (_: unknown, response: CallResponseFailure) => {
-        setFetching(false)
-        setFetched(true)
-        setFetchError(response.message)
-        requestConsole?.add({
-          method: requestMethod.value,
-          url,
-          status: 999,
-          time: 0,
-          request: callApiRequest,
-          failure: response
-        })
-        window.electron.ipcRenderer.removeAllListeners(CALL_API_FAILURE)
-        window.electron.ipcRenderer.removeAllListeners(CALL_API_RESPONSE)
-      }
-    )
+    window.electron.ipcRenderer.on(REQUEST.failure, (_: unknown, response: CallResponseFailure) => {
+      setFetching(false)
+      setFetched(true)
+      setFetchError(response.message)
+      requestConsole?.add({
+        method: requestMethod.value,
+        url,
+        status: 999,
+        time: 0,
+        request: callApiRequest,
+        failure: response
+      })
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+    })
   }
 
   const setDataToCapture = (

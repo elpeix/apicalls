@@ -1,11 +1,5 @@
 import { BrowserWindow, Event, Input } from 'electron'
-import {
-  ACTION_CLOSE_TAB,
-  ACTION_NEW_TAB,
-  ACTION_NEXT_TAB,
-  ACTION_PREV_TAB,
-  ACTION_TOGGLE_SIDEBAR
-} from '../lib/ipcChannels'
+import { ACTIONS } from '../lib/ipcChannels'
 
 type ShortcutKey = {
   control?: boolean
@@ -20,11 +14,12 @@ const isMac = process.platform === 'darwin'
 
 export const registerShortcuts = (mainWindow: BrowserWindow) => {
   const ws = new WindowShortcut(mainWindow)
-  ws.register('commandOrControl+t', () => mainWindow.webContents.send(ACTION_NEW_TAB))
-  ws.register('control+Tab', () => mainWindow.webContents.send(ACTION_NEXT_TAB))
-  ws.register('control+shift+Tab', () => mainWindow.webContents.send(ACTION_PREV_TAB))
-  ws.register('commandOrControl+w', () => mainWindow.webContents.send(ACTION_CLOSE_TAB))
-  ws.register('commandOrControl+b', () => mainWindow.webContents.send(ACTION_TOGGLE_SIDEBAR))
+  ws.register('commandOrControl+t', () => mainWindow.webContents.send(ACTIONS.newTab))
+  ws.register('control+Tab', () => mainWindow.webContents.send(ACTIONS.nextTab))
+  ws.register('control+shift+Tab', () => mainWindow.webContents.send(ACTIONS.prevTab))
+  ws.register('commandOrControl+w', () => mainWindow.webContents.send(ACTIONS.closeTab))
+  ws.register('commandOrControl+b', () => mainWindow.webContents.send(ACTIONS.toggleSidebar))
+  ws.register('commandOrControl+Enter', () => mainWindow.webContents.send(ACTIONS.sendRequest))
 }
 
 class WindowShortcut {

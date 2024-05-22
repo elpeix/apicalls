@@ -1,9 +1,5 @@
 import { useState } from 'react'
-import {
-  CREATE_ENVIRONMENT,
-  REMOVE_ENVIRONMENT,
-  UPDATE_ENVIRONMENT
-} from '../../../lib/ipcChannels'
+import { ENVIRONMENTS } from '../../../lib/ipcChannels'
 
 export function useEnvironments(): EnvironmentsHookType {
   const [environments, setEnvironments] = useState<Environment[]>([])
@@ -21,17 +17,17 @@ export function useEnvironments(): EnvironmentsHookType {
   }
   const add = (environment: Environment) => {
     setEnvironments([...environments, environment])
-    ipcRenderer.send(CREATE_ENVIRONMENT, environment)
+    ipcRenderer.send(ENVIRONMENTS.create, environment)
   }
 
   const remove = (id: Identifier) => {
     setEnvironments(environments.filter((environment) => environment.id !== id))
-    ipcRenderer.send(REMOVE_ENVIRONMENT, id)
+    ipcRenderer.send(ENVIRONMENTS.remove, id)
   }
 
   const update = (environment: Environment) => {
     setEnvironments(environments.map((env) => (env.id === environment.id ? environment : env)))
-    ipcRenderer.send(UPDATE_ENVIRONMENT, environment)
+    ipcRenderer.send(ENVIRONMENTS.update, environment)
   }
 
   const clear = () => setEnvironments([])
@@ -42,7 +38,7 @@ export function useEnvironments(): EnvironmentsHookType {
     setEnvironments(
       environments.map((environment) => {
         environment.active = environment.id === id
-        ipcRenderer.send(UPDATE_ENVIRONMENT, environment)
+        ipcRenderer.send(ENVIRONMENTS.update, environment)
         return environment
       })
     )
@@ -50,7 +46,7 @@ export function useEnvironments(): EnvironmentsHookType {
     setEnvironments(
       environments.map((environment) => {
         environment.active = false
-        ipcRenderer.send(UPDATE_ENVIRONMENT, environment)
+        ipcRenderer.send(ENVIRONMENTS.update, environment)
         return environment
       })
     )

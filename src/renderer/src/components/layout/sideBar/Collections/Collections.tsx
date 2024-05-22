@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { IMPORT_COLLECTION } from '../../../../../../lib/ipcChannels'
+import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Collection from './Collection'
@@ -17,7 +17,7 @@ export default function Collections() {
 
   const importHanlder = () => {
     if (!collections) return
-    window.electron.ipcRenderer.send(IMPORT_COLLECTION)
+    window.electron.ipcRenderer.send(COLLECTIONS.import)
   }
 
   return (

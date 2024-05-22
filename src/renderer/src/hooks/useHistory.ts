@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GET_SETTINGS, SETTINGS_UPDATED } from '../../../lib/ipcChannels'
+import { SETTINGS } from '../../../lib/ipcChannels'
 
 export function useHistory(): HistoryHookType {
   const [history, setHistory] = useState<RequestType[]>([])
@@ -7,11 +7,11 @@ export function useHistory(): HistoryHookType {
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(GET_SETTINGS)
-    ipcRenderer.on(SETTINGS_UPDATED, (_: unknown, settings: AppSettingsType) =>
+    ipcRenderer.send(SETTINGS.get)
+    ipcRenderer.on(SETTINGS.updated, (_: unknown, settings: AppSettingsType) =>
       setSettings(settings)
     )
-    return () => ipcRenderer.removeAllListeners(SETTINGS_UPDATED)
+    return () => ipcRenderer.removeAllListeners(SETTINGS.updated)
   }, [])
 
   const add = (request: RequestType) => {

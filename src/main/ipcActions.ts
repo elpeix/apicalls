@@ -2,32 +2,22 @@ import { app, ipcMain } from 'electron'
 import { restCall } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
-import {
-  CALL_API,
-  CALL_API_FAILURE,
-  CALL_API_RESPONSE,
-  GET_SETTINGS,
-  SAVE_SETTINGS,
-  SETTINGS_UPDATED,
-  CLEAR_SETTINGS,
-  VERSION_GET_SUCCESS,
-  VERSION_GET
-} from '../lib/ipcChannels'
+import { REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
 
-ipcMain.on(GET_SETTINGS, (event) => event.reply(SETTINGS_UPDATED, getSettings()))
-ipcMain.on(SAVE_SETTINGS, (_, settings) => setSettings(settings))
-ipcMain.on(CLEAR_SETTINGS, (event) => {
+ipcMain.on(SETTINGS.get, (event) => event.reply(SETTINGS.updated, getSettings()))
+ipcMain.on(SETTINGS.save, (_, settings) => setSettings(settings))
+ipcMain.on(SETTINGS.clear, (event) => {
   clearSettings()
-  event.reply(SETTINGS_UPDATED, getSettings())
+  event.reply(SETTINGS.updated, getSettings())
 })
 
-ipcMain.on(CALL_API, async (event, callRequest: CallRequest) => {
+ipcMain.on(REQUEST.call, async (event, callRequest: CallRequest) => {
   try {
     const response = await restCall(callRequest)
-    event.reply(CALL_API_RESPONSE, response)
+    event.reply(REQUEST.response, response)
   } catch (error: unknown) {
     const restCallerError = error as RestCallerError
-    event.reply(CALL_API_FAILURE, {
+    event.reply(REQUEST.failure, {
       message: restCallerError.message,
       request: restCallerError.request,
       response: restCallerError.response
@@ -35,4 +25,4 @@ ipcMain.on(CALL_API, async (event, callRequest: CallRequest) => {
   }
 })
 
-ipcMain.on(VERSION_GET, (event) => event.reply(VERSION_GET_SUCCESS, app.getVersion()))
+ipcMain.on(VERSION.get, (event) => event.reply(VERSION.getSuccess, app.getVersion()))
