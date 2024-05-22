@@ -133,27 +133,16 @@
             border-top: 1px solid var(--border-color);
             padding: 0.3rem 0;
             min-height: 1.4rem;
-            width: 100%;
-
-            > * {
-              display: flex;
-            }
 
             .label {
               color: var(--color-5);
             }
-
             .value {
               display: flex;
               flex-direction: column;
               align-items: flex-start;
               gap: 0.1rem;
-              width: 100%;
               overflow-x: auto;
-
-              .valueItem {
-                width: 100%;
-              }
             }
           }
         }
