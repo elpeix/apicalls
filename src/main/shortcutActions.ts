@@ -21,13 +21,8 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
   ws.register('commandOrControl+b', ACTIONS.toggleSidebar, mainWindow)
   ws.register('commandOrControl+Enter', ACTIONS.sendRequest, mainWindow)
   ws.register('commandOrControl+s', ACTIONS.saveRequest, mainWindow)
-  if (isMac) {
-    ws.register('command+alt+c', ACTIONS.toggleConsole, mainWindow)
-    ws.register('command+alt+p', ACTIONS.toggleRequestPanel, mainWindow)
-  } else {
-    ws.register('control+shift+C', ACTIONS.toggleConsole, mainWindow)
-    ws.register('control+shift+P', ACTIONS.toggleRequestPanel, mainWindow)
-  }
+  ws.register('commandOrControl+shift+c', ACTIONS.toggleConsole, mainWindow)
+  ws.register('commandOrControl+shift+p', ACTIONS.toggleRequestPanel, mainWindow)
 }
 
 class WindowShortcut {
@@ -75,7 +70,7 @@ class WindowShortcut {
       })
       .sort()
     modifierKeys = modifierKeys.sort()
-    modifierKeys.push(key)
+    modifierKeys.push(key.toLocaleLowerCase())
     const shortcutKey = modifierKeys.join('+')
     if (!this.shortcuts.has(shortcutKey)) {
       this.shortcuts.set(shortcutKey, callback)
@@ -107,7 +102,7 @@ class WindowShortcut {
     if (input.shift) baseKeys.push('shift')
     if (input.alt) baseKeys.push('alt')
     baseKeys = baseKeys.sort()
-    baseKeys.push(input.key)
+    baseKeys.push(input.key.toLocaleLowerCase())
     return baseKeys.join('+')
   }
 }
