@@ -65,7 +65,10 @@ export default function Params({
           </SimpleTable.Header>
           <SimpleTable.Body>
             {items.map((item: KeyValue, index: number) => (
-              <SimpleTable.Row key={index} className={item.enabled ? styles.rowEnabled : ''}>
+              <SimpleTable.Row
+                key={index}
+                className={item.enabled === undefined || item.enabled ? styles.rowEnabled : ''}
+              >
                 {showEnable && (
                   <SimpleTable.Cell>
                     <input
