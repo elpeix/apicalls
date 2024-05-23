@@ -9,6 +9,8 @@ export default function ResponseHeaders({ headers }: { headers: KeyValue[] }) {
         <div className={styles.headers}>
           <Params
             items={headers}
+            editableName={false}
+            editableValue={false}
             showEnable={false}
             showDelete={false}
             maxNameSize={700}

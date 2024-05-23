@@ -9,6 +9,7 @@ export default function Params({
   onSave = () => {},
   showEnable = true,
   editableName = true,
+  editableValue = true,
   showDelete = true,
   addCaption = 'Add param',
   removeCaption = 'Remove param',
@@ -20,6 +21,7 @@ export default function Params({
   onAdd?: () => void
   onSave?: (params: KeyValue[]) => void
   editableName?: boolean
+  editableValue?: boolean
   showEnable?: boolean
   showDelete?: boolean
   addCaption?: string
@@ -90,7 +92,7 @@ export default function Params({
                   showTip={true}
                 />
                 <SimpleTable.Cell
-                  editable
+                  editable={editableValue}
                   value={item.value}
                   placeholder="Value"
                   onChange={(value) => {
