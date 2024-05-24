@@ -24,6 +24,7 @@ export default function EditableName({
   const nameRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    if (editingName) return
     if (editMode) {
       setEditingName(true)
       setTimeout(() => {
@@ -32,7 +33,7 @@ export default function EditableName({
         nameRef.current.focus()
       }, 0)
     }
-  }, [editMode, nameValue.length, name])
+  }, [editMode, nameValue.length, name, editingName])
 
   useEffect(() => {
     setNameValue(name)
@@ -69,6 +70,11 @@ export default function EditableName({
     if (onBlur) onBlur()
   }
 
+  const disableEvent = (e: React.DragEvent | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
   return (
     <div
       className={`${styles.name} ${className} ${editingName && styles.editable}`}
@@ -83,6 +89,12 @@ export default function EditableName({
           onChange={changeName}
           onBlur={handleOnBlur}
           onKeyDown={onKeyDown}
+          draggable={true}
+          onDragStart={disableEvent}
+          onDrag={disableEvent}
+          onDragEnd={disableEvent}
+          onClick={disableEvent}
+          onDoubleClick={disableEvent}
           autoFocus
         />
       )}
