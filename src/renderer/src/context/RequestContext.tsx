@@ -57,6 +57,7 @@ export default function RequestContextProvider({
   const [requestHeaders, setRequestHeaders] = useState(definedRequest.headers || [])
   const [requestPathParams, setRequestPathParams] = useState(definedRequest.pathParams || [])
   const [requestQueryParams, setRequestQueryParams] = useState(definedRequest.queryParams || [])
+  const [requestFullUrl, setRequestFullUrl] = useState(definedRequest.url || '')
 
   const [launchRequest, setLaunchRequest] = useState(false)
   const [fetching, setFetching] = useState(false)
@@ -385,20 +386,23 @@ export default function RequestContextProvider({
   }
 
   const setFullUrl = (value: string) => {
+    if (value === requestFullUrl) return
+    setRequestFullUrl(value)
     const [url, params] = value.split('?')
-    setUrl(value)
     setUrl(url)
     setPathParams(getPathParamsFromUrl(url))
     setQueryParams(getQueryParamsFromUrl(params, requestQueryParams))
   }
 
   const setBody = (body: string) => {
+    if (body === requestBody) return
     setRequestBody(body)
     setChanged(true)
     setSaved(false)
   }
 
   const setHeaders = (headers: KeyValue[]) => {
+    if (keyValuesAreEqual(headers, requestHeaders)) return
     setRequestHeaders(headers)
     setChanged(true)
     setSaved(false)
@@ -428,6 +432,7 @@ export default function RequestContextProvider({
   }
 
   const setPathParams = (pathParams: KeyValue[]) => {
+    if (keyValuesAreEqual(pathParams, requestPathParams)) return
     setRequestPathParams(pathParams)
     setChanged(true)
     setSaved(false)
@@ -444,9 +449,24 @@ export default function RequestContextProvider({
   }
 
   const setQueryParams = (params: KeyValue[]) => {
+    if (keyValuesAreEqual(params, requestQueryParams)) return
     setRequestQueryParams(params)
     setChanged(true)
     setSaved(false)
+  }
+
+  const keyValuesAreEqual = (a: KeyValue[], b: KeyValue[]) => {
+    if (a.length !== b.length) return false
+    return a.every((item, index) => keyValueAreEqual(item, b[index]))
+  }
+
+  const keyValueAreEqual = (a: KeyValue, b: KeyValue) => {
+    return (
+      a.name === b.name &&
+      a.value === b.value &&
+      a.enabled === b.enabled &&
+      a.toBeRemoved === b.toBeRemoved
+    )
   }
 
   const addQueryParam = () => {
@@ -461,6 +481,12 @@ export default function RequestContextProvider({
 
   const getActiveQueryParamsLength = () => {
     return requestQueryParams.filter((param: KeyValue) => param.enabled).length
+  }
+
+  const setAuth = (auth: RequestAuth) => {
+    setRequestAuth(auth)
+    setChanged(true)
+    setSaved(false)
   }
 
   const contextValue = {
@@ -496,7 +522,7 @@ export default function RequestContextProvider({
       setUrl,
       setFullUrl,
       setBody,
-      setAuth: setRequestAuth,
+      setAuth,
       fetch,
       urlIsValid
     },

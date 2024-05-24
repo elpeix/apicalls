@@ -76,7 +76,7 @@ export default function Params({
                       checked={item.enabled}
                       onChange={(e) => {
                         const newItems = [...items]
-                        newItems[index].enabled = e.target.checked
+                        newItems[index] = { ...newItems[index], enabled: e.target.checked }
                         onSave(newItems)
                       }}
                     />
@@ -89,7 +89,7 @@ export default function Params({
                   placeholder="Name"
                   onChange={(value) => {
                     const newItems = [...items]
-                    newItems[index].name = value
+                    newItems[index] = { ...newItems[index], name: value }
                     onSave(newItems)
                   }}
                   showTip={true}
@@ -100,7 +100,7 @@ export default function Params({
                   placeholder="Value"
                   onChange={(value) => {
                     const newItems = [...items]
-                    newItems[index].value = value
+                    newItems[index] = { ...newItems[index], value }
                     onSave(newItems)
                   }}
                   showTip={true}
