@@ -137,7 +137,7 @@ export default function RequestContextProvider({
 
     const headers: HeadersInit = {}
     requestHeaders.forEach((header) => {
-      if (header.enabled) {
+      if (header.enabled && header.name) {
         headers[getValue(header.name)] = getValue(header.value)
       }
     })
@@ -223,7 +223,7 @@ export default function RequestContextProvider({
     const url = getValue(request.url)
     const headers: HeadersInit = {}
     request.headers?.forEach((header) => {
-      if (header.enabled) {
+      if (header.enabled && header.name) {
         headers[getValue(header.name)] = getValue(header.value)
       }
     })
@@ -231,7 +231,7 @@ export default function RequestContextProvider({
       id: tabId,
       url,
       method: request.method.value,
-      headers: headers,
+      headers,
       queryParams: request.queryParams,
       body: request.body
     }

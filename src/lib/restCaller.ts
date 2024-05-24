@@ -18,7 +18,7 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
     const queryParams = new URLSearchParams()
     if (request.queryParams && request.queryParams.length > 0) {
       request.queryParams
-        .filter((param) => param.enabled)
+        .filter((param) => param.enabled && param.name)
         .forEach((param) => {
           queryParams.append(param.name, param.value)
         })
