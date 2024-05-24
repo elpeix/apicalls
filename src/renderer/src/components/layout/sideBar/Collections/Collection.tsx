@@ -36,19 +36,30 @@ export default function Collection({
   const [filter, setFilter] = useState('')
   const [showPreRequest, setShowPreRequest] = useState(false)
   const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
+  const [updateTime, setUpdateTime] = useState(0)
 
   useEffect(() => {
-    setColl(collection)
-    filterElements(filter, collection.elements)
+    let internalCollection: Collection | undefined
+    if (updateTime !== collections?.updateTime) {
+      setUpdateTime(collections?.updateTime || 0)
+      internalCollection = collections?.get(coll.id)
+    } else {
+      internalCollection = coll
+    }
+    if (!internalCollection) return
 
-    if (!collection.name) {
+    setColl(internalCollection)
+    filterElements(filter, internalCollection.elements)
+
+    if (!internalCollection.name) {
       setEditingName(true)
       setTimeout(() => {
         if (!nameRef.current) return
         nameRef.current.focus()
       }, 0)
     }
-  }, [collection])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collection, filter, collections?.updateTime])
 
   const createFolderHandler = (name: string) => {
     setShowCreateFolder(false)

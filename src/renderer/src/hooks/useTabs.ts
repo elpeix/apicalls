@@ -7,7 +7,6 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const [tabs, setTabs] = useState([...initialTabs])
 
   const openTab = ({ request, collectionId, path = [], shiftKey = false }: OpenTabArguments) => {
-    console.log('openTab', request, shiftKey, collectionId, path)
     const tab = getTab(request.id)
     if (tab && !shiftKey) {
       setActiveTab(tabs.indexOf(tab))

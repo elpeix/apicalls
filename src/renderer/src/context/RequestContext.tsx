@@ -324,7 +324,6 @@ export default function RequestContextProvider({
   }
 
   const saveRequest = () => {
-    console.log('Save request', saved)
     if (!collections) return
     if (!collectionId) {
       console.error('No collection selected')
