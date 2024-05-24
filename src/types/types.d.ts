@@ -95,14 +95,16 @@ type HistoryHookType = {
   get: (id: Identifier) => RequestType | undefined
 }
 
+type OpenTabArguments = {
+  request: RequestType
+  collectionId?: Identifier
+  path?: PathItem[]
+  shiftKey?: boolean
+}
+
 type TabsHookType = {
   setTabs: (tabs: RequestTab[]) => void
-  openTab: (
-    itemRequest: RequestType,
-    shiftKey?: boolean,
-    collectionId?: Identifier,
-    path?: PathItem[]
-  ) => void
+  openTab: (args: OpenTabArguments) => void
   newTab: (itemRequest?: RequestType, collectionId?: Identifier, path?: PathItem[]) => void
   addTab: (tab: RequestTab) => void
   removeTab: (tabId: Identifier) => void
@@ -147,6 +149,7 @@ type CollectionsHookType = {
   setPreRequest: (collectionId: Identifier, preRequestData: PreRequest) => void
   clearPreRequest: (collectionId: Identifier) => void
   saveRequest: (saveRequest: SaveRequest) => void
+  updateTime: number
 }
 
 type EnvironmentsHookType = {

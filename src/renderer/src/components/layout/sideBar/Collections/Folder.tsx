@@ -84,7 +84,17 @@ export default function Folder({
     })
     folder.elements.push(request)
     update()
-    tabs?.openTab(request)
+    tabs?.openTab({
+      request,
+      collectionId,
+      path: [
+        ...folderPath,
+        {
+          id: request.id,
+          type: 'request'
+        }
+      ]
+    })
   }
 
   const handleDragOverDebounced = () => {

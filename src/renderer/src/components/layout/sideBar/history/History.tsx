@@ -47,7 +47,7 @@ export default function History() {
           <div
             key={index}
             className={`sidePanel-content-item ${styles.item}`}
-            onClick={() => tabs?.openTab(historyItem)}
+            onClick={() => tabs?.openTab({ request: historyItem })}
           >
             <div className={styles.title}>
               <div className={`${styles.method} ${historyItem.request.method.value}`}>

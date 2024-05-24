@@ -6,20 +6,16 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const ipcRenderer = window.electron.ipcRenderer
   const [tabs, setTabs] = useState([...initialTabs])
 
-  const openTab = (
-    itemRequest: RequestType,
-    shiftKey?: boolean,
-    collectionId?: Identifier,
-    path?: PathItem[]
-  ) => {
-    const tab = getTab(itemRequest.id)
+  const openTab = ({ request, collectionId, path = [], shiftKey = false }: OpenTabArguments) => {
+    console.log('openTab', request, shiftKey, collectionId, path)
+    const tab = getTab(request.id)
     if (tab && !shiftKey) {
       setActiveTab(tabs.indexOf(tab))
     } else {
       if (shiftKey) {
-        itemRequest.id = itemRequest.id + new Date().getTime().toString()
+        request.id = request.id + new Date().getTime().toString()
       }
-      newTab(itemRequest, collectionId, path)
+      newTab(request, collectionId, path)
     }
   }
 

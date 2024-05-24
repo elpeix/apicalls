@@ -91,7 +91,7 @@ export default function Collection({
     })
     coll.elements.push(request)
     update({ ...coll })
-    tabs?.openTab(request)
+    tabs?.openTab({ request, collectionId: coll.id, path: [{ id: request.id, type: 'request' }] })
   }
 
   const handleEndScroll = useMemo(() => {
