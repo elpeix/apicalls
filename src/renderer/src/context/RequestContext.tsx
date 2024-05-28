@@ -8,6 +8,7 @@ import {
   replacePathParams
 } from '../lib/paramsCapturer'
 import { useConsole } from '../hooks/useConsole'
+import { getValueFromPath } from '../lib/utils'
 
 export const RequestContext = createContext<RequestContestType>({
   path: [],
@@ -281,8 +282,9 @@ export default function RequestContextProvider({
     environment: Environment
   ) => {
     const name = dataToCapture.setEnvironmentVariable
-    let value = ''
+    let value: string | number | boolean = ''
     if (dataToCapture.type === 'body') {
+      value = getValueFromPath(callResponse.result || '', dataToCapture.path)
       const jsonResult = JSON.parse(callResponse.result || '{}')
       value = jsonResult[dataToCapture.path] // FIXME: Real path is not implemented
     } else if (dataToCapture.type === 'header') {
@@ -293,13 +295,13 @@ export default function RequestContextProvider({
     }
     const variable = environment.variables.find((variable) => variable.name === name)
     if (variable) {
-      variable.value = value
+      variable.value = value.toString()
     } else {
       environment.variables = [
         ...environment.variables,
         {
           name: name,
-          value: value
+          value: value.toString()
         }
       ]
     }
