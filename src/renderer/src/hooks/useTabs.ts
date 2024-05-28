@@ -47,8 +47,11 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const updateTab = (tabId: Identifier, tab: RequestTab) => {
     updateTabs(tabs.map((t) => (t.id === tabId ? tab : t)))
   }
-  const updateTabRequest = (tabId: Identifier, request: RequestBase) => {
-    updateTabs(tabs.map((tab: RequestTab) => (tab.id === tabId ? { ...tab, request } : tab)))
+  const updateTabRequest = (tabId: Identifier, saved: boolean, request: RequestBase) => {
+    const newTabs = tabs.map((tab: RequestTab) =>
+      tab.id === tabId ? { ...tab, request, saved } : tab
+    )
+    updateTabs(newTabs)
   }
   const hasTabs = () => tabs.length > 0
   const getTab = (tabId: Identifier) => tabs.find((t) => t.id === tabId)
@@ -81,12 +84,6 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     updateTab(tabId, { ...tab, name })
   }
 
-  const setSaved = (tabId: Identifier, saved: boolean) => {
-    const tab = getTab(tabId)
-    if (!tab) return
-    updateTab(tabId, { ...tab, saved })
-  }
-
   return {
     openTab,
     newTab,
@@ -101,7 +98,6 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     getSelectedTabIndex,
     setTabs,
     renameTab,
-    tabs,
-    setSaved
+    tabs
   }
 }

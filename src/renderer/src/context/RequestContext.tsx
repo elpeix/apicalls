@@ -75,7 +75,7 @@ export default function RequestContextProvider({
   useEffect(() => {
     if (changed) {
       setChanged(false)
-      tabs?.updateTabRequest(tabId, {
+      tabs?.updateTabRequest(tabId, saved, {
         ...definedRequest,
         method: requestMethod,
         url: requestUrl,
@@ -84,7 +84,6 @@ export default function RequestContextProvider({
         queryParams: requestQueryParams,
         body: requestBody
       })
-      tabs?.setSaved(tabId, saved)
       return
     }
     if (launchRequest) {
@@ -96,6 +95,7 @@ export default function RequestContextProvider({
     tabId,
     tabs,
     changed,
+    saved,
     definedRequest,
     requestMethod,
     requestUrl,

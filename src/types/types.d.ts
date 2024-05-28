@@ -109,14 +109,13 @@ type TabsHookType = {
   addTab: (tab: RequestTab) => void
   removeTab: (tabId: Identifier) => void
   updateTab: (tabId: Identifier, tab: RequestTab) => void
-  updateTabRequest: (tabId: Identifier, request: RequestBase) => void
+  updateTabRequest: (tabId: Identifier, saved: boolean, request: RequestBase) => void
   hasTabs: () => boolean
   getTab: (tabId: Identifier) => RequestTab | undefined
   getTabs: () => RequestTab[]
   setActiveTab: (index: number) => void
   getSelectedTabIndex: () => number
   renameTab: (tabId: Identifier, name: string) => void
-  setSaved: (tabId: Identifier, saved: boolean) => void
   tabs: RequestTab[]
 }
 
