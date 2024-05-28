@@ -87,6 +87,7 @@ export default function Params({
                   autoFocus={item.name === ''}
                   value={item.name}
                   placeholder="Name"
+                  changeOnKeyUp={true}
                   onChange={(value) => {
                     const newItems = [...items]
                     newItems[index] = { ...newItems[index], name: value }
@@ -98,6 +99,7 @@ export default function Params({
                   editable={editableValue}
                   value={item.value}
                   placeholder="Value"
+                  changeOnKeyUp={true}
                   onChange={(value) => {
                     const newItems = [...items]
                     newItems[index] = { ...newItems[index], value }

@@ -109,6 +109,7 @@ function SimpleTableCell({
   value = '',
   placeholder = '',
   onChange,
+  changeOnKeyUp = false,
   children,
   showTip = false
 }: {
@@ -117,6 +118,7 @@ function SimpleTableCell({
   value?: string | React.ReactNode
   placeholder?: string
   onChange?: (value: string) => void
+  changeOnKeyUp?: boolean
   children?: React.ReactNode
   showTip?: boolean
 }) {
@@ -146,6 +148,8 @@ function SimpleTableCell({
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       setEditableValue(value)
+    } else if (changeOnKeyUp && onChange) {
+      onChange(editableValue as string)
     } else if (e.key === 'Enter' && onChange) {
       onChange(editableValue as string)
       if (e.ctrlKey) {
