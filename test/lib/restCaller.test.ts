@@ -1,6 +1,15 @@
 import { describe, it, expect, vi, assert, afterEach } from 'vitest'
 import { restCall } from '../../src/lib/restCaller'
 
+vi.mock('../../src/lib/settings.ts', () => {
+  return {
+    namedExport: 'getSettings',
+    getSettings: () => {
+      return { timeout: 1000 }
+    }
+  }
+})
+
 describe('restCaller', () => {
   afterEach(() => {
     vi.resetAllMocks()
