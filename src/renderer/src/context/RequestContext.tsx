@@ -82,6 +82,7 @@ export default function RequestContextProvider({
         url: requestUrl,
         auth: requestAuth,
         headers: requestHeaders,
+        pathParams: requestPathParams,
         queryParams: requestQueryParams,
         body: requestBody
       })
