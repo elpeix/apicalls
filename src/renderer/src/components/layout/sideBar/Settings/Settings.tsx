@@ -105,6 +105,18 @@ export default function Settings() {
             />
           </div>
 
+          <div className={styles.groupRow}>
+            <input
+              id="manageCookies"
+              type="checkbox"
+              checked={settings.manageCookies}
+              onChange={(e) => setSettings({ ...settings, manageCookies: e.target.checked })}
+            />
+            <label htmlFor="manageCookies">
+              <span>Manage cookies</span>
+            </label>
+          </div>
+
           <div className={styles.group}>
             <button onClick={saveSettings}>Save</button>
             <a className={styles.clearSettings} onClick={() => setShowClearSettings(true)}>

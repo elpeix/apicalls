@@ -232,6 +232,7 @@ type AppSettingsType = {
   proxy: string
   maxHistory: number
   timeout: number
+  manageCookies?: boolean
 }
 
 type CallRequest = {
