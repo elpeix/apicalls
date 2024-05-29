@@ -37,7 +37,14 @@ export default function RequestContextProvider({
   tab: RequestTab
   children: React.ReactNode
 }) {
-  const { history, environments, tabs, collections } = useContext(AppContext)
+  const {
+    history,
+    environments,
+    tabs,
+    collections,
+    cookies,
+    appSettings: settings
+  } = useContext(AppContext)
 
   const path = tab.path || []
   const collectionId = tab.collectionId
@@ -137,26 +144,13 @@ export default function RequestContextProvider({
   const sendMainRequest = (requestLogs: RequestLog[] = []) => {
     const url = getValue(requestUrl)
 
-    const headers: HeadersInit = {}
-    requestHeaders.forEach((header) => {
-      if (header.enabled && header.name) {
-        headers[getValue(header.name)] = getValue(header.value)
-      }
-    })
-    if (requestAuth.type !== 'none' && requestAuth.value) {
-      headers['Authorization'] = createAuthHeaderValue({
-        type: requestAuth.type,
-        value: getValue(requestAuth.value)
-      })
-    }
-
     saveHistory()
 
     const callApiRequest: CallRequest = {
       id: tabId,
       url,
       method: requestMethod.value,
-      headers,
+      headers: getHeaders(url),
       queryParams: requestQueryParams,
       body: requestBody
     }
@@ -169,6 +163,7 @@ export default function RequestContextProvider({
       setResponseSize(callResponse.contentLength)
       setFetchedHeaders(callResponse.responseHeaders)
       setResponseBody(callResponse.result || '')
+      setCookies(callResponse.responseHeaders)
       requestConsole?.addAll([
         ...requestLogs,
         {
@@ -371,6 +366,48 @@ export default function RequestContextProvider({
       value = environments.replaceVariables(value)
     }
     return value
+  }
+
+  const getHeaders = (url: string) => {
+    const headers: HeadersInit = {}
+    requestHeaders.forEach((header) => {
+      if (header.enabled && header.name) {
+        headers[getValue(header.name)] = getValue(header.value)
+      }
+    })
+    if (requestAuth.type !== 'none' && requestAuth.value) {
+      headers['Authorization'] = createAuthHeaderValue({
+        type: requestAuth.type,
+        value: getValue(requestAuth.value)
+      })
+    }
+    if (settings?.settings?.manageCookies) {
+      const origin = getOrigin(getValue(url))
+      const originCookies = cookies?.get(origin)
+      if (originCookies) {
+        headers['Cookie'] = originCookies.cookies.join('; ')
+      }
+    }
+    return headers
+  }
+
+  const setCookies = (headers: KeyValue[]) => {
+    if (settings?.settings?.manageCookies) {
+      const origin = getOrigin(getValue(requestUrl))
+      const responseCookies = headers
+        .filter((header) => header.name === 'set-cookie')
+        .map((header) => header.value.split(';'))
+        .map((cookie) => cookie[0])
+      if (!responseCookies) {
+        return
+      }
+      cookies?.upsert(origin, responseCookies)
+    }
+  }
+
+  const getOrigin = (url: string): string => {
+    const urlObject = new URL(url)
+    return `${urlObject.origin}`
   }
 
   const setMethod = (method: Method) => {

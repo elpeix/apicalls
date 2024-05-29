@@ -5,6 +5,8 @@ import { useEnvironments } from '../hooks/useEnvironments'
 import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
 import { COLLECTIONS, ENVIRONMENTS, TABS } from '../../../lib/ipcChannels'
+import { useCookies } from '../hooks/useCookies'
+import { useSettigns as useAppSettings } from '../hooks/useSettings'
 
 export const AppContext = createContext<{
   menu: MenuHookType | null
@@ -12,12 +14,16 @@ export const AppContext = createContext<{
   collections: CollectionsHookType | null
   environments: EnvironmentsHookType | null
   history: HistoryHookType | null
+  cookies: CookiesHookType | null
+  appSettings: AppSettingsHookType | null
 }>({
   menu: null,
   tabs: null,
   collections: null,
   environments: null,
-  history: null
+  history: null,
+  cookies: null,
+  appSettings: null
 })
 
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
@@ -26,12 +32,15 @@ export default function AppContextProvider({ children }: { children: React.React
   const collections = useCollections()
   const environments = useEnvironments()
   const history = useHistory()
+  const cookies = useCookies()
+  const appSettings = useAppSettings()
 
   useEffect(() => {
     const ipcRenderer = window.electron.ipcRenderer
     ipcRenderer.send(ENVIRONMENTS.get)
     ipcRenderer.send(COLLECTIONS.get)
     ipcRenderer.send(TABS.load)
+
     ipcRenderer.on(ENVIRONMENTS.updated, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
     })
@@ -56,7 +65,9 @@ export default function AppContextProvider({ children }: { children: React.React
     tabs,
     collections,
     environments,
-    history
+    history,
+    cookies,
+    appSettings
   }
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>

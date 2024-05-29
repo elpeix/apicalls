@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Versions from './Versions'
 import styles from './Settings.module.css'
-import { SETTINGS } from '../../../../../../lib/ipcChannels'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
+import { AppContext } from '../../../../context/AppContext'
 
 export default function Settings() {
+  const { appSettings } = useContext(AppContext)
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
 
   const [showClearSettings, setShowClearSettings] = useState(false)
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(SETTINGS.get)
-    ipcRenderer.on(SETTINGS.updated, (_: unknown, settings: AppSettingsType) =>
-      setSettings(settings)
-    )
-    return () => ipcRenderer.removeAllListeners(SETTINGS.updated)
-  }, [])
+    setSettings(appSettings?.settings || null)
+  }, [appSettings?.settings])
 
   const saveSettings = () => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(SETTINGS.save, settings)
+    if (!settings) return
+    appSettings?.save(settings)
   }
 
   const clearSettings = () => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(SETTINGS.clear)
+    appSettings?.clear()
     setShowClearSettings(false)
   }
 

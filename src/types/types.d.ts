@@ -180,6 +180,25 @@ type MenuHookType = {
   select: (id: Identifier) => void
 }
 
+type OriginCookies = {
+  origin: string
+  cookies: string[]
+}
+
+type CookiesHookType = {
+  upsert: (origin: string, cookies: string[]) => void
+  remove: (origin: string) => void
+  clear: () => void
+  getAll: () => OriginCookies[]
+  get: (origin: string) => OriginCookies | undefined
+}
+
+type AppSettingsHookType = {
+  settings: AppSettingsType | null
+  save: (settings: AppSettingsType) => void
+  clear: () => void
+}
+
 type RequestItem = {
   items: KeyValue[]
   set: (item: KeyValue[]) => void
