@@ -17,7 +17,8 @@ export const REQUEST = {
   call: 'request:call',
   cancel: 'request:cancel',
   failure: 'request:failure',
-  response: 'request:response'
+  response: 'request:response',
+  cancelled: 'request:cancelled'
 }
 
 export const SETTINGS = {

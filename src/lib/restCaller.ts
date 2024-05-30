@@ -3,15 +3,23 @@ import { getSettings } from './settings'
 
 const defaultMethod = 'GET'
 
+let requestId = 0
+const abortControllers: Map<Identifier, AbortController> = new Map()
+
 export const restCall = async (request: CallRequest): Promise<CallResponse> => {
   if (!request.method) {
     request.method = defaultMethod
   }
   try {
     const abortController = new AbortController()
+    const id = request.id ?? requestId++
+    abortControllers.set(id, abortController)
     const settings = getSettings()
     if (settings.timeout > 0) {
-      setTimeout(() => abortController.abort(), settings.timeout)
+      setTimeout(() => {
+        abortController.abort()
+        abortControllers.delete(id)
+      }, settings.timeout)
     }
 
     let path = request.url
@@ -54,7 +62,7 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
       headers.push({ name: key, value })
     })
     return {
-      id: request.id,
+      id,
       result,
       status: {
         code: response.status,
@@ -71,4 +79,14 @@ export const restCall = async (request: CallRequest): Promise<CallResponse> => {
     }
     throw err
   }
+}
+
+export const restCancel = (id: Identifier): boolean => {
+  const controller = abortControllers.get(id)
+  if (controller) {
+    controller.abort()
+    abortControllers.delete(id)
+    return true
+  }
+  return false
 }

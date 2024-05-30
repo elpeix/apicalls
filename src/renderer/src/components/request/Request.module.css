@@ -60,6 +60,7 @@
 }
 
 .send,
+.cancel,
 .save {
   display: flex;
   align-items: center;
@@ -90,6 +91,15 @@
 
   &:active {
     background-color: var(--color-9);
+  }
+
+  &.cancel {
+    background-color: var(--cancel-color);
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 
   &.save {

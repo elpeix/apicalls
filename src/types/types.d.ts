@@ -222,6 +222,7 @@ type RequestContextRequestType = {
   setBody: (body: string) => void
   setAuth: (auth: RequestAuth) => void
   fetch: () => void
+  cancel: () => void
   urlIsValid: ({ url }: { url?: string }) => boolean
 }
 

@@ -9,11 +9,23 @@ export default function SendButton() {
   if (!request) return null
 
   return (
-    <button className={styles.send} onClick={request.fetch} disabled={fetching}>
-      <div className={styles.buttonIcon}>
-        <Icon icon="send" />
-      </div>
-      <div className={styles.buttonText}>Send</div>
-    </button>
+    <>
+      {fetching && (
+        <button className={styles.cancel} onClick={request.cancel}>
+          <div className={styles.buttonIcon}>
+            <Icon icon="close" />
+          </div>
+          <div className={styles.buttonText}>Cancel</div>
+        </button>
+      )}
+      {!fetching && (
+        <button className={styles.send} onClick={request.fetch}>
+          <div className={styles.buttonIcon}>
+            <Icon icon="send" />
+          </div>
+          <div className={styles.buttonText}>Send</div>
+        </button>
+      )}
+    </>
   )
 }

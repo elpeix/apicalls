@@ -1,5 +1,5 @@
 import { app, ipcMain } from 'electron'
-import { restCall } from '../../src/lib/restCaller'
+import { restCall, restCancel } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
 import { REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
@@ -22,6 +22,12 @@ ipcMain.on(REQUEST.call, async (event, callRequest: CallRequest) => {
       request: restCallerError.request,
       response: restCallerError.response
     } as CallResponseFailure)
+  }
+})
+
+ipcMain.on(REQUEST.cancel, (event, requestId: Identifier) => {
+  if (restCancel(requestId)) {
+    event.reply(REQUEST.cancelled, requestId)
   }
 })
 

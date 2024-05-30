@@ -128,6 +128,10 @@ export default function RequestContextProvider({
     setLaunchRequest(true)
   }
 
+  const cancel = () => {
+    window.electron.ipcRenderer.send(REQUEST.cancel, tabId)
+  }
+
   const sendRequest = () => {
     if (!requestUrl || !urlIsValid({})) return
     setFetching(true)
@@ -178,6 +182,7 @@ export default function RequestContextProvider({
       setFetching(false)
       window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
       window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.cancelled)
     })
 
     const getFullUrl = () => {
@@ -205,6 +210,31 @@ export default function RequestContextProvider({
       ])
       window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
       window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+    })
+
+    window.electron.ipcRenderer.on(REQUEST.cancelled, (_: unknown, requestId: number) => {
+      if (requestId !== tabId) return
+      setFetching(false)
+      setFetched(true)
+      setFetchError('Request was cancelled')
+      requestConsole?.addAll([
+        ...requestLogs,
+        {
+          method: requestMethod.value,
+          url: getFullUrl(),
+          status: 499,
+          time: 0,
+          request: callApiRequest,
+          failure: {
+            request: callApiRequest,
+            message: 'Request was cancelled'
+          } as CallResponseFailure
+        }
+      ])
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.cancelled)
     })
   }
 
@@ -253,6 +283,7 @@ export default function RequestContextProvider({
       }
       window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
       window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.cancelled)
       sendMainRequest([requestLog])
     })
     window.electron.ipcRenderer.on(REQUEST.failure, (_: unknown, response: CallResponseFailure) => {
@@ -269,6 +300,28 @@ export default function RequestContextProvider({
       })
       window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
       window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+    })
+
+    window.electron.ipcRenderer.on(REQUEST.cancelled, (_: unknown, requestId: number) => {
+      if (requestId !== tabId) return
+      setFetching(false)
+      setFetched(true)
+      setFetchError('Request was cancelled')
+      requestConsole?.add({
+        method: requestMethod.value,
+        url,
+        status: 499,
+        time: 0,
+        request: callApiRequest,
+        failure: {
+          request: callApiRequest,
+          message: 'Request was cancelled'
+        } as CallResponseFailure
+      })
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.failure)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.response)
+      window.electron.ipcRenderer.removeAllListeners(REQUEST.cancelled)
     })
   }
 
@@ -358,6 +411,7 @@ export default function RequestContextProvider({
   }
 
   const getUrl = ({ url = requestUrl }) => new URL(getValue(url))
+
   const getValue = (value: string): string => {
     if (requestPathParams) {
       value = replacePathParams(value, requestPathParams)
@@ -564,6 +618,7 @@ export default function RequestContextProvider({
       setBody,
       setAuth,
       fetch,
+      cancel,
       urlIsValid
     },
     fetching,
