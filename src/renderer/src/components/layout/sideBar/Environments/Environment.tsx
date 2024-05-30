@@ -69,7 +69,7 @@ export default function Environment({
         <div className={styles.checkbox}>
           <input
             type="checkbox"
-            checked={environment.active}
+            checked={env.active}
             onClick={(e) => e.stopPropagation()}
             onChange={handleCheckbox}
           />

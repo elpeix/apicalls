@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Environment from './Environment'
@@ -8,9 +8,20 @@ import { FilterInput } from '../../../base/FilterInput/FilterInput'
 
 export default function Environments() {
   const { environments } = useContext(AppContext)
+
+  const [envs, setEnvs] = useState<Environment[]>([])
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    if (!environments) return
+    setEnvs(environments.getAll())
+    if (selectedEnvironment) {
+      const env = environments.get(selectedEnvironment.id)
+      if (env) setSelectedEnvironment(env)
+    }
+  }, [environments, selectedEnvironment])
 
   const add = () => {
     if (!environments) return
@@ -68,22 +79,20 @@ export default function Environments() {
               <FilterInput onClear={handleShowFilter} onFilter={handleFilter} />
             </div>
           )}
-          {environments &&
-            environments
-              .getAll()
-              .filter(
-                (environment) =>
-                  !showFilter || environment.name.toLowerCase().includes(filter.toLowerCase())
-              )
-              .map((environment) => (
-                <EnvironmentItem
-                  key={environment.id}
-                  environment={environment}
-                  selectEnvironment={setSelectedEnvironment}
-                  activeEnvironment={(id) => environments.active(id)}
-                  deactiveEnvironment={() => environments.deactive()}
-                />
-              ))}
+          {envs
+            .filter(
+              (environment) =>
+                !showFilter || environment.name.toLowerCase().includes(filter.toLowerCase())
+            )
+            .map((environment) => (
+              <EnvironmentItem
+                key={environment.id}
+                environment={environment}
+                selectEnvironment={setSelectedEnvironment}
+                activeEnvironment={(id) => environments?.active(id)}
+                deactiveEnvironment={() => environments?.deactive()}
+              />
+            ))}
         </div>
       )}
     </>

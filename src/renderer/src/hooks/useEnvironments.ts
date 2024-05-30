@@ -30,23 +30,26 @@ export function useEnvironments(): EnvironmentsHookType {
     ipcRenderer.send(ENVIRONMENTS.update, environment)
   }
 
+  const updateAll = (environments: Environment[]) => {
+    setEnvironments(environments)
+    ipcRenderer.send(ENVIRONMENTS.updateAll, environments)
+  }
+
   const clear = () => setEnvironments([])
   const getAll = () => environments
   const get = (id: Identifier) => environments.find((environment) => environment.id === id)
   const getActive = () => environments.find((environment) => environment.active)
   const active = (id: Identifier) =>
-    setEnvironments(
+    updateAll(
       environments.map((environment) => {
         environment.active = environment.id === id
-        ipcRenderer.send(ENVIRONMENTS.update, environment)
         return environment
       })
     )
   const deactive = () =>
-    setEnvironments(
+    updateAll(
       environments.map((environment) => {
         environment.active = false
-        ipcRenderer.send(ENVIRONMENTS.update, environment)
         return environment
       })
     )

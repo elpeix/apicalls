@@ -20,6 +20,11 @@ ipcMain.on(ENVIRONMENTS.update, (event, environment: Environment) => {
   event.reply(ENVIRONMENTS.updated, newEnvironments)
 })
 
+ipcMain.on(ENVIRONMENTS.updateAll, (event, environments: Environment[]) => {
+  store.set(ENVIRONMENTS_KEY, environments)
+  event.reply(ENVIRONMENTS.updated, environments)
+})
+
 ipcMain.on(ENVIRONMENTS.get, (event) => {
   event.reply(ENVIRONMENTS.updated, store.get(ENVIRONMENTS_KEY, []))
 })

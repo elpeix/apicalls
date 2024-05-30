@@ -31,6 +31,7 @@ export const ENVIRONMENTS = {
   get: 'environments:get',
   create: 'environments:create',
   update: 'environments:update',
+  updateAll: 'environments:update-all',
   remove: 'environments:remove',
   updated: 'environments:updated',
   getFailure: 'environments:get-failure'
