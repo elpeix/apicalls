@@ -39,24 +39,20 @@ export default function SideMenu({
   const macClass = windowAPI.os.isMac ? styles.mac : ''
 
   return (
-    <>
-      <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''} ${macClass}`}>
-        {menu &&
-          menu.items.map((item, index) => (
-            <div
-              key={index}
-              className={`${styles.item} ${isSelected(item.id) ? styles.active : ''}  ${
-                item.spacer ? styles.spacer : ''
-              }`}
-              title={item.title ? item.title : ''}
-              onClick={() => !item.spacer && handleClick(item.id)}
-            >
-              {item.id && !item.spacer && (
-                <ButtonIcon icon={item.id} size={24} title={item.title} />
-              )}
-            </div>
-          ))}
-      </div>
-    </>
+    <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''} ${macClass}`}>
+      {menu &&
+        menu.items.map((item, index) => (
+          <div
+            key={index}
+            className={`${styles.item} ${isSelected(item.id) ? styles.active : ''}  ${
+              item.spacer ? styles.spacer : ''
+            }`}
+            title={item.title ? item.title : ''}
+            onClick={() => !item.spacer && handleClick(item.id)}
+          >
+            {item.id && !item.spacer && <ButtonIcon icon={item.id} size={24} title={item.title} />}
+          </div>
+        ))}
+    </div>
   )
 }
