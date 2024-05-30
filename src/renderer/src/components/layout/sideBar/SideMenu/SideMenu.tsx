@@ -34,8 +34,6 @@ export default function SideMenu({
   }
 
   const windowAPI = window.api as WindowAPI
-  console.log(windowAPI.os.isMac)
-
   const macClass = windowAPI.os.isMac ? styles.mac : ''
 
   return (

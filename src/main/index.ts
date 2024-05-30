@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
 import { registerShortcuts } from './shortcutActions'
+import { menu } from './menu'
 
 const store = new Store()
 
@@ -43,7 +44,8 @@ function createWindow() {
   registerShortcuts(mainWindow)
 }
 
-Menu.setApplicationMenu(null)
+// Set application menu
+Menu.setApplicationMenu(menu)
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

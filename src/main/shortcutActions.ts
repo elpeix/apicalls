@@ -23,6 +23,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
   ws.register('commandOrControl+s', ACTIONS.saveRequest, mainWindow)
   ws.register('commandOrControl+shift+c', ACTIONS.toggleConsole, mainWindow)
   ws.register('commandOrControl+shift+p', ACTIONS.toggleRequestPanel, mainWindow)
+  ws.registerCallback('commandOrControl+shift+i', () => mainWindow.webContents.toggleDevTools())
 }
 
 class WindowShortcut {
