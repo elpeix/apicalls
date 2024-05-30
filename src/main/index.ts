@@ -6,6 +6,8 @@ import { registerShortcuts } from './shortcutActions'
 
 const store = new Store()
 
+const icon = join(__dirname, '../../resources/icon.png')
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -13,7 +15,9 @@ function createWindow() {
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    icon: join(__dirname, '../../resources/icon'),
+    icon,
+    title: 'API Calls',
+    titleBarStyle: 'hiddenInset',
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
@@ -43,6 +47,11 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // Set dock icon for macOS
+  if (process.platform === 'darwin') {
+    app.dock.setIcon(icon)
+  }
+
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.francescrequesens.apicalls')
 

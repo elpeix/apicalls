@@ -292,3 +292,11 @@ type SaveRequest = {
   collectionId: Identifier
   request: RequestType
 }
+
+type WindowAPI = {
+  os: {
+    isWindows: boolean
+    isMac: boolean
+    isLinux: boolean
+  }
+}

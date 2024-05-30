@@ -79,6 +79,11 @@
     .panel-tabs-header {
       display: flex;
       flex-direction: row;
+      -webkit-app-region: drag;
+
+      * {
+        -webkit-app-region: no-drag;
+      }
 
       .panel-tabs-header-list {
         overflow-x: auto;
