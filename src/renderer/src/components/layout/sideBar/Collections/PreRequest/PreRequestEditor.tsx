@@ -26,6 +26,7 @@ export default function PreRequestEditor({
   const [queryParams, setQueryParams] = useState<KeyValue[]>([])
   const [body, setBody] = useState<string>('')
   const [dataToCapture, setDataToCapture] = useState<PreRequestDataToCapture[]>([])
+  const [active, setActive] = useState(false)
 
   useEffect(() => {
     setUrl(preRequest?.request.url || '')
@@ -35,6 +36,7 @@ export default function PreRequestEditor({
     setBody(preRequest?.request.body || '')
     setType(preRequest?.type || 'authorization')
     setDataToCapture(preRequest?.dataToCapture || [])
+    setActive(preRequest?.active || false)
   }, [preRequest])
 
   const handleSave = () => {
@@ -47,7 +49,8 @@ export default function PreRequestEditor({
         body
       },
       type,
-      dataToCapture
+      dataToCapture,
+      active
     }
     onSave(savedPreRequest)
     onClose()
@@ -105,12 +108,20 @@ export default function PreRequestEditor({
         </Tabs>
       </div>
       <div className={styles.footer}>
-        <button className={styles.cancel} onClick={onClose}>
-          Cancel
-        </button>
-        <button className={styles.save} onClick={handleSave}>
-          Save
-        </button>
+        <div className={styles.left}>
+          <label>
+            <input type="checkbox" checked={active} onChange={() => setActive(!active)} />
+            <span className={active ? styles.active : ''}>Active</span>
+          </label>
+        </div>
+        <div className={styles.right}>
+          <button className={styles.cancel} onClick={onClose}>
+            Cancel
+          </button>
+          <button className={styles.save} onClick={handleSave}>
+            Save
+          </button>
+        </div>
       </div>
     </Dialog>
   )

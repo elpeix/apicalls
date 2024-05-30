@@ -65,6 +65,7 @@ type PreRequest = {
   request: RequestBase
   type: 'authorization' | 'data'
   dataToCapture: PreRequestDataToCapture[]
+  active?: boolean
 }
 
 type CollectionFolder = {

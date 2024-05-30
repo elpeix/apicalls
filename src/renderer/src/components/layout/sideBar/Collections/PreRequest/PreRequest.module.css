@@ -76,24 +76,50 @@
   .footer {
     padding: 0.5rem;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 0.5rem;
+    justify-content: space-between;
 
-    button:focus {
-      box-shadow: 0 0 0 1px var(--focus-color);
+    .left {
+      display: flex;
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        span {
+          text-transform: uppercase;
+          cursor: pointer;
+          color: var(--color-5);
+          transition: color 0.2s ease-in-out;
+
+          &:hover,
+          &.active {
+            color: var(--color-3);
+          }
+        }
+      }
     }
 
-    .cancel {
-      color: var(--color-5);
-    }
+    .right {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
 
-    .save {
-      color: var(--color-3);
-      background-color: var(--color-9);
+      button:focus {
+        box-shadow: 0 0 0 1px var(--focus-color);
+      }
 
-      &:focus {
-        color: var(--highlight-color);
+      .cancel {
+        color: var(--color-5);
+      }
+
+      .save {
+        color: var(--color-3);
+        background-color: var(--color-9);
+
+        &:focus {
+          color: var(--highlight-color);
+        }
       }
     }
   }

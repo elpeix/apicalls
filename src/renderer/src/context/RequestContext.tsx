@@ -134,7 +134,7 @@ export default function RequestContextProvider({
     setFetched(false)
     setFetchError('')
 
-    if (preRequestData) {
+    if (preRequestData && preRequestData.active) {
       sendPreRequest()
     } else {
       sendMainRequest()
@@ -209,7 +209,7 @@ export default function RequestContextProvider({
   }
 
   const sendPreRequest = () => {
-    if (!preRequestData) {
+    if (!preRequestData || !preRequestData.active) {
       return
     }
     const environment = environments?.getActive()
