@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, nativeTheme } from 'electron'
+import { app, shell, BrowserWindow, nativeTheme, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
@@ -42,6 +42,8 @@ function createWindow() {
 
   registerShortcuts(mainWindow)
 }
+
+Menu.setApplicationMenu(null)
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
