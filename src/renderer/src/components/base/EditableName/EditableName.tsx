@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './EditableName.module.css'
 import Name from '../Name'
+import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function EditableName({
   name,
@@ -39,6 +40,16 @@ export default function EditableName({
     setNameValue(name)
   }, [name])
 
+  useEffect(() => {
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.escape, () => {
+      setEditingName(false)
+      setNameValue(name)
+      if (onBlur) onBlur()
+    })
+    return () => ipcRenderer.removeAllListeners(ACTIONS.escape)
+  }, [name, onBlur])
+
   const editName = () => {
     if (!editOnDoubleClick) return
     setEditingName(true)
@@ -53,11 +64,6 @@ export default function EditableName({
     setNameValue(e.target.value)
   }
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setEditingName(false)
-      setNameValue(name)
-      if (onBlur) onBlur()
-    }
     if (e.key === 'Enter') {
       setEditingName(false)
       update(nameValue)

@@ -14,9 +14,6 @@ export default function Confirm({
   onCancel: () => void
 }) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === 'Escape') {
-      onCancel()
-    }
     if (e.key === 'Enter') {
       onConfirm()
     }

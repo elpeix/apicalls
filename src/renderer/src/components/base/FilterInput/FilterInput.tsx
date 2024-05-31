@@ -1,7 +1,8 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Input from '../Input/Input'
 import ButtonIcon from '../ButtonIcon'
 import styles from './FilterInput.module.css'
+import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export const FilterInput = ({
   onFilter,
@@ -12,29 +13,23 @@ export const FilterInput = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
+  useEffect(() => {
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.escape, () => {
       inputRef.current?.blur()
-      clear()
-    }
-  }
+      onClear?.()
+    })
+    return () => ipcRenderer.removeAllListeners(ACTIONS.escape)
+  }, [onClear])
 
   const clear = () => {
     onClear?.()
-    onFilter('')
   }
 
   return (
     <div className={styles.filter}>
       <div className={styles.input}>
-        <Input
-          inputRef={inputRef}
-          placeholder="Filter"
-          value=""
-          onChange={onFilter}
-          onKeyDown={handleKeyDown}
-          autoFocus
-        />
+        <Input inputRef={inputRef} placeholder="Filter" value="" onChange={onFilter} autoFocus />
       </div>
       <ButtonIcon icon="close" onClick={() => clear()} />
     </div>

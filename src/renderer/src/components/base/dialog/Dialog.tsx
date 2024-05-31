@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Dialog.module.css'
+import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function Dialog({
   children,
@@ -11,6 +12,15 @@ export default function Dialog({
   onClose?: () => void
 }) {
   const [show, setShow] = useState(true)
+
+  useEffect(() => {
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.escape, () => {
+      setShow(false)
+      if (onClose) onClose()
+    })
+    return () => ipcRenderer.removeAllListeners(ACTIONS.escape)
+  }, [onClose])
 
   const overlayClick = () => {
     setShow(false)

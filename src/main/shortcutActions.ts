@@ -23,6 +23,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
   ws.register('commandOrControl+s', ACTIONS.saveRequest, mainWindow)
   ws.register('commandOrControl+shift+c', ACTIONS.toggleConsole, mainWindow)
   ws.register('commandOrControl+shift+p', ACTIONS.toggleRequestPanel, mainWindow)
+  ws.register('escape', ACTIONS.escape, mainWindow)
   ws.registerCallback('commandOrControl+shift+i', () => mainWindow.webContents.toggleDevTools())
 }
 
@@ -41,9 +42,6 @@ class WindowShortcut {
 
   public registerCallback(shortcut: string, callback: () => void): void {
     const baseKeys = shortcut.split('+')
-    if (baseKeys.length === 1) {
-      baseKeys.unshift(isMac ? 'meta' : 'control')
-    }
     if (['control', 'shift', 'alt', 'meta'].includes(baseKeys[baseKeys.length - 1])) {
       return
     }

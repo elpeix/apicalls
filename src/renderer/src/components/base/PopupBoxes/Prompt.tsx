@@ -17,9 +17,6 @@ export default function Prompt({
 }) {
   const [value, setValue] = useState('')
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Escape') {
-      handleCancel()
-    }
     if (e.key === 'Enter') {
       handleOk()
     }
