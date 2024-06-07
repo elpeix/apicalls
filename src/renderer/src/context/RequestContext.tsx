@@ -634,7 +634,8 @@ export default function RequestContextProvider({
     },
     save: saveRequest,
     saved,
-    requestConsole
+    requestConsole,
+    tabId
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>

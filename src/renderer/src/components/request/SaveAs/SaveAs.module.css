@@ -1,0 +1,224 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: 50rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+
+  .label {
+    color: var(--color-3);
+    text-transform: uppercase;
+    padding: 1rem 0.5rem;
+    user-select: none;
+  }
+
+  .input {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    border-left: 1px solid var(--border-color);
+
+    box-shadow: inset 0 0 0 1px transparent;
+    transition: box-shadow 0.2s ease-in-out;
+
+    &:has(*:focus) {
+      box-shadow: inset 0 0 0 1px var(--focus-color);
+    }
+
+    input {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 1rem 0.5rem;
+
+      &::placeholder {
+        color: var(--color-5);
+      }
+    }
+    &.inputError {
+      background-color: var(--error-background-color) !important;
+    }
+  }
+}
+
+.body {
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  height: 30rem;
+  width: 100%;
+  flex-direction: row;
+  background-color: var(--color-11);
+  user-select: none;
+
+  .collections {
+    display: flex;
+    flex-direction: column;
+    width: 16rem;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid var(--border-color);
+    background-color: var(--color-9);
+
+    .collection {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      color: var(--color-3);
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      .name {
+        flex: 1;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:hover {
+        background-color: var(--color-8);
+      }
+
+      &.selected {
+        background-color: var(--color-7);
+        color: var(--color-1);
+      }
+    }
+  }
+
+  .collectionFolders {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    .foldersPath {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding: 0 0.56rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--color-5);
+      width: 100%;
+      height: 2.1rem;
+
+      .path {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        display: flex;
+        cursor: pointer;
+        height: 100%;
+        align-items: center;
+        transition: color 0.2s;
+
+        &:hover {
+          color: var(--color-3);
+        }
+
+        &::after {
+          content: '/';
+          margin: 0 0.3rem;
+          color: var(--color-4);
+          font-weight: 800;
+          font-size: 1rem;
+        }
+
+        &:last-child {
+          cursor: default;
+          color: var(--color-4);
+          &::after {
+            content: '';
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    .folders {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+
+      .folder {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.5rem;
+        color: var(--color-3);
+        border-bottom: 1px solid var(--border-color);
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        .name {
+          flex: 1;
+          font-weight: 500;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+
+        &.selected {
+          background-color: var(--color-8);
+          color: var(--color-1);
+        }
+      }
+    }
+
+    .noCollection {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-size: 1.2rem;
+      color: var(--color-6);
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+
+  .error {
+    color: var(--error-color);
+    margin-right: 1rem;
+  }
+
+  button:focus {
+    box-shadow: 0 0 0 1px var(--focus-color);
+  }
+
+  .cancel {
+    color: var(--color-5);
+  }
+
+  .save {
+    color: var(--color-3);
+    background-color: var(--color-9);
+
+    &:focus {
+      color: var(--highlight-color);
+    }
+  }
+}

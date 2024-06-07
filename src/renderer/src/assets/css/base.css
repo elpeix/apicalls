@@ -26,6 +26,7 @@
   --highlight-color: #0cf;
   --success-background-color: rgba(0, 204, 255, 0.2);
   --error-background-color: rgba(223, 48, 48, 0.1);
+  --error-color: #ff4d4d;
   --overlay-color: rgba(0, 0, 0, 0.5);
   --cancel-color: rgba(223, 48, 48, 0.1);
 
@@ -91,6 +92,7 @@
     --highlight-color: #0088ff;
     --success-background-color: #69b9ff;
     --error-background-color: #ff4d4d;
+    --error-color: #ff4d4d;
     --overlay-color: rgba(0, 0, 0, 0.5);
     --cancel-color: rgba(255, 77, 77, 0.1);
 

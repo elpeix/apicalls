@@ -244,6 +244,7 @@ type RequestContestType = {
   }
   save: () => void
   requestConsole?: ConsoleHookType | null
+  tabId?: Identifier
 }
 
 type Theme = 'light' | 'dark' | 'system'

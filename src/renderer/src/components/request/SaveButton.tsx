@@ -2,8 +2,8 @@ import React, { useContext, useRef, useState } from 'react'
 import styles from './Request.module.css'
 import Icon from '../base/Icon/Icon'
 import LinkedModal from '../base/linkedModal/LinkedModal'
-import Dialog from '../base/dialog/Dialog'
 import { RequestContext } from '../../context/RequestContext'
+import SaveAs from './SaveAs/SaveAs'
 
 export default function SaveButton() {
   const { path, save } = useContext(RequestContext)
@@ -51,9 +51,7 @@ export default function SaveButton() {
         </LinkedModal>
       )}
       {showDialog && (
-        <Dialog onClose={() => setShowDialog(false)}>
-          <div>Save as...</div>
-        </Dialog>
+        <SaveAs onSave={() => setShowDialog(false)} onClose={() => setShowDialog(false)} />
       )}
     </div>
   )
