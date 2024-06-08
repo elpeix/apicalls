@@ -5,7 +5,17 @@ import { RequestContext } from '../../../context/RequestContext'
 import { AppContext } from '../../../context/AppContext'
 import Icon from '../../base/Icon/Icon'
 
-export default function SaveAs({ onSave, onClose }: { onSave: () => void; onClose: () => void }) {
+const getFolders = (elements: (CollectionFolder | RequestType)[]) => {
+  return elements
+    .filter((element) => element.type === 'folder')
+    .map((element) => element as CollectionFolder)
+}
+
+const getFolder = (folders: CollectionFolder[], id: Identifier) => {
+  return folders.find((element) => element.id === id)
+}
+
+export default function SaveAs({ onClose }: { onClose: () => void }) {
   const { collections, tabs } = useContext(AppContext)
   const { tabId } = useContext(RequestContext)
 
@@ -20,54 +30,43 @@ export default function SaveAs({ onSave, onClose }: { onSave: () => void; onClos
   const [requestNameError, setRequestNameError] = useState(false)
 
   useEffect(() => {
-    if (!tabs || !tabId) return
-    const tab = tabs?.getTab(tabId)
-    if (!tab) return
-    setRequestName(tab.name || '')
-    const collection = collections
-      ?.getAll()
-      .find((collection) => collection.id === tab.collectionId)
-    if (collection) {
-      setCollectionSelected(collection)
-      const path = tab.path?.filter((pathItem) => pathItem.type === 'folder')
-      if (!path) {
-        return
-      }
-
-      let folders = collection.elements
-        .filter((element) => element.type === 'folder')
-        .map((element) => element as CollectionFolder)
-
-      // Get last folder
-      const folderId = path[path.length - 1]?.id
-      if (folderId) {
-        const folder = folders.find((element) => element.id === folderId) as
-          | CollectionFolder
-          | undefined
-        if (folder) {
-          setFolderSelected(folder as CollectionFolder)
-        }
-      }
-
-      // Get folder path
-      const folderPath: CollectionFolder[] = []
-      console.log('Path', path)
-      for (let i = 0; i < path.length - 1; i++) {
-        console.log('Path', path[i])
-        const folder = folders.find((element) => element.id === path[i].id) as
-          | CollectionFolder
-          | undefined
-        if (folder) {
-          folderPath.push(folder as CollectionFolder)
-          folders = folder.elements
-            .filter((element) => element.type === 'folder')
-            .map((element) => element as CollectionFolder)
-        }
-      }
-
-      setFolderPath(folderPath)
-      setFolderList(folders)
+    if (!tabs || !tabId) {
+      return
     }
+    const tab = tabs?.getTab(tabId)
+    if (!tab) {
+      return
+    }
+    setRequestName(tab.name || '')
+    if (!tab.collectionId) {
+      return
+    }
+    const collection = collections?.get(tab.collectionId)
+    if (!collection) {
+      return
+    }
+    setCollectionSelected(collection)
+    const path = tab.path?.filter((pathItem) => pathItem.type === 'folder')
+    if (!path) {
+      return
+    }
+    let folders = getFolders(collection.elements)
+    const folderPath: CollectionFolder[] = []
+    for (let i = 0; i < path.length - 1; i++) {
+      const folder = getFolder(folders, path[i].id)
+      if (folder) {
+        folderPath.push(folder as CollectionFolder)
+        folders = getFolders(folder.elements)
+      }
+    }
+    const folderId = path[path.length - 1]?.id
+    if (folderId) {
+      const folder = getFolder(folders, folderId)
+      setFolderSelected(folder || null)
+    }
+
+    setFolderPath(folderPath)
+    setFolderList(folders)
   }, [collections, tabId, tabs])
 
   useEffect(() => {
@@ -77,34 +76,23 @@ export default function SaveAs({ onSave, onClose }: { onSave: () => void; onClos
 
   const selectCollection = (collection: Collection) => {
     setCollectionSelected(collection)
-    const folders: CollectionFolder[] = collection.elements
-      .filter((element) => element.type === 'folder')
-      .map((element) => element as CollectionFolder)
-    setFolderList(folders)
+    setFolderList(getFolders(collection.elements))
     setFolderPath([])
   }
 
   const openFolder = (folder: CollectionFolder) => {
-    console.log(folder)
     setFolderPath([...folderPath, folder])
-    const folders: CollectionFolder[] = folder.elements
-      .filter((element) => element.type === 'folder')
-      .map((element) => element as CollectionFolder)
-    setFolderList(folders)
+    setFolderList(getFolders(folder.elements))
   }
 
   const selectFolder = (folder: CollectionFolder) => {
-    console.log(folder)
     setFolderSelected(folder)
   }
 
   const selectFolderPath = (index: number) => {
     setFolderPath(folderPath.slice(0, index + 1))
     const folder = folderPath[index]
-    const folders: CollectionFolder[] = folder.elements
-      .filter((element) => element.type === 'folder')
-      .map((element) => element as CollectionFolder)
-    setFolderList(folders)
+    setFolderList(getFolders(folder.elements))
   }
 
   const saveHandler = () => {
@@ -119,29 +107,30 @@ export default function SaveAs({ onSave, onClose }: { onSave: () => void; onClos
       inputRef.current?.focus()
       return
     }
-    const tab = tabs?.getTab(tabId)
-    console.log('Save handler', folderPath)
     const path: PathItem[] = [
       ...folderPath.map((folder) => ({ id: folder.id, type: 'folder' }) as PathItem)
     ]
     if (folderSelected) {
       path.push({ id: folderSelected.id, type: 'folder' })
-      console.log('Folder selected', folderSelected)
     }
+    const requestId = new Date().getTime() + '_' + Number(Math.random() * 1000).toFixed(0)
+    path.push({ id: requestId, type: 'request' })
+    const tab = tabs?.getTab(tabId)
     const request = {
-      ...tab,
-      id: new Date().getTime().toString(),
+      type: 'collection',
+      id: requestId,
       name: requestName,
+      date: new Date().toISOString(),
+      request: { ...tab?.request },
+      active: true,
+      saved: true,
       collectionId: collectionSelected.id,
-      path,
-      saved: true
+      path
     } as RequestTab
-    console.log('Save', collectionSelected.id, path, request)
 
-    // TODO: Save request
-    // tabs.updateTab(tabId, request)
-    // collections?.saveRequest({ path, collectionId: collectionSelected.id, request })
-    onSave()
+    tabs.updateTab(tabId, request)
+    collections?.saveRequest({ path, collectionId: collectionSelected.id, request })
+    onClose()
   }
 
   return (

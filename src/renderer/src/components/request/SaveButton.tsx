@@ -50,9 +50,7 @@ export default function SaveButton() {
           <div onClick={openDialog}>Save as...</div>
         </LinkedModal>
       )}
-      {showDialog && (
-        <SaveAs onSave={() => setShowDialog(false)} onClose={() => setShowDialog(false)} />
-      )}
+      {showDialog && <SaveAs onClose={() => setShowDialog(false)} />}
     </div>
   )
 }

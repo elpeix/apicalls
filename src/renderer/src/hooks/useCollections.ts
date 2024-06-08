@@ -91,9 +91,14 @@ export function useCollections(): CollectionsHookType {
       }
       const index = elements.findIndex((element) => element.id === item.id)
       if (index === -1) {
-        throw new Error('Element not found')
-      }
-      if (pathCopy.length === 0) {
+        elements.push({
+          type: request.type,
+          id: request.id,
+          name: request.name,
+          date: request.date,
+          request: request.request
+        })
+      } else if (pathCopy.length === 0) {
         elements.splice(index, 1, request)
       } else {
         elements = (elements[index] as CollectionFolder).elements
