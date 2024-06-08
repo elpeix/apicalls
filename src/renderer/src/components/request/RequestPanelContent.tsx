@@ -10,7 +10,7 @@ import styles from './Request.module.css'
 import { ACTIONS } from '../../../../lib/ipcChannels'
 
 export default function RequestPanelContent() {
-  const { isActive, request, fetching, save } = useContext(RequestContext)
+  const { isActive, request, fetching, save, setOpenSaveAs } = useContext(RequestContext)
 
   const requestPanel = useRef<ImperativePanelHandle>(null)
   const [requestPanelCollapsed, setRequestPanelCollapsed] = useState(false)
@@ -34,6 +34,17 @@ export default function RequestPanelContent() {
       ipcRenderer.removeAllListeners(ACTIONS.saveRequest)
     }
   }, [isActive, save])
+
+  useEffect(() => {
+    if (!isActive) return
+    const ipcRenderer = window.electron.ipcRenderer
+    ipcRenderer.on(ACTIONS.saveAsRequest, () => {
+      setOpenSaveAs && setOpenSaveAs(true)
+    })
+    return () => {
+      ipcRenderer.removeAllListeners(ACTIONS.saveAsRequest)
+    }
+  }, [isActive, setOpenSaveAs])
 
   useEffect(() => {
     if (!isActive) return

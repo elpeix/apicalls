@@ -21,6 +21,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
   ws.register('commandOrControl+b', ACTIONS.toggleSidebar, mainWindow)
   ws.register('commandOrControl+Enter', ACTIONS.sendRequest, mainWindow)
   ws.register('commandOrControl+s', ACTIONS.saveRequest, mainWindow)
+  ws.register('commandOrControl+shift+s', ACTIONS.saveAsRequest, mainWindow)
   ws.register('commandOrControl+shift+c', ACTIONS.toggleConsole, mainWindow)
   ws.register('commandOrControl+shift+p', ACTIONS.toggleRequestPanel, mainWindow)
   ws.register('escape', ACTIONS.escape, mainWindow)

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './Request.module.css'
 import Icon from '../base/Icon/Icon'
 import LinkedModal from '../base/linkedModal/LinkedModal'
@@ -6,15 +6,26 @@ import { RequestContext } from '../../context/RequestContext'
 import SaveAs from './SaveAs/SaveAs'
 
 export default function SaveButton() {
-  const { path, save } = useContext(RequestContext)
+  const { path, save, openSaveAs, setOpenSaveAs } = useContext(RequestContext)
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
 
+  useEffect(() => {
+    if (openSaveAs) {
+      setShowDialog(true)
+      setShowModal(false)
+    }
+  }, [openSaveAs])
+
   const handleClick = (e: React.MouseEvent) => {
+    console.log('handleClick', path)
     e.stopPropagation()
-    if (!path) return
-    save()
+    if (!path || path.length === 0) {
+      openDialog(e)
+    } else {
+      save()
+    }
   }
 
   const openModal = (e: React.MouseEvent) => {
@@ -26,6 +37,11 @@ export default function SaveButton() {
     e.stopPropagation()
     setShowDialog(true)
     setShowModal(false)
+  }
+
+  const closeDialog = () => {
+    setShowDialog(false)
+    setOpenSaveAs && setOpenSaveAs(false)
   }
 
   return (
@@ -50,7 +66,7 @@ export default function SaveButton() {
           <div onClick={openDialog}>Save as...</div>
         </LinkedModal>
       )}
-      {showDialog && <SaveAs onClose={() => setShowDialog(false)} />}
+      {showDialog && <SaveAs onClose={closeDialog} />}
     </div>
   )
 }

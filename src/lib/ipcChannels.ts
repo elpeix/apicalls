@@ -46,6 +46,7 @@ export const ACTIONS = {
   toggleSidebar: 'action:toggle-sidebar',
   sendRequest: 'action:send-request',
   saveRequest: 'action:save-request',
+  saveAsRequest: 'action:save-as-request',
   toggleRequestPanel: 'action:toggle-request-panel',
   toggleConsole: 'action:toggle-console',
   escape: 'action:escape'

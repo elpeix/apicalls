@@ -37,7 +37,11 @@ export default function SaveAs({ onClose }: { onClose: () => void }) {
     if (!tab) {
       return
     }
-    setRequestName(tab.name || '')
+    let name = tab.name
+    if (!name || tab.type === 'draft') {
+      name = ''
+    }
+    setRequestName(name)
     if (!tab.collectionId) {
       return
     }

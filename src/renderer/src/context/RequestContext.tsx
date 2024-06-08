@@ -66,6 +66,7 @@ export default function RequestContextProvider({
   const [requestPathParams, setRequestPathParams] = useState(definedRequest.pathParams || [])
   const [requestQueryParams, setRequestQueryParams] = useState(definedRequest.queryParams || [])
   const [requestFullUrl, setRequestFullUrl] = useState(definedRequest.url || '')
+  const [openSaveAs, setOpenSaveAs] = useState(false)
 
   const [launchRequest, setLaunchRequest] = useState(false)
   const [fetching, setFetching] = useState(false)
@@ -379,6 +380,7 @@ export default function RequestContextProvider({
     if (!collections) return
     if (!collectionId) {
       console.error('No collection selected')
+      setOpenSaveAs(true)
       return
     }
     const request = {
@@ -635,7 +637,9 @@ export default function RequestContextProvider({
     save: saveRequest,
     saved,
     requestConsole,
-    tabId
+    tabId,
+    openSaveAs,
+    setOpenSaveAs
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
