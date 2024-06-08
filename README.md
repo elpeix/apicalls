@@ -2,6 +2,8 @@
 
 Call Rest APIs
 
+![ApiCalls](apiCalls.png)
+
 ## Project Setup
 
 ### Install
