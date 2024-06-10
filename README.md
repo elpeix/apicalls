@@ -1,6 +1,6 @@
 # API Calls
 
-Call Rest APIs
+Simple application to call REST APIs.
 
 ![ApiCalls](apiCalls.png)
 
