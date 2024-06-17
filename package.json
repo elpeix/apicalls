@@ -24,7 +24,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@monaco-editor/react": "^4.6.0",
-    "electron-store": "^9.0.0",
+    "electron-store": "^10.0.0",
     "react-resizable-panels": "^2.0.17",
     "react-select": "^5.8.0",
     "react-tabs": "^6.0.2",
