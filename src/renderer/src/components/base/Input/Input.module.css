@@ -42,6 +42,7 @@
         background: transparent;
         pointer-events: auto;
         height: 100%;
+        white-space: pre;
 
         &.variable {
           color: var(--highlight-color);
