@@ -35,6 +35,17 @@ export function useEnvironments(): EnvironmentsHookType {
     ipcRenderer.send(ENVIRONMENTS.updateAll, environments)
   }
 
+  const duplicate = (id: Identifier) => {
+    const environment = get(id)
+    if (!environment) return
+    const newEnvironment = {
+      ...environment,
+      id: new Date().getTime(),
+      name: `${environment.name} Copy`
+    }
+    add(newEnvironment)
+  }
+
   const clear = () => setEnvironments([])
   const getAll = () => environments
   const get = (id: Identifier) => environments.find((environment) => environment.id === id)
@@ -81,6 +92,7 @@ export function useEnvironments(): EnvironmentsHookType {
     add,
     update,
     remove,
+    duplicate,
     clear,
     get,
     getActive,

@@ -5,6 +5,7 @@ import Environment from './Environment'
 import EnvironmentItem from './EnvironmentItem'
 import styles from './Environment.module.css'
 import { FilterInput } from '../../../base/FilterInput/FilterInput'
+import Scrollable from '../../../base/Scrollable'
 
 export default function Environments() {
   const { environments } = useContext(AppContext)
@@ -13,6 +14,7 @@ export default function Environments() {
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
+  const [isScrolling, setIsScrolling] = useState(false)
 
   useEffect(() => {
     if (!environments) return
@@ -34,10 +36,19 @@ export default function Environments() {
     environments.update(environment)
   }
 
-  const remove = () => {
-    if (!selectedEnvironment || !environments) return
-    environments.remove(selectedEnvironment.id)
-    setSelectedEnvironment(null)
+  const remove = (id: Identifier) => {
+    if (!environments) return
+    if (id) {
+      environments.remove(id)
+      if (selectedEnvironment && selectedEnvironment.id === id) {
+        setSelectedEnvironment(null)
+      }
+    }
+  }
+
+  const duplicate = (id: Identifier) => {
+    if (!environments) return
+    environments.duplicate(id)
   }
 
   const handleShowFilter = () => {
@@ -73,7 +84,11 @@ export default function Environments() {
         />
       )}
       {!selectedEnvironment && (
-        <div className={`sidePanel-content ${styles.content}`}>
+        <Scrollable
+          className={`sidePanel-content ${styles.content}`}
+          onStartScroll={() => setIsScrolling(true)}
+          onEndScroll={() => setIsScrolling(false)}
+        >
           {showFilter && (
             <div className={styles.filter}>
               <FilterInput onClear={handleShowFilter} onFilter={handleFilter} />
@@ -91,9 +106,12 @@ export default function Environments() {
                 selectEnvironment={setSelectedEnvironment}
                 activeEnvironment={(id) => environments?.active(id)}
                 deactiveEnvironment={() => environments?.deactive()}
+                remove={remove}
+                duplicate={duplicate}
+                isScrolling={isScrolling}
               />
             ))}
-        </div>
+        </Scrollable>
       )}
     </>
   )

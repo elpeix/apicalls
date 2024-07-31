@@ -158,6 +158,7 @@ type EnvironmentsHookType = {
   add: (environment: Environment) => void
   remove: (id: Identifier) => void
   update: (environment: Environment) => void
+  duplicate: (id: Identifier) => void
   clear: () => void
   getAll: () => Environment[]
   get: (id: Identifier) => Environment | undefined

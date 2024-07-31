@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import { createFolder, createRequest } from '../../../../lib/factory'
@@ -14,6 +14,7 @@ import { moveElements } from '../../../../lib/moveElements'
 import { FilterInput } from '../../../base/FilterInput/FilterInput'
 import { filterCollectionElements } from '../../../../lib/collectionFilter'
 import PreRequestEditor from './PreRequest/PreRequestEditor'
+import Scrollable from '../../../base/Scrollable'
 
 export default function Collection({
   collection,
@@ -105,21 +106,6 @@ export default function Collection({
     tabs?.openTab({ request, collectionId: coll.id, path: [{ id: request.id, type: 'request' }] })
   }
 
-  const handleEndScroll = useMemo(() => {
-    let timeout: NodeJS.Timeout
-    return () => {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        setIsScrolling(false)
-      }, 100)
-    }
-  }, [])
-
-  const handleScroll = () => {
-    setIsScrolling(true)
-    handleEndScroll()
-  }
-
   const handleRemove = () => {
     collections?.remove(coll.id)
     setShowDialog(false)
@@ -194,7 +180,11 @@ export default function Collection({
           <FilterInput onClear={handleShowFilter} onFilter={handleFilter} />
         </div>
       )}
-      <div className={styles.collectionContent} onScroll={handleScroll}>
+      <Scrollable
+        className={styles.collectionContent}
+        onStartScroll={() => setIsScrolling(true)}
+        onEndScroll={() => setIsScrolling(false)}
+      >
         <CollectionElements
           collectionId={coll.id}
           elements={filteredElements}
@@ -203,7 +193,7 @@ export default function Collection({
           path={[]}
           scrolling={isScrolling}
         />
-      </div>
+      </Scrollable>
       {showDialog && (
         <Confirm
           message="Are you sure you want to remove this collection?"

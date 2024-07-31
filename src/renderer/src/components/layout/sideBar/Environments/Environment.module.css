@@ -125,4 +125,22 @@
   &:hover .edit {
     display: block;
   }
+
+  .menu {
+    .menuIcon {
+      display: none;
+    }
+  }
+
+  &:has(.menuActive),
+  &:hover,
+  &:focus {
+    opacity: 1;
+    background-color: var(--color-8);
+
+    .folderEdit,
+    .menuIcon {
+      display: flex;
+    }
+  }
 }

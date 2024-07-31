@@ -15,7 +15,7 @@ export default function Environment({
   environment: Environment
   back: () => void
   update: (environment: Environment) => void
-  remove: () => void
+  remove: (id: Identifier) => void
 }) {
   const { environments } = useContext(AppContext)
 
@@ -101,7 +101,7 @@ export default function Environment({
       {showDialog && (
         <Confirm
           message="Are you sure you want to remove this environment?"
-          onConfirm={remove}
+          onConfirm={() => remove(env.id)}
           onCancel={() => setShowDialog(false)}
         />
       )}
