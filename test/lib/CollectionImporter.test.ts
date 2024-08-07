@@ -131,4 +131,25 @@ describe('CollectionImporter', () => {
       expect(request).toHaveProperty('url')
     }
   })
+
+  it('should return a collection with multiple methods with same path', async () => {
+    const importer = new CollectionImporter('./test/fixtures/openapi_methods.json')
+    for await (const progress of importer.import()) {
+      expect(progress).toBeTypeOf('number')
+    }
+    const collection = importer.getCollection()
+    expect(collection).toBeDefined()
+    expect(collection).not.toBeNull()
+    expect(collection.elements).toHaveLength(4)
+
+    for (const element of collection.elements) {
+      expect(element).toHaveProperty('name')
+      expect(element).toHaveProperty('type')
+      expect(element.type).toBe('collection')
+      expect(element).toHaveProperty('request')
+      const requestElement = element as RequestType
+      const request = requestElement.request
+      expect(request).toHaveProperty('url')
+    }
+  })
 })

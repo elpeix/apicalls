@@ -73,19 +73,6 @@ class CollectionImporter {
     const id = new Date().getTime()
     const collectionTree: (CollectionFolder | RequestType)[] = []
     for (const path in sortedPaths) {
-      const params = this.getParams(sortedPaths[path])
-      const collectionRequest: RequestType = {
-        type: 'collection',
-        id: `${id}_${++count}`,
-        name: sortedPaths[path].summary || path,
-        request: {
-          url: baseUrl + path,
-          method: this.getMethod(Object.keys(sortedPaths[path])[0]),
-          headers: params.headers,
-          pathParams: this.getPathParams(path),
-          queryParams: params.queryParams
-        }
-      }
       const splitPath = path.split('/')
       let currentTree = collectionTree
       for (let i = 0; i < splitPath.length - 1; i++) {
@@ -118,7 +105,22 @@ class CollectionImporter {
           currentTree = (element as CollectionFolder).elements
         }
       }
-      currentTree.push(collectionRequest)
+
+      for (const method in sortedPaths[path]) {
+        const params = this.getParams(sortedPaths[path][method].parameters ?? [])
+        currentTree.push({
+          type: 'collection',
+          id: `${id}_${++count}`,
+          name: sortedPaths[path].summary || path,
+          request: {
+            url: baseUrl + path,
+            method: this.getMethod(method),
+            headers: params.headers,
+            pathParams: this.getPathParams(path),
+            queryParams: params.queryParams
+          }
+        })
+      }
     }
     this.sortTree(collectionTree)
     return collectionTree
@@ -128,10 +130,8 @@ class CollectionImporter {
     return getPathParamsFromUrl(path)
   }
 
-  private getParams(path: any): { headers: KeyValue[]; queryParams: KeyValue[] } {
+  private getParams(parameters: any): { headers: KeyValue[]; queryParams: KeyValue[] } {
     // Update type to openAPI path object
-    const method = Object.keys(path)[0]
-    const parameters = path[method].parameters ?? []
     const queryParams: KeyValue[] = []
     const headers: KeyValue[] = []
     if (!parameters) {
