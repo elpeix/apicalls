@@ -9,7 +9,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "format": "prettier --write .",
-    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "lint": "eslint . --fix",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
