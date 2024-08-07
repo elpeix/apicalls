@@ -41,7 +41,9 @@ export default function SaveButton() {
 
   const closeDialog = () => {
     setShowDialog(false)
-    setOpenSaveAs && setOpenSaveAs(false)
+    if (setOpenSaveAs) {
+      setOpenSaveAs(false)
+    }
   }
 
   return (

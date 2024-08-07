@@ -52,7 +52,9 @@ export default function Environments() {
   }
 
   const handleShowFilter = () => {
-    filter && setFilter('')
+    if (filter) {
+      setFilter('')
+    }
     setShowFilter(!showFilter)
   }
 

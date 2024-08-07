@@ -22,9 +22,9 @@ export default function Layout() {
     const ipcRenderer = window.electron.ipcRenderer
     ipcRenderer.on(ACTIONS.toggleSidebar, () => {
       if (sidePanelCollapsed) {
-        sidePanel.current && sidePanel.current?.expand()
+        sidePanel.current?.expand()
       } else {
-        sidePanel.current && sidePanel.current?.collapse()
+        sidePanel.current?.collapse()
       }
     })
     return () => ipcRenderer.removeAllListeners(ACTIONS.toggleSidebar)

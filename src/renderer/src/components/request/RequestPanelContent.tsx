@@ -39,7 +39,9 @@ export default function RequestPanelContent() {
     if (!isActive) return
     const ipcRenderer = window.electron.ipcRenderer
     ipcRenderer.on(ACTIONS.saveAsRequest, () => {
-      setOpenSaveAs && setOpenSaveAs(true)
+      if (setOpenSaveAs) {
+        setOpenSaveAs(true)
+      }
     })
     return () => {
       ipcRenderer.removeAllListeners(ACTIONS.saveAsRequest)

@@ -19,7 +19,9 @@ export default function Scrollable({
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         setIsScrolling(false)
-        onEndScroll && onEndScroll()
+        if (onEndScroll) {
+          onEndScroll()
+        }
       }, 100)
     }
   }, [onEndScroll])
@@ -33,7 +35,9 @@ export default function Scrollable({
     if (!isScrolling) {
       return
     }
-    onStartScroll && onStartScroll()
+    if (onStartScroll) {
+      onStartScroll()
+    }
   }, [isScrolling, onStartScroll])
 
   return (
