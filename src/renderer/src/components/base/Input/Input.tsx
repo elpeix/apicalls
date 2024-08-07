@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useId, useMemo, useState } from 'react'
 import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
@@ -42,10 +42,20 @@ export default function Input({
   const debouncedOnOver = useDebounce(onOver, 700)
   const debouncedValue = useDebounce(internalValue, 700)
   const [variableList, setVariableList] = useState<Variable[]>([])
+  const [envVariables, setEnvVariables] = useState<KeyValue[]>([])
 
   useEffect(() => {
     setInternalValue(value)
   }, [value])
+
+  const variableListId = useId()
+
+  useEffect(() => {
+    const variables = environments?.getVariables()
+    if (variables) {
+      setEnvVariables(variables)
+    }
+  }, [environments])
 
   useEffect(() => {
     if (debouncedValue) {
@@ -109,8 +119,16 @@ export default function Input({
           value={internalValue}
           style={style}
           autoFocus={autoFocus}
+          list={variableListId}
         />
       </div>
+      {showTip && envVariables.length > 0 && (
+        <datalist id={variableListId}>
+          {envVariables.map((variable, index) => (
+            <option key={index} value={`{{${variable.name}}}`} />
+          ))}
+        </datalist>
+      )}
       {showLinkedModal() && (
         <LinkedModal parentRef={inputRef} topOffset={30}>
           <div

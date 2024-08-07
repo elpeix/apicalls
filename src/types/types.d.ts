@@ -168,6 +168,7 @@ type EnvironmentsHookType = {
   variableIsDefined: (name: string) => boolean
   replaceVariables: (value: string) => string
   getVariableValue: (name: string) => string
+  getVariables: (id?: Identifier) => KeyValue[]
 }
 
 type MenuItem = {

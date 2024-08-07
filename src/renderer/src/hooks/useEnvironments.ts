@@ -85,6 +85,17 @@ export function useEnvironments(): EnvironmentsHookType {
     return variable.value
   }
 
+  const getVariables = (id: Identifier = 0) => {
+    let environment: Environment | undefined
+    if (id === 0) {
+      environment = getActive()
+    } else {
+      environment = get(id)
+    }
+    if (!environment) return []
+    return environment.variables
+  }
+
   return {
     setEnvironments,
     getAll,
@@ -100,6 +111,7 @@ export function useEnvironments(): EnvironmentsHookType {
     deactive,
     variableIsDefined,
     replaceVariables,
-    getVariableValue
+    getVariableValue,
+    getVariables
   }
 }

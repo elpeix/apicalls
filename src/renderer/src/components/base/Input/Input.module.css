@@ -70,6 +70,16 @@
     &::placeholder {
       color: var(--color-5);
     }
+
+    &:autofill,
+    &:autofill:hover,
+    &:autofill:focus,
+    &:autofill:active {
+      -webkit-text-fill-color: var(--highlight-color);
+      -webkit-box-shadow: 0 0 0 100rem var(--background-content) inset;
+      box-shadow: 0 0 0 100rem var(--background-content) inset;
+      caret-color: var(--base-color);
+    }
   }
 }
 
