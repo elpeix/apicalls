@@ -76,9 +76,21 @@
     &:autofill:focus,
     &:autofill:active {
       -webkit-text-fill-color: var(--highlight-color);
-      -webkit-box-shadow: 0 0 0 100rem var(--background-content) inset;
       box-shadow: 0 0 0 100rem var(--background-content) inset;
+      border-top: 1px solid var(--background-content);
+      border-bottom: 1px solid var(--background-content);
       caret-color: var(--base-color);
+      transition: border-color 0.2s ease-in-out;
+    }
+    &:autofill:focus,
+    &:autofill:active {
+      border-top-color: var(--focus-color);
+      border-bottom-color: var(--focus-color);
+      transition: border-color 0s ease-in-out;
+      &::selection {
+        background-color: var(--accent-color);
+       -webkit-text-fill-color: var(--selected-color);
+      }
     }
   }
 }
