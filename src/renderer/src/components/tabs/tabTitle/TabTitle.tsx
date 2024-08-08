@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../../../context/AppContext'
 import ButtonIcon from '../../base/ButtonIcon'
 import styles from './TabTitle.module.css'
+import Droppable from '../../base/Droppable/Droppable'
 
 export default function TabTitle({ tab }: { tab: RequestTab }) {
   const { tabs } = useContext(AppContext)
@@ -34,16 +35,35 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
     }
   }
 
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    e.dataTransfer.setData('tabId', tab.id.toString())
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    const tabId = e.dataTransfer.getData('tabId')
+    tabs?.moveTab(tabId, tab.id)
+  }
+
   const className = `${styles.tabTitle} ${styles[tab.type]} ${active} ${saved ? styles.saved : styles.unsaved}`
 
   return (
-    <div className={className} onMouseDown={onMouseDown}>
+    <Droppable
+      className={className}
+      onMouseDown={onMouseDown}
+      draggable={true}
+      onDragStart={handleDragStart}
+      onDrop={handleDrop}
+      allowedDropTypes={['tabId']}
+    >
       <div className={styles.content}>
         <span className={styles.title}>{getTabTitle()}</span>
         <span className={styles.close}>
           <ButtonIcon icon="close" size={15} onClick={onClose} />
         </span>
       </div>
-    </div>
+    </Droppable>
   )
 }

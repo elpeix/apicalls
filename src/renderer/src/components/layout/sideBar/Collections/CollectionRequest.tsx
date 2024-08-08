@@ -74,7 +74,12 @@ export default function CollectionRequest({
 
   return (
     <>
-      <Droppable className={styles.request} onClick={clickHandler} onDrop={handleDrop}>
+      <Droppable
+        className={styles.request}
+        onClick={clickHandler}
+        onDrop={handleDrop}
+        allowedDropTypes={['path']}
+      >
         <div className={`${styles.requestMethod} ${request.method.value}`}>
           {request.method.label}
         </div>

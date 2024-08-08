@@ -117,6 +117,7 @@ type TabsHookType = {
   setActiveTab: (index: number) => void
   getSelectedTabIndex: () => number
   renameTab: (tabId: Identifier, name: string) => void
+  moveTab: (tabId: Identifier, toBeforeTabId: Identifier) => void
   tabs: RequestTab[]
 }
 

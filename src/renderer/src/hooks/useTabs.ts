@@ -84,6 +84,15 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     updateTab(tabId, { ...tab, name })
   }
 
+  const moveTab = (tabId: Identifier, toBeforeTabId: Identifier) => {
+    const newTabs = [...tabs]
+    const fromIndex = newTabs.findIndex((t) => t.id == tabId)
+    const toIndex = newTabs.findIndex((t) => t.id == toBeforeTabId)
+    const [removed] = newTabs.splice(fromIndex, 1)
+    newTabs.splice(toIndex, 0, removed)
+    updateTabs(newTabs)
+  }
+
   return {
     openTab,
     newTab,
@@ -98,6 +107,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     getSelectedTabIndex,
     setTabs,
     renameTab,
+    moveTab,
     tabs
   }
 }

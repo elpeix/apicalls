@@ -19,7 +19,6 @@ export default function SaveButton() {
   }, [openSaveAs])
 
   const handleClick = (e: React.MouseEvent) => {
-    console.log('handleClick', path)
     e.stopPropagation()
     if (!path || path.length === 0) {
       openDialog(e)

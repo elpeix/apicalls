@@ -5,14 +5,21 @@ import { useDebounce } from '../../../hooks/useDebounce'
 export default function Droppable({
   children,
   onClick,
+  onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation(),
+  draggable = false,
+  onDragStart = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault(),
   onDrop,
   onDragOver,
   onDragEnter,
   onDragLeave,
   onDragOverDebounced,
-  className
+  className,
+  allowedDropTypes = []
 }: {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+  onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void
+  draggable?: boolean
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void
   onDragOver?: (e: React.DragEvent<HTMLDivElement>) => void
   onDragEnter?: (e: React.DragEvent<HTMLDivElement>) => void
@@ -20,18 +27,21 @@ export default function Droppable({
   onDragOverDebounced?: () => void
   children?: React.ReactNode
   className?: string
+  allowedDropTypes?: string[]
 }) {
   const [dragOnOver, setDragOnOver] = useState(false)
   const debouncedDragOnOver = useDebounce(dragOnOver, 500)
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
+    if (!isAllowedDrop(e)) return
     setDragOnOver(true)
     onDragEnter?.(e)
   }
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
+    if (!isAllowedDrop(e)) return
     setDragOnOver(true)
     if (debouncedDragOnOver && onDragOverDebounced) {
       onDragOverDebounced()
@@ -48,12 +58,26 @@ export default function Droppable({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setDragOnOver(false)
+    if (!isAllowedDrop(e)) return
     onDrop(e)
+  }
+
+  const isAllowedDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    if (allowedDropTypes.length > 0) {
+      const hasAllowedType = allowedDropTypes.some(
+        (type) => e.dataTransfer.types.indexOf(type.toLocaleLowerCase()) !== -1
+      )
+      if (!hasAllowedType) return false
+    }
+    return true
   }
 
   return (
     <div
       className={`${className} ${styles.droppable} ${dragOnOver ? styles.dragOver : ''}`}
+      onMouseDown={onMouseDown}
+      draggable={draggable}
+      onDragStart={onDragStart}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}

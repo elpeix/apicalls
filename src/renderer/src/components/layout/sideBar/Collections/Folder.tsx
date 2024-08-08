@@ -116,6 +116,7 @@ export default function Folder({
         className={styles.folder}
         onDragOverDebounced={handleDragOverDebounced}
         onDrop={handleDrop}
+        allowedDropTypes={['path']}
       >
         <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''}`}>
           <div>

@@ -58,7 +58,7 @@
 
   &.unsaved {
     position: relative;
-    &::before {
+    &::after {
       content: '';
       position: absolute;
       background: var(--highlight-color);

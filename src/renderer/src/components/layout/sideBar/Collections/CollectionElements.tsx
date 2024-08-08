@@ -54,7 +54,7 @@ export default function CollectionElements({
           scrolling={scrolling}
         />
       ))}
-      <Droppable onDrop={handleDrop} className={styles.firstElement} />
+      <Droppable onDrop={handleDrop} className={styles.firstElement} allowedDropTypes={['path']} />
     </>
   )
 }
