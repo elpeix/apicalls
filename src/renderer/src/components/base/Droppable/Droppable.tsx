@@ -14,6 +14,7 @@ export default function Droppable({
   onDragLeave,
   onDragOverDebounced,
   className,
+  dragDecorator = 'top',
   allowedDropTypes = []
 }: {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
@@ -27,6 +28,7 @@ export default function Droppable({
   onDragOverDebounced?: () => void
   children?: React.ReactNode
   className?: string
+  dragDecorator?: 'top' | 'left'
   allowedDropTypes?: string[]
 }) {
   const [dragOnOver, setDragOnOver] = useState(false)
@@ -74,7 +76,7 @@ export default function Droppable({
 
   return (
     <div
-      className={`${className} ${styles.droppable} ${dragOnOver ? styles.dragOver : ''}`}
+      className={`${className} ${styles.droppable} ${dragOnOver ? styles.dragOver + ' ' + styles[dragDecorator] : ''}`}
       onMouseDown={onMouseDown}
       draggable={draggable}
       onDragStart={onDragStart}

@@ -62,6 +62,10 @@ export default function Environments() {
     setFilter(filter)
   }
 
+  const move = (id: Identifier, toBeforeId: Identifier) => {
+    environments?.move(id, toBeforeId)
+  }
+
   return (
     <>
       <div className="sidePanel-header">
@@ -108,6 +112,7 @@ export default function Environments() {
                 selectEnvironment={setSelectedEnvironment}
                 activeEnvironment={(id) => environments?.active(id)}
                 deactiveEnvironment={() => environments?.deactive()}
+                move={move}
                 remove={remove}
                 duplicate={duplicate}
                 isScrolling={isScrolling}

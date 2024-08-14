@@ -18,5 +18,12 @@
         border-top: none;
       }
     }
+
+    &.left::before {
+      height: 100%;
+      width: 0;
+      border-top: none;
+      border-left: 2px solid var(--color-5);
+    }
   }
 }

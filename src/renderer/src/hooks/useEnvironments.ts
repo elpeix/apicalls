@@ -96,6 +96,15 @@ export function useEnvironments(): EnvironmentsHookType {
     return environment.variables
   }
 
+  const move = (id: Identifier, toBeforeId: Identifier) => {
+    const newEnvs = [...environments]
+    const fromIndex = newEnvs.findIndex((t) => t.id == id)
+    const toIndex = newEnvs.findIndex((t) => t.id == toBeforeId)
+    const [removed] = newEnvs.splice(fromIndex, 1)
+    newEnvs.splice(toIndex, 0, removed)
+    updateAll(newEnvs)
+  }
+
   return {
     setEnvironments,
     getAll,
@@ -105,6 +114,7 @@ export function useEnvironments(): EnvironmentsHookType {
     remove,
     duplicate,
     clear,
+    move,
     get,
     getActive,
     active,

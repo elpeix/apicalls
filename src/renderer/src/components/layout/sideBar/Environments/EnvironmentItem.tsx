@@ -4,12 +4,14 @@ import Name from '../../../base/Name'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import Confirm from '../../../base/PopupBoxes/Confirm'
+import Droppable from '../../../base/Droppable/Droppable'
 
 export default function EnvironmentItem({
   environment,
   selectEnvironment,
   activeEnvironment,
   deactiveEnvironment,
+  move,
   remove,
   duplicate,
   isScrolling
@@ -18,6 +20,7 @@ export default function EnvironmentItem({
   selectEnvironment: (environment: Environment) => void
   activeEnvironment: (id: Identifier) => void
   deactiveEnvironment: () => void
+  move: (id: Identifier, toBeforeId: Identifier) => void
   remove: (id: Identifier) => void
   duplicate: (id: Identifier) => void
   isScrolling: boolean
@@ -31,8 +34,28 @@ export default function EnvironmentItem({
     }
   }
 
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    e.dataTransfer.setData('envId', environment.id.toString())
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    const envId = e.dataTransfer.getData('envId')
+    console.log(envId, environment.id)
+    move(envId, environment.id)
+  }
+
   return (
-    <div className={`sidePanel-content-item ${styles.item}`}>
+    <Droppable
+      className={`sidePanel-content-item ${styles.item}`}
+      draggable={true}
+      onDragStart={handleDragStart}
+      onDrop={handleDrop}
+      dragDecorator="left"
+      allowedDropTypes={['envId']}
+    >
       <div className={styles.checkbox}>
         <input
           type="checkbox"
@@ -64,6 +87,6 @@ export default function EnvironmentItem({
           onCancel={() => setShowDialog(false)}
         />
       )}
-    </div>
+    </Droppable>
   )
 }
