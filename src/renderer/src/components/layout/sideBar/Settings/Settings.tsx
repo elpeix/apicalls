@@ -87,19 +87,6 @@ export default function Settings() {
               onChange={(e) => setSettings({ ...settings, timeout: Number(e.target.value) })}
             />
           </div>
-          <div className={styles.group}>
-            <label htmlFor="proxy">
-              <span>Proxy</span> <small>(Not implemented yet)</small>
-            </label>
-            <input
-              id="proxy"
-              type="text"
-              value={settings.proxy}
-              placeholder="http://localhost:8080"
-              onChange={(e) => setSettings({ ...settings, proxy: e.target.value })}
-            />
-          </div>
-
           <div className={styles.groupRow}>
             <input
               id="manageCookies"
