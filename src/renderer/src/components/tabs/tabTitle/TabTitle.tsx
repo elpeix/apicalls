@@ -17,7 +17,6 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   useEffect(() => {
     setTabName(tab.name)
     setSaved(tab.saved || false)
-    console.log(tab)
   }, [tab])
 
   const getTabTitle = () => {

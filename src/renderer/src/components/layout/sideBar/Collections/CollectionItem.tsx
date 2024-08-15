@@ -21,7 +21,6 @@ export default function CollectionItem({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     const id = e.dataTransfer.getData('collectionId')
-    console.log(id, collection.id)
     move(id, collection.id)
   }
 
