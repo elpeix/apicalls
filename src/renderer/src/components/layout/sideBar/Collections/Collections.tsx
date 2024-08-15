@@ -54,6 +54,7 @@ export default function Collections() {
                   key={collection.id}
                   collection={collection}
                   selectCollection={setSelectedCollection}
+                  move={collections.move}
                 />
               ))}
         </div>

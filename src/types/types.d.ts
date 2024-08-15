@@ -145,6 +145,7 @@ type CollectionsHookType = {
   remove: (id: Identifier) => void
   update: (collection: Collection) => void
   clear: () => void
+  move: (id: Identifier, toBeforeId: Identifier) => void
   getAll: () => Collection[]
   get: (id: Identifier) => Collection | undefined
   setPreRequest: (collectionId: Identifier, preRequestData: PreRequest) => void

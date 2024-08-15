@@ -43,7 +43,6 @@ export default function EnvironmentItem({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     const envId = e.dataTransfer.getData('envId')
-    console.log(envId, environment.id)
     move(envId, environment.id)
   }
 

@@ -2,6 +2,7 @@ export const COLLECTIONS = {
   get: 'collections:get',
   create: 'collections:create',
   update: 'collections:update',
+  updateAll: 'collections:updateAll',
   remove: 'collections:remove',
   updated: 'collections:updated',
   getFailure: 'collections:get-failure',

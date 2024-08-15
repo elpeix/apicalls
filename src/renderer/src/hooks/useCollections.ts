@@ -107,6 +107,16 @@ export function useCollections(): CollectionsHookType {
     update(newCollection)
   }
 
+  const move = (id: Identifier, toBeforeId: Identifier) => {
+    const newCollections = [...collections]
+    const fromIndex = newCollections.findIndex((t) => t.id == id)
+    const toIndex = newCollections.findIndex((t) => t.id == toBeforeId)
+    const [removed] = newCollections.splice(fromIndex, 1)
+    newCollections.splice(toIndex, 0, removed)
+    updateCollections(newCollections)
+    ipcRenderer.send(COLLECTIONS.updateAll, newCollections)
+  }
+
   return {
     setCollections,
     create,
@@ -114,6 +124,7 @@ export function useCollections(): CollectionsHookType {
     remove,
     update,
     clear,
+    move,
     getAll,
     get,
     setPreRequest,
