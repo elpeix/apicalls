@@ -39,10 +39,10 @@ export default function LinkedModal({
     }
     if (parentRef.current) {
       const rect = parentRef.current.getBoundingClientRect()
-      setX(rect.left + leftOffset)
-      setY(rect.top + topOffset)
+      setX(rect.left)
+      setY(rect.top)
     }
-  }, [ref, parentRef, topOffset, leftOffset])
+  }, [ref, parentRef])
 
   const handleOutsideClick = (e: MouseEvent) => {
     if (
@@ -55,23 +55,25 @@ export default function LinkedModal({
   }
 
   const getTop = () => {
-    if (y + dimensions.height > window.innerHeight) {
-      return y - dimensions.height
+    if (y + dimensions.height + topOffset > window.innerHeight) {
+      return y - dimensions.height - topOffset
     }
-    if (y < 0) {
+    if (y + topOffset < 0) {
       return 0
     }
-    return y
+    return y + topOffset
   }
 
   const getLeft = () => {
-    if (x + dimensions.width > window.innerWidth) {
-      return x - dimensions.width + (parentRef.current ? parentRef.current.offsetWidth : 0)
+    if (x + dimensions.width + leftOffset > window.innerWidth) {
+      return (
+        x - dimensions.width - leftOffset + (parentRef.current ? parentRef.current.offsetWidth : 0)
+      )
     }
-    if (x < 0) {
+    if (x + leftOffset < 0) {
       return 0
     }
-    return x
+    return x + leftOffset
   }
 
   return (

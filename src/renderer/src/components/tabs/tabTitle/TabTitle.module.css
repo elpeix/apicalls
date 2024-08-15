@@ -85,3 +85,26 @@
     width: 6rem;
   }
 }
+
+.tooltip {
+  background: var(--color-9);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    padding: 0.4rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  & > *:last-child {
+    border-bottom: none;
+  }
+
+  .collection {
+    font-weight: bold;
+  }
+
+  .request {
+  }
+}
