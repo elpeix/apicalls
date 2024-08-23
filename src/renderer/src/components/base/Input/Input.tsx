@@ -83,6 +83,7 @@ export default function Input({
         return <mark key={index} className={className}>{`{{${part}}}`}</mark>
       })
     }
+    return internalValue
   }
 
   const mouseOverHandler = () => setOnOver(true)
