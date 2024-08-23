@@ -84,7 +84,7 @@ export default function LinkedModal({
       style={{
         top: `${getTop()}px`,
         left: `${getLeft()}px`,
-        zIndex: zIndex * 1000
+        zIndex: zIndex * 100
       }}
     >
       {children}

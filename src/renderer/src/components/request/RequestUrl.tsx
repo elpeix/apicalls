@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import Input from '../base/Input/Input'
 import styles from './Request.module.css'
 import { RequestContext } from '../../context/RequestContext'
+import Autocompleter from '../base/Autocompleter/Autocompleter'
 
 export default function RequestUrl() {
   const { request } = useContext(RequestContext)
@@ -42,14 +42,15 @@ export default function RequestUrl() {
   const getClassName = () => `${styles.url} ${url.length && urlError ? styles.error : ''}`
 
   return (
-    <Input
+    <Autocompleter
       inputRef={urlRef}
       className={getClassName()}
       value={url}
       onChange={handleUrlChange}
       onBlur={handleUrlBlur}
       placeholder="Enter URL..."
-      showTip={true}
+      offsetX={-11}
+      offsetY={11}
     />
   )
 }

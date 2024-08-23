@@ -141,6 +141,7 @@ body {
   flex-direction: column;
   font-family: var(--font-family);
   font-size: var(--font-size);
+  overflow: hidden;
 }
 
 *,

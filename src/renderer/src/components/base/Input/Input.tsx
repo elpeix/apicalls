@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useId, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
@@ -15,7 +15,9 @@ export default function Input({
   placeholder,
   fontSize = 14,
   autoFocus = false,
-  showTip = false
+  highlightVars = false,
+  showTip = false,
+  zIndexTip = 1
 }: {
   inputRef: React.RefObject<HTMLInputElement>
   className?: string
@@ -27,7 +29,9 @@ export default function Input({
   placeholder?: string
   fontSize?: number
   autoFocus?: boolean
+  highlightVars?: boolean
   showTip?: boolean
+  zIndexTip?: number
 }) {
   type Variable = {
     part: string
@@ -42,20 +46,10 @@ export default function Input({
   const debouncedOnOver = useDebounce(onOver, 700)
   const debouncedValue = useDebounce(internalValue, 700)
   const [variableList, setVariableList] = useState<Variable[]>([])
-  const [envVariables, setEnvVariables] = useState<KeyValue[]>([])
 
   useEffect(() => {
     setInternalValue(value)
   }, [value])
-
-  const variableListId = useId()
-
-  useEffect(() => {
-    const variables = environments?.getVariables()
-    if (variables) {
-      setEnvVariables(variables)
-    }
-  }, [environments])
 
   useEffect(() => {
     if (debouncedValue) {
@@ -80,14 +74,15 @@ export default function Input({
   }
 
   const highlight = () => {
-    if (!showTip) return internalValue
-    return internalValue.split(REGEX).map((part, index) => {
-      if (index % 2 === 0) return part
-      const className = environments?.variableIsDefined(part)
-        ? styles.variable
-        : styles.variableUndefined
-      return <mark key={index} className={className}>{`{{${part}}}`}</mark>
-    })
+    if (showTip || highlightVars) {
+      return internalValue.split(REGEX).map((part, index) => {
+        if (index % 2 === 0) return part
+        const className = environments?.variableIsDefined(part)
+          ? styles.variable
+          : styles.variableUndefined
+        return <mark key={index} className={className}>{`{{${part}}}`}</mark>
+      })
+    }
   }
 
   const mouseOverHandler = () => setOnOver(true)
@@ -102,7 +97,7 @@ export default function Input({
   return (
     <>
       <div
-        className={`${styles.input} ${className}`}
+        className={`${styles.input} ${className || ''}`}
         onMouseOver={mouseOverHandler}
         onMouseOut={mouseOutHandler}
       >
@@ -119,18 +114,10 @@ export default function Input({
           value={internalValue}
           style={style}
           autoFocus={autoFocus}
-          list={variableListId}
         />
       </div>
-      {showTip && envVariables.length > 0 && (
-        <datalist id={variableListId}>
-          {envVariables.map((variable, index) => (
-            <option key={index} value={`{{${variable.name}}}`} />
-          ))}
-        </datalist>
-      )}
       {showLinkedModal() && (
-        <LinkedModal parentRef={inputRef} topOffset={30}>
+        <LinkedModal parentRef={inputRef} topOffset={30} zIndex={zIndexTip}>
           <div
             className={styles.variableList}
             onMouseOver={mouseOverHandler}

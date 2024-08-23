@@ -1,0 +1,24 @@
+.autocompleter {
+  width: 100%;
+
+  ul.suggestions {
+    position: absolute;
+    max-width: 40rem;
+    min-width: 10rem;
+    max-height: 16rem;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    background-color: var(--color-11);
+
+    li {
+      padding: 0.5rem;
+      cursor: pointer;
+      color: var(--base-color);
+
+      &.selected {
+        background-color: var(--hover-color);
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import styles from './SimpleTable.module.css'
 import Input from '../Input/Input'
+import Autocompleter from '../Autocompleter/Autocompleter'
 
 const SimpleTableContext = createContext<{
   templateColumns: string
@@ -110,6 +111,7 @@ function SimpleTableCell({
   placeholder = '',
   onChange,
   changeOnKeyUp = false,
+  options,
   children,
   showTip = false
 }: {
@@ -119,11 +121,12 @@ function SimpleTableCell({
   placeholder?: string
   onChange?: (value: string) => void
   changeOnKeyUp?: boolean
+  options?: string[]
   children?: React.ReactNode
   showTip?: boolean
 }) {
   const [editableValue, setEditableValue] = useState(value)
-  const inputRef = useRef<HTMLInputElement>()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (editable) {
@@ -159,7 +162,7 @@ function SimpleTableCell({
   return (
     <div className={styles.cell} role="cell" onClick={handleCellClick}>
       <div>
-        {!!editable && (
+        {!!editable && !showTip && (
           <Input
             inputRef={inputRef}
             value={editableValue as string}
@@ -170,6 +173,21 @@ function SimpleTableCell({
             fontSize={12}
             showTip={showTip}
             autoFocus={autoFocus}
+          />
+        )}
+        {!!editable && showTip && (
+          <Autocompleter
+            inputRef={inputRef}
+            value={editableValue as string}
+            options={options}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onKeyUp={handleKeyUp}
+            placeholder={placeholder}
+            fontSize={12}
+            autoFocus={autoFocus}
+            offsetY={9}
+            offsetX={-5}
           />
         )}
         {!editable && <>{value || children}</>}
