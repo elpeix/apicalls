@@ -36,7 +36,7 @@ export const replacePathParams = (url: string, params: KeyValue[]): string => {
     .join('/')
 }
 
-const canBeParam = (p: string): boolean => p.length > 2 && /^{[a-z0-9]+}$/i.test(p)
+const canBeParam = (p: string): boolean => p.length > 2 && /^{(\w)+}$/i.test(p)
 
 export const getQueryParamsFromUrl = (
   params: string,

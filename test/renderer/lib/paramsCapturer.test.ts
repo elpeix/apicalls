@@ -46,6 +46,11 @@ describe('Params Capturer Test', () => {
     const params = getPathParamsFromUrl('/{{env}}/{any}/')
     expect(params).toEqual([getKeyValue('any')])
   })
+
+  it('should return an array if url has params with /{any_param}', () => {
+    const params = getPathParamsFromUrl('/{any_param}')
+    expect(params).toEqual([getKeyValue('any_param')])
+  })
 })
 
 const getKeyValue = (name: string, value = '', enabled = true): KeyValue => {
