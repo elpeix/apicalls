@@ -1,3 +1,8 @@
+.overlay {
+  cursor: default;
+  position: fixed;
+  inset: 0;
+}
 .linkedModal {
   position: fixed;
   min-width: 6rem;

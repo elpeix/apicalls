@@ -54,20 +54,18 @@ export default function Menu({
         onClick={handleOnClick}
       />
       {showMenu && (
-        <>
-          <div className={styles.menuOverlay} onClick={() => setShowMenu(false)} />
-          <LinkedModal
-            parentRef={menuRef}
-            zIndex={1}
-            topOffset={23}
-            leftOffset={-136}
-            className={styles.menuModal}
-            closeModal={() => setShowMenu(false)}
-            onClick={handleOnClickModal}
-          >
-            {children}
-          </LinkedModal>
-        </>
+        <LinkedModal
+          parentRef={menuRef}
+          zIndex={1}
+          topOffset={23}
+          leftOffset={-136}
+          className={styles.menuModal}
+          useOverlay={true}
+          closeModal={() => setShowMenu(false)}
+          onClick={handleOnClickModal}
+        >
+          {children}
+        </LinkedModal>
       )}
     </div>
   )

@@ -9,6 +9,7 @@ export default function LinkedModal({
   topOffset = 0,
   leftOffset = 0,
   onClick = () => {},
+  useOverlay = false,
   children
 }: {
   parentRef: React.RefObject<HTMLElement>
@@ -17,6 +18,7 @@ export default function LinkedModal({
   closeModal?: () => void
   topOffset?: number
   leftOffset?: number
+  useOverlay?: boolean
   onClick?: (e: React.MouseEvent<Element>) => void
   children: React.ReactNode
 }) {
@@ -77,17 +79,22 @@ export default function LinkedModal({
   }
 
   return (
-    <div
-      ref={ref}
-      className={`${className} ${styles.linkedModal}`}
-      onClick={onClick}
-      style={{
-        top: `${getTop()}px`,
-        left: `${getLeft()}px`,
-        zIndex: zIndex * 100
-      }}
-    >
-      {children}
-    </div>
+    <>
+      {useOverlay && (
+        <div className={styles.overlay} onClick={closeModal} style={{ zIndex: zIndex * 100 - 1 }} />
+      )}
+      <div
+        ref={ref}
+        className={`${className} ${styles.linkedModal}`}
+        onClick={onClick}
+        style={{
+          top: `${getTop()}px`,
+          left: `${getLeft()}px`,
+          zIndex: zIndex * 100
+        }}
+      >
+        {children}
+      </div>
+    </>
   )
 }

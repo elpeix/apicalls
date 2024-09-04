@@ -62,6 +62,7 @@ export default function SaveButton() {
           zIndex={1}
           topOffset={43}
           className={styles.saveAsModal}
+          useOverlay={true}
           closeModal={() => setShowModal(false)}
         >
           <div onClick={openDialog}>Save as...</div>

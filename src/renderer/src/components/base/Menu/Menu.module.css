@@ -33,10 +33,4 @@
       margin: 0;
     }
   }
-  .menuOverlay {
-    cursor: default;
-    position: fixed;
-    inset: 0;
-    z-index: 99;
-  }
 }
