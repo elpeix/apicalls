@@ -31,10 +31,13 @@ linux:
   icon: ./build/icons/
   target:
     - AppImage
-    - snap
+    - rpm
     - deb
   maintainer: electronjs.org
   category: Utility
+rpm:
+  depends:
+    - '/usr/lib64/libuuid.so.1'
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
