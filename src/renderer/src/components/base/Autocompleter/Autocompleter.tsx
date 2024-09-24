@@ -114,11 +114,11 @@ export default function Autocompleter({
 
   // Handle ESC key
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.escape, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.escape, () => {
       clearSuggestions()
     })
-    return () => ipcRenderer.removeAllListeners(ACTIONS.escape)
+    return () => ipcRenderer?.removeAllListeners(ACTIONS.escape)
   }, [clearSuggestions])
 
   // Handle Outside Click

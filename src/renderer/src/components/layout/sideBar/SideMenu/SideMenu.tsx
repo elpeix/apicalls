@@ -34,7 +34,7 @@ export default function SideMenu({
   }
 
   const windowAPI = window.api as WindowAPI
-  const macClass = windowAPI.os.isMac ? styles.mac : ''
+  const macClass = windowAPI?.os.isMac ? styles.mac : ''
 
   return (
     <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''} ${macClass}`}>

@@ -41,13 +41,13 @@ export default function EditableName({
   }, [name])
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.escape, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.escape, () => {
       setEditingName(false)
       setNameValue(name)
       if (onBlur) onBlur()
     })
-    return () => ipcRenderer.removeAllListeners(ACTIONS.escape)
+    return () => ipcRenderer?.removeAllListeners(ACTIONS.escape)
   }, [name, onBlur])
 
   const editName = () => {

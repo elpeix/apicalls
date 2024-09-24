@@ -4,7 +4,7 @@ import { COLLECTIONS } from '../../../lib/ipcChannels'
 export function useCollections(): CollectionsHookType {
   const [collections, setCollections] = useState<Collection[]>([])
   const [updateTime, setUpdateTime] = useState(0)
-  const ipcRenderer = window.electron.ipcRenderer
+  const ipcRenderer = window.electron?.ipcRenderer
 
   const create = () => {
     const newCollection: Collection = {
@@ -18,12 +18,12 @@ export function useCollections(): CollectionsHookType {
 
   const add = (collection: Collection) => {
     updateCollections([...collections, collection])
-    ipcRenderer.send(COLLECTIONS.create, collection)
+    ipcRenderer?.send(COLLECTIONS.create, collection)
   }
 
   const remove = (id: Identifier) => {
     updateCollections(collections.filter((collection) => collection.id !== id))
-    ipcRenderer.send(COLLECTIONS.remove, id)
+    ipcRenderer?.send(COLLECTIONS.remove, id)
   }
 
   const update = (collection: Collection) => {
@@ -35,7 +35,7 @@ export function useCollections(): CollectionsHookType {
         return coll
       })
     )
-    ipcRenderer.send(COLLECTIONS.update, collection)
+    ipcRenderer?.send(COLLECTIONS.update, collection)
   }
 
   const updateCollections = (newCollections: Collection[]) => {
@@ -114,7 +114,7 @@ export function useCollections(): CollectionsHookType {
     const [removed] = newCollections.splice(fromIndex, 1)
     newCollections.splice(toIndex, 0, removed)
     updateCollections(newCollections)
-    ipcRenderer.send(COLLECTIONS.updateAll, newCollections)
+    ipcRenderer?.send(COLLECTIONS.updateAll, newCollections)
   }
 
   return {

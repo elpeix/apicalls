@@ -3,7 +3,7 @@ import { ENVIRONMENTS } from '../../../lib/ipcChannels'
 
 export function useEnvironments(): EnvironmentsHookType {
   const [environments, setEnvironments] = useState<Environment[]>([])
-  const ipcRenderer = window.electron.ipcRenderer
+  const ipcRenderer = window.electron?.ipcRenderer
 
   const create = () => {
     const newEnvironment = {
@@ -17,22 +17,22 @@ export function useEnvironments(): EnvironmentsHookType {
   }
   const add = (environment: Environment) => {
     setEnvironments([...environments, environment])
-    ipcRenderer.send(ENVIRONMENTS.create, environment)
+    ipcRenderer?.send(ENVIRONMENTS.create, environment)
   }
 
   const remove = (id: Identifier) => {
     setEnvironments(environments.filter((environment) => environment.id !== id))
-    ipcRenderer.send(ENVIRONMENTS.remove, id)
+    ipcRenderer?.send(ENVIRONMENTS.remove, id)
   }
 
   const update = (environment: Environment) => {
     setEnvironments(environments.map((env) => (env.id === environment.id ? environment : env)))
-    ipcRenderer.send(ENVIRONMENTS.update, environment)
+    ipcRenderer?.send(ENVIRONMENTS.update, environment)
   }
 
   const updateAll = (environments: Environment[]) => {
     setEnvironments(environments)
-    ipcRenderer.send(ENVIRONMENTS.updateAll, environments)
+    ipcRenderer?.send(ENVIRONMENTS.updateAll, environments)
   }
 
   const duplicate = (id: Identifier) => {

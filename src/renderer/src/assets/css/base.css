@@ -62,7 +62,7 @@
   background-color: var(--background-base);
   color: var(--base-color);
 
-  --font-family: Roboto, 'Ubuntu', 'Helvetica Neue', sans-serif;
+  --font-family: 'Ubuntu', 'DejaVu', 'Helvetica Neue', sans-serif;
   --font-size: 0.8rem;
 }
 

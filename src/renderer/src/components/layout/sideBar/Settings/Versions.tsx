@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { VERSION } from '../../../../../../lib/ipcChannels'
 
 function Versions() {
-  const [versions] = useState(window.electron.process.versions)
+  const [versions] = useState(window.electron?.process.versions)
   const [appVersion, setAppVersion] = useState('')
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(VERSION.get)
-    ipcRenderer.on(VERSION.getSuccess, (_: unknown, version: string) => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.send(VERSION.get)
+    ipcRenderer?.on(VERSION.getSuccess, (_: unknown, version: string) => {
       setAppVersion(version)
     })
 
     return () => {
-      ipcRenderer.removeAllListeners(VERSION.get)
+      ipcRenderer?.removeAllListeners(VERSION.get)
     }
   }, [setAppVersion])
 

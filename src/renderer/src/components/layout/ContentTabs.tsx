@@ -19,28 +19,28 @@ export default function ContentTabs() {
     setTabList(tabs.tabs)
     setSelectedTabIndex(tabs.getSelectedTabIndex())
 
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.closeTab, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.closeTab, () => {
       const tab = tabs.tabs[tabs.getSelectedTabIndex()]
       if (tab) {
         tabs.removeTab(tab.id)
       }
     })
 
-    ipcRenderer.on(ACTIONS.nextTab, () => {
+    ipcRenderer?.on(ACTIONS.nextTab, () => {
       const nextTabIndex = (tabs.getSelectedTabIndex() + 1) % tabs.tabs.length
       tabs.setActiveTab(nextTabIndex)
     })
 
-    ipcRenderer.on(ACTIONS.prevTab, () => {
+    ipcRenderer?.on(ACTIONS.prevTab, () => {
       const prevTabIndex = (tabs.getSelectedTabIndex() - 1 + tabs.tabs.length) % tabs.tabs.length
       tabs.setActiveTab(prevTabIndex)
     })
 
     return () => {
-      ipcRenderer.removeAllListeners(ACTIONS.closeTab)
-      ipcRenderer.removeAllListeners(ACTIONS.nextTab)
-      ipcRenderer.removeAllListeners(ACTIONS.prevTab)
+      ipcRenderer?.removeAllListeners(ACTIONS.closeTab)
+      ipcRenderer?.removeAllListeners(ACTIONS.nextTab)
+      ipcRenderer?.removeAllListeners(ACTIONS.prevTab)
     }
   }, [tabs])
 

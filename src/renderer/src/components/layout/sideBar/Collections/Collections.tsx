@@ -17,7 +17,7 @@ export default function Collections() {
 
   const importHanlder = () => {
     if (!collections) return
-    window.electron.ipcRenderer.send(COLLECTIONS.import)
+    window.electron?.ipcRenderer.send(COLLECTIONS.import)
   }
 
   return (

@@ -9,11 +9,11 @@ export default function NewTab({ showLabel = false }: { showLabel?: boolean }) {
   const onClick = () => tabs?.newTab()
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.newTab, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.newTab, () => {
       tabs?.newTab()
     })
-    return () => ipcRenderer.removeAllListeners(ACTIONS.newTab)
+    return () => ipcRenderer?.removeAllListeners(ACTIONS.newTab)
   }, [tabs])
 
   const className = `${styles.newTab} ${showLabel ? styles.withLabel : ''}`

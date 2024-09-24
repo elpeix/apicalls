@@ -6,12 +6,12 @@ export function useHistory(): HistoryHookType {
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(SETTINGS.get)
-    ipcRenderer.on(SETTINGS.updated, (_: unknown, settings: AppSettingsType) =>
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.send(SETTINGS.get)
+    ipcRenderer?.on(SETTINGS.updated, (_: unknown, settings: AppSettingsType) =>
       setSettings(settings)
     )
-    return () => ipcRenderer.removeAllListeners(SETTINGS.updated)
+    return () => ipcRenderer?.removeAllListeners(SETTINGS.updated)
   }, [])
 
   const add = (request: RequestType) => {
