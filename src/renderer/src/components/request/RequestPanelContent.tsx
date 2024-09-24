@@ -19,57 +19,57 @@ export default function RequestPanelContent() {
 
   useEffect(() => {
     if (!isActive || fetching) return
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.sendRequest, () => request?.fetch())
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.sendRequest, () => request?.fetch())
     return () => {
-      ipcRenderer.removeAllListeners(ACTIONS.sendRequest)
+      ipcRenderer?.removeAllListeners(ACTIONS.sendRequest)
     }
   }, [isActive, request, fetching])
 
   useEffect(() => {
     if (!isActive) return
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.saveRequest, () => save())
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.saveRequest, () => save())
     return () => {
-      ipcRenderer.removeAllListeners(ACTIONS.saveRequest)
+      ipcRenderer?.removeAllListeners(ACTIONS.saveRequest)
     }
   }, [isActive, save])
 
   useEffect(() => {
     if (!isActive) return
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.saveAsRequest, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.saveAsRequest, () => {
       if (setOpenSaveAs) {
         setOpenSaveAs(true)
       }
     })
     return () => {
-      ipcRenderer.removeAllListeners(ACTIONS.saveAsRequest)
+      ipcRenderer?.removeAllListeners(ACTIONS.saveAsRequest)
     }
   }, [isActive, setOpenSaveAs])
 
   useEffect(() => {
     if (!isActive) return
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.toggleRequestPanel, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.toggleRequestPanel, () => {
       if (!requestPanel.current) return
       if (requestPanelCollapsed) requestPanel.current.expand()
       else requestPanel.current.collapse()
     })
     return () => {
-      ipcRenderer.removeAllListeners(ACTIONS.toggleRequestPanel)
+      ipcRenderer?.removeAllListeners(ACTIONS.toggleRequestPanel)
     }
   }, [isActive, requestPanelCollapsed])
 
   useEffect(() => {
     if (!isActive) return
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.toggleConsole, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.toggleConsole, () => {
       if (consoleCollapsed) consolePanel?.current?.expand()
       else consolePanel?.current?.collapse()
     })
     return () => {
-      ipcRenderer.removeAllListeners(ACTIONS.toggleConsole)
+      ipcRenderer?.removeAllListeners(ACTIONS.toggleConsole)
     }
   }, [isActive, consoleCollapsed])
 

@@ -14,12 +14,12 @@ export default function Dialog({
   const [show, setShow] = useState(true)
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.escape, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.escape, () => {
       setShow(false)
       if (onClose) onClose()
     })
-    return () => ipcRenderer.removeAllListeners(ACTIONS.escape)
+    return () => ipcRenderer?.removeAllListeners(ACTIONS.escape)
   }, [onClose])
 
   const overlayClick = () => {

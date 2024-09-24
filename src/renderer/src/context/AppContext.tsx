@@ -36,27 +36,27 @@ export default function AppContextProvider({ children }: { children: React.React
   const appSettings = useAppSettings()
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.send(ENVIRONMENTS.get)
-    ipcRenderer.send(COLLECTIONS.get)
-    ipcRenderer.send(TABS.load)
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.send(ENVIRONMENTS.get)
+    ipcRenderer?.send(COLLECTIONS.get)
+    ipcRenderer?.send(TABS.load)
 
-    ipcRenderer.on(ENVIRONMENTS.updated, (_: unknown, environmentList: Environment[]) => {
+    ipcRenderer?.on(ENVIRONMENTS.updated, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
     })
 
-    ipcRenderer.on(COLLECTIONS.updated, (_: unknown, collectionList: Collection[]) => {
+    ipcRenderer?.on(COLLECTIONS.updated, (_: unknown, collectionList: Collection[]) => {
       collections?.setCollections(collectionList)
     })
 
-    ipcRenderer.on(TABS.loadSuccess, (_: unknown, tabList: RequestTab[]) => {
+    ipcRenderer?.on(TABS.loadSuccess, (_: unknown, tabList: RequestTab[]) => {
       tabs?.setTabs(tabList)
     })
 
     return () => {
-      ipcRenderer.removeAllListeners(ENVIRONMENTS.updated)
-      ipcRenderer.removeAllListeners(COLLECTIONS.updated)
-      ipcRenderer.removeAllListeners(TABS.loadSuccess)
+      ipcRenderer?.removeAllListeners(ENVIRONMENTS.updated)
+      ipcRenderer?.removeAllListeners(COLLECTIONS.updated)
+      ipcRenderer?.removeAllListeners(TABS.loadSuccess)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -14,12 +14,12 @@ export const FilterInput = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.escape, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.escape, () => {
       inputRef.current?.blur()
       onClear?.()
     })
-    return () => ipcRenderer.removeAllListeners(ACTIONS.escape)
+    return () => ipcRenderer?.removeAllListeners(ACTIONS.escape)
   }, [onClear])
 
   const clear = () => {

@@ -3,7 +3,7 @@ import { createRequest } from '../lib/factory'
 import { TABS } from '../../../lib/ipcChannels'
 
 export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
-  const ipcRenderer = window.electron.ipcRenderer
+  const ipcRenderer = window.electron?.ipcRenderer
   const [tabs, setTabs] = useState([...initialTabs])
 
   const openTab = ({ request, collectionId, path = [], shiftKey = false }: OpenTabArguments) => {
@@ -75,7 +75,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
 
   const updateTabs = (newTabs: RequestTab[]) => {
     setTabs(newTabs)
-    ipcRenderer.send(TABS.update, newTabs)
+    ipcRenderer?.send(TABS.update, newTabs)
   }
 
   const renameTab = (tabId: Identifier, name: string) => {

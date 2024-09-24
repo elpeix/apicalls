@@ -19,15 +19,15 @@ export default function Layout() {
   }, [sidePanelCollapsed, menu])
 
   useEffect(() => {
-    const ipcRenderer = window.electron.ipcRenderer
-    ipcRenderer.on(ACTIONS.toggleSidebar, () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.toggleSidebar, () => {
       if (sidePanelCollapsed) {
         sidePanel.current?.expand()
       } else {
         sidePanel.current?.collapse()
       }
     })
-    return () => ipcRenderer.removeAllListeners(ACTIONS.toggleSidebar)
+    return () => ipcRenderer?.removeAllListeners(ACTIONS.toggleSidebar)
   }, [sidePanelCollapsed])
 
   const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
