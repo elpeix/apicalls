@@ -94,6 +94,12 @@ export default function SaveAs({ onClose }: { onClose: () => void }) {
   }
 
   const selectFolderPath = (index: number) => {
+    if (index < 0) {
+      if (collectionSelected) {
+        selectCollection(collectionSelected)
+      }
+      return
+    }
     setFolderPath(folderPath.slice(0, index + 1))
     const folder = folderPath[index]
     setFolderList(getFolders(folder.elements))
