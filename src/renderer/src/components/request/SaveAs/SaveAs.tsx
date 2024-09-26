@@ -188,6 +188,16 @@ export default function SaveAs({ onClose }: { onClose: () => void }) {
               </div>
 
               <div className={styles.folders}>
+                {folderPath.length > 0 && (
+                  <div
+                    className={styles.folder}
+                    onDoubleClick={() => selectFolderPath(folderPath.length - 2)}
+                    title="Go back"
+                  >
+                    <Icon icon="folder" />
+                    <div className={styles.name}>..</div>
+                  </div>
+                )}
                 {folderList.map((folder) => (
                   <div
                     key={folder.id}
