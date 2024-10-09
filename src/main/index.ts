@@ -18,7 +18,7 @@ function createWindow() {
     autoHideMenuBar: true,
     icon,
     title: 'API Calls',
-    titleBarStyle: 'hiddenInset',
+    titleBarStyle: 'default',
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
