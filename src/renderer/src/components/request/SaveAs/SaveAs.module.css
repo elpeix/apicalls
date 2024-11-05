@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 50rem;
+  min-height: 12rem;
 }
 
 .header {
@@ -51,16 +52,19 @@
 .body {
   border-bottom: 1px solid var(--border-color);
   display: flex;
-  height: 30rem;
+  min-height: 6rem;
+  height: 20rem;
   width: 100%;
   flex-direction: row;
   background-color: var(--color-11);
   user-select: none;
+  overflow: hidden;
 
   .collections {
     display: flex;
     flex-direction: column;
     width: 16rem;
+    min-width: 6rem;
     height: 100%;
     overflow-y: auto;
     border-right: 1px solid var(--border-color);
@@ -199,6 +203,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
+  overflow: hidden;
+  min-height: 3rem;
 
   .error {
     color: var(--error-color);
