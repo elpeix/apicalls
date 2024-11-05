@@ -62,7 +62,7 @@ export default function PreRequestEditor({
   }
 
   return (
-    <Dialog className={styles.preRequest} onClose={onClose}>
+    <Dialog className={styles.preRequest} onClose={onClose} preventKeyClose={true}>
       <div className={styles.bar}>
         <div className={styles.method}>
           <MethodSelect method={method} onSelect={setMethod} />

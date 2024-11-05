@@ -5,27 +5,27 @@ import { ACTIONS } from '../../../../../lib/ipcChannels'
 export default function Dialog({
   children,
   className = '',
-  onClose
+  onClose,
+  preventKeyClose = false
 }: {
   children: React.ReactNode
   className?: string
   onClose?: () => void
+  preventKeyClose?: boolean
 }) {
   const [show, setShow] = useState(true)
 
-  useEffect(() => {
-    const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.escape, () => {
-      setShow(false)
-      if (onClose) onClose()
-    })
-    return () => ipcRenderer?.removeAllListeners(ACTIONS.escape)
-  }, [onClose])
-
-  const overlayClick = () => {
+  const closeDialog = () => {
     setShow(false)
     if (onClose) onClose()
   }
+
+  useEffect(() => {
+    if (preventKeyClose) return
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.once(ACTIONS.escape, closeDialog)
+    return () => ipcRenderer?.removeListener(ACTIONS.escape, closeDialog)
+  }, [onClose, preventKeyClose])
 
   const dialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     e.stopPropagation()
@@ -34,7 +34,7 @@ export default function Dialog({
   return (
     <>
       {show && (
-        <div className={styles.overlay} onClick={overlayClick}>
+        <div className={styles.overlay} onClick={closeDialog}>
           <dialog className={`${styles.dialog} ${className}`} onClick={dialogClick}>
             {children}
           </dialog>
