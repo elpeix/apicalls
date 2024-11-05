@@ -12,20 +12,35 @@ type ShortcutKey = {
 
 const isMac = process.platform === 'darwin'
 
+const registeredShortcuts = new Set<string>()
+
 export const registerShortcuts = (mainWindow: BrowserWindow) => {
   const ws = new WindowShortcut(mainWindow)
-  ws.register('commandOrControl+t', ACTIONS.newTab, mainWindow)
-  ws.register('control+Tab', ACTIONS.nextTab, mainWindow)
-  ws.register('control+shift+Tab', ACTIONS.prevTab, mainWindow)
-  ws.register('commandOrControl+w', ACTIONS.closeTab, mainWindow)
-  ws.register('commandOrControl+b', ACTIONS.toggleSidebar, mainWindow)
-  ws.register('commandOrControl+Enter', ACTIONS.sendRequest, mainWindow)
-  ws.register('commandOrControl+s', ACTIONS.saveRequest, mainWindow)
-  ws.register('commandOrControl+shift+s', ACTIONS.saveAsRequest, mainWindow)
-  ws.register('commandOrControl+shift+c', ACTIONS.toggleConsole, mainWindow)
-  ws.register('commandOrControl+shift+p', ACTIONS.toggleRequestPanel, mainWindow)
-  ws.register('escape', ACTIONS.escape, mainWindow)
-  ws.registerCallback('commandOrControl+shift+i', () => mainWindow.webContents.toggleDevTools())
+  const shortcuts = [
+    { shortcut: 'commandOrControl+t', action: ACTIONS.newTab },
+    { shortcut: 'control+Tab', action: ACTIONS.nextTab },
+    { shortcut: 'control+shift+Tab', action: ACTIONS.prevTab },
+    { shortcut: 'commandOrControl+w', action: ACTIONS.closeTab },
+    { shortcut: 'commandOrControl+b', action: ACTIONS.toggleSidebar },
+    { shortcut: 'commandOrControl+Enter', action: ACTIONS.sendRequest },
+    { shortcut: 'commandOrControl+s', action: ACTIONS.saveRequest },
+    { shortcut: 'commandOrControl+shift+s', action: ACTIONS.saveAsRequest },
+    { shortcut: 'commandOrControl+shift+c', action: ACTIONS.toggleConsole },
+    { shortcut: 'commandOrControl+shift+p', action: ACTIONS.toggleRequestPanel },
+    { shortcut: 'escape', action: ACTIONS.escape }
+  ]
+
+  shortcuts.forEach(({ shortcut, action }) => {
+    if (!registeredShortcuts.has(shortcut)) {
+      ws.register(shortcut, action, mainWindow)
+      registeredShortcuts.add(shortcut)
+    }
+  })
+
+  if (!registeredShortcuts.has('commandOrControl+shift+i')) {
+    ws.registerCallback('commandOrControl+shift+i', () => mainWindow.webContents.toggleDevTools())
+    registeredShortcuts.add('commandOrControl+shift+i')
+  }
 }
 
 class WindowShortcut {

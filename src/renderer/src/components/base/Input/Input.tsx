@@ -9,6 +9,7 @@ export default function Input({
   className,
   value,
   onChange,
+  onFocus,
   onBlur,
   onKeyUp,
   onKeyDown,
@@ -22,6 +23,7 @@ export default function Input({
   inputRef: React.RefObject<HTMLInputElement>
   className?: string
   value: string
+  onFocus?: () => void
   onChange?: (value: string) => void
   onBlur?: (value: string) => void
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void
@@ -109,6 +111,7 @@ export default function Input({
           ref={inputRef}
           placeholder={placeholder}
           onChange={handleChange}
+          onFocus={onFocus}
           onBlur={handleBlur}
           onKeyUp={onKeyUp}
           onKeyDown={onKeyDown}

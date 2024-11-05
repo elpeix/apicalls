@@ -40,15 +40,18 @@ export default function EditableName({
     setNameValue(name)
   }, [name])
 
+  const cancelEdit = () => {
+    setEditingName(false)
+    setNameValue(name)
+    if (onBlur) onBlur()
+  }
+
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.escape, () => {
-      setEditingName(false)
-      setNameValue(name)
-      if (onBlur) onBlur()
-    })
-    return () => ipcRenderer?.removeAllListeners(ACTIONS.escape)
-  }, [name, onBlur])
+    ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
+    ipcRenderer?.on(ACTIONS.escape, cancelEdit)
+    return () => ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
+  }, [])
 
   const editName = () => {
     if (!editOnDoubleClick) return

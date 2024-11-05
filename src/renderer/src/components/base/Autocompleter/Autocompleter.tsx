@@ -112,20 +112,24 @@ export default function Autocompleter({
     setSuggestions(tmpOptions)
   }, [envVariables, options])
 
-  // Handle ESC key
-  useEffect(() => {
-    const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.escape, () => {
-      clearSuggestions()
-    })
-    return () => ipcRenderer?.removeAllListeners(ACTIONS.escape)
-  }, [clearSuggestions])
-
   // Handle Outside Click
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
   })
+
+  const handleFocus = () => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.removeListener(ACTIONS.escape, clearSuggestions)
+    ipcRenderer?.on(ACTIONS.escape, clearSuggestions)
+  }
+
+  const handleBlur = (value: string) => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.removeListener(ACTIONS.escape, clearSuggestions)
+    clearSuggestions()
+    onBlur?.(value)
+  }
 
   const handleOutsideClick = (e: MouseEvent) => {
     if (showSuggestions && ref.current && !ref.current.contains(e.target as Node)) {
@@ -133,7 +137,6 @@ export default function Autocompleter({
     }
   }
 
-  // Handle on Input Change
   const handleOnChange = (value: string) => {
     assignValue(value)
     if (!value.trim()) {
@@ -152,7 +155,6 @@ export default function Autocompleter({
     }
   }
 
-  // Handle Key Down
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault()
@@ -244,7 +246,8 @@ export default function Autocompleter({
         onChange={handleOnChange}
         onKeyDown={handleKeyDown}
         onKeyUp={onKeyUp}
-        onBlur={onBlur}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         autoFocus={autoFocus}
         fontSize={fontSize}
         highlightVars={true}
