@@ -19,6 +19,12 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
     setSaved(tab.saved || false)
   }, [tab])
 
+  useEffect(() => {
+    if (tab.active && ref && ref.current) {
+      ref.current.scrollIntoView()
+    }
+  }, [tab.active])
+
   const getTabTitle = () => {
     if (tabName !== undefined) return tabName
     if (tab.type === 'history') return 'History'
