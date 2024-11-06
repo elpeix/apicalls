@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import Input from '../Input/Input'
 import ButtonIcon from '../ButtonIcon'
 import styles from './FilterInput.module.css'
