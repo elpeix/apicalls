@@ -12,9 +12,13 @@ import { AppContext } from '../../../../context/AppContext'
 import RequestCreator from './RequestCreator'
 import { moveElements } from '../../../../lib/moveElements'
 import { FilterInput } from '../../../base/FilterInput/FilterInput'
-import { filterCollectionElements } from '../../../../lib/collectionFilter'
+import {
+  filterCollectionElements,
+  toggleCollectionElements
+} from '../../../../lib/collectionFilter'
 import PreRequestEditor from './PreRequest/PreRequestEditor'
 import Scrollable from '../../../base/Scrollable'
+import { REMOVE_COLOR } from '../../../../constant'
 
 export default function Collection({
   collection,
@@ -146,6 +150,11 @@ export default function Collection({
     update({ ...coll, preRequest: data })
   }
 
+  const toggleCollection = (expand: boolean) => {
+    toggleCollectionElements(coll.elements, expand)
+    update({ ...coll })
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -171,7 +180,25 @@ export default function Collection({
             />
             <MenuElement icon="edit" title="Rename" onClick={editName} />
             <MenuSeparator />
-            <MenuElement icon="delete" title="Remove" onClick={() => setShowDialog(true)} />
+            <MenuElement
+              icon="expand"
+              title="Expand all"
+              disabled={filter !== ''}
+              onClick={() => toggleCollection(true)}
+            />
+            <MenuElement
+              icon="collapse"
+              title="Collapse all"
+              disabled={filter !== ''}
+              onClick={() => toggleCollection(false)}
+            />
+            <MenuSeparator />
+            <MenuElement
+              icon="delete"
+              color={REMOVE_COLOR}
+              title="Remove"
+              onClick={() => setShowDialog(true)}
+            />
           </Menu>
         </div>
       </div>
@@ -198,6 +225,7 @@ export default function Collection({
         <Confirm
           message="Are you sure you want to remove this collection?"
           confirmName="Remove"
+          confirmColor={REMOVE_COLOR}
           onConfirm={handleRemove}
           onCancel={() => setShowDialog(false)}
         />

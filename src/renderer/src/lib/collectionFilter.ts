@@ -50,3 +50,17 @@ const queryFilter = (text: string, filter: string): boolean => {
   }
   return false
 }
+
+export const toggleCollectionElements = (
+  elements: (CollectionFolder | RequestType)[],
+  expand: boolean
+) => {
+  elements.forEach((element) => {
+    if (element.type === 'folder') {
+      const folder = element as CollectionFolder
+      folder.expanded = expand
+      toggleCollectionElements(folder.elements, expand)
+    }
+  })
+  return elements
+}
