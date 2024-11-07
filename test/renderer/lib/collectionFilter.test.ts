@@ -47,4 +47,16 @@ describe('Collection filter test', () => {
     expect(firstFolder.id).toEqual(100)
     expect(firstFolder.elements).length(4)
   })
+
+  it('should filter by method', () => {
+    const elements = [getRequest(123, 'some request', 'GET')]
+    const result = filterCollectionElements(elements, 'get')
+    expect(result).length(1)
+  })
+
+  it('should filter with partial values', () => {
+    const elements = [getRequest(123, 'a request', 'GET')]
+    const result = filterCollectionElements(elements, 'gere')
+    expect(result).length(1)
+  })
 })

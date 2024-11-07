@@ -29,6 +29,24 @@ const filterElements = (
     if (!element.name) {
       return false
     }
-    return element.name.toLowerCase().includes(filter.toLowerCase())
+    return partialFilter(element, filter)
   })
+}
+
+const partialFilter = (element: RequestType, filter: string): boolean => {
+  const methodAndName = `${element.request.method.value} ${element.name}`.toLowerCase()
+  return queryFilter(methodAndName, filter.toLowerCase())
+}
+
+const queryFilter = (text: string, filter: string): boolean => {
+  let filterIndex = 0
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === filter[filterIndex]) {
+      filterIndex++
+    }
+    if (filterIndex === filter.length) {
+      return true
+    }
+  }
+  return false
 }

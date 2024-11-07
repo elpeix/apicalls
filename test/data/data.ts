@@ -1,6 +1,6 @@
 import { createMethod } from '../../src/renderer/src/lib/factory'
 
-export const getRequest = (id: Identifier, name = ''): RequestType => {
+export const getRequest = (id: Identifier, name = '', method = 'GET'): RequestType => {
   if (!name) {
     name = `request-${id}`
   }
@@ -10,7 +10,7 @@ export const getRequest = (id: Identifier, name = ''): RequestType => {
     name,
     request: {
       url: 'anyUrl',
-      method: createMethod('GET'),
+      method: createMethod(method),
       headers: [],
       queryParams: []
     }
