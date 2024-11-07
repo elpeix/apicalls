@@ -6,6 +6,7 @@ import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import Droppable from '../../../base/Droppable/Droppable'
+import { REMOVE_COLOR } from '../../../../constant'
 
 export default function CollectionRequest({
   collectionRequest,
@@ -99,7 +100,12 @@ export default function CollectionRequest({
           <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
           <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
           <MenuSeparator />
-          <MenuElement icon="delete" title="Remove" onClick={() => setShowRemove(true)} />
+          <MenuElement
+            icon="delete"
+            title="Remove"
+            color={REMOVE_COLOR}
+            onClick={() => setShowRemove(true)}
+          />
         </Menu>
       </Droppable>
 
@@ -107,6 +113,7 @@ export default function CollectionRequest({
         <Confirm
           message={`Are you sure you want to remove request ${collectionRequest.name}?`}
           confirmName="Remove"
+          confirmColor={REMOVE_COLOR}
           onConfirm={handleConfirmRemove}
           onCancel={() => setShowRemove(false)}
         />

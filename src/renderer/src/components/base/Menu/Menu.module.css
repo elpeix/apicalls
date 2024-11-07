@@ -17,6 +17,13 @@
       cursor: pointer;
       transition: background-color 0.2s ease-in-out;
 
+      &.disabled {
+        opacity: 0.4;
+        font-style: italic;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
       &:hover {
         background-color: var(--hover-color);
       }

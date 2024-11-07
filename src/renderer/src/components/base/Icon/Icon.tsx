@@ -2,6 +2,7 @@ import React from 'react'
 import Icons from '../../../assets/icons/icons.svg'
 import useTheme from '../../../hooks/useTheme'
 import styles from './Icon.module.css'
+import { LIGHT_MODE_COLOR, DARK_MODE_COLOR } from '../../../constant'
 
 export default function Icon({
   icon,
@@ -16,16 +17,13 @@ export default function Icon({
   spin?: boolean
   direction?: 'north' | 'south' | 'east' | 'west'
 }) {
-  const LIGHT_COLOR = '#444'
-  const DARK_COLOR = '#bbb'
-
   const { getTheme } = useTheme()
 
   const getIconColor = (): string => {
     if (color) {
       return color
     }
-    return getTheme(LIGHT_COLOR, DARK_COLOR)
+    return getTheme(LIGHT_MODE_COLOR, DARK_MODE_COLOR)
   }
 
   const className = `${styles.icon} icon-${icon} ${spin ? styles.spin : ''} ${styles[direction]}`

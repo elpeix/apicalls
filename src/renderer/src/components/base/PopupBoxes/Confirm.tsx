@@ -5,11 +5,13 @@ import styles from './PopupBoxes.module.css'
 export default function Confirm({
   message,
   confirmName,
+  confirmColor = '',
   onConfirm,
   onCancel
 }: {
   message: string
   confirmName?: string
+  confirmColor?: string
   onConfirm: () => void
   onCancel: () => void
 }) {
@@ -19,6 +21,8 @@ export default function Confirm({
     }
   }
 
+  const styleConfirm = confirmColor ? { color: confirmColor } : {}
+
   return (
     <Dialog className={styles.popupBox} onClose={onCancel}>
       <div className={styles.message}>{message}</div>
@@ -26,7 +30,13 @@ export default function Confirm({
         <button className={styles.cancel} onClick={onCancel}>
           Cancel
         </button>
-        <button className={styles.ok} onClick={onConfirm} onKeyDown={handleKeyDown} autoFocus>
+        <button
+          className={styles.ok}
+          onClick={onConfirm}
+          onKeyDown={handleKeyDown}
+          style={styleConfirm}
+          autoFocus
+        >
           {confirmName || 'Ok'}
         </button>
       </div>

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { CSSProperties, ReactElement } from 'react'
 import styles from './Menu.module.css'
 import Icon from '../Icon/Icon'
 
@@ -11,15 +11,24 @@ export type ReactMenuElement =
 export function MenuElement({
   icon = '',
   title,
+  color = '',
+  disabled = false,
   onClick
 }: {
   icon: string
   title: string
+  color?: string
+  disabled?: boolean
   onClick: () => void
 }) {
+  const style: CSSProperties = color ? { color: color } : {}
   return (
-    <div className={styles.item} onClick={onClick}>
-      <Icon icon={icon} />
+    <div
+      className={`${styles.item} ${disabled ? styles.disabled : ''}`}
+      onClick={onClick}
+      style={style}
+    >
+      <Icon icon={icon} color={color} />
       {title}
     </div>
   )

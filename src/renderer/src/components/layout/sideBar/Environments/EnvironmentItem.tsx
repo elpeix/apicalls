@@ -5,6 +5,7 @@ import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import Droppable from '../../../base/Droppable/Droppable'
+import { REMOVE_COLOR } from '../../../../constant'
 
 export default function EnvironmentItem({
   environment,
@@ -77,11 +78,18 @@ export default function EnvironmentItem({
         <MenuElement icon="edit" title="Edit" onClick={() => selectEnvironment(environment)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(environment.id)} />
         <MenuSeparator />
-        <MenuElement icon="delete" title="Remove" onClick={() => setShowDialog(true)} />
+        <MenuElement
+          icon="delete"
+          title="Remove"
+          color={REMOVE_COLOR}
+          onClick={() => setShowDialog(true)}
+        />
       </Menu>
       {showDialog && (
         <Confirm
           message="Are you sure you want to remove this environment?"
+          confirmName="Remove"
+          confirmColor={REMOVE_COLOR}
           onConfirm={() => remove(environment.id)}
           onCancel={() => setShowDialog(false)}
         />

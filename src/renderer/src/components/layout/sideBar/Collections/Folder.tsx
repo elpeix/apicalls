@@ -11,6 +11,7 @@ import styles from './Collections.module.css'
 import FolderCreator from './FolderCreator'
 import RequestCreator from './RequestCreator'
 import Droppable from '../../../base/Droppable/Droppable'
+import { REMOVE_COLOR } from '../../../../constant'
 
 export default function Folder({
   folder,
@@ -144,7 +145,12 @@ export default function Folder({
             <MenuElement icon="folder" title="Add folder" onClick={handleAddFolder} />
             <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
             <MenuSeparator />
-            <MenuElement icon="delete" title="Remove" onClick={() => setShowRemoveFolder(true)} />
+            <MenuElement
+              icon="delete"
+              title="Remove"
+              color={REMOVE_COLOR}
+              onClick={() => setShowRemoveFolder(true)}
+            />
           </Menu>
         </div>
         {expanded && folder.elements && (
@@ -176,6 +182,7 @@ export default function Folder({
         <Confirm
           message={`Are you sure you want to remove folder ${folder.name}?`}
           confirmName="Remove"
+          confirmColor={REMOVE_COLOR}
           onConfirm={removeFolderHandler}
           onCancel={() => setShowRemoveFolder(false)}
         />

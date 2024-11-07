@@ -5,6 +5,7 @@ import EnvironmentVariables from './EnvironmentVariables'
 import EditableName from '../../../base/EditableName/EditableName'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import { AppContext } from '../../../../context/AppContext'
+import { REMOVE_COLOR } from '../../../../constant'
 
 export default function Environment({
   environment,
@@ -101,6 +102,8 @@ export default function Environment({
       {showDialog && (
         <Confirm
           message="Are you sure you want to remove this environment?"
+          confirmName="Remove"
+          confirmColor={REMOVE_COLOR}
           onConfirm={() => remove(env.id)}
           onCancel={() => setShowDialog(false)}
         />
