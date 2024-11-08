@@ -92,6 +92,10 @@
           height: 0.2rem;
         }
       }
+
+      .panel-tabs-header-spacer {
+        flex-grow: 1;
+      }
     }
 
     .panel-tabs-content {

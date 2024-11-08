@@ -5,6 +5,7 @@ import RequestPanel from '../request/RequestPanel'
 import NewTab from '../tabs/newTab/NewTab'
 import TabTitle from '../tabs/tabTitle/TabTitle'
 import { ACTIONS } from '../../../../lib/ipcChannels'
+import SearchTabs from '../tabs/SearchTabs/SearchTabs'
 
 export default function ContentTabs() {
   const { tabs } = useContext(AppContext)
@@ -73,6 +74,8 @@ export default function ContentTabs() {
                 </TabList>
               </div>
               <NewTab />
+              <div className="panel-tabs-header-spacer" />
+              <SearchTabs />
             </div>
             <div className="panel-tabs-content">
               {tabList.map((tab) => (

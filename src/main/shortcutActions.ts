@@ -27,6 +27,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
     { shortcut: 'commandOrControl+shift+s', action: ACTIONS.saveAsRequest },
     { shortcut: 'commandOrControl+shift+c', action: ACTIONS.toggleConsole },
     { shortcut: 'commandOrControl+shift+p', action: ACTIONS.toggleRequestPanel },
+    { shortcut: 'commandOrControl+shift+t', action: ACTIONS.searchTab },
     { shortcut: 'escape', action: ACTIONS.escape }
   ]
 

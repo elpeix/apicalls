@@ -32,3 +32,16 @@ export function getValueFromPath(json: string, path: string): string | number | 
     return ''
   }
 }
+
+export const queryFilter = (text: string, filter: string): boolean => {
+  let filterIndex = 0
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === filter[filterIndex]) {
+      filterIndex++
+    }
+    if (filterIndex === filter.length) {
+      return true
+    }
+  }
+  return false
+}

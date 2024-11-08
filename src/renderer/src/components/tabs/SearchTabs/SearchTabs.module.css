@@ -1,0 +1,64 @@
+.button {
+  padding: 0 0.4rem;
+}
+
+.tabsDialog {
+  width: 30rem;
+}
+
+.input {
+  padding: 0.6rem;
+}
+
+.tabsList {
+  list-style-type: none;
+  background-color: var(--color-11);
+  border-top: 1px solid var(--border-color);
+  max-height: 20rem;
+  overflow-y: auto;
+  overflowi-x: hidden;
+
+  li {
+    padding: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    &:hover {
+      background-color: var(--hover-color);
+    }
+    &:active,
+    &.selected {
+      background-color: var(--accent-color);
+    }
+
+    .tabName {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tabRequest {
+      display: flex;
+      gap: 0.4rem;
+      font-size: 0.66rem;
+
+      .tabRequestUrl {
+        color: var(--color-5);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.noResults {
+  padding: 0.4rem;
+  color: var(--color-6);
+  font-style: italic;
+  user-select: none;
+}

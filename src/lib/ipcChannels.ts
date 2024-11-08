@@ -44,6 +44,7 @@ export const ACTIONS = {
   nextTab: 'action:next-tab',
   prevTab: 'action:prev-tab',
   closeTab: 'action:close-tab',
+  searchTab: 'action:search-tab',
   toggleSidebar: 'action:toggle-sidebar',
   sendRequest: 'action:send-request',
   saveRequest: 'action:save-request',

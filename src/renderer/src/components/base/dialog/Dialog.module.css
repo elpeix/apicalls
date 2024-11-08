@@ -8,6 +8,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  &.dialogOnTop {
+    justify-content: start;
+  }
 }
 .dialog {
   display: unset;

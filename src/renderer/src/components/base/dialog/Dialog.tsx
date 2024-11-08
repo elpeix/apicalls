@@ -6,12 +6,14 @@ export default function Dialog({
   children,
   className = '',
   onClose,
-  preventKeyClose = false
+  preventKeyClose = false,
+  position = 'center'
 }: {
   children: React.ReactNode
   className?: string
   onClose?: () => void
   preventKeyClose?: boolean
+  position?: 'top' | 'center'
 }) {
   const [show, setShow] = useState(true)
 
@@ -34,7 +36,10 @@ export default function Dialog({
   return (
     <>
       {show && (
-        <div className={styles.overlay} onClick={closeDialog}>
+        <div
+          className={`${styles.overlay} ${position === 'top' ? styles.dialogOnTop : ''}`}
+          onClick={closeDialog}
+        >
           <dialog className={`${styles.dialog} ${className}`} onClick={dialogClick}>
             {children}
           </dialog>

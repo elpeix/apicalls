@@ -1,3 +1,5 @@
+import { queryFilter } from './utils'
+
 export const filterCollectionElements = (
   elements: (CollectionFolder | RequestType)[],
   filter: string
@@ -36,19 +38,6 @@ const filterElements = (
 const partialFilter = (element: RequestType, filter: string): boolean => {
   const methodAndName = `${element.request.method.value} ${element.name}`.toLowerCase()
   return queryFilter(methodAndName, filter.toLowerCase())
-}
-
-const queryFilter = (text: string, filter: string): boolean => {
-  let filterIndex = 0
-  for (let i = 0; i < text.length; i++) {
-    if (text[i] === filter[filterIndex]) {
-      filterIndex++
-    }
-    if (filterIndex === filter.length) {
-      return true
-    }
-  }
-  return false
 }
 
 export const toggleCollectionElements = (
