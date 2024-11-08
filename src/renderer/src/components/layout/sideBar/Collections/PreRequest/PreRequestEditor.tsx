@@ -26,7 +26,9 @@ export default function PreRequestEditor({
   const [queryParams, setQueryParams] = useState<KeyValue[]>([])
   const [body, setBody] = useState<string>('')
   const [dataToCapture, setDataToCapture] = useState<PreRequestDataToCapture[]>([])
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState(
+    preRequest && preRequest.active !== undefined ? preRequest.active : true
+  )
 
   useEffect(() => {
     setUrl(preRequest?.request.url || '')
@@ -36,7 +38,7 @@ export default function PreRequestEditor({
     setBody(preRequest?.request.body || '')
     setType(preRequest?.type || 'authorization')
     setDataToCapture(preRequest?.dataToCapture || [])
-    setActive(preRequest?.active || false)
+    setActive(preRequest && preRequest.active !== undefined ? preRequest.active : true)
   }, [preRequest])
 
   const handleSave = () => {
