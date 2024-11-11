@@ -1,4 +1,4 @@
-import React, { createContext, useEffect } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import useTabs from '../hooks/useTabs'
 import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
@@ -7,8 +7,10 @@ import { useCollections } from '../hooks/useCollections'
 import { COLLECTIONS, ENVIRONMENTS, TABS } from '../../../lib/ipcChannels'
 import { useCookies } from '../hooks/useCookies'
 import { useSettigns as useAppSettings } from '../hooks/useSettings'
+import Dialog from '../components/base/dialog/Dialog'
 
 export const AppContext = createContext<{
+  application: ApplicationType
   menu: MenuHookType | null
   tabs: TabsHookType | null
   collections: CollectionsHookType | null
@@ -17,6 +19,7 @@ export const AppContext = createContext<{
   cookies: CookiesHookType | null
   appSettings: AppSettingsHookType | null
 }>({
+  application: {} as ApplicationType,
   menu: null,
   tabs: null,
   collections: null,
@@ -60,7 +63,25 @@ export default function AppContextProvider({ children }: { children: React.React
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const [dialogProps, setDialogProps] = useState<{
+    children: React.ReactNode
+    className?: string
+    onClose?: () => void
+    preventKeyClose?: boolean
+    position?: 'top' | 'center'
+  } | null>(null)
+
+  const showDialog = (dialogProps: DialogType) => {
+    setDialogProps(dialogProps)
+  }
+
+  const hideDialog = () => {
+    dialogProps?.onClose?.()
+    setDialogProps(null)
+  }
+
   const contextValue = {
+    application: { showDialog, hideDialog },
     menu,
     tabs,
     collections,
@@ -70,5 +91,19 @@ export default function AppContextProvider({ children }: { children: React.React
     appSettings
   }
 
-  return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+  return (
+    <AppContext.Provider value={contextValue}>
+      {children}
+      {dialogProps && (
+        <Dialog
+          className={dialogProps.className}
+          onClose={hideDialog}
+          preventKeyClose={dialogProps.preventKeyClose}
+          position={dialogProps.position}
+        >
+          {dialogProps.children}
+        </Dialog>
+      )}
+    </AppContext.Provider>
+  )
 }

@@ -4,16 +4,17 @@ import Icon from '../base/Icon/Icon'
 import LinkedModal from '../base/linkedModal/LinkedModal'
 import { RequestContext } from '../../context/RequestContext'
 import SaveAs from './SaveAs/SaveAs'
+import { AppContext } from '../../context/AppContext'
 
 export default function SaveButton() {
+  const { application } = useContext(AppContext)
   const { path, save, openSaveAs, setOpenSaveAs } = useContext(RequestContext)
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
-  const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => {
     if (openSaveAs) {
-      setShowDialog(true)
+      openDialog()
       setShowModal(false)
     }
   }, [openSaveAs])
@@ -21,7 +22,7 @@ export default function SaveButton() {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (!path || path.length === 0) {
-      openDialog(e)
+      openDialog()
     } else {
       save()
     }
@@ -32,14 +33,16 @@ export default function SaveButton() {
     setShowModal(!showModal)
   }
 
-  const openDialog = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setShowDialog(true)
+  const openDialog = () => {
+    application.showDialog({
+      children: <SaveAs onClose={closeDialog} />,
+      onClose: closeDialog
+    })
     setShowModal(false)
   }
 
   const closeDialog = () => {
-    setShowDialog(false)
+    application.hideDialog()
     if (setOpenSaveAs) {
       setOpenSaveAs(false)
     }
@@ -68,7 +71,6 @@ export default function SaveButton() {
           <div onClick={openDialog}>Save as...</div>
         </LinkedModal>
       )}
-      {showDialog && <SaveAs onClose={closeDialog} />}
     </div>
   )
 }

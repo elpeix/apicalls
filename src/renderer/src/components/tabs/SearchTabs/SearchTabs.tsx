@@ -1,17 +1,39 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../../base/ButtonIcon'
 import styles from './SearchTabs.module.css'
-import Dialog from '../../base/dialog/Dialog'
 import { AppContext } from '../../../context/AppContext'
 import Input from '../../base/Input/Input'
 import { queryFilter } from '../../../lib/utils'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function SearchTabs() {
+  const { application } = useContext(AppContext)
+
+  const openDialog = () => {
+    application.showDialog({
+      children: <SearchTabsChildren onClose={application.hideDialog} />,
+      className: styles.tabsDialog,
+      position: 'top'
+    })
+  }
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.searchTab, openDialog)
+    return () => ipcRenderer?.removeAllListeners(ACTIONS.searchTab)
+  }, [])
+
+  return (
+    <div className={styles.button}>
+      <ButtonIcon icon="search" title="Search tabs" onClick={openDialog} />
+    </div>
+  )
+}
+
+function SearchTabsChildren({ onClose }: { onClose: () => void }) {
   const { tabs } = useContext(AppContext)
   const inputRef = useRef(null)
   const listRef = useRef<HTMLUListElement>(null)
-  const [show, setShow] = useState(false)
   const [filter, setFilter] = useState('')
   const [filteredTabs, setFilteredTabs] = useState(tabs?.tabs || [])
   const [selectedFilteredTab, setSelectedFilteredTab] = useState(-1)
@@ -20,17 +42,7 @@ export default function SearchTabs() {
     setFilter('')
     setFilteredTabs(tabs?.tabs || [])
     setSelectedFilteredTab(0)
-
-    const ipcRenderer = window.electron?.ipcRenderer
-    if (!show) {
-      ipcRenderer?.once(ACTIONS.searchTab, () => {
-        setShow(true)
-      })
-    } else {
-      ipcRenderer?.removeAllListeners(ACTIONS.searchTab)
-    }
-    return () => ipcRenderer?.removeAllListeners(ACTIONS.searchTab)
-  }, [show, tabs])
+  }, [tabs])
 
   const changeHandler = (value: string) => {
     setFilter(value)
@@ -85,49 +97,42 @@ export default function SearchTabs() {
       return
     }
     tabs?.setActiveTab(tabIndex)
-    setShow(false)
+    onClose()
   }
 
   return (
     <>
-      <div className={styles.button}>
-        <ButtonIcon icon="search" title="Search tabs" onClick={() => setShow(!show)} />
+      <div className={styles.searchBar}>
+        <Input
+          inputRef={inputRef}
+          className={styles.input}
+          onChange={changeHandler}
+          onKeyDown={keyDownHandler}
+          value={filter}
+          placeholder="Search opened tabs"
+          autoFocus
+        />
       </div>
-      {show && (
-        <Dialog className={styles.tabsDialog} position="top" onClose={() => setShow(false)}>
-          <div className={styles.searchBar}>
-            <Input
-              inputRef={inputRef}
-              className={styles.input}
-              onChange={changeHandler}
-              onKeyDown={keyDownHandler}
-              value={filter}
-              placeholder="Search opened tabs"
-              autoFocus
-            />
-          </div>
-          {filteredTabs && (
-            <ul className={styles.tabsList} ref={listRef}>
-              {filteredTabs.map((tab, index) => (
-                <li
-                  className={index === selectedFilteredTab ? styles.selected : ''}
-                  key={`searchTabs_${tab.id}`}
-                  onClick={() => selectTab(tab)}
-                >
-                  <div className={styles.tabName}>{tab.name || tab.request.url}</div>
-                  <div className={styles.tabRequest}>
-                    <div className={`${tab.request.method.value} ${styles.tabRequestMethod}`}>
-                      {tab.request.method.label}
-                    </div>
-                    <div className={styles.tabRequestUrl}>{tab.request.url}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-          {!filteredTabs.length && <div className={styles.noResults}>No matching tabs</div>}
-        </Dialog>
+      {filteredTabs && (
+        <ul className={styles.tabsList} ref={listRef}>
+          {filteredTabs.map((tab, index) => (
+            <li
+              className={index === selectedFilteredTab ? styles.selected : ''}
+              key={`searchTabs_${tab.id}`}
+              onClick={() => selectTab(tab)}
+            >
+              <div className={styles.tabName}>{tab.name || tab.request.url}</div>
+              <div className={styles.tabRequest}>
+                <div className={`${tab.request.method.value} ${styles.tabRequestMethod}`}>
+                  {tab.request.method.label}
+                </div>
+                <div className={styles.tabRequestUrl}>{tab.request.url}</div>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
+      {!filteredTabs.length && <div className={styles.noResults}>No matching tabs</div>}
     </>
   )
 }

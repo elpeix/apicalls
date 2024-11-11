@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import Dialog from '../../base/dialog/Dialog'
 import styles from './SaveAs.module.css'
 import { RequestContext } from '../../../context/RequestContext'
 import { AppContext } from '../../../context/AppContext'
@@ -144,7 +143,7 @@ export default function SaveAs({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <Dialog onClose={onClose} className={styles.dialog}>
+    <div className={styles.dialog}>
       <div className={styles.header}>
         <label className={styles.label} htmlFor="requestName">
           Request name
@@ -231,6 +230,6 @@ export default function SaveAs({ onClose }: { onClose: () => void }) {
           Save
         </button>
       </div>
-    </Dialog>
+    </div>
   )
 }

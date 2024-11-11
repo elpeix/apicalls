@@ -308,3 +308,16 @@ type WindowAPI = {
     isLinux: boolean
   }
 }
+
+type ApplicationType = {
+  showDialog: (dialogProps: DialogType) => void
+  hideDialog: () => void
+}
+
+type DialogType = {
+  children: React.ReactNode
+  className?: string
+  onClose?: () => void
+  preventKeyClose?: boolean
+  position?: 'top' | 'center'
+}
