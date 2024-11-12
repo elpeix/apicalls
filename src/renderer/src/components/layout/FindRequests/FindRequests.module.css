@@ -1,0 +1,69 @@
+.dialog {
+  width: 30rem;
+}
+
+.input {
+  padding: 0.6rem;
+}
+
+.list {
+  list-style-type: none;
+  background-color: var(--color-11);
+  border-top: 1px solid var(--border-color);
+  max-height: 20rem;
+  overflow-y: auto;
+  overflowi-x: hidden;
+
+  li {
+    padding: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    &:hover {
+      background-color: var(--hover-color);
+    }
+    &:active,
+    &.selected {
+      background-color: var(--accent-color);
+    }
+
+    .collectionName,
+    .folderPath {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .collectionName {
+      color: var(--color-4);
+      font-weight: bold;
+    }
+
+    .folderPath {
+      color: var(--color-5);
+    }
+
+    .request {
+      display: flex;
+      gap: 0.4rem;
+      font-size: 0.66rem;
+
+      .requestName {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.noResults {
+  padding: 0.4rem;
+  color: var(--color-6);
+  font-style: italic;
+  user-select: none;
+}

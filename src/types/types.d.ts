@@ -83,6 +83,15 @@ type Collection = {
   elements: (CollectionFolder | RequestType)[]
 }
 
+type FlatRequest = RequestType & {
+  collectionId: Identifier
+  collectionName: string
+  folderId: Identifier
+  folderPath: string
+  path: PathItem[]
+  filter: string
+}
+
 type PathItem = {
   id: Identifier
   type: 'folder' | 'request' | 'collection'

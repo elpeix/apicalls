@@ -46,6 +46,7 @@ export const ACTIONS = {
   closeTab: 'action:close-tab',
   searchTab: 'action:search-tab',
   toggleSidebar: 'action:toggle-sidebar',
+  findRequest: 'action:find-request',
   sendRequest: 'action:send-request',
   saveRequest: 'action:save-request',
   saveAsRequest: 'action:save-as-request',

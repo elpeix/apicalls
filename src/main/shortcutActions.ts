@@ -19,6 +19,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
   const shortcuts = [
     { shortcut: 'commandOrControl+t', action: ACTIONS.newTab },
     { shortcut: 'control+Tab', action: ACTIONS.nextTab },
+    { shortcut: 'commandOrControl+p', action: ACTIONS.findRequest },
     { shortcut: 'control+shift+Tab', action: ACTIONS.prevTab },
     { shortcut: 'commandOrControl+w', action: ACTIONS.closeTab },
     { shortcut: 'commandOrControl+b', action: ACTIONS.toggleSidebar },

@@ -53,3 +53,55 @@ export const toggleCollectionElements = (
   })
   return elements
 }
+
+// TODO: Promise
+export const flatRequests = (collections: Collection[]): FlatRequest[] => {
+  return collections.flatMap((collection) =>
+    flatElements(collection.id, collection.name, collection.elements)
+  )
+}
+
+const flatElements = (
+  collectionId: Identifier,
+  collectionName: string,
+  elements: (CollectionFolder | RequestType)[],
+  folderId: Identifier = '',
+  folderPath: string = '',
+  path: PathItem[] = []
+): FlatRequest[] => {
+  let requests: FlatRequest[] = []
+  elements.forEach((element) => {
+    if (element.type === 'folder') {
+      path.push({
+        id: element.id,
+        type: 'folder'
+      })
+      const folderRequests = flatElements(
+        collectionId,
+        collectionName,
+        element.elements,
+        element.id,
+        `${folderPath}${element.name}/`,
+        path
+      )
+      requests = requests.concat(folderRequests)
+    } else {
+      const filter =
+        `${collectionName} ${element.request.method.value} ${element.name}`.toLowerCase()
+      path.push({
+        id: element.id,
+        type: 'request'
+      })
+      requests.push({
+        ...element,
+        collectionId,
+        collectionName,
+        folderId,
+        folderPath,
+        filter,
+        path
+      })
+    }
+  })
+  return requests
+}
