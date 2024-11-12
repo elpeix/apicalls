@@ -5,11 +5,8 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import EditableName from '../../../base/EditableName/EditableName'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
-import Confirm from '../../../base/PopupBoxes/Confirm'
 import CollectionElements from './CollectionElements'
 import styles from './Collections.module.css'
-import FolderCreator from './FolderCreator'
-import RequestCreator from './RequestCreator'
 import Droppable from '../../../base/Droppable/Droppable'
 import { REMOVE_COLOR } from '../../../../constant'
 
@@ -30,12 +27,9 @@ export default function Folder({
   remove: (folder: CollectionFolder) => void
   scrolling: boolean
 }) {
-  const { tabs } = useContext(AppContext)
+  const { application, tabs } = useContext(AppContext)
   const [expanded, setExpanded] = useState(folder.expanded || false)
   const [editingName, setEditingName] = useState(false)
-  const [showCreateFolder, setShowCreateFolder] = useState(false)
-  const [showRemoveFolder, setShowRemoveFolder] = useState(false)
-  const [showCreateRequest, setShowCreateRequest] = useState(false)
 
   useEffect(() => {
     setExpanded(folder.expanded || false)
@@ -53,18 +47,30 @@ export default function Folder({
 
   const handleAddFolder = () => {
     expandFolder(true)
-    setShowCreateFolder(true)
+    application.showPrompt({
+      message: 'Folder name:',
+      placeholder: 'Folder name',
+      confirmName: 'Add',
+      onConfirm: (name: string) => {
+        application.hidePrompt()
+        folder.elements.push(createFolder(name))
+        update()
+      },
+      onCancel: () => application.hidePrompt()
+    })
   }
 
-  const createFolderHandler = (name: string) => {
-    setShowCreateFolder(false)
-    folder.elements.push(createFolder(name))
-    update()
-  }
-
-  const removeFolderHandler = () => {
-    setShowRemoveFolder(false)
-    remove(folder)
+  const handleRemoveFolder = () => {
+    application.showConfirm({
+      message: `Are you sure you want to remove folder ${folder.name}?`,
+      confirmName: 'Remove',
+      confirmColor: 'danger',
+      onConfirm: () => {
+        application.hideConfirm()
+        remove(folder)
+      },
+      onCancel: () => application.hideConfirm()
+    })
   }
 
   const changeName = (name: string) => {
@@ -74,27 +80,31 @@ export default function Folder({
 
   const handleAddRequest = () => {
     expandFolder(true)
-    setShowCreateRequest(true)
-  }
-
-  const createRequestHandler = (name: string) => {
-    setShowCreateRequest(false)
-    const request = createRequest({
-      name,
-      type: 'collection'
-    })
-    folder.elements.push(request)
-    update()
-    tabs?.openTab({
-      request,
-      collectionId,
-      path: [
-        ...folderPath,
-        {
-          id: request.id,
-          type: 'request'
-        }
-      ]
+    application.showPrompt({
+      message: 'Request name:',
+      placeholder: 'Request name',
+      confirmName: 'Add',
+      onConfirm: (name: string) => {
+        application.hidePrompt()
+        const request = createRequest({
+          name,
+          type: 'collection'
+        })
+        folder.elements.push(request)
+        update()
+        tabs?.openTab({
+          request,
+          collectionId,
+          path: [
+            ...folderPath,
+            {
+              id: request.id,
+              type: 'request'
+            }
+          ]
+        })
+      },
+      onCancel: () => application.hidePrompt()
     })
   }
 
@@ -149,7 +159,7 @@ export default function Folder({
               icon="delete"
               title="Remove"
               color={REMOVE_COLOR}
-              onClick={() => setShowRemoveFolder(true)}
+              onClick={handleRemoveFolder}
             />
           </Menu>
         </div>
@@ -166,27 +176,6 @@ export default function Folder({
           </div>
         )}
       </Droppable>
-
-      {showCreateFolder && (
-        <FolderCreator onCancel={() => setShowCreateFolder(false)} onCreate={createFolderHandler} />
-      )}
-
-      {showCreateRequest && (
-        <RequestCreator
-          onCancel={() => setShowCreateRequest(false)}
-          onCreate={createRequestHandler}
-        />
-      )}
-
-      {showRemoveFolder && (
-        <Confirm
-          message={`Are you sure you want to remove folder ${folder.name}?`}
-          confirmName="Remove"
-          confirmColor={REMOVE_COLOR}
-          onConfirm={removeFolderHandler}
-          onCancel={() => setShowRemoveFolder(false)}
-        />
-      )}
     </>
   )
 }

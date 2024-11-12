@@ -127,7 +127,6 @@ export default function Autocompleter({
   const handleBlur = (value: string) => {
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.removeListener(ACTIONS.escape, clearSuggestions)
-    clearSuggestions()
     onBlur?.(value)
   }
 

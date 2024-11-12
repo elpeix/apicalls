@@ -308,3 +308,36 @@ type WindowAPI = {
     isLinux: boolean
   }
 }
+
+type ApplicationType = {
+  showDialog: (dialogProps: DialogType) => void
+  hideDialog: () => void
+  showPrompt: (promptProps: PromptType) => void
+  hidePrompt: () => void
+  showConfirm: (confirmProps: ConfirmType) => void
+  hideConfirm: () => void
+}
+
+type DialogType = {
+  children: React.ReactNode
+  className?: string
+  onClose?: () => void
+  preventKeyClose?: boolean
+  position?: 'top' | 'center'
+}
+
+type PromptType = {
+  message: string
+  confirmName?: string
+  placeholder?: string
+  onConfirm: (value: string) => void
+  onCancel: () => void
+}
+
+type ConfirmType = {
+  message: string
+  confirmName?: string
+  confirmColor?: 'primary' | 'danger'
+  onConfirm: () => void
+  onCancel: () => void
+}

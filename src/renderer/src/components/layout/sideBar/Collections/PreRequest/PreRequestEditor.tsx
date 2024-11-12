@@ -3,7 +3,6 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { createMethod } from '../../../../../lib/factory'
 import Input from '../../../../base/Input/Input'
 import MethodSelect from '../../../../base/MethodSelect/MethodSelect'
-import Dialog from '../../../../base/dialog/Dialog'
 import styles from './PreRequest.module.css'
 import Params from '../../../../base/Params/Params'
 import Editor from '../../../../base/Editor'
@@ -64,7 +63,7 @@ export default function PreRequestEditor({
   }
 
   return (
-    <Dialog className={styles.preRequest} onClose={onClose} preventKeyClose={true}>
+    <div className={styles.preRequest}>
       <div className={styles.bar}>
         <div className={styles.method}>
           <MethodSelect method={method} onSelect={setMethod} />
@@ -125,6 +124,6 @@ export default function PreRequestEditor({
           </button>
         </div>
       </div>
-    </Dialog>
+    </div>
   )
 }

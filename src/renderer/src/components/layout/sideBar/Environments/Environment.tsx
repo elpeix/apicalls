@@ -3,7 +3,6 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Environment.module.css'
 import EnvironmentVariables from './EnvironmentVariables'
 import EditableName from '../../../base/EditableName/EditableName'
-import Confirm from '../../../base/PopupBoxes/Confirm'
 import { AppContext } from '../../../../context/AppContext'
 import { REMOVE_COLOR } from '../../../../constant'
 
@@ -18,12 +17,11 @@ export default function Environment({
   update: (environment: Environment) => void
   remove: (id: Identifier) => void
 }) {
-  const { environments } = useContext(AppContext)
+  const { application, environments } = useContext(AppContext)
 
   const nameRef = useRef<HTMLInputElement>(null)
   const [env, setEnv] = useState(environment)
   const [editingName, setEditingName] = useState(false)
-  const [showDialog, setShowDialog] = useState(false)
 
   useEffect(() => {
     setEnv(environment)
@@ -61,6 +59,19 @@ export default function Environment({
     update({ ...env, variables })
   }
 
+  const handleRemove = () => {
+    application.showConfirm({
+      message: `Are you sure you want to remove environment ${env.name}?`,
+      confirmName: 'Remove',
+      confirmColor: 'danger',
+      onConfirm: () => {
+        remove(env.id)
+        application.hidePrompt()
+      },
+      onCancel: () => application.hidePrompt()
+    })
+  }
+
   return (
     <div className={`sidePanel-content ${styles.environment}`}>
       <div className={styles.header}>
@@ -84,11 +95,7 @@ export default function Environment({
           editOnDoubleClick={true}
         />
         <div className={styles.remove}>
-          <ButtonIcon
-            icon="delete"
-            onClick={() => setShowDialog(true)}
-            title="Remove environment"
-          />
+          <ButtonIcon icon="delete" onClick={handleRemove} title="Remove environment" />
         </div>
       </div>
       <div className={styles.content}>
@@ -96,18 +103,9 @@ export default function Environment({
       </div>
       <div className={styles.footer}>
         <div>
-          <ButtonIcon icon="more" onClick={addVariable} title="Add variable" />
+          <ButtonIcon icon="more" onClick={addVariable} title="Add variable" color={REMOVE_COLOR} />
         </div>
       </div>
-      {showDialog && (
-        <Confirm
-          message="Are you sure you want to remove this environment?"
-          confirmName="Remove"
-          confirmColor={REMOVE_COLOR}
-          onConfirm={() => remove(env.id)}
-          onCancel={() => setShowDialog(false)}
-        />
-      )}
     </div>
   )
 }

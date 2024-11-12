@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Dialog from '../dialog/Dialog'
 import styles from './PopupBoxes.module.css'
 
 export default function Prompt({
@@ -31,7 +30,7 @@ export default function Prompt({
     onConfirm(value)
   }
   return (
-    <Dialog className={styles.popupBox} onClose={handleCancel}>
+    <div className={styles.popupBox}>
       <div className={styles.message}>
         {message}
         <input
@@ -50,6 +49,6 @@ export default function Prompt({
           {confirmName || 'Ok'}
         </button>
       </div>
-    </Dialog>
+    </div>
   )
 }

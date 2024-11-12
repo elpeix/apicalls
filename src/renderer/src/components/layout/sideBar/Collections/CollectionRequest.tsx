@@ -4,7 +4,6 @@ import { AppContext } from '../../../../context/AppContext'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
-import Confirm from '../../../base/PopupBoxes/Confirm'
 import Droppable from '../../../base/Droppable/Droppable'
 import { REMOVE_COLOR } from '../../../../constant'
 
@@ -27,10 +26,9 @@ export default function CollectionRequest({
   addRequest: (request: RequestType) => void
   scrolling: boolean
 }) {
-  const { tabs } = useContext(AppContext)
+  const { application, tabs } = useContext(AppContext)
   const { request } = collectionRequest
   const [editingName, setEditingName] = useState(false)
-  const [showRemove, setShowRemove] = useState(false)
   const requestPath = [
     ...path,
     {
@@ -55,9 +53,18 @@ export default function CollectionRequest({
     update()
   }
 
-  const handleConfirmRemove = () => {
-    setShowRemove(false)
-    remove(collectionRequest)
+  const handleRemove = () => {
+    application.showConfirm({
+      message: `Are you sure you want to remove request ${collectionRequest.name}?`,
+      confirmName: 'Remove',
+      confirmColor: 'danger',
+      onConfirm: () => {
+        application.hidePrompt()
+        remove(collectionRequest)
+      },
+
+      onCancel: () => application.hidePrompt()
+    })
   }
 
   const duplicate = (request: RequestType) => {
@@ -100,24 +107,9 @@ export default function CollectionRequest({
           <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
           <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
           <MenuSeparator />
-          <MenuElement
-            icon="delete"
-            title="Remove"
-            color={REMOVE_COLOR}
-            onClick={() => setShowRemove(true)}
-          />
+          <MenuElement icon="delete" title="Remove" color={REMOVE_COLOR} onClick={handleRemove} />
         </Menu>
       </Droppable>
-
-      {showRemove && (
-        <Confirm
-          message={`Are you sure you want to remove request ${collectionRequest.name}?`}
-          confirmName="Remove"
-          confirmColor={REMOVE_COLOR}
-          onConfirm={handleConfirmRemove}
-          onCancel={() => setShowRemove(false)}
-        />
-      )}
     </>
   )
 }

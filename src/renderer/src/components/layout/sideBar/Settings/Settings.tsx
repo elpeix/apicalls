@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Versions from './Versions'
 import styles from './Settings.module.css'
-import Confirm from '../../../base/PopupBoxes/Confirm'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
 
 export default function Settings() {
-  const { appSettings } = useContext(AppContext)
+  const { application, appSettings } = useContext(AppContext)
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
-
-  const [showClearSettings, setShowClearSettings] = useState(false)
 
   useEffect(() => {
     setSettings(appSettings?.settings || null)
@@ -20,9 +17,15 @@ export default function Settings() {
     appSettings?.save(settings)
   }
 
-  const clearSettings = () => {
-    appSettings?.clear()
-    setShowClearSettings(false)
+  const handleClearSettings = () => {
+    application.showConfirm({
+      message: 'Are you sure you want to clear settings?',
+      onConfirm: () => {
+        appSettings?.clear()
+        application.hideConfirm()
+      },
+      onCancel: () => application.hideConfirm()
+    })
   }
 
   const getThemeName = (value: string): Theme => {
@@ -101,20 +104,13 @@ export default function Settings() {
 
           <div className={styles.group}>
             <button onClick={saveSettings}>Save</button>
-            <a className={styles.clearSettings} onClick={() => setShowClearSettings(true)}>
+            <a className={styles.clearSettings} onClick={handleClearSettings}>
               Clear settings
             </a>
           </div>
         </div>
       </div>
       <Versions />
-      {showClearSettings && (
-        <Confirm
-          message="Are you sure you want to clear settings?"
-          onConfirm={clearSettings}
-          onCancel={() => setShowClearSettings(false)}
-        ></Confirm>
-      )}
     </div>
   )
 }

@@ -1,17 +1,16 @@
-import React from 'react'
-import Dialog from '../dialog/Dialog'
+import React, { CSSProperties } from 'react'
 import styles from './PopupBoxes.module.css'
 
 export default function Confirm({
   message,
   confirmName,
-  confirmColor = '',
+  confirmColor = 'primary',
   onConfirm,
   onCancel
 }: {
   message: string
   confirmName?: string
-  confirmColor?: string
+  confirmColor?: 'primary' | 'danger'
   onConfirm: () => void
   onCancel: () => void
 }) {
@@ -21,10 +20,15 @@ export default function Confirm({
     }
   }
 
-  const styleConfirm = confirmColor ? { color: confirmColor } : {}
+  let styleConfirm: CSSProperties = {}
+  if (confirmColor === 'danger') {
+    styleConfirm = {
+      color: 'var(--danger-color)'
+    }
+  }
 
   return (
-    <Dialog className={styles.popupBox} onClose={onCancel}>
+    <div className={styles.popupBox}>
       <div className={styles.message}>{message}</div>
       <div className={styles.buttons}>
         <button className={styles.cancel} onClick={onCancel}>
@@ -40,6 +44,6 @@ export default function Confirm({
           {confirmName || 'Ok'}
         </button>
       </div>
-    </Dialog>
+    </div>
   )
 }
