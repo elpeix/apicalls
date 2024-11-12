@@ -8,8 +8,6 @@ import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import CollectionElements from './CollectionElements'
 import styles from './Collections.module.css'
-import FolderCreator from './FolderCreator'
-import RequestCreator from './RequestCreator'
 import Droppable from '../../../base/Droppable/Droppable'
 import { REMOVE_COLOR } from '../../../../constant'
 
@@ -30,12 +28,10 @@ export default function Folder({
   remove: (folder: CollectionFolder) => void
   scrolling: boolean
 }) {
-  const { tabs } = useContext(AppContext)
+  const { application, tabs } = useContext(AppContext)
   const [expanded, setExpanded] = useState(folder.expanded || false)
   const [editingName, setEditingName] = useState(false)
-  const [showCreateFolder, setShowCreateFolder] = useState(false)
   const [showRemoveFolder, setShowRemoveFolder] = useState(false)
-  const [showCreateRequest, setShowCreateRequest] = useState(false)
 
   useEffect(() => {
     setExpanded(folder.expanded || false)
@@ -53,11 +49,17 @@ export default function Folder({
 
   const handleAddFolder = () => {
     expandFolder(true)
-    setShowCreateFolder(true)
+    application.showPrompt({
+      message: 'Folder name:',
+      placeholder: 'Folder name',
+      confirmName: 'Add',
+      onConfirm: createFolderHandler,
+      onCancel: () => application.hidePrompt()
+    })
   }
 
   const createFolderHandler = (name: string) => {
-    setShowCreateFolder(false)
+    application.hidePrompt()
     folder.elements.push(createFolder(name))
     update()
   }
@@ -74,11 +76,17 @@ export default function Folder({
 
   const handleAddRequest = () => {
     expandFolder(true)
-    setShowCreateRequest(true)
+    application.showPrompt({
+      message: 'Request name:',
+      placeholder: 'Request name',
+      confirmName: 'Add',
+      onConfirm: createRequestHandler,
+      onCancel: () => application.hidePrompt()
+    })
   }
 
   const createRequestHandler = (name: string) => {
-    setShowCreateRequest(false)
+    application.hidePrompt()
     const request = createRequest({
       name,
       type: 'collection'
@@ -166,17 +174,6 @@ export default function Folder({
           </div>
         )}
       </Droppable>
-
-      {showCreateFolder && (
-        <FolderCreator onCancel={() => setShowCreateFolder(false)} onCreate={createFolderHandler} />
-      )}
-
-      {showCreateRequest && (
-        <RequestCreator
-          onCancel={() => setShowCreateRequest(false)}
-          onCreate={createRequestHandler}
-        />
-      )}
 
       {showRemoveFolder && (
         <Confirm

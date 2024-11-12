@@ -4,12 +4,10 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import { createFolder, createRequest } from '../../../../lib/factory'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
-import FolderCreator from './FolderCreator'
 import Confirm from '../../../base/PopupBoxes/Confirm'
 import CollectionElements from './CollectionElements'
 import EditableName from '../../../base/EditableName/EditableName'
 import { AppContext } from '../../../../context/AppContext'
-import RequestCreator from './RequestCreator'
 import { moveElements } from '../../../../lib/moveElements'
 import { FilterInput } from '../../../base/FilterInput/FilterInput'
 import {
@@ -29,12 +27,10 @@ export default function Collection({
   back: () => void
   onRemove?: () => void
 }) {
-  const { tabs, collections } = useContext(AppContext)
+  const { application, tabs, collections } = useContext(AppContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [editingName, setEditingName] = useState(false)
-  const [showCreateFolder, setShowCreateFolder] = useState(false)
-  const [showCreateRequest, setShowCreateRequest] = useState(false)
   const [showDialog, setShowDialog] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
@@ -66,8 +62,18 @@ export default function Collection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection, filter, collections?.updateTime])
 
+  const openCreateFolder = () => {
+    application.showPrompt({
+      message: 'Folder name:',
+      placeholder: 'Folder name',
+      confirmName: 'Add',
+      onConfirm: createFolderHandler,
+      onCancel: () => application.hidePrompt()
+    })
+  }
+
   const createFolderHandler = (name: string) => {
-    setShowCreateFolder(false)
+    application.hidePrompt()
     coll.elements.push(createFolder(name))
     update({ ...coll })
   }
@@ -96,11 +102,17 @@ export default function Collection({
   }
 
   const handleAddRequest = () => {
-    setShowCreateRequest(true)
+    application.showPrompt({
+      message: 'Request name:',
+      placeholder: 'Request name',
+      confirmName: 'Add',
+      onConfirm: createRequestHandler,
+      onCancel: () => application.hidePrompt()
+    })
   }
 
   const createRequestHandler = (name: string) => {
-    setShowCreateRequest(false)
+    application.hidePrompt()
     const request = createRequest({
       name,
       type: 'collection'
@@ -173,11 +185,7 @@ export default function Collection({
           <Menu>
             <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
             <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
-            <MenuElement
-              icon="folder"
-              title="Add folder"
-              onClick={() => setShowCreateFolder(true)}
-            />
+            <MenuElement icon="folder" title="Add folder" onClick={openCreateFolder} />
             <MenuElement icon="edit" title="Rename" onClick={editName} />
             <MenuSeparator />
             <MenuElement
@@ -228,17 +236,6 @@ export default function Collection({
           confirmColor={REMOVE_COLOR}
           onConfirm={handleRemove}
           onCancel={() => setShowDialog(false)}
-        />
-      )}
-
-      {showCreateFolder && (
-        <FolderCreator onCancel={() => setShowCreateFolder(false)} onCreate={createFolderHandler} />
-      )}
-
-      {showCreateRequest && (
-        <RequestCreator
-          onCancel={() => setShowCreateRequest(false)}
-          onCreate={createRequestHandler}
         />
       )}
 

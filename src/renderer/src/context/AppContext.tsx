@@ -8,6 +8,8 @@ import { COLLECTIONS, ENVIRONMENTS, TABS } from '../../../lib/ipcChannels'
 import { useCookies } from '../hooks/useCookies'
 import { useSettigns as useAppSettings } from '../hooks/useSettings'
 import Dialog from '../components/base/dialog/Dialog'
+import Prompt from '../components/base/PopupBoxes/Prompt'
+import Confirm from '../components/base/PopupBoxes/Confirm'
 
 export const AppContext = createContext<{
   application: ApplicationType
@@ -80,8 +82,44 @@ export default function AppContextProvider({ children }: { children: React.React
     setDialogProps(null)
   }
 
+  const showConfirm = (confirmProps: ConfirmType) => {
+    showDialog({
+      children: (
+        <Confirm
+          message={confirmProps.message}
+          confirmName={confirmProps.confirmName}
+          confirmColor={confirmProps.confirmColor}
+          onConfirm={confirmProps.onConfirm}
+          onCancel={confirmProps.onCancel}
+        />
+      )
+    })
+  }
+
+  const hideConfirm = () => {
+    hideDialog()
+  }
+
+  const showPrompt = (promptProps: PromptType) => {
+    showDialog({
+      children: (
+        <Prompt
+          message={promptProps.message}
+          placeholder={promptProps.placeholder}
+          confirmName={promptProps.confirmName}
+          onConfirm={promptProps.onConfirm}
+          onCancel={promptProps.onCancel}
+        />
+      )
+    })
+  }
+
+  const hidePrompt = () => {
+    hideDialog()
+  }
+
   const contextValue = {
-    application: { showDialog, hideDialog },
+    application: { showDialog, hideDialog, showPrompt, hidePrompt, showConfirm, hideConfirm },
     menu,
     tabs,
     collections,
