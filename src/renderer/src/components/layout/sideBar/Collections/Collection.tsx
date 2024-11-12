@@ -30,11 +30,9 @@ export default function Collection({
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [editingName, setEditingName] = useState(false)
-  // const [showDialog, setShowDialog] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
-  const [showPreRequest, setShowPreRequest] = useState(false)
   const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
   const [updateTime, setUpdateTime] = useState(0)
 
@@ -61,20 +59,18 @@ export default function Collection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection, filter, collections?.updateTime])
 
-  const openCreateFolder = () => {
+  const handleCreateFolder = () => {
     application.showPrompt({
       message: 'Folder name:',
       placeholder: 'Folder name',
       confirmName: 'Add',
-      onConfirm: createFolderHandler,
+      onConfirm: (name: string) => {
+        application.hidePrompt()
+        coll.elements.push(createFolder(name))
+        update({ ...coll })
+      },
       onCancel: () => application.hidePrompt()
     })
-  }
-
-  const createFolderHandler = (name: string) => {
-    application.hidePrompt()
-    coll.elements.push(createFolder(name))
-    update({ ...coll })
   }
 
   const handleUpdate = () => {
@@ -105,36 +101,36 @@ export default function Collection({
       message: 'Request name:',
       placeholder: 'Request name',
       confirmName: 'Add',
-      onConfirm: createRequestHandler,
+      onConfirm: (name: string) => {
+        application.hidePrompt()
+        const request = createRequest({
+          name,
+          type: 'collection'
+        })
+        coll.elements.push(request)
+        update({ ...coll })
+        tabs?.openTab({
+          request,
+          collectionId: coll.id,
+          path: [{ id: request.id, type: 'request' }]
+        })
+      },
       onCancel: () => application.hidePrompt()
     })
   }
 
-  const createRequestHandler = (name: string) => {
-    application.hidePrompt()
-    const request = createRequest({
-      name,
-      type: 'collection'
-    })
-    coll.elements.push(request)
-    update({ ...coll })
-    tabs?.openTab({ request, collectionId: coll.id, path: [{ id: request.id, type: 'request' }] })
-  }
-
-  const openRemoveConfirm = () => {
+  const handleRemoveCollection = () => {
     application.showConfirm({
       message: 'Are you sure you want to remove this collection?',
       confirmName: 'Remove',
       confirmColor: 'danger',
-      onConfirm: handleRemove,
+      onConfirm: () => {
+        collections?.remove(coll.id)
+        application.hideConfirm()
+        onRemove?.()
+      },
       onCancel: () => application.hideConfirm()
     })
-  }
-
-  const handleRemove = () => {
-    collections?.remove(coll.id)
-    application.hideConfirm()
-    onRemove?.()
   }
 
   const handleMove = ({ from, to }: { from: PathItem[]; to: PathItem[] }) => {
@@ -164,7 +160,16 @@ export default function Collection({
   }
 
   const handlePreRequest = () => {
-    setShowPreRequest(true)
+    application.showDialog({
+      children: (
+        <PreRequestEditor
+          preRequest={coll.preRequest}
+          onSave={preRequestSave}
+          onClose={() => application.hideDialog()}
+        />
+      ),
+      preventKeyClose: true
+    })
   }
 
   const preRequestSave = (data: PreRequest) => {
@@ -194,7 +199,7 @@ export default function Collection({
           <Menu>
             <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
             <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
-            <MenuElement icon="folder" title="Add folder" onClick={openCreateFolder} />
+            <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
             <MenuElement icon="edit" title="Rename" onClick={editName} />
             <MenuSeparator />
             <MenuElement
@@ -214,7 +219,7 @@ export default function Collection({
               icon="delete"
               color={REMOVE_COLOR}
               title="Remove"
-              onClick={openRemoveConfirm}
+              onClick={handleRemoveCollection}
             />
           </Menu>
         </div>
@@ -238,14 +243,6 @@ export default function Collection({
           scrolling={isScrolling}
         />
       </Scrollable>
-
-      {showPreRequest && (
-        <PreRequestEditor
-          preRequest={coll.preRequest}
-          onSave={preRequestSave}
-          onClose={() => setShowPreRequest(false)}
-        />
-      )}
     </div>
   )
 }

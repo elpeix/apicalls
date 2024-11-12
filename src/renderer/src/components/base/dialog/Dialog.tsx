@@ -8,13 +8,7 @@ export default function Dialog({
   onClose,
   preventKeyClose = false,
   position = 'center'
-}: {
-  children: React.ReactNode
-  className?: string
-  onClose?: () => void
-  preventKeyClose?: boolean
-  position?: 'top' | 'center'
-}) {
+}: DialogType) {
   const [show, setShow] = useState(true)
 
   const closeDialog = () => {

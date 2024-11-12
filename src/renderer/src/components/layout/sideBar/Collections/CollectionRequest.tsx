@@ -53,19 +53,18 @@ export default function CollectionRequest({
     update()
   }
 
-  const handlerRemove = () => {
+  const handleRemove = () => {
     application.showConfirm({
       message: `Are you sure you want to remove request ${collectionRequest.name}?`,
       confirmName: 'Remove',
       confirmColor: 'danger',
-      onConfirm: handleConfirmRemove,
+      onConfirm: () => {
+        application.hidePrompt()
+        remove(collectionRequest)
+      },
+
       onCancel: () => application.hidePrompt()
     })
-  }
-
-  const handleConfirmRemove = () => {
-    application.hidePrompt()
-    remove(collectionRequest)
   }
 
   const duplicate = (request: RequestType) => {
@@ -108,7 +107,7 @@ export default function CollectionRequest({
           <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
           <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
           <MenuSeparator />
-          <MenuElement icon="delete" title="Remove" color={REMOVE_COLOR} onClick={handlerRemove} />
+          <MenuElement icon="delete" title="Remove" color={REMOVE_COLOR} onClick={handleRemove} />
         </Menu>
       </Droppable>
     </>

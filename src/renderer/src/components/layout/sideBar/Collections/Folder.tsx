@@ -51,15 +51,13 @@ export default function Folder({
       message: 'Folder name:',
       placeholder: 'Folder name',
       confirmName: 'Add',
-      onConfirm: createFolderHandler,
+      onConfirm: (name: string) => {
+        application.hidePrompt()
+        folder.elements.push(createFolder(name))
+        update()
+      },
       onCancel: () => application.hidePrompt()
     })
-  }
-
-  const createFolderHandler = (name: string) => {
-    application.hidePrompt()
-    folder.elements.push(createFolder(name))
-    update()
   }
 
   const handleRemoveFolder = () => {
@@ -67,14 +65,12 @@ export default function Folder({
       message: `Are you sure you want to remove folder ${folder.name}?`,
       confirmName: 'Remove',
       confirmColor: 'danger',
-      onConfirm: removeFolderHandler,
+      onConfirm: () => {
+        application.hideConfirm()
+        remove(folder)
+      },
       onCancel: () => application.hideConfirm()
     })
-  }
-
-  const removeFolderHandler = () => {
-    application.hideConfirm()
-    remove(folder)
   }
 
   const changeName = (name: string) => {
@@ -88,29 +84,27 @@ export default function Folder({
       message: 'Request name:',
       placeholder: 'Request name',
       confirmName: 'Add',
-      onConfirm: createRequestHandler,
+      onConfirm: (name: string) => {
+        application.hidePrompt()
+        const request = createRequest({
+          name,
+          type: 'collection'
+        })
+        folder.elements.push(request)
+        update()
+        tabs?.openTab({
+          request,
+          collectionId,
+          path: [
+            ...folderPath,
+            {
+              id: request.id,
+              type: 'request'
+            }
+          ]
+        })
+      },
       onCancel: () => application.hidePrompt()
-    })
-  }
-
-  const createRequestHandler = (name: string) => {
-    application.hidePrompt()
-    const request = createRequest({
-      name,
-      type: 'collection'
-    })
-    folder.elements.push(request)
-    update()
-    tabs?.openTab({
-      request,
-      collectionId,
-      path: [
-        ...folderPath,
-        {
-          id: request.id,
-          type: 'request'
-        }
-      ]
     })
   }
 

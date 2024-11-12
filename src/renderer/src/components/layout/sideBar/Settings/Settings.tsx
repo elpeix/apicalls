@@ -20,14 +20,12 @@ export default function Settings() {
   const handleClearSettings = () => {
     application.showConfirm({
       message: 'Are you sure you want to clear settings?',
-      onConfirm: clearSettings,
+      onConfirm: () => {
+        appSettings?.clear()
+        application.hideConfirm()
+      },
       onCancel: () => application.hideConfirm()
     })
-  }
-
-  const clearSettings = () => {
-    appSettings?.clear()
-    application.hideConfirm()
   }
 
   const getThemeName = (value: string): Theme => {

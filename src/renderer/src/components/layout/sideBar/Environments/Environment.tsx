@@ -59,19 +59,17 @@ export default function Environment({
     update({ ...env, variables })
   }
 
-  const handleConfirmRemove = () => {
+  const handleRemove = () => {
     application.showConfirm({
       message: `Are you sure you want to remove environment ${env.name}?`,
       confirmName: 'Remove',
       confirmColor: 'danger',
-      onConfirm: () => removeEnvironment(env.id),
+      onConfirm: () => {
+        remove(env.id)
+        application.hidePrompt()
+      },
       onCancel: () => application.hidePrompt()
     })
-  }
-
-  const removeEnvironment = (id: Identifier) => {
-    remove(id)
-    application.hidePrompt()
   }
 
   return (
@@ -97,7 +95,7 @@ export default function Environment({
           editOnDoubleClick={true}
         />
         <div className={styles.remove}>
-          <ButtonIcon icon="delete" onClick={handleConfirmRemove} title="Remove environment" />
+          <ButtonIcon icon="delete" onClick={handleRemove} title="Remove environment" />
         </div>
       </div>
       <div className={styles.content}>

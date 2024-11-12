@@ -48,19 +48,17 @@ export default function EnvironmentItem({
     move(envId, environment.id)
   }
 
-  const handleConfirmRemove = () => {
+  const handleRemove = () => {
     application.showConfirm({
       message: `Are you sure you want to remove environment ${environment.name}?`,
       confirmName: 'Remove',
       confirmColor: 'danger',
-      onConfirm: () => removeEnvironment(environment.id),
+      onConfirm: () => {
+        remove(environment.id)
+        application.hidePrompt()
+      },
       onCancel: () => application.hidePrompt()
     })
-  }
-
-  const removeEnvironment = (id: Identifier) => {
-    remove(id)
-    application.hidePrompt()
   }
 
   return (
@@ -94,12 +92,7 @@ export default function EnvironmentItem({
         <MenuElement icon="edit" title="Edit" onClick={() => selectEnvironment(environment)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(environment.id)} />
         <MenuSeparator />
-        <MenuElement
-          icon="delete"
-          title="Remove"
-          color={REMOVE_COLOR}
-          onClick={handleConfirmRemove}
-        />
+        <MenuElement icon="delete" title="Remove" color={REMOVE_COLOR} onClick={handleRemove} />
       </Menu>
     </Droppable>
   )
