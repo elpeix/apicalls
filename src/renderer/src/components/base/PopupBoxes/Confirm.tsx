@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import Dialog from '../dialog/Dialog'
 import styles from './PopupBoxes.module.css'
 
@@ -11,7 +11,7 @@ export default function Confirm({
 }: {
   message: string
   confirmName?: string
-  confirmColor?: string
+  confirmColor?: 'primary' | 'danger' | string // TODO: remove string
   onConfirm: () => void
   onCancel: () => void
 }) {
@@ -21,8 +21,21 @@ export default function Confirm({
     }
   }
 
-  const styleConfirm = confirmColor ? { color: confirmColor } : {}
+  // TODO: Remove string, primary and use object for color
+  let styleConfirm: CSSProperties = {}
+  if (confirmColor === 'primary') {
+    // pass
+  } else if (confirmColor === 'danger') {
+    styleConfirm = {
+      color: 'var(--danger-color)'
+    }
+  } else if (confirmColor) {
+    styleConfirm = {
+      color: confirmColor
+    }
+  }
 
+  // TODO: Remove Dialog and use div
   return (
     <Dialog className={styles.popupBox} onClose={onCancel}>
       <div className={styles.message}>{message}</div>

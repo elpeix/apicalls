@@ -5,7 +5,6 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import EditableName from '../../../base/EditableName/EditableName'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
-import Confirm from '../../../base/PopupBoxes/Confirm'
 import CollectionElements from './CollectionElements'
 import styles from './Collections.module.css'
 import Droppable from '../../../base/Droppable/Droppable'
@@ -31,7 +30,6 @@ export default function Folder({
   const { application, tabs } = useContext(AppContext)
   const [expanded, setExpanded] = useState(folder.expanded || false)
   const [editingName, setEditingName] = useState(false)
-  const [showRemoveFolder, setShowRemoveFolder] = useState(false)
 
   useEffect(() => {
     setExpanded(folder.expanded || false)
@@ -64,8 +62,18 @@ export default function Folder({
     update()
   }
 
+  const handleRemoveFolder = () => {
+    application.showConfirm({
+      message: `Are you sure you want to remove folder ${folder.name}?`,
+      confirmName: 'Remove',
+      confirmColor: 'danger',
+      onConfirm: removeFolderHandler,
+      onCancel: () => application.hideConfirm()
+    })
+  }
+
   const removeFolderHandler = () => {
-    setShowRemoveFolder(false)
+    application.hideConfirm()
     remove(folder)
   }
 
@@ -157,7 +165,7 @@ export default function Folder({
               icon="delete"
               title="Remove"
               color={REMOVE_COLOR}
-              onClick={() => setShowRemoveFolder(true)}
+              onClick={handleRemoveFolder}
             />
           </Menu>
         </div>
@@ -174,16 +182,6 @@ export default function Folder({
           </div>
         )}
       </Droppable>
-
-      {showRemoveFolder && (
-        <Confirm
-          message={`Are you sure you want to remove folder ${folder.name}?`}
-          confirmName="Remove"
-          confirmColor={REMOVE_COLOR}
-          onConfirm={removeFolderHandler}
-          onCancel={() => setShowRemoveFolder(false)}
-        />
-      )}
     </>
   )
 }
