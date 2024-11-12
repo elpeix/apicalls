@@ -4,7 +4,6 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import { createFolder, createRequest } from '../../../../lib/factory'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
-import Confirm from '../../../base/PopupBoxes/Confirm'
 import CollectionElements from './CollectionElements'
 import EditableName from '../../../base/EditableName/EditableName'
 import { AppContext } from '../../../../context/AppContext'
@@ -31,7 +30,7 @@ export default function Collection({
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [editingName, setEditingName] = useState(false)
-  const [showDialog, setShowDialog] = useState(false)
+  // const [showDialog, setShowDialog] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
@@ -122,9 +121,19 @@ export default function Collection({
     tabs?.openTab({ request, collectionId: coll.id, path: [{ id: request.id, type: 'request' }] })
   }
 
+  const openRemoveConfirm = () => {
+    application.showConfirm({
+      message: 'Are you sure you want to remove this collection?',
+      confirmName: 'Remove',
+      confirmColor: 'danger',
+      onConfirm: handleRemove,
+      onCancel: () => application.hideConfirm()
+    })
+  }
+
   const handleRemove = () => {
     collections?.remove(coll.id)
-    setShowDialog(false)
+    application.hideConfirm()
     onRemove?.()
   }
 
@@ -205,7 +214,7 @@ export default function Collection({
               icon="delete"
               color={REMOVE_COLOR}
               title="Remove"
-              onClick={() => setShowDialog(true)}
+              onClick={openRemoveConfirm}
             />
           </Menu>
         </div>
@@ -229,15 +238,6 @@ export default function Collection({
           scrolling={isScrolling}
         />
       </Scrollable>
-      {showDialog && (
-        <Confirm
-          message="Are you sure you want to remove this collection?"
-          confirmName="Remove"
-          confirmColor={REMOVE_COLOR}
-          onConfirm={handleRemove}
-          onCancel={() => setShowDialog(false)}
-        />
-      )}
 
       {showPreRequest && (
         <PreRequestEditor

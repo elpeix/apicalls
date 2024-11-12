@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import styles from './Environment.module.css'
 import Name from '../../../base/Name'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
-import Confirm from '../../../base/PopupBoxes/Confirm'
 import Droppable from '../../../base/Droppable/Droppable'
 import { REMOVE_COLOR } from '../../../../constant'
+import { AppContext } from '../../../../context/AppContext'
 
 export default function EnvironmentItem({
   environment,
@@ -26,7 +26,8 @@ export default function EnvironmentItem({
   duplicate: (id: Identifier) => void
   isScrolling: boolean
 }) {
-  const [showDialog, setShowDialog] = useState(false)
+  const { application } = useContext(AppContext)
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       activeEnvironment(environment.id)
@@ -45,6 +46,21 @@ export default function EnvironmentItem({
     e.stopPropagation()
     const envId = e.dataTransfer.getData('envId')
     move(envId, environment.id)
+  }
+
+  const handleConfirmRemove = () => {
+    application.showConfirm({
+      message: `Are you sure you want to remove environment ${environment.name}?`,
+      confirmName: 'Remove',
+      confirmColor: 'danger',
+      onConfirm: () => removeEnvironment(environment.id),
+      onCancel: () => application.hidePrompt()
+    })
+  }
+
+  const removeEnvironment = (id: Identifier) => {
+    remove(id)
+    application.hidePrompt()
   }
 
   return (
@@ -82,18 +98,9 @@ export default function EnvironmentItem({
           icon="delete"
           title="Remove"
           color={REMOVE_COLOR}
-          onClick={() => setShowDialog(true)}
+          onClick={handleConfirmRemove}
         />
       </Menu>
-      {showDialog && (
-        <Confirm
-          message="Are you sure you want to remove this environment?"
-          confirmName="Remove"
-          confirmColor={REMOVE_COLOR}
-          onConfirm={() => remove(environment.id)}
-          onCancel={() => setShowDialog(false)}
-        />
-      )}
     </Droppable>
   )
 }
