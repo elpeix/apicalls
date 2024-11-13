@@ -71,27 +71,20 @@ const flatElements = (
 ): FlatRequest[] => {
   let requests: FlatRequest[] = []
   elements.forEach((element) => {
+    const newPath = [...path, { id: element.id, type: element.type } as PathItem]
     if (element.type === 'folder') {
-      path.push({
-        id: element.id,
-        type: 'folder'
-      })
       const folderRequests = flatElements(
         collectionId,
         collectionName,
         element.elements,
         element.id,
         `${folderPath}${element.name}/`,
-        path
+        newPath
       )
       requests = requests.concat(folderRequests)
     } else {
       const filter =
         `${collectionName} ${element.request.method.value} ${element.name}`.toLowerCase()
-      path.push({
-        id: element.id,
-        type: 'request'
-      })
       requests.push({
         ...element,
         collectionId,
@@ -99,7 +92,7 @@ const flatElements = (
         folderId,
         folderPath,
         filter,
-        path
+        path: newPath
       })
     }
   })
