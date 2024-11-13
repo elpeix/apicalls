@@ -83,8 +83,7 @@ const flatElements = (
       )
       requests = requests.concat(folderRequests)
     } else {
-      const filter =
-        `${collectionName} ${element.request.method.value} ${element.name}`.toLowerCase()
+      const filter = `${collectionName} ${element.request.method.value} ${element.name}`
       const filterPositions = [
         collectionName.length,
         collectionName.length + 1 + element.request.method.value.length,

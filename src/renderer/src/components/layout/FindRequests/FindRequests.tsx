@@ -22,32 +22,19 @@ export default function FindRequests() {
     setFilter('')
     const requests = flatRequests(collections?.getAll() || [])
     setAllRequests(requests)
-    const requestsWithNodes = requests.map((request) => {
-      return {
-        ...request,
-        childNode: (
-          <>
-            <div className={styles.collectionName}>{request.collectionName}</div>
-            <div className={styles.folderPath}>{request.folderPath}</div>
-            <div className={styles.request}>
-              <div className={`${request.request.method.value} ${styles.method}`}>
-                {request.request.method.label}
-              </div>
-              <div className={styles.requestName}>{request.name}</div>
-            </div>
-          </>
-        )
-      }
-    })
-    setFiltered(requestsWithNodes)
+    setFiltered(getAllFlatRequestsWithNode(requests))
     setSelectedFiltered(0)
-  }, [])
+  }, [collections])
 
   useEffect(() => {
     setSelectedFiltered(0)
+    if (!debouncedFilter) {
+      setFiltered(getAllFlatRequestsWithNode(allRequests))
+      return
+    }
     const lcValue = (debouncedFilter as string).toLowerCase()
     const requestFiltered = allRequests.map((flatRequest) => {
-      if (queryFilter(flatRequest.filter, lcValue)) {
+      if (queryFilter(flatRequest.filter.toLowerCase(), lcValue)) {
         const preparedValues = highlight(flatRequest.filter, lcValue, flatRequest.filterPositions)
         return {
           ...flatRequest,
@@ -75,7 +62,27 @@ export default function FindRequests() {
       return null
     })
     setFiltered(requestFiltered.filter((item) => item !== null))
-  }, [debouncedFilter])
+  }, [debouncedFilter, allRequests])
+
+  const getAllFlatRequestsWithNode = (flatRequests: FlatRequest[]): FlatRequestWithNode[] => {
+    return flatRequests.map((flatRequest) => {
+      return {
+        ...flatRequest,
+        childNode: (
+          <>
+            <div className={styles.collectionName}>{flatRequest.collectionName}</div>
+            <div className={styles.folderPath}>{flatRequest.folderPath}</div>
+            <div className={styles.request}>
+              <div className={`${flatRequest.request.method.value} ${styles.method}`}>
+                {flatRequest.request.method.label}
+              </div>
+              <div className={styles.requestName}>{flatRequest.name}</div>
+            </div>
+          </>
+        )
+      }
+    })
+  }
 
   const handleChange = (value: string) => {
     setFilter(value)
@@ -85,15 +92,20 @@ export default function FindRequests() {
     const result = ['', '', '']
     let filterIndex = 0
     let position = 0
+    const lcText = text.toLowerCase()
     for (let i = 0; i < text.length; i++) {
       if (i === filterPositions[position]) {
         position++
       } else {
-        if (text[i] === filter[filterIndex]) {
-          result[position] += `<span class="${styles.highlight}">${text[i]}</span>`
+        let character = text[i]
+        if (character === '<') {
+          character = '&lt;'
+        }
+        if (lcText[i] === filter[filterIndex]) {
+          result[position] += `<span class="${styles.highlight}">${character}</span>`
           filterIndex++
         } else {
-          result[position] += text[i]
+          result[position] += character
         }
       }
     }
@@ -137,8 +149,15 @@ export default function FindRequests() {
   }
 
   const openRequest = (flatRequest: FlatRequest) => {
+    const request: RequestType = {
+      type: flatRequest.type,
+      id: flatRequest.id,
+      name: flatRequest.name,
+      date: flatRequest.date,
+      request: flatRequest.request
+    }
     tabs?.openTab({
-      request: flatRequest,
+      request: request,
       collectionId: flatRequest.collectionId,
       path: flatRequest.path
     })
