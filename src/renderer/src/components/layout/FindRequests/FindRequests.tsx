@@ -4,29 +4,100 @@ import Input from '../../base/Input/Input'
 import { flatRequests } from '../../../lib/collectionFilter'
 import { queryFilter } from '../../../lib/utils'
 import styles from './FindRequests.module.css'
+import { useDebounce } from '../../../hooks/useDebounce'
+
+type FlatRequestWithNode = FlatRequest & { childNode: React.ReactNode }
 
 export default function FindRequests() {
   const { application, collections, tabs } = useContext(AppContext)
   const inputRef = useRef(null)
   const listRef = useRef<HTMLUListElement>(null)
   const [allRequests, setAllRequests] = useState<FlatRequest[]>([])
-  const [filter, setFilter] = useState('')
-  const [filtered, setFiltered] = useState<FlatRequest[]>([])
+  const [filter, setFilter] = useState<string>('')
+  const debouncedFilter = useDebounce(filter, 200)
+  const [filtered, setFiltered] = useState<FlatRequestWithNode[]>([])
   const [selectedFiltered, setSelectedFiltered] = useState(-1)
 
   useEffect(() => {
     setFilter('')
     const requests = flatRequests(collections?.getAll() || [])
     setAllRequests(requests)
-    setFiltered(requests)
+    const requestsWithNodes = requests.map((request) => {
+      return {
+        ...request,
+        childNode: (
+          <>
+            <div className={styles.collectionName}>{request.collectionName}</div>
+            <div className={styles.folderPath}>{request.folderPath}</div>
+            <div className={styles.request}>
+              <div className={`${request.request.method.value} ${styles.method}`}>
+                {request.request.method.label}
+              </div>
+              <div className={styles.requestName}>{request.name}</div>
+            </div>
+          </>
+        )
+      }
+    })
+    setFiltered(requestsWithNodes)
     setSelectedFiltered(0)
   }, [])
 
+  useEffect(() => {
+    setSelectedFiltered(0)
+    const lcValue = (debouncedFilter as string).toLowerCase()
+    const requestFiltered = allRequests.map((flatRequest) => {
+      if (queryFilter(flatRequest.filter, lcValue)) {
+        const preparedValues = highlight(flatRequest.filter, lcValue, flatRequest.filterPositions)
+        return {
+          ...flatRequest,
+          childNode: (
+            <>
+              <div
+                className={styles.collectionName}
+                dangerouslySetInnerHTML={{ __html: preparedValues[0] }}
+              />
+              <div className={styles.folderPath}>{flatRequest.folderPath}</div>
+              <div className={styles.request}>
+                <div
+                  className={`${flatRequest.request.method.value} ${styles.method}`}
+                  dangerouslySetInnerHTML={{ __html: preparedValues[1] }}
+                />
+                <div
+                  className={styles.requestName}
+                  dangerouslySetInnerHTML={{ __html: preparedValues[2] }}
+                />
+              </div>
+            </>
+          )
+        }
+      }
+      return null
+    })
+    setFiltered(requestFiltered.filter((item) => item !== null))
+  }, [debouncedFilter])
+
   const handleChange = (value: string) => {
     setFilter(value)
-    setSelectedFiltered(0)
-    const lcValue = value.toLowerCase()
-    setFiltered(allRequests.filter((flatRequest) => queryFilter(flatRequest.filter, lcValue)))
+  }
+
+  const highlight = (text: string, filter: string, filterPositions: number[]) => {
+    const result = ['', '', '']
+    let filterIndex = 0
+    let position = 0
+    for (let i = 0; i < text.length; i++) {
+      if (i === filterPositions[position]) {
+        position++
+      } else {
+        if (text[i] === filter[filterIndex]) {
+          result[position] += `<span class="${styles.highlight}">${text[i]}</span>`
+          filterIndex++
+        } else {
+          result[position] += text[i]
+        }
+      }
+    }
+    return result
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -95,14 +166,7 @@ export default function FindRequests() {
               key={`foundItem_${index}`}
               onClick={() => openRequest(item)}
             >
-              <div className={styles.collectionName}>{item.collectionName}</div>
-              <div className={styles.folderPath}>{item.folderPath}</div>
-              <div className={styles.request}>
-                <div className={`${item.request.method.value} ${styles.method}`}>
-                  {item.request.method.label}
-                </div>
-                <div className={styles.requestName}>{item.name}</div>
-              </div>
+              {item.childNode}
             </li>
           ))}
         </ul>

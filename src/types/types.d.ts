@@ -90,6 +90,7 @@ type FlatRequest = RequestType & {
   folderPath: string
   path: PathItem[]
   filter: string
+  filterPositions: number[]
 }
 
 type PathItem = {

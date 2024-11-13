@@ -85,6 +85,16 @@ const flatElements = (
     } else {
       const filter =
         `${collectionName} ${element.request.method.value} ${element.name}`.toLowerCase()
+      const filterPositions = [
+        collectionName.length,
+        collectionName.length + 1 + element.request.method.value.length,
+        collectionName.length +
+          1 +
+          element.request.method.value.length +
+          1 +
+          (element.name?.length || 0)
+      ]
+
       requests.push({
         ...element,
         collectionId,
@@ -92,7 +102,8 @@ const flatElements = (
         folderId,
         folderPath,
         filter,
-        path: newPath
+        path: newPath,
+        filterPositions
       })
     }
   })

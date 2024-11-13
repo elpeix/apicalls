@@ -38,6 +38,10 @@
       white-space: nowrap;
     }
 
+    .highlight {
+      background-color: var(--accent-color);
+    }
+
     .collectionName {
       color: var(--color-4);
       font-weight: bold;
