@@ -40,11 +40,13 @@ export default function FindRequests() {
           ...flatRequest,
           childNode: (
             <>
-              <div
-                className={styles.collectionName}
-                dangerouslySetInnerHTML={{ __html: preparedValues[0] }}
-              />
-              <div className={styles.folderPath}>{flatRequest.folderPath}</div>
+              <div className={styles.foundHead}>
+                <div
+                  className={styles.collectionName}
+                  dangerouslySetInnerHTML={{ __html: preparedValues[0] }}
+                />
+                <div className={styles.folderPath}>{flatRequest.folderPath}</div>
+              </div>
               <div className={styles.request}>
                 <div
                   className={`${flatRequest.request.method.value} ${styles.method}`}
@@ -70,8 +72,10 @@ export default function FindRequests() {
         ...flatRequest,
         childNode: (
           <>
-            <div className={styles.collectionName}>{flatRequest.collectionName}</div>
-            <div className={styles.folderPath}>{flatRequest.folderPath}</div>
+            <div className={styles.foundHead}>
+              <div className={styles.collectionName}>{flatRequest.collectionName}</div>
+              <div className={styles.folderPath}>{flatRequest.folderPath}</div>
+            </div>
             <div className={styles.request}>
               <div className={`${flatRequest.request.method.value} ${styles.method}`}>
                 {flatRequest.request.method.label}

@@ -30,6 +30,15 @@
       background-color: var(--accent-color);
     }
 
+    .highlight {
+      background-color: var(--accent-color);
+    }
+
+    .foundHead {
+      display: flex;
+      justify-content: space-around;
+    }
+
     .collectionName,
     .folderPath {
       width: 100%;
@@ -38,17 +47,16 @@
       white-space: nowrap;
     }
 
-    .highlight {
-      background-color: var(--accent-color);
-    }
-
     .collectionName {
       color: var(--color-4);
       font-weight: bold;
     }
 
     .folderPath {
-      color: var(--color-5);
+      color: var(--color-7);
+      font-style: italic;
+      text-align: right;
+      font-size: 0.66rem;
     }
 
     .request {
