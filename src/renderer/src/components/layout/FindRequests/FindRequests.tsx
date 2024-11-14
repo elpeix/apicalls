@@ -100,17 +100,16 @@ export default function FindRequests() {
     for (let i = 0; i < text.length; i++) {
       if (i === filterPositions[position]) {
         position++
+      }
+      let character = text[i]
+      if (character === '<') {
+        character = '&lt;'
+      }
+      if (lcText[i] === filter[filterIndex]) {
+        result[position] += `<span class="${styles.highlight}">${character}</span>`
+        filterIndex++
       } else {
-        let character = text[i]
-        if (character === '<') {
-          character = '&lt;'
-        }
-        if (lcText[i] === filter[filterIndex]) {
-          result[position] += `<span class="${styles.highlight}">${character}</span>`
-          filterIndex++
-        } else {
-          result[position] += character
-        }
+        result[position] += character
       }
     }
     return result
