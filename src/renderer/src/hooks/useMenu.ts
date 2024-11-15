@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { ACTIONS } from '../../../lib/ipcChannels'
 
 export function useMenu(): MenuHookType {
   const items: MenuItem[] = [
@@ -10,6 +11,21 @@ export function useMenu(): MenuHookType {
   ]
 
   const [selected, setSelected] = useState(items[0])
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.showCollections, () => setSelected(items[0]))
+    ipcRenderer?.on(ACTIONS.showEnvironments, () => setSelected(items[1]))
+    ipcRenderer?.on(ACTIONS.showHistory, () => setSelected(items[2]))
+    ipcRenderer?.on(ACTIONS.showSettings, () => setSelected(items[4]))
+
+    return () => {
+      ipcRenderer?.removeAllListeners(ACTIONS.showCollections)
+      ipcRenderer?.removeAllListeners(ACTIONS.showEnvironments)
+      ipcRenderer?.removeAllListeners(ACTIONS.showHistory)
+      ipcRenderer?.removeAllListeners(ACTIONS.showSettings)
+    }
+  }, [setSelected])
 
   const select = (id: Identifier) => {
     const item = items.find((item) => item.id === id)

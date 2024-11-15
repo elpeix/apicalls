@@ -52,7 +52,11 @@ export const ACTIONS = {
   saveAsRequest: 'action:save-as-request',
   toggleRequestPanel: 'action:toggle-request-panel',
   toggleConsole: 'action:toggle-console',
-  escape: 'action:escape'
+  escape: 'action:escape',
+  showSettings: 'action:show-settings',
+  showCollections: 'action:show-collections',
+  showEnvironments: 'action:show-environments',
+  showHistory: 'action:show-history'
 }
 
 export const TABS = {
