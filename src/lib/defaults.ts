@@ -3,5 +3,6 @@ export const defaultSettings: AppSettingsType = {
   timeout: 30000,
   maxHistory: 100,
   proxy: '',
-  manageCookies: false
+  manageCookies: false,
+  menu: true
 }

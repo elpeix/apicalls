@@ -26,7 +26,8 @@ export const SETTINGS = {
   get: 'settings:get',
   save: 'settings:save',
   clear: 'settings:clear',
-  updated: 'settings:updated'
+  updated: 'settings:updated',
+  toggleMenu: 'settings:toggle-menu'
 }
 
 export const ENVIRONMENTS = {

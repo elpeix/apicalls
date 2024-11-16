@@ -101,6 +101,17 @@ export default function Settings() {
               <span>Manage cookies</span>
             </label>
           </div>
+          <div className={styles.groupRow}>
+            <input
+              id="toggleMenu"
+              type="checkbox"
+              checked={settings.menu}
+              onChange={(e) => setSettings({ ...settings, menu: e.target.checked })}
+            />
+            <label htmlFor="toggleMenu">
+              <span>Show menu</span>
+            </label>
+          </div>
 
           <div className={styles.group}>
             <button onClick={saveSettings}>Save</button>

@@ -3,19 +3,21 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
 import { registerShortcuts } from './shortcutActions'
-import { menu } from './menu'
+import { getMenu } from './menu'
+import { defaultSettings } from '../lib/defaults'
 
 const store = new Store()
 
 const icon = join(__dirname, '../../resources/icon.png')
 
+let mainWindow: BrowserWindow | null
+
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
-    autoHideMenuBar: true,
     icon,
     title: 'API Calls',
     titleBarStyle: 'default',
@@ -26,7 +28,7 @@ function createWindow() {
     }
   })
 
-  mainWindow.on('ready-to-show', () => mainWindow.show())
+  mainWindow.on('ready-to-show', () => mainWindow?.show())
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -36,16 +38,20 @@ function createWindow() {
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then(() => mainWindow.maximize())
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then(() => mainWindow?.maximize())
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html')).then(() => mainWindow.maximize())
+    mainWindow
+      .loadFile(join(__dirname, '../renderer/index.html'))
+      .then(() => mainWindow?.maximize())
   }
 
   registerShortcuts(mainWindow)
-}
 
-// Set application menu
-Menu.setApplicationMenu(menu)
+  // Set application menu
+  const settings = store.get('settings', defaultSettings) as AppSettingsType
+  Menu.setApplicationMenu(getMenu(mainWindow))
+  mainWindow.setMenuBarVisibility(!!settings.menu)
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -93,3 +99,5 @@ import './ipcActions'
 import './ipcCollectionActions'
 import './ipcEnvironmentActions'
 import './ipcTabsActions'
+
+export { mainWindow }

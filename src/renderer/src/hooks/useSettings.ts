@@ -17,6 +17,10 @@ export function useSettigns(): AppSettingsHookType {
     setSettings(settings)
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(SETTINGS.save, settings)
+
+    if (settings.menu !== undefined) {
+      ipcRenderer?.send(SETTINGS.toggleMenu, settings.menu)
+    }
   }
 
   const clear = () => {

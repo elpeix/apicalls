@@ -3,12 +3,19 @@ import { restCall, restCancel } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
 import { REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
+import { mainWindow } from '.'
 
 ipcMain.on(SETTINGS.get, (event) => event.reply(SETTINGS.updated, getSettings()))
 ipcMain.on(SETTINGS.save, (_, settings) => setSettings(settings))
 ipcMain.on(SETTINGS.clear, (event) => {
   clearSettings()
   event.reply(SETTINGS.updated, getSettings())
+})
+
+ipcMain.on(SETTINGS.toggleMenu, (_, showMenu: boolean) => {
+  const settings = getSettings()
+  setSettings({ ...settings, menu: showMenu })
+  mainWindow?.setMenuBarVisibility(showMenu)
 })
 
 ipcMain.on(REQUEST.call, async (event, callRequest: CallRequest) => {

@@ -272,6 +272,7 @@ type AppSettingsType = {
   maxHistory: number
   timeout: number
   manageCookies?: boolean
+  menu?: boolean
 }
 
 type CallRequest = {
