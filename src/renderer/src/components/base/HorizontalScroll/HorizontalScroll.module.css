@@ -1,0 +1,10 @@
+.scrollable {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    height: 0.2rem;
+  }
+}

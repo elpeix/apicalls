@@ -53,6 +53,8 @@
   outline: none;
   box-shadow: inset 0 0 0 1px transparent;
   transition: box-shadow 0.2s ease-in-out;
+  overflow: hidden;
+  min-width: 9rem;
 
   &.error {
     background-color: var(--error-background-color);
@@ -156,6 +158,14 @@
 
   &:hover {
     background-color: var(--hover-color);
+  }
+}
+@media (max-width: 480px) {
+  .saveButton {
+    display: none;
+  }
+  .buttonText {
+    display: none;
   }
 }
 

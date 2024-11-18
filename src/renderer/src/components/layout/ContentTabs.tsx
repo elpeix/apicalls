@@ -6,6 +6,7 @@ import NewTab from '../tabs/newTab/NewTab'
 import TabTitle from '../tabs/tabTitle/TabTitle'
 import { ACTIONS } from '../../../../lib/ipcChannels'
 import SearchTabs from '../tabs/SearchTabs/SearchTabs'
+import HorizontalScroll from '../base/HorizontalScroll/HorizontalScroll'
 
 export default function ContentTabs() {
   const { tabs } = useContext(AppContext)
@@ -49,14 +50,6 @@ export default function ContentTabs() {
     tabs?.setActiveTab(index)
     return true
   }
-  const onWheel = (e: React.WheelEvent) => {
-    const el = e.currentTarget
-    const scrollLeft = el.scrollLeft
-    el.scrollTo({
-      left: scrollLeft + e.deltaY * 0.4,
-      behavior: 'instant'
-    })
-  }
 
   return (
     <>
@@ -64,7 +57,7 @@ export default function ContentTabs() {
         <div className="panel-tabs">
           <Tabs onSelect={onSelect} selectedIndex={selectedTabIndex}>
             <div className="panel-tabs-header">
-              <div className="panel-tabs-header-list" onWheel={onWheel}>
+              <HorizontalScroll className="panel-tabs-header-list">
                 <TabList>
                   {tabList.map((tab) => (
                     <Tab key={tab.id} className="request-tab">
@@ -72,7 +65,7 @@ export default function ContentTabs() {
                     </Tab>
                   ))}
                 </TabList>
-              </div>
+              </HorizontalScroll>
               <NewTab />
               <div className="panel-tabs-header-spacer" />
               <SearchTabs />

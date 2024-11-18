@@ -6,6 +6,7 @@ import Editor from '../base/Editor'
 import styles from './Request.module.css'
 import RequestAuth from './RequestAuth'
 import Params from '../base/Params/Params'
+import HorizontalScroll from '../base/HorizontalScroll/HorizontalScroll'
 
 export default function RequestTabs() {
   const { request } = useContext(RequestContext)
@@ -23,22 +24,24 @@ export default function RequestTabs() {
 
   return (
     <div className={styles.tabs}>
-      <Tabs className="tabs">
-        <TabList>
-          {request.pathParams.items.length > 0 && (
+      <Tabs>
+        <HorizontalScroll>
+          <TabList>
+            {request.pathParams.items.length > 0 && (
+              <Tab>
+                <RequestTab name="Path params" />
+              </Tab>
+            )}
             <Tab>
-              <RequestTab name="Path params" />
+              <RequestTab name="Query params" count={activeQueryParams} />
             </Tab>
-          )}
-          <Tab>
-            <RequestTab name="Query params" count={activeQueryParams} />
-          </Tab>
-          <Tab>
-            <RequestTab name="Headers" count={activeHeaders} />
-          </Tab>
-          <Tab>Authorization</Tab>
-          {showBody && <Tab>Body</Tab>}
-        </TabList>
+            <Tab>
+              <RequestTab name="Headers" count={activeHeaders} />
+            </Tab>
+            <Tab>Authorization</Tab>
+            {showBody && <Tab>Body</Tab>}
+          </TabList>
+        </HorizontalScroll>
         <div className="tab-panel-wrapper">
           {request.pathParams.items.length > 0 && (
             <TabPanel forceRender={true}>

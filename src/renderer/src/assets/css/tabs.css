@@ -85,14 +85,6 @@
         -webkit-app-region: no-drag;
       }
 
-      .panel-tabs-header-list {
-        overflow-x: auto;
-
-        &::-webkit-scrollbar {
-          height: 0.2rem;
-        }
-      }
-
       .panel-tabs-header-spacer {
         flex-grow: 1;
       }
