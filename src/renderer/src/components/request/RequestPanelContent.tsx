@@ -14,7 +14,11 @@ export default function RequestPanelContent() {
   const { appSettings } = useContext(AppContext)
   const { isActive, request, fetching, save, setOpenSaveAs } = useContext(RequestContext)
   const [requestView, setRequestView] = useState<AppSettingsRequestView>(
-    appSettings?.settings?.requestView === 'horizontal' ? 'vertical' : 'horizontal'
+    appSettings?.settings?.requestView
+      ? appSettings?.settings?.requestView === 'horizontal'
+        ? 'vertical'
+        : 'horizontal'
+      : 'vertical'
   )
   const [gutterMode, setGutterMode] = useState<'horizontal' | 'vertical'>(
     appSettings?.settings?.requestView || 'horizontal'
@@ -22,7 +26,13 @@ export default function RequestPanelContent() {
 
   useEffect(() => {
     if (!appSettings) return
-    setRequestView(appSettings.settings?.requestView === 'horizontal' ? 'vertical' : 'horizontal')
+    setRequestView(
+      appSettings?.settings?.requestView
+        ? appSettings?.settings?.requestView === 'horizontal'
+          ? 'vertical'
+          : 'horizontal'
+        : 'vertical'
+    )
     setGutterMode(appSettings.settings?.requestView || 'horizontal')
   }, [appSettings])
 

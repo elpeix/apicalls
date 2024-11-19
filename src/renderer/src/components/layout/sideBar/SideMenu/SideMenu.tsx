@@ -6,13 +6,11 @@ import { AppContext } from '../../../../context/AppContext'
 export default function SideMenu({
   showSelected,
   onSelect,
-  isCollapsed,
-  collapse
+  isCollapsed
 }: {
   showSelected: boolean
   onSelect: () => void
   isCollapsed: boolean
-  collapse: () => void
 }) {
   const { menu } = useContext(AppContext)
   const [selected, setSelected] = useState<MenuItem>({ id: '', title: '' })
@@ -24,10 +22,6 @@ export default function SideMenu({
   const isSelected = (id: Identifier) => showSelected && selected && selected.id === id
   const handleClick = (id: Identifier) => {
     if (id && menu) {
-      if (!isCollapsed && menu.selected && menu.selected.id === id) {
-        collapse()
-        return
-      }
       menu.select(id)
       onSelect()
     }

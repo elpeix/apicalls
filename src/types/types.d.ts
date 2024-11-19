@@ -194,6 +194,8 @@ type MenuHookType = {
   items: MenuItem[]
   selected: MenuItem
   select: (id: Identifier) => void
+  expanded: boolean
+  setExpanded: (expanded: boolean) => void
 }
 
 type OriginCookies = {

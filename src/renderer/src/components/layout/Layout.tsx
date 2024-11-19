@@ -11,25 +11,19 @@ import FindRequests from './FindRequests/FindRequests'
 export default function Layout() {
   const { application, menu } = useContext(AppContext)
   const sidePanel = useRef<ImperativePanelHandle | null>(null)
-
-  const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false)
   const [showSelected, setShowSelected] = useState(false)
 
   useEffect(() => {
-    setShowSelected(!sidePanelCollapsed && menu != null && !!menu.selected)
-  }, [sidePanelCollapsed, menu])
+    setShowSelected(menu != null && !!menu.expanded && !!menu.selected)
+  }, [menu])
 
   useEffect(() => {
-    const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.toggleSidebar, () => {
-      if (sidePanelCollapsed) {
-        sidePanel.current?.expand()
-      } else {
-        sidePanel.current?.collapse()
-      }
-    })
-    return () => ipcRenderer?.removeAllListeners(ACTIONS.toggleSidebar)
-  }, [sidePanelCollapsed])
+    if (menu?.expanded) {
+      sidePanel.current?.expand()
+    } else {
+      sidePanel.current?.collapse()
+    }
+  }, [menu?.expanded])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -50,18 +44,9 @@ export default function Layout() {
         <SideMenu
           showSelected={showSelected}
           onSelect={expandSidePanel}
-          isCollapsed={sidePanelCollapsed}
-          collapse={() => sidePanel.current && sidePanel.current?.collapse()}
+          isCollapsed={!menu?.expanded}
         />
-        <Panel
-          defaultSize={15}
-          minSize={10}
-          maxSize={40}
-          collapsible={true}
-          ref={sidePanel}
-          onCollapse={() => setSidePanelCollapsed(true)}
-          onExpand={() => setSidePanelCollapsed(false)}
-        >
+        <Panel defaultSize={15} minSize={10} maxSize={40} collapsible={true} ref={sidePanel}>
           <SidePanel />
         </Panel>
         <Gutter mode="vertical" onDoubleClick={expandSidePanel} />
