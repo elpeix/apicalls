@@ -41,6 +41,7 @@ export function useMenu(): MenuHookType {
     if (item) {
       if (item.id === selected.id) {
         setExpanded(!expanded)
+        return
       }
       selectMenuItem(item)
     } else {
