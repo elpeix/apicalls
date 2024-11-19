@@ -25,7 +25,7 @@ export default function RequestTabs() {
   return (
     <div className={styles.tabs}>
       <Tabs>
-        <HorizontalScroll>
+        <HorizontalScroll className={styles.requestTabs}>
           <TabList>
             {request.pathParams.items.length > 0 && (
               <Tab>

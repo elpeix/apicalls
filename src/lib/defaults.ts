@@ -4,5 +4,6 @@ export const defaultSettings: AppSettingsType = {
   maxHistory: 100,
   proxy: '',
   manageCookies: false,
-  menu: true
+  menu: true,
+  requestView: 'horizontal'
 }

@@ -28,13 +28,19 @@ export default function Settings() {
     })
   }
 
+  if (!settings) return null
+
   const getThemeName = (value: string): Theme => {
     const allowed = ['light', 'dark', 'system']
     if (!allowed.includes(value)) return 'system'
     return value as Theme
   }
 
-  if (!settings) return null
+  const getRequestView = (value: string): AppSettingsRequestView => {
+    const allowed = ['horizontal', 'vertical']
+    if (!allowed.includes(value)) return 'horizontal'
+    return value as AppSettingsRequestView
+  }
 
   const options = [
     {
@@ -51,6 +57,17 @@ export default function Settings() {
     }
   ]
 
+  const requestViewOptions = [
+    {
+      value: 'horizontal',
+      label: 'Horizontal'
+    },
+    {
+      value: 'vertical',
+      label: 'Vertical'
+    }
+  ]
+
   return (
     <div className={styles.settings}>
       <div className="sidePanel-header">
@@ -64,6 +81,16 @@ export default function Settings() {
               value={settings.theme}
               onChange={(e) => setSettings({ ...settings, theme: getThemeName(e.target.value) })}
               options={options}
+            />
+          </div>
+          <div className={styles.group}>
+            <label htmlFor="requestView">Request view</label>
+            <SimpleSelect
+              value={settings.requestView}
+              onChange={(e) =>
+                setSettings({ ...settings, requestView: getRequestView(e.target.value) })
+              }
+              options={requestViewOptions}
             />
           </div>
           <div className={styles.group}>

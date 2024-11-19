@@ -8,9 +8,23 @@ import Console from '../base/Console/Console'
 import Response from '../response/Response'
 import styles from './Request.module.css'
 import { ACTIONS } from '../../../../lib/ipcChannels'
+import { AppContext } from '../../context/AppContext'
 
 export default function RequestPanelContent() {
+  const { appSettings } = useContext(AppContext)
   const { isActive, request, fetching, save, setOpenSaveAs } = useContext(RequestContext)
+  const [requestView, setRequestView] = useState<AppSettingsRequestView>(
+    appSettings?.settings?.requestView === 'horizontal' ? 'vertical' : 'horizontal'
+  )
+  const [gutterMode, setGutterMode] = useState<'horizontal' | 'vertical'>(
+    appSettings?.settings?.requestView || 'horizontal'
+  )
+
+  useEffect(() => {
+    if (!appSettings) return
+    setRequestView(appSettings.settings?.requestView === 'horizontal' ? 'vertical' : 'horizontal')
+    setGutterMode(appSettings.settings?.requestView || 'horizontal')
+  }, [appSettings])
 
   const requestPanel = useRef<ImperativePanelHandle>(null)
   const [requestPanelCollapsed, setRequestPanelCollapsed] = useState(false)
@@ -91,20 +105,24 @@ export default function RequestPanelContent() {
     <div className={styles.panel}>
       <RequestBar />
       <PanelGroup direction="vertical">
-        <Panel
-          defaultSize={20}
-          minSize={10}
-          maxSize={90}
-          collapsible={true}
-          ref={requestPanel}
-          onCollapse={() => setRequestPanelCollapsed(true)}
-          onExpand={() => setRequestPanelCollapsed(false)}
-        >
-          <RequestTabs />
-        </Panel>
-        <Gutter mode="horizontal" onDoubleClick={toggleRequestPanel} />
         <Panel>
-          <Response showConsole={expandConsole} consoleIsHidden={consoleCollapsed} />
+          <PanelGroup direction={requestView}>
+            <Panel
+              defaultSize={20}
+              minSize={10}
+              maxSize={90}
+              collapsible={true}
+              ref={requestPanel}
+              onCollapse={() => setRequestPanelCollapsed(true)}
+              onExpand={() => setRequestPanelCollapsed(false)}
+            >
+              <RequestTabs />
+            </Panel>
+            <Gutter mode={gutterMode} onDoubleClick={toggleRequestPanel} />
+            <Panel>
+              <Response showConsole={expandConsole} consoleIsHidden={consoleCollapsed} />
+            </Panel>
+          </PanelGroup>
         </Panel>
         <Gutter mode="horizontal" onDoubleClick={toggleConsole} />
 

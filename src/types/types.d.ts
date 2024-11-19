@@ -266,6 +266,7 @@ type RequestContestType = {
 
 type Theme = 'light' | 'dark' | 'system'
 
+type AppSettingsRequestView = 'horizontal' | 'vertical'
 type AppSettingsType = {
   theme: Theme
   proxy: string
@@ -273,6 +274,7 @@ type AppSettingsType = {
   timeout: number
   manageCookies?: boolean
   menu?: boolean
+  requestView?: AppSettingsRequestView
 }
 
 type CallRequest = {
