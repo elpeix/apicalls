@@ -266,7 +266,7 @@ type RequestContestType = {
   setOpenSaveAs?: (openSaveAs: boolean) => void
 }
 
-type Theme = 'light' | 'dark' | 'system'
+type Theme = 'light' | 'dark' | 'system' | 'monokai'
 
 type AppSettingsRequestView = 'horizontal' | 'vertical'
 type AppSettingsType = {

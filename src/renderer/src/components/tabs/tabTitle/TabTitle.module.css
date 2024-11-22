@@ -10,7 +10,7 @@
     transition: background-color 0.2s ease-in-out;
 
     &:hover {
-      background-color: var(--color-9);
+      background-color: var(--tab-hover-background-color);
       cursor: pointer;
 
       .close {
@@ -87,7 +87,7 @@
 }
 
 .tooltip {
-  background: var(--color-9);
+  background: var(--tab-hover-background-color);
   border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;

@@ -92,7 +92,7 @@
     &:hover,
     &:focus {
       opacity: 1;
-      background-color: var(--color-8);
+      background-color: var(--sidePanel-color-hover);
 
       .folderEdit,
       .menuIcon {
@@ -163,7 +163,7 @@
   &:hover,
   &:focus {
     opacity: 1;
-    background-color: var(--color-8);
+    background-color: var(--sidePanel-color-hover);
 
     .itemEdit,
     .menuIcon {

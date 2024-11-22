@@ -28,6 +28,7 @@
   min-height: 4rem;
   max-width: 80vw;
   max-height: 80vh;
-  background-color: var(--background-base);
-  border: 1px solid var(--border-color);
+  background-color: var(--dialog-background-color);
+  color: var(--dialog-color);
+  border: 1px solid var(--dialog-border-color);
 }

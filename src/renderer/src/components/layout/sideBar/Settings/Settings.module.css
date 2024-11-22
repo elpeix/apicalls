@@ -39,14 +39,14 @@
         button {
           margin-top: 2rem;
 
-          &:hover,
-          &:focus {
-            background: var(--color-8);
-          }
-
-          &:active {
-            background: var(--color-7);
-          }
+          /* &:hover, */
+          /* &:focus { */
+          /*   background: var(--color-8); */
+          /* } */
+          /**/
+          /* &:active { */
+          /*   background: var(--color-7); */
+          /* } */
         }
       }
 

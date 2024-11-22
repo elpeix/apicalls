@@ -31,7 +31,7 @@ export default function Settings() {
   if (!settings) return null
 
   const getThemeName = (value: string): Theme => {
-    const allowed = ['light', 'dark', 'system']
+    const allowed = ['light', 'dark', 'system', 'monokai']
     if (!allowed.includes(value)) return 'system'
     return value as Theme
   }
@@ -54,6 +54,10 @@ export default function Settings() {
     {
       value: 'system',
       label: 'Auto'
+    },
+    {
+      value: 'monokai',
+      label: 'Monokai'
     }
   ]
 

@@ -14,9 +14,11 @@
 
   --background-base: var(--color-10);
   --background-content: var(--color-11);
+  --base-color: var(--color-2);
+  --icon-color: var(--color-3);
+  --icon-danger-color: #a78;
 
   --selected-color: var(--color-1);
-  --base-color: var(--color-2);
   --accent-color: rgba(0, 204, 255, 0.2);
   --focus-color: var(--color-5);
   --border-color: var(--color-8);
@@ -30,6 +32,38 @@
   --danger-color: #a78;
   --overlay-color: rgba(0, 0, 0, 0.5);
   --cancel-color: rgba(223, 48, 48, 0.1);
+
+  --input-background-color: transparent;
+  --input-color: var(--color-4);
+  --input-border-color: var(--color-8);
+  --input-hover-background-color: var(--color-9);
+  --input-hover-color: var(--color-2);
+  --input-hover-border-color: var(--color-7);
+  --input-disabled-color: var(--color-5);
+
+  --button-background-color: var(--color-10);
+  --button-color: var(--color-2);
+  --button-border-color: var(--color-8);
+  --button-hover-background-color: var(--color-9);
+  --button-hover-color: var(--color-2);
+  --button-hover-border-color: var(--color-7);
+  --button-active-background-color: var(--color-8);
+  --button-active-color: var(--color-1);
+  --button-active-border-color: var(--color-7);
+
+  --button-cancel-background-color: transparent;
+  --button-cancel-color: var(--color-5);
+  --button-cancel-border-color: var(--color-8);
+  --button-cancel-hover-background-color: var(--color-9);
+  --button-cancel-hover-color: var(--color-6);
+  --button-cancel-hover-border-color: var(--color-8);
+  --button-cancel-active-background-color: var(--color-10);
+  --button-cancel-active-color: var(--color-6);
+  --button-cancel-active-border-color: var(--color-7);
+
+  --button-focus-color: var(--color-1);
+
+  --select-arrow-color: var(--color-5);
 
   --status-200-color: rgb(108, 185, 73);
   --status-300-color: rgb(255, 165, 0);
@@ -50,6 +84,11 @@
   --gutter-transition: 0.2s;
   --gutter-transition-delay: 0.2s;
 
+  --dialog-background-color: var(--color-11);
+  --dialog-color: var(--color-2);
+  --dialog-border-color: var(--color-8);
+  --dialog-buttons-background-color: var(--color-10);
+
   --tab-color: var(--base-color);
   --tab-background-color: transparent;
   --tab-hover-background-color: var(--hover-color);
@@ -67,49 +106,150 @@
   --font-size: 0.8rem;
 }
 
-/* Light theme */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-1: #000;
-    --color-2: #444;
-    --color-3: #555;
-    --color-4: #666;
-    --color-5: #777;
-    --color-6: #aaa;
-    --color-7: #bbb;
-    --color-8: #ccc;
-    --color-9: #ddd;
-    --color-10: #eee;
-    --color-11: #fafafa;
-    --color-12: #fff;
+:root[data-theme='light'] {
+  --color-1: #000;
+  --color-2: #444;
+  --color-3: #555;
+  --color-4: #666;
+  --color-5: #777;
+  --color-6: #aaa;
+  --color-7: #bbb;
+  --color-8: #ccc;
+  --color-9: #ddd;
+  --color-10: #eee;
+  --color-11: #fafafa;
+  --color-12: #fff;
 
-    --accent-color: #69b9ff;
-    --border-color: var(--color-8);
-    --hover-color: var(--color-9);
-    --sidePanel-color: var(--color-10);
-    --sidePanel-color-hover: var(--color-9);
-    --tab-panel-background-color: var(--color-11);
+  --accent-color: #69b9ff;
+  --border-color: var(--color-8);
+  --hover-color: var(--color-9);
+  --sidePanel-color: var(--color-10);
+  --sidePanel-color-hover: var(--color-9);
+  --tab-panel-background-color: var(--color-11);
 
-    --highlight-color: #0088ff;
-    --success-background-color: #69b9ff;
-    --error-background-color: #ff4d4d;
-    --error-color: #ff4d4d;
-    --overlay-color: rgba(0, 0, 0, 0.5);
-    --cancel-color: rgba(255, 77, 77, 0.1);
+  --highlight-color: #0088ff;
+  --success-background-color: #69b9ff;
+  --error-background-color: #ff4d4d;
+  --error-color: #ff4d4d;
+  --overlay-color: rgba(0, 0, 0, 0.5);
+  --cancel-color: rgba(255, 77, 77, 0.1);
 
-    --status-200-color: rgb(108, 185, 73);
-    --status-300-color: rgb(255, 165, 0);
-    --status-400-color: rgb(196, 80, 231);
-    --status-500-color: rgb(223, 48, 48);
+  --status-200-color: rgb(108, 185, 73);
+  --status-300-color: rgb(255, 165, 0);
+  --status-400-color: rgb(196, 80, 231);
+  --status-500-color: rgb(223, 48, 48);
 
-    --method-get-color: rgb(45, 151, 133);
-    --method-post-color: rgb(66, 133, 244);
-    --method-put-color: rgb(204, 99, 0);
-    --method-patch-color: rgb(180, 138, 0);
-    --method-delete-color: rgb(223, 48, 101);
-    --method-head-color: rgb(126, 126, 126);
-    --method-option-color: rgb(158, 78, 248);
-  }
+  --method-get-color: rgb(45, 151, 133);
+  --method-post-color: rgb(66, 133, 244);
+  --method-put-color: rgb(204, 99, 0);
+  --method-patch-color: rgb(180, 138, 0);
+  --method-delete-color: rgb(223, 48, 101);
+  --method-head-color: rgb(126, 126, 126);
+  --method-option-color: rgb(158, 78, 248);
+}
+
+:root[data-theme='monokai'] {
+  --color-0: #1e1f19; /* Fons principal */
+  --color-1: #272822; /* Fons principal */
+  --color-2: #3e3d32; /* Fons secundari */
+  --color-3: #49483e; /* Elements menys destacats */
+  --color-4: #75715e; /* Elements de transició */
+  --color-5: #a59f85; /* Text menys destacat */
+  --color-6: #f8f8f2; /* Text principal */
+  --color-7: #fd971f; /* Accent groc-taronja */
+  --color-8: #f92672; /* Accent rosa intens */
+  --color-9: #66d9ef; /* Accent blau */
+  --color-10: #a6e22e; /* Accent verd */
+  --color-11: #ae81ff; /* Accent lila */
+  --color-12: #f8f8f0; /* Fons secundari clar */
+
+  --background-base: var(--color-1);
+  --background-content: var(--color-0);
+  --base-color: var(--color-6);
+  --icon-color: var(--color-6);
+
+  --accent-color: var(--color-6);
+  --border-color: var(--color-3);
+  --hover-color: var(--color-3);
+  --sidePanel-menu-color: var(--color-1);
+  --sidePanel-color: var(--color-2);
+  --sidePanel-color-hover: var(--color-4);
+
+  --highlight-color: var(--color-9);
+  --success-background-color: var(--color-10);
+  --error-background-color: var(--color-8);
+  --error-color: var(--color-8);
+  --overlay-color: rgba(0, 0, 0, 0.45);
+  --cancel-color: rgba(249, 38, 114, 0.1);
+
+  --input-background-color: transparent;
+  --input-color: var(--color-6);
+  --input-border-color: var(--color-4);
+  --input-hover-background-color: var(--color-2);
+  --input-hover-color: var(--color-6);
+  --input-hover-border-color: var(--color-5);
+  --input-disabled-color: var(--color-5);
+
+  --button-background-color: transparent;
+  --button-color: var(--color-6);
+  --button-border-color: var(--color-4);
+  --button-hover-background-color: var(--color-3);
+  --button-hover-color: var(--color-6);
+  --button-hover-border-color: var(--color-5);
+  --button-active-background-color: var(--color-4);
+  --button-active-color: var(--color-6);
+  --button-active-border-color: var(--color-5);
+  --button-focus-color: var(--color-6);
+
+  --button-cancel-background-color: transparent;
+  --button-cancel-color: var(--color-4);
+  --button-cancel-border-color: var(--color-3);
+  --button-cancel-hover-background-color: var(--color-2);
+  --button-cancel-hover-color: var(--color-5);
+  --button-cancel-hover-border-color: var(--color-4);
+  --button-cancel-active-background-color: var(--color-3);
+  --button-cancel-active-color: var(--color-6);
+  --button-cancel-active-border-color: var(--color-5);
+
+  --button-ok-background-color: var(--color-2);
+  --button-ok-color: var(--color-6);
+  --button-ok-border-color: var(--color-4);
+  --button-ok-hover-background-color: var(--color-3);
+  --button-ok-hover-color: var(--color-6);
+  --button-ok-hover-border-color: var(--color-5);
+  --button-ok-active-background-color: var(--color-4);
+  --button-ok-active-color: var(--color-6);
+  --button-ok-active-border-color: var(--color-6);
+
+  --select-arrow-color: var(--color-5);
+
+  --gutter-color: var(--border-color);
+  --gutter-color-drag: var(--color-8);
+
+  --dialog-background-color: var(--color-0);
+  --dialog-color: var(--color-6);
+  --dialog-border-color: var(--color-3);
+  --dialog-buttons-background-color: var(--color-1);
+
+  --tab-color: var(--base-color);
+  --tab-background-color: transparent;
+  --tab-hover-background-color: var(--color-2);
+  --tab-selected-color: var(--base-color);
+  --tab-selected-background-color: var(--color-3);
+  --tab-panel-background-color: var(--color-0);
+
+  --status-200-color: var(--color-10);
+  --status-300-color: var(--color-7);
+  --status-400-color: var(--color-11);
+  --status-500-color: var(--color-8);
+
+  --method-get-color: var(--color-10);
+  --method-post-color: var(--color-9);
+  --method-put-color: var(--color-7);
+  --method-patch-color: #e6db74;
+  --method-delete-color: var(--color-8);
+  --method-head-color: var(--color-5);
+  --method-option-color: var(--color-11);
 }
 
 ::selection {

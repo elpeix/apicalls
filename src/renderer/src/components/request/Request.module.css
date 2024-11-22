@@ -83,16 +83,14 @@
     opacity 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
 
-  &:hover {
-    background-color: var(--color-10);
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: var(--border-color) !important;
   }
 
   &:focus {
     box-shadow: inset 0 0 0 1px var(--focus-color);
-  }
-
-  &:active {
-    background-color: var(--color-9);
   }
 
   &.cancel {

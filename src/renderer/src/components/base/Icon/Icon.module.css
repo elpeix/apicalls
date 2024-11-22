@@ -3,6 +3,11 @@
   transition: all 0.1s ease-in-out;
   display: flex;
   align-items: center;
+  color: var(--icon-color);
+
+  &.danger {
+    color: var(--danger-color);
+  }
 
   &.spin {
     animation: spin 1.8s linear infinite;

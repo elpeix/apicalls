@@ -11,9 +11,9 @@ input[type='text'],
 input[type='number'] {
   appearance: none;
   width: 100%;
-  border: 1px solid var(--border-color);
-  background-color: transparent;
-  color: var(--base-color);
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-background-color);
+  color: var(--input-color);
   padding: 5px 10px;
   transition:
     background-color 0.2s ease-in-out,
@@ -22,9 +22,9 @@ input[type='number'] {
 
   &:hover,
   &:active {
-    background-color: var(--hover-color);
-    color: var(--base-color);
-    border-color: var(--color-7);
+    background-color: var(--input-hover-background-color);
+    color: var(--input-hover-color);
+    border-color: var(--input-hover-border-color);
   }
 
   &:focus {
@@ -37,7 +37,7 @@ input[type='number'] {
     cursor: not-allowed;
     border: 1px solid var(--border-color);
     background-color: transparent;
-    color: var(--color-5);
+    color: var(--input-disabled-color);
   }
 }
 
@@ -51,8 +51,8 @@ input[type='checkbox'] {
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 1px solid var(--border-color);
-  background-color: var(--color-10);
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-background-color);
   cursor: pointer;
   position: relative;
   transition: border-color 0.2s ease-in-out;
@@ -71,10 +71,10 @@ input[type='checkbox'] {
   }
 
   &:hover {
-    border-color: var(--color-5);
+    border-color: var(--input-hover-border-color);
 
     &::after {
-      border-color: var(--color-5);
+      border-color: var(--input-hover-border-color);
     }
   }
 
@@ -86,9 +86,9 @@ input[type='checkbox'] {
 }
 
 button {
-  border: 1px solid var(--border-color);
-  background-color: transparent;
-  color: var(--base-color);
+  border: 1px solid var(--button-border-color);
+  background-color: var(--button-background-color);
+  color: var(--input-color);
   cursor: pointer;
   user-select: none;
   text-transform: uppercase;
@@ -99,21 +99,28 @@ button {
     border-color 0.2s ease-in-out;
 
   &:hover,
+  &:focus {
+    background-color: var(--button-hover-background-color);
+    color: var(--button-hover-color);
+    border-color: var(--button-hover-border-color);
+  }
+
   &:active {
-    background-color: var(--hover-color);
-    color: var(--base-color);
-    border-color: var(--color-7);
+    background-color: var(--button-active-background-color);
+    color: var(--button-active-color);
+    border-color: var(--button-active-border-color);
   }
 
   &:focus {
     outline: none;
+    border-color: var(--focus-color) !important;
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: transparent;
-    color: var(--color-5);
+    color: var(--input-disabled-color);
   }
 
   &.button-icon {
@@ -167,7 +174,7 @@ select {
     transition: background-color 0.2s ease-in-out;
 
     &.select__control--is-focused {
-      background-color: var(--hover-color);
+      background-color: var(--input-hover-background-color);
     }
   }
   .select__value-container {
@@ -203,7 +210,9 @@ select {
     }
   }
   &:hover {
-    background-color: var(--hover-color);
+    background-color: var(--input-hover-background-color);
+    color: var(--input-hover-color);
+    border-color: var(--input-hover-border-color);
   }
 }
 

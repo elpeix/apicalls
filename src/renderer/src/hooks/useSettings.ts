@@ -9,12 +9,14 @@ export function useSettigns(): AppSettingsHookType {
     ipcRenderer?.send(SETTINGS.get)
     ipcRenderer?.on(SETTINGS.updated, (_: unknown, settings: AppSettingsType) => {
       setSettings(settings)
+      document.documentElement.setAttribute('data-theme', settings.theme)
     })
     return () => ipcRenderer?.removeAllListeners(SETTINGS.updated)
   }, [])
 
   const save = (settings: AppSettingsType) => {
     setSettings(settings)
+    document.documentElement.setAttribute('data-theme', settings.theme)
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(SETTINGS.save, settings)
 
