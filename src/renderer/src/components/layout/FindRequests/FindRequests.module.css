@@ -8,11 +8,11 @@
 
 .list {
   list-style-type: none;
-  background-color: var(--color-11);
+  background-color: var(--background-content);
   border-top: 1px solid var(--border-color);
   max-height: 20rem;
   overflow-y: auto;
-  overflowi-x: hidden;
+  overflow-x: hidden;
 
   li {
     padding: 0.5rem;
@@ -23,15 +23,15 @@
     gap: 0.4rem;
 
     &:hover {
-      background-color: var(--hover-color);
+      background-color: var(--hover-background-color);
     }
     &:active,
     &.selected {
-      background-color: var(--accent-color);
+      background-color: var(--active-background-color);
     }
 
     .highlight {
-      background-color: var(--accent-color);
+      background-color: var(--active-background-color);
     }
 
     .foundHead {

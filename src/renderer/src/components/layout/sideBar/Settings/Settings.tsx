@@ -146,7 +146,7 @@ export default function Settings() {
 
           <div className={styles.group}>
             <button onClick={saveSettings}>Save</button>
-            <a className={styles.clearSettings} onClick={handleClearSettings}>
+            <a className={`button-text ${styles.clearSettings}`} onClick={handleClearSettings}>
               Clear settings
             </a>
           </div>

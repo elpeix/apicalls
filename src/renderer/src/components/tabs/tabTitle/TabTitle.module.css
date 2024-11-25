@@ -38,7 +38,7 @@
   }
 
   .close {
-    color: var(--color-1);
+    color: var(--base-color);
     padding: 0.5rem 0.5rem;
     visibility: hidden;
   }
@@ -78,7 +78,7 @@
     background: var(--color-9);
     font-weight: 500;
     font-size: 12px;
-    color: var(--color-1);
+    color: var(--base-color);
     border: 1px solid var(--highlight-color);
     margin: 0.2rem 0.3rem;
     padding: 0.15rem 0.4rem 0.25rem;

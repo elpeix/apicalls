@@ -38,15 +38,6 @@
 
         button {
           margin-top: 2rem;
-
-          /* &:hover, */
-          /* &:focus { */
-          /*   background: var(--color-8); */
-          /* } */
-          /**/
-          /* &:active { */
-          /*   background: var(--color-7); */
-          /* } */
         }
       }
 
@@ -66,12 +57,7 @@
 }
 
 .clearSettings {
-  color: var(--color-5);
   cursor: pointer;
   margin-top: 0.5rem;
   transition: color ease-in-out 0.2s;
-
-  &:hover {
-    color: var(--color-4);
-  }
 }

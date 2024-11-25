@@ -195,6 +195,14 @@ button {
   }
 }
 
+.button-text {
+  color: var(--link-color);
+
+  &:hover {
+    color: var(--link-hover-color);
+  }
+}
+
 select {
   appearance: none;
   background-color: none;
@@ -270,7 +278,7 @@ ul.versions {
   & > li {
     list-style: none;
     width: 100%;
-    color: var(--color-5);
+    opacity: 0.5;
   }
 }
 

@@ -33,14 +33,14 @@
     }
 
     input {
-      background-color: transparent;
+      background-color: var(--input-background-color);
       border: none;
       outline: none;
       width: 100%;
       padding: 1rem 0.5rem;
 
       &::placeholder {
-        color: var(--color-5);
+        color: var(--input-placeholder-color);
       }
     }
     &.inputError {
@@ -68,7 +68,7 @@
     height: 100%;
     overflow-y: auto;
     border-right: 1px solid var(--dialog-border-color);
-    background-color: var(--color-9);
+    background-color: var(--sidePanel-color);
 
     .collection {
       display: flex;
@@ -77,6 +77,7 @@
       padding: 0.4rem 0.5rem;
       color: var(--color-3);
       border-bottom: 1px solid var(--dialog-border-color);
+      color: var(--sidePanel-color-text);
       cursor: pointer;
       transition: background-color 0.2s;
 
@@ -88,13 +89,9 @@
         white-space: nowrap;
       }
 
-      &:hover {
-        background-color: var(--color-8);
-      }
-
+      &:hover,
       &.selected {
-        background-color: var(--color-7);
-        color: var(--color-1);
+        background-color: var(--sidePanel-color-hover);
       }
     }
   }
@@ -113,7 +110,7 @@
       flex-wrap: wrap;
       padding: 0 0.56rem;
       border-bottom: 1px solid var(--border-color);
-      color: var(--color-5);
+      color: var(--link-color);
       width: 100%;
       height: 2.1rem;
 
@@ -129,20 +126,21 @@
         transition: color 0.2s;
 
         &:hover {
-          color: var(--color-3);
+          color: var(--link-hover-color);
         }
 
         &::after {
           content: '/';
           margin: 0 0.3rem;
-          color: var(--color-4);
+          color: var(--base-color);
+          opacity: 0.6;
           font-weight: 800;
           font-size: 1rem;
         }
 
         &:last-child {
           cursor: default;
-          color: var(--color-4);
+          color: var(--base-color);
           &::after {
             content: '';
             margin: 0;
@@ -162,10 +160,10 @@
         align-items: center;
         gap: 0.5rem;
         padding: 0.4rem 0.5rem;
-        color: var(--color-3);
         border-bottom: 1px solid var(--border-color);
         cursor: pointer;
         transition: background-color 0.2s;
+        opacity: 0.8;
 
         .name {
           flex: 1;
@@ -176,12 +174,12 @@
         }
 
         &:hover {
-          background-color: var(--hover-color);
+          background-color: var(--hover-background-color);
         }
 
         &.selected {
-          background-color: var(--color-8);
-          color: var(--color-1);
+          background-color: var(--active-background-color);
+          color: var(--active-color);
         }
       }
     }
@@ -192,7 +190,8 @@
       align-items: center;
       height: 100%;
       font-size: 1.2rem;
-      color: var(--color-6);
+      color: var(--base-color);
+      opacity: 0.5;
     }
   }
 }
@@ -205,26 +204,10 @@
   padding: 0.5rem;
   overflow: hidden;
   min-height: 3rem;
+  background-color: var(--dialog-footer-background-color);
 
   .error {
     color: var(--error-color);
     margin-right: 1rem;
-  }
-
-  button:focus {
-    box-shadow: 0 0 0 1px var(--focus-color);
-  }
-
-  .cancel {
-    color: var(--color-5);
-  }
-
-  .save {
-    color: var(--color-3);
-    background-color: var(--color-9);
-
-    &:focus {
-      color: var(--highlight-color);
-    }
   }
 }

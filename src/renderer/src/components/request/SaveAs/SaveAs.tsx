@@ -3,6 +3,7 @@ import styles from './SaveAs.module.css'
 import { RequestContext } from '../../../context/RequestContext'
 import { AppContext } from '../../../context/AppContext'
 import Icon from '../../base/Icon/Icon'
+import { Button } from '../../base/Buttons/Buttons'
 
 const getFolders = (elements: (CollectionFolder | RequestType)[]) => {
   return elements
@@ -223,12 +224,12 @@ export default function SaveAs({ onClose }: { onClose: () => void }) {
 
       <div className={styles.footer}>
         {errorMessage && <div className={styles.error}>{errorMessage}</div>}
-        <button className={styles.cancel} onClick={onClose}>
+        <Button.Cancel className={styles.cancel} onClick={onClose}>
           Cancel
-        </button>
-        <button className={styles.save} onClick={saveHandler}>
+        </Button.Cancel>
+        <Button.Ok className={styles.save} onClick={saveHandler}>
           Save
-        </button>
+        </Button.Ok>
       </div>
     </div>
   )

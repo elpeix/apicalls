@@ -34,7 +34,7 @@
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
-    background-color: var(--hover-color);
+    background-color: var(--hover-background-color);
   }
 
   &:has(*:focus) {
@@ -145,7 +145,7 @@
 
   &:hover {
     opacity: 1;
-    background-color: var(--hover-color);
+    background-color: var(--hover-background-color);
   }
 }
 
@@ -155,7 +155,7 @@
   border-right: none;
 
   &:hover {
-    background-color: var(--hover-color);
+    background-color: var(--hover-background-color);
   }
 }
 @media (max-width: 480px) {

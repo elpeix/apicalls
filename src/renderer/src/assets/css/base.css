@@ -22,10 +22,14 @@
   --accent-color: rgba(0, 204, 255, 0.2);
   --focus-color: var(--color-5);
   --border-color: var(--color-8);
-  --hover-color: var(--color-9);
+  --hover-color: var(--color-3);
+  --hover-background-color: var(--color-9);
+  --active-color: var(--color-1);
+  --active-background-color: var(--color-8);
   --sidePanel-color: var(--color-9);
   --sidePanel-color-hover: var(--color-8);
   --highlight-color: #0cf;
+
   --success-background-color: rgba(0, 204, 255, 0.2);
   --error-background-color: rgba(223, 48, 48, 0.1);
   --error-color: #ff4d4d;
@@ -35,6 +39,7 @@
 
   --input-background-color: transparent;
   --input-color: var(--color-4);
+  --input-placeholder-color: var(--color-5);
   --input-border-color: var(--color-8);
   --input-hover-background-color: var(--color-9);
   --input-hover-color: var(--color-2);
@@ -73,6 +78,9 @@
 
   --button-focus-color: var(--color-1);
 
+  --link-color: var(--color-5);
+  --link-hover-color: var(--color-4);
+
   --select-arrow-color: var(--color-5);
 
   --status-200-color: rgb(108, 185, 73);
@@ -97,15 +105,19 @@
   --dialog-background-color: var(--color-11);
   --dialog-color: var(--color-2);
   --dialog-border-color: var(--color-8);
-  --dialog-buttons-background-color: var(--color-10);
+  --dialog-footer-color: var(--color-5);
+  --dialog-footer-hover-color: var(--color-6);
+  --dialog-footer-background-color: var(--color-10);
 
   --tab-color: var(--base-color);
   --tab-background-color: transparent;
-  --tab-hover-background-color: var(--hover-color);
+  --tab-hover-background-color: var(--hover-background-color);
   --tab-selected-color: var(--selected-color);
   --tab-selected-background-color: var(--border-color);
   --tab-height: 33px;
   --tab-panel-background-color: var(--background-content);
+
+  --console-color: var(--color-5);
 
   --select-arrow: var(--base-color);
 
@@ -180,7 +192,10 @@
 
   --accent-color: var(--color-6);
   --border-color: var(--color-3);
-  --hover-color: var(--color-3);
+  --hover-color: var(--color-6);
+  --hover-background-color: var(--color-2);
+  --active-color: var(--color-6);
+  --active-background-color: var(--color-2);
   --sidePanel-menu-color: var(--color-1);
   --sidePanel-color: var(--color-2);
   --sidePanel-color-hover: var(--color-4);
@@ -194,6 +209,7 @@
 
   --input-background-color: transparent;
   --input-color: var(--color-6);
+  --input-placeholder-color: var(--color-5);
   --input-border-color: var(--color-4);
   --input-hover-background-color: var(--color-2);
   --input-hover-color: var(--color-6);
@@ -231,6 +247,9 @@
   --button-ok-active-color: var(--color-6);
   --button-ok-active-border-color: var(--color-6);
 
+  --link-color: var(--color-5);
+  --link-hover-color: var(--color-6);
+
   --select-arrow-color: var(--color-5);
 
   --gutter-color: var(--border-color);
@@ -239,7 +258,9 @@
   --dialog-background-color: var(--color-0);
   --dialog-color: var(--color-6);
   --dialog-border-color: var(--color-3);
-  --dialog-buttons-background-color: var(--color-1);
+  --dialog-footer-color: var(--color-5);
+  --dialog-footer-hover-color: var(--color-6);
+  --dialog-footer-background-color: var(--color-1);
 
   --tab-color: var(--base-color);
   --tab-background-color: transparent;
@@ -260,6 +281,8 @@
   --method-delete-color: var(--color-8);
   --method-head-color: var(--color-5);
   --method-option-color: var(--color-11);
+
+  --console-color: var(--color-5);
 }
 
 ::selection {

@@ -22,49 +22,11 @@
     justify-content: flex-end;
     gap: 0.5rem;
     border-top: 1px solid var(--dialog-border-color);
-    background-color: var(--dialog-buttons-background-color);
+    background-color: var(--dialog-footer-background-color);
     padding: 0.5rem;
 
     button {
       min-width: 6rem;
-    }
-
-    .cancel {
-      color: var(--button-cancel-color);
-      background-color: var(--button-cancel-background-color);
-      border-color: var(--button-cancel-border-color);
-      transition: all 0.2s ease-in-out;
-
-      &:hover {
-        color: var(--button-cancel-hover-color);
-        background-color: var(--button-cancel-hover-background-color);
-        border-color: var(--button-cancel-hover-border-color);
-      }
-
-      &:active {
-        color: var(--button-cancel-active-color);
-        background-color: var(--button-cancel-active-background-color);
-        border-color: var(--button-cancel-active-border-color);
-      }
-    }
-
-    .ok {
-      color: var(--button-ok-color);
-      background-color: var(--button-ok-background-color);
-      border-color: var(--button-ok-border-color);
-      transition: all 0.2s ease-in-out;
-
-      &:hover {
-        color: var(--button-ok-hover-color);
-        background-color: var(--button-ok-hover-background-color);
-        border-color: var(--button-ok-hover-border-color);
-      }
-
-      &:active {
-        color: var(--button-ok-active-color);
-        background-color: var(--button-ok-active-background-color);
-        border-color: var(--button-ok-active-border-color);
-      }
     }
   }
 }
