@@ -61,6 +61,16 @@
   --button-cancel-active-color: var(--color-6);
   --button-cancel-active-border-color: var(--color-7);
 
+  --button-ok-background-color: var(--color-9);
+  --button-ok-color: var(--color-5);
+  --button-ok-border-color: var(--color-7);
+  --button-ok-hover-background-color: var(--color-8);
+  --button-ok-hover-color: var(--color-5);
+  --button-ok-hover-border-color: var(--color-6);
+  --button-ok-active-background-color: var(--color-9);
+  --button-ok-active-color: var(--color-6);
+  --button-ok-active-border-color: var(--color-6);
+
   --button-focus-color: var(--color-1);
 
   --select-arrow-color: var(--color-5);

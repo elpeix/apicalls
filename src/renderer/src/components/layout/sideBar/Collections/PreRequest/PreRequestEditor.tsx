@@ -116,10 +116,10 @@ export default function PreRequestEditor({
           </label>
         </div>
         <div className={styles.right}>
-          <button className={styles.cancel} onClick={onClose}>
+          <button className="cancel" onClick={onClose}>
             Cancel
           </button>
-          <button className={styles.save} onClick={handleSave}>
+          <button className="ok" onClick={handleSave}>
             Save
           </button>
         </div>
