@@ -66,7 +66,14 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.francescrequesens.apicalls')
 
   // Set theme source for nativeTheme
-  nativeTheme.themeSource = store.get('settings.theme', 'system') as 'light' | 'dark' | 'system'
+  const theme = store.get('settings.theme', 'system')
+  if (theme === 'light') {
+    nativeTheme.themeSource = 'light'
+  } else if (theme === 'dark') {
+    nativeTheme.themeSource = 'dark'
+  } else {
+    nativeTheme.themeSource = 'system'
+  }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

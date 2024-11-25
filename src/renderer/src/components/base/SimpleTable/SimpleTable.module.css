@@ -49,7 +49,7 @@
 
     .cell {
       font-weight: 600;
-      color: var(--color-4);
+      color: var(--base-color);
 
       &.draggable {
         position: relative;

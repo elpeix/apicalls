@@ -47,7 +47,7 @@
         }
 
         &.variableUndefined {
-          color: var(--color-5);
+          color: var(--input-undefined-color);
         }
 
         &:hover {
@@ -66,7 +66,7 @@
     width: 100%;
 
     &::placeholder {
-      color: var(--color-5);
+      color: var(--input-placeholder-color);
     }
 
     &:autofill,
@@ -110,7 +110,7 @@
     color: var(--highlight-color);
   }
   .variableUndefined {
-    color: var(--color-5);
+    color: var(--input-undefined-color);
   }
 
   .variableValue {

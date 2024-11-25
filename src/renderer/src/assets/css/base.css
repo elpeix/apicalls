@@ -45,6 +45,7 @@
   --input-hover-color: var(--color-2);
   --input-hover-border-color: var(--color-7);
   --input-disabled-color: var(--color-5);
+  --input-undefined-color: var(--color-5);
 
   --button-background-color: var(--color-10);
   --button-color: var(--color-2);
@@ -117,9 +118,32 @@
   --tab-height: 33px;
   --tab-panel-background-color: var(--background-content);
 
+  --response-no-content-color: var(--color-5);
+  --response-no-content-background-color: var(--color-9);
+  --loading-color: var(--color-5);
+  --droppable-color: var(--color-5);
   --console-color: var(--color-5);
 
   --select-arrow: var(--base-color);
+
+  --search-list-background-color: var(--background-content);
+  --search-list-border-color: var(--border-color);
+  --search-list-no-results-color: var(--color-6);
+  --search-list-item-color: var(--color-3);
+  --search-list-item-color-2: var(--color-5);
+  --search-list-item-color-3: var(--color-7);
+  --search-list-item-hover-color: var(--hover-background-color);
+  --search-list-item-active-color: var(--active-background-color);
+  --search-list-highlight-color: #0cf4;
+
+  --switch-text-color: var(--color-5);
+  --switch-text-hover-color: var(--color-4);
+  --switch-text-active-color: var(--color-4);
+  --switch-color: var(--color-5);
+  --switch-hover-color: var(--color-4);
+  --switch-active-color: var(--color-4);
+  --switch-background-color: var(--color-8);
+  --switch-active-background-color: var(--success-background-color);
 
   background-color: var(--background-base);
   color: var(--base-color);
@@ -215,6 +239,7 @@
   --input-hover-color: var(--color-6);
   --input-hover-border-color: var(--color-5);
   --input-disabled-color: var(--color-5);
+  --input-undefined-color: var(--color-5);
 
   --button-background-color: transparent;
   --button-color: var(--color-6);
@@ -283,6 +308,29 @@
   --method-option-color: var(--color-11);
 
   --console-color: var(--color-5);
+  --droppable-color: var(--color-5);
+  --loading-color: var(--color-5);
+  --response-no-content-color: var(--color-5);
+  --response-no-content-background-color: var(--color-0);
+
+  --search-list-background-color: var(--background-content);
+  --search-list-border-color: var(--border-color);
+  --search-list-no-results-color: var(--color-6);
+  --search-list-item-color: var(--color-6);
+  --search-list-item-color-2: var(--color-5);
+  --search-list-item-color-3: var(--color-7);
+  --search-list-item-hover-color: var(--hover-background-color);
+  --search-list-item-active-color: var(--active-background-color);
+  --search-list-highlight-color: #66d9ef44;
+
+  --switch-text-color: var(--color-5);
+  --switch-text-hover-color: var(--color-6);
+  --switch-text-active-color: var(--color-6);
+  --switch-color: var(--color-5);
+  --switch-hover-color: var(--color-6);
+  --switch-active-color: var(--color-10);
+  --switch-background-color: var(--color-3);
+  --switch-active-background-color: var(--color-3);
 }
 
 ::selection {

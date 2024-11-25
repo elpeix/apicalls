@@ -11,6 +11,7 @@ export default function ResponseBody({
   raw: boolean
   language: string
 }) {
+  value = ''
   return (
     <div className={`${value.length ? styles.body : styles.bodyNoContent}`}>
       {value && (

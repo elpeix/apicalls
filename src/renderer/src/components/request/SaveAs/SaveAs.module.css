@@ -13,7 +13,7 @@
   align-items: center;
 
   .label {
-    color: var(--color-3);
+    color: var(--dialog-color);
     text-transform: uppercase;
     padding: 1rem 0.5rem;
     user-select: none;
@@ -75,7 +75,7 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.4rem 0.5rem;
-      color: var(--color-3);
+      color: var(--dialog-color);
       border-bottom: 1px solid var(--dialog-border-color);
       color: var(--sidePanel-color-text);
       cursor: pointer;
