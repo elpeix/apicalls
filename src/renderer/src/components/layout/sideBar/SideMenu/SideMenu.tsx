@@ -39,7 +39,9 @@ export default function SideMenu({
             title={item.title ? item.title : ''}
             onClick={() => !item.spacer && handleClick(item.id)}
           >
-            {item.id && !item.spacer && <ButtonIcon icon={item.id} size={24} title={item.title} />}
+            {item.id && !item.spacer && (
+              <ButtonIcon icon={item.id} iconClassName={styles.icon} size={24} title={item.title} />
+            )}
           </div>
         ))}
     </div>

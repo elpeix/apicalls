@@ -52,6 +52,10 @@
       }
     }
 
+    .icon {
+      color: var(--sidePanel-icon-color);
+    }
+
     &.spacer {
       flex-grow: 1;
       -webkit-app-region: drag;

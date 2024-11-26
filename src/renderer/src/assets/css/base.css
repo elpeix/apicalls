@@ -10,7 +10,6 @@
   --color-9: #242424;
   --color-10: #1d1d1d;
   --color-11: #161616;
-  --color-12: #000;
 
   --background-base: var(--color-10);
   --background-content: var(--color-11);
@@ -26,9 +25,11 @@
   --hover-background-color: var(--color-9);
   --active-color: var(--color-1);
   --active-background-color: var(--color-8);
+  --highlight-color: #0cf;
+
   --sidePanel-color: var(--color-9);
   --sidePanel-color-hover: var(--color-8);
-  --highlight-color: #0cf;
+  --sidePanel-icon-color: var(--color-3);
 
   --success-background-color: rgba(0, 204, 255, 0.2);
   --error-background-color: rgba(223, 48, 48, 0.1);
@@ -145,6 +146,12 @@
   --switch-background-color: var(--color-8);
   --switch-active-background-color: var(--success-background-color);
 
+  --scrollbar-background-color: var(--background-base);
+  --scrollbar-border-color: var(--border-color);
+  --scrollbar-thumb-color: var(--border-color);
+  --scrollbar-thumb-hover-color: var(--color-7);
+  --scrollbar-corner-color: var(--color-6);
+
   background-color: var(--background-base);
   color: var(--base-color);
 
@@ -164,7 +171,6 @@
   --color-9: #ddd;
   --color-10: #eee;
   --color-11: #fafafa;
-  --color-12: #fff;
 
   --accent-color: #69b9ff;
   --border-color: var(--color-8);
@@ -195,19 +201,18 @@
 }
 
 :root[data-theme='monokai'] {
-  --color-0: #1e1f19; /* Fons principal */
-  --color-1: #272822; /* Fons principal */
-  --color-2: #3e3d32; /* Fons secundari */
-  --color-3: #49483e; /* Elements menys destacats */
-  --color-4: #75715e; /* Elements de transició */
-  --color-5: #a59f85; /* Text menys destacat */
-  --color-6: #f8f8f2; /* Text principal */
-  --color-7: #fd971f; /* Accent groc-taronja */
-  --color-8: #f92672; /* Accent rosa intens */
-  --color-9: #66d9ef; /* Accent blau */
-  --color-10: #a6e22e; /* Accent verd */
-  --color-11: #ae81ff; /* Accent lila */
-  --color-12: #f8f8f0; /* Fons secundari clar */
+  --color-0: #1e1f19;
+  --color-1: #272822;
+  --color-2: #3e3d32;
+  --color-3: #49483e;
+  --color-4: #75715e;
+  --color-5: #a59f85;
+  --color-6: #f8f8f2;
+  --color-7: #fd971f;
+  --color-8: #f92672;
+  --color-9: #66d9ef;
+  --color-10: #a6e22e;
+  --color-11: #ae81ff;
 
   --background-base: var(--color-1);
   --background-content: var(--color-0);
@@ -220,9 +225,10 @@
   --hover-background-color: var(--color-2);
   --active-color: var(--color-6);
   --active-background-color: var(--color-2);
-  --sidePanel-menu-color: var(--color-1);
+
   --sidePanel-color: var(--color-2);
   --sidePanel-color-hover: var(--color-4);
+  --sidePanel-icon-color: var(--color-6);
 
   --highlight-color: var(--color-9);
   --success-background-color: var(--color-10);
@@ -331,6 +337,12 @@
   --switch-active-color: var(--color-10);
   --switch-background-color: var(--color-3);
   --switch-active-background-color: var(--color-3);
+
+  --scrollbar-background-color: var(--background-base);
+  --scrollbar-border-color: var(--border-color);
+  --scrollbar-thumb-color: var(--border-color);
+  --scrollbar-thumb-hover-color: var(--color-4);
+  --scrollbar-corner-color: var(--color-1);
 }
 
 ::selection {
@@ -341,21 +353,21 @@
 ::-webkit-scrollbar {
   height: 14px;
   width: 14px;
-  border-left: 1px solid var(--border-color);
-  background: var(--background-base);
+  border-left: 1px solid var(--scrollbar-border-color);
+  background: var(--scrollbar-background-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
+  background-color: var(--scrollbar-thumb-color);
   transition: background-color 0.2s ease-in-out;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-5);
+  background-color: var(--scrollbar-thumb-hover-color);
 }
 
 ::-webkit-scrollbar-corner {
-  background: var(--color-12);
+  background: var(--scrollbar-corner-color);
 }
 
 body {

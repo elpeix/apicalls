@@ -5,12 +5,14 @@ import { REMOVE_COLOR } from '../../../constant'
 
 export default function Icon({
   icon,
+  className = '',
   color = '',
   size = 20,
   spin = false,
   direction = 'south'
 }: {
   icon: string | number
+  className?: string
   color?: string
   size?: number
   spin?: boolean
@@ -23,10 +25,10 @@ export default function Icon({
     return ''
   }
 
-  const className = `${styles.icon} ${getIconColor()} icon-${icon} ${spin ? styles.spin : ''} ${styles[direction]}`
+  const cls = `${styles.icon} ${className} ${getIconColor()} icon-${icon} ${spin ? styles.spin : ''} ${styles[direction]}`
 
   return (
-    <svg className={className} fill="currentcolor" width={size} height={size}>
+    <svg className={cls} fill="currentcolor" width={size} height={size}>
       <use xlinkHref={`${Icons}#${icon}`} />
     </svg>
   )
