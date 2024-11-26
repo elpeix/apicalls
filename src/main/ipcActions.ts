@@ -4,9 +4,22 @@ import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
 import { REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
 import { mainWindow } from '.'
+import fs from 'fs'
+import * as path from 'path'
 
-ipcMain.on(SETTINGS.get, (event) => event.reply(SETTINGS.updated, getSettings()))
+let themes: Map<string, AppTheme> = new Map()
+
+ipcMain.on(SETTINGS.get, (event) => {
+  if (!themes.size) {
+    themes = listThemes()
+    console.log('themes', themes)
+  }
+  event.reply(SETTINGS.updated, getSettings())
+  event.reply(SETTINGS.listThemes, themes)
+})
+
 ipcMain.on(SETTINGS.save, (_, settings) => setSettings(settings))
+
 ipcMain.on(SETTINGS.clear, (event) => {
   clearSettings()
   event.reply(SETTINGS.updated, getSettings())
@@ -39,3 +52,19 @@ ipcMain.on(REQUEST.cancel, (event, requestId: Identifier) => {
 })
 
 ipcMain.on(VERSION.get, (event) => event.reply(VERSION.getSuccess, app.getVersion()))
+
+const themesDir = path.join(app.getPath('userData'), 'themes')
+const listThemes = (): Map<string, AppTheme> => {
+  if (!fs.existsSync(themesDir)) {
+    fs.mkdirSync(themesDir)
+    return new Map()
+  }
+  const files = fs.readdirSync(themesDir).filter((file) => file.endsWith('.json'))
+  return new Map(
+    files.map((file) => {
+      const theme = fs.readFileSync(path.join(themesDir, file), 'utf8')
+      const key = file.replace('.json', '')
+      return [key, JSON.parse(theme) as AppTheme]
+    })
+  )
+}

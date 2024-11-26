@@ -27,7 +27,8 @@ export const SETTINGS = {
   save: 'settings:save',
   clear: 'settings:clear',
   updated: 'settings:updated',
-  toggleMenu: 'settings:toggle-menu'
+  toggleMenu: 'settings:toggle-menu',
+  listThemes: 'settings:list-themes'
 }
 
 export const ENVIRONMENTS = {

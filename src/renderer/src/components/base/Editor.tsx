@@ -20,7 +20,6 @@ export default function Editor({
   const editorRef = useRef<Monaco | null>(null)
 
   useEffect(() => {
-    console.log('settings', appSettings, editorRef)
     const editorTheme = appSettings?.getEditorTheme()
     if (!editorTheme) {
       return

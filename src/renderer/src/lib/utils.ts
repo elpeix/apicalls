@@ -1,3 +1,16 @@
+export function applyTheme(theme: Record<string, string>): void {
+  const root = document.documentElement
+  Object.keys(theme).forEach((key) => {
+    root.style.setProperty(`--${key}`, theme[key])
+  })
+}
+
+export function removeStyleProperties(): void {
+  const root = document.documentElement
+  const keys = Array.from(root.style).filter((key) => key.startsWith('--'))
+  keys.forEach((key) => root.style.removeProperty(key))
+}
+
 export function stringifySize(size: number): string {
   if (size < 1024) {
     return `${size} bytes`
