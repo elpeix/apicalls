@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react'
 import { SETTINGS } from '../../../lib/ipcChannels'
 
-export function useSettigns(): AppSettingsHookType {
+export function useSettings(): AppSettingsHookType {
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
+  const LIGHT = 'light'
+  const DARK = 'dark'
+
+  const base = window || global
+  const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
+
+  const [mode, setMode] = useState(matchMedia.matches ? DARK : LIGHT)
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -13,6 +20,12 @@ export function useSettigns(): AppSettingsHookType {
     })
     return () => ipcRenderer?.removeAllListeners(SETTINGS.updated)
   }, [])
+
+  useEffect(() => {
+    matchMedia.addEventListener('change', (e) => {
+      setMode(e.matches ? DARK : LIGHT)
+    })
+  }, [matchMedia])
 
   const save = (settings: AppSettingsType) => {
     setSettings(settings)
@@ -30,5 +43,12 @@ export function useSettigns(): AppSettingsHookType {
     ipcRenderer?.send(SETTINGS.clear)
   }
 
-  return { settings, save, clear }
+  const getEditorTheme = () => {
+    if (!settings || settings.theme === 'system') {
+      return mode === LIGHT ? 'vs-light' : 'vs-dark'
+    }
+    return settings?.theme === 'dark' ? 'vs-dark' : 'vs-light'
+  }
+
+  return { settings, save, clear, getEditorTheme }
 }

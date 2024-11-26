@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+// TODO: Remove
 export default function useTheme() {
   const LIGHT = 'light'
   const DARK = 'dark'

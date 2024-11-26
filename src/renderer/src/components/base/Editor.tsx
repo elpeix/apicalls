@@ -1,6 +1,6 @@
-import React from 'react'
-import { Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
-import useTheme from '../../hooks/useTheme'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
+import { AppContext } from '../../context/AppContext'
 
 export default function Editor({
   language = 'json',
@@ -15,17 +15,34 @@ export default function Editor({
   wordWrap?: boolean
   onChange?: OnChange
 }) {
-  const { getTheme } = useTheme()
+  const { appSettings } = useContext(AppContext)
+  const [theme, setTheme] = useState('vs-light')
+  const editorRef = useRef<Monaco | null>(null)
+
+  useEffect(() => {
+    console.log('settings', appSettings, editorRef)
+    const editorTheme = appSettings?.getEditorTheme()
+    if (!editorTheme) {
+      return
+    }
+    setTheme(editorTheme)
+    if (editorRef.current) {
+      editorRef.current.editor.setTheme(editorTheme)
+    }
+  }, [appSettings])
 
   return (
     <MonacoEditor
       defaultLanguage={language}
       language={language}
       onChange={onChange}
-      theme={getTheme('vs-light', 'vs-dark')}
+      theme={theme}
       height="100%"
       width="100%"
       value={value}
+      onMount={(_, monaco) => {
+        editorRef.current = monaco
+      }}
       options={{
         minimap: {
           enabled: false

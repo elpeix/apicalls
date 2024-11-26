@@ -215,6 +215,7 @@ type AppSettingsHookType = {
   settings: AppSettingsType | null
   save: (settings: AppSettingsType) => void
   clear: () => void
+  getEditorTheme: () => string
 }
 
 type RequestItem = {
