@@ -74,12 +74,14 @@ export default function RequestTabs() {
           </TabPanel>
           {showBody && (
             <TabPanel>
-              <Editor
-                language="json"
-                onChange={handleBodyChange}
-                value={request.body}
-                readOnly={false}
-              />
+              <div className={styles.requestBody}>
+                <Editor
+                  language="json"
+                  onChange={handleBodyChange}
+                  value={request.body}
+                  readOnly={false}
+                />
+              </div>
             </TabPanel>
           )}
         </div>

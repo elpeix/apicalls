@@ -216,6 +216,7 @@
 }
 
 .authorization {
+  border-top: 1px solid var(--border-color);
   padding: 0.5rem;
   display: flex;
   flex-direction: row;
@@ -230,4 +231,10 @@
     border: 1px solid var(--border-color);
     padding: 0.5rem;
   }
+}
+
+.requestBody {
+  height: 100%;
+  width: 100%;
+  border-top: 1px solid var(--border-color);
 }

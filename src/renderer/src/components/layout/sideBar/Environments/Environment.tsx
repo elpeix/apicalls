@@ -4,7 +4,6 @@ import styles from './Environment.module.css'
 import EnvironmentVariables from './EnvironmentVariables'
 import EditableName from '../../../base/EditableName/EditableName'
 import { AppContext } from '../../../../context/AppContext'
-import { REMOVE_COLOR } from '../../../../constant'
 
 export default function Environment({
   environment,
@@ -103,7 +102,7 @@ export default function Environment({
       </div>
       <div className={styles.footer}>
         <div>
-          <ButtonIcon icon="more" onClick={addVariable} title="Add variable" color={REMOVE_COLOR} />
+          <ButtonIcon icon="more" onClick={addVariable} title="Add variable" />
         </div>
       </div>
     </div>

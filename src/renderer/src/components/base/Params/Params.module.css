@@ -2,6 +2,11 @@
   height: 100%;
   width: 100%;
   overflow: auto;
+  border-top: 1px solid var(--border-color);
+
+  &:has([role='table']) {
+    border-top: none;
+  }
 
   & > .add {
     display: flex;
