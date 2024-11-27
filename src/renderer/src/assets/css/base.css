@@ -214,6 +214,7 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--scrollbar-thumb-color);
+  border-left: 1px solid var(--scrollbar-border-color);
   transition: background-color 0.2s ease-in-out;
 }
 
