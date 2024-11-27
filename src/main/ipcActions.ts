@@ -12,7 +12,6 @@ let themes: Map<string, AppTheme> = new Map()
 ipcMain.on(SETTINGS.get, (event) => {
   if (!themes.size) {
     themes = listThemes()
-    console.log('themes', themes)
   }
   event.reply(SETTINGS.updated, getSettings())
   event.reply(SETTINGS.listThemes, themes)
