@@ -99,7 +99,7 @@
   --method-head-color: rgb(151, 151, 151);
   --method-option-color: rgb(158, 78, 248);
 
-  --gutter-color: var(--border-color);
+  --gutter-color: var(--color-8);
   --gutter-color-drag: var(--highlight-color);
   --gutter-transition: 0.2s;
   --gutter-transition-delay: 0.2s;
@@ -123,6 +123,7 @@
   --response-no-content-background-color: var(--color-9);
   --loading-color: var(--color-5);
   --droppable-color: var(--color-5);
+  --console-background-color: var(--color-10);
   --console-color: var(--color-5);
 
   --select-arrow: var(--base-color);
@@ -148,9 +149,11 @@
 
   --scrollbar-background-color: var(--background-base);
   --scrollbar-border-color: var(--border-color);
-  --scrollbar-thumb-color: var(--border-color);
+  --scrollbar-thumb-color: var(--color-8);
   --scrollbar-thumb-hover-color: var(--color-7);
   --scrollbar-corner-color: var(--color-6);
+
+  --table-border-color: var(--color-8);
 
   background-color: var(--background-base);
   color: var(--base-color);

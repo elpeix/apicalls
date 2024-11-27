@@ -56,7 +56,6 @@
 
   li {
     cursor: pointer;
-    border-right: 1px solid var(--border-color);
   }
 
   .tab-panel-wrapper {

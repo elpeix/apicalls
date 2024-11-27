@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   font-size: 0.8rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--table-border-color);
 
   .header,
   .row {
@@ -17,8 +17,8 @@
   .cell {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--table-border-color);
+    border-right: 1px solid var(--table-border-color);
     min-height: 1.9rem;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -61,7 +61,7 @@
           top: 0;
           cursor: col-resize;
           z-index: 10;
-          background: var(--border-color);
+          background: var(--table-border-color);
           opacity: 0;
         }
       }
