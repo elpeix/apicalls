@@ -4,6 +4,7 @@ import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
 import { REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
 import { mainWindow } from '.'
+
 import fs from 'fs'
 import * as path from 'path'
 
@@ -56,7 +57,11 @@ const themesDir = path.join(app.getPath('userData'), 'themes')
 const listThemes = (): Map<string, AppTheme> => {
   if (!fs.existsSync(themesDir)) {
     fs.mkdirSync(themesDir)
-    return new Map()
+    const appThemesDir = path.join(app.getAppPath(), 'themes')
+    // Copy default themes to user data
+    fs.readdirSync(appThemesDir).forEach((file) => {
+      fs.copyFileSync(path.join(appThemesDir, file), path.join(themesDir, file))
+    })
   }
   const files = fs.readdirSync(themesDir).filter((file) => file.endsWith('.json'))
   return new Map(

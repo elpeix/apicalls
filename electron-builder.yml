@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.francescrequesens.apicalls
 productName: api-calls
 directories:
   buildResources: build
@@ -8,6 +8,7 @@ files:
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - 'themes/*'
 asarUnpack:
   - resources/**
 win:
@@ -33,7 +34,7 @@ linux:
     - AppImage
     - rpm
     - deb
-  maintainer: electronjs.org
+  maintainer: francescrequesens.com
   category: Utility
 rpm:
   depends:
