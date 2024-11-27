@@ -40,7 +40,7 @@ export default function Layout() {
 
   return (
     <>
-      <PanelGroup direction="horizontal">
+      <PanelGroup direction="horizontal" autoSaveId="panelLayout">
         <SideMenu
           showSelected={showSelected}
           onSelect={expandSidePanel}
