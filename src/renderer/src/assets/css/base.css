@@ -115,7 +115,7 @@
   --tab-background-color: transparent;
   --tab-hover-background-color: var(--hover-background-color);
   --tab-selected-color: var(--selected-color);
-  --tab-selected-background-color: var(--border-color);
+  --tab-selected-background-color: var(--color-8);
   --tab-height: 33px;
   --tab-panel-background-color: var(--background-content);
 
@@ -182,7 +182,11 @@
   --sidePanel-color-hover: var(--color-9);
   --tab-panel-background-color: var(--color-11);
 
-  --highlight-color: #0088ff;
+  --sidePanel-color: var(--color-9);
+  --sidePanel-color-hover: var(--color-8);
+  --tab-panel-background-color: var(--color-11);
+
+  --highlight-color: #348bd8;
   --success-background-color: #69b9ff;
   --error-background-color: #ff4d4d;
   --error-color: #ff4d4d;
@@ -194,7 +198,7 @@
   --status-400-color: rgb(196, 80, 231);
   --status-500-color: rgb(223, 48, 48);
 
-  --method-get-color: rgb(45, 151, 133);
+  --method-get-color: rgb(31, 173, 150);
   --method-post-color: rgb(66, 133, 244);
   --method-put-color: rgb(204, 99, 0);
   --method-patch-color: rgb(180, 138, 0);
