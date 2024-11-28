@@ -106,15 +106,8 @@
   &.save {
     border-left: 1px solid var(--border-color);
     border-right: 1px solid var(--border-color);
-    opacity: 0.7;
-
     .icon {
       margin-right: 0.5rem;
-    }
-
-    &:hover,
-    &:active {
-      opacity: 1;
     }
   }
 
@@ -137,15 +130,12 @@
   border-right: none;
   height: 100%;
   align-items: center;
-  opacity: 0.7;
   cursor: pointer;
   transition:
     background-color 0.2s ease-in-out,
-    border-color 0.2s ease-in-out,
-    opacity 0.2s ease-in-out;
+    border-color 0.2s ease-in-out;
 
   &:hover {
-    opacity: 1;
     background-color: var(--hover-background-color);
   }
 }
