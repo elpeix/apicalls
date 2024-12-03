@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import { AppContext } from '../../context/AppContext'
+import { RequestContext } from '../../context/RequestContext'
 
 const base = window || global
 const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
@@ -19,6 +20,7 @@ export default function Editor({
   onChange?: OnChange
 }) {
   const { appSettings } = useContext(AppContext)
+  const requestContext = useContext(RequestContext)
   const [theme, setTheme] = useState(matchMedia.matches ? 'vs-dark' : 'vsi-light')
   const editorRef = useRef<Monaco | null>(null)
 
@@ -39,6 +41,38 @@ export default function Editor({
     }
   }, [requestContext.isActive, value, appSettings])
 
+  return requestContext.isActive ? (
+    <RenderEditor
+      language={language}
+      value={value}
+      editorRef={editorRef}
+      readOnly={readOnly}
+      wordWrap={wordWrap || false}
+      theme={theme}
+      onChange={onChange}
+    />
+  ) : (
+    <></>
+  )
+}
+
+function RenderEditor({
+  language,
+  value,
+  editorRef,
+  readOnly,
+  wordWrap,
+  onChange,
+  theme
+}: {
+  language: string
+  value: string
+  editorRef: React.MutableRefObject<Monaco | null>
+  readOnly: boolean
+  wordWrap: boolean
+  onChange?: OnChange
+  theme: string
+}) {
   return (
     <MonacoEditor
       defaultLanguage={language}
@@ -67,19 +101,8 @@ export default function Editor({
         contextmenu: false,
         //accessibilityHelpUrl: false,
         accessibilitySupport: 'off',
-
-        // Disable column selection
-        //columnSelection: false,
-
-        // Disable line colors
-        // renderLineHighlight: 'none',
-
-        // Disable indendt lines
-        //renderIndentGuides: false,
-
-        // Hide invisible characters
+        renderLineHighlight: readOnly ? 'none' : 'all',
         renderWhitespace: 'none',
-
         wordWrap: wordWrap ? 'on' : 'off',
         fontSize: 12
       }}
