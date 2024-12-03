@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import { AppContext } from '../../context/AppContext'
 
+const base = window || global
+const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
+
 export default function Editor({
   language = 'json',
   value,
@@ -16,7 +19,7 @@ export default function Editor({
   onChange?: OnChange
 }) {
   const { appSettings } = useContext(AppContext)
-  const [theme, setTheme] = useState('vs-light')
+  const [theme, setTheme] = useState(matchMedia.matches ? 'vs-dark' : 'vsi-light')
   const editorRef = useRef<Monaco | null>(null)
 
   useEffect(() => {
@@ -24,11 +27,17 @@ export default function Editor({
     if (!editorTheme) {
       return
     }
-    setTheme(editorTheme)
-    if (editorRef.current) {
-      editorRef.current.editor.setTheme(editorTheme)
+    if (editorTheme.data && Object.keys(editorTheme.data).length > 0 && editorTheme.data.colors) {
+      const monaco = editorRef.current
+      if (monaco) {
+        monaco.editor.defineTheme(editorTheme.name, editorTheme.data)
+        monaco.editor.setTheme(editorTheme.name)
+      }
+      setTheme(editorTheme.name)
+    } else {
+      setTheme(editorTheme.mode === 'dark' ? 'vs-dark' : 'vs-light')
     }
-  }, [appSettings])
+  }, [requestContext.isActive, value, appSettings])
 
   return (
     <MonacoEditor

@@ -216,7 +216,11 @@ type AppSettingsHookType = {
   save: (settings: AppSettingsType) => void
   clear: () => void
   themes: Map<string, AppTheme>
-  getEditorTheme: () => string
+  getEditorTheme: () => {
+    name: string
+    mode: string
+    data: data
+  }
 }
 
 type RequestItem = {
@@ -270,6 +274,7 @@ type RequestContestType = {
 
 type AppTheme = {
   name: string
+  mode: string
   colors: {
     [key: string]: string
   }

@@ -55,7 +55,7 @@ export default function ContentTabs() {
     <>
       {hasTabs && (
         <div className="panel-tabs">
-          <Tabs onSelect={onSelect} selectedIndex={selectedTabIndex}>
+          <Tabs onSelect={onSelect} selectedIndex={selectedTabIndex} forceRenderTabPanel={true}>
             <div className="panel-tabs-header">
               <HorizontalScroll className="panel-tabs-header-list">
                 <TabList>
@@ -72,7 +72,7 @@ export default function ContentTabs() {
             </div>
             <div className="panel-tabs-content">
               {tabList.map((tab) => (
-                <TabPanel key={tab.id} forceRender={true}>
+                <TabPanel key={tab.id}>
                   <RequestPanel tab={tab} />
                 </TabPanel>
               ))}

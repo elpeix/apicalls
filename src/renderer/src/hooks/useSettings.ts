@@ -63,16 +63,25 @@ export function useSettings(): AppSettingsHookType {
     ipcRenderer?.send(SETTINGS.clear)
   }
 
-  const getEditorTheme = () => {
+  const getEditorTheme = (): { name: string; mode: string; data: object } => {
     // TODO: Return base and colors
     if (!settings || settings.theme === 'system') {
-      return mode === LIGHT ? 'vs-light' : 'vs-dark'
+      const themeName = mode === DARK ? 'vs-dark' : 'vs-light'
+      return { name: themeName, mode, data: {} }
     }
-    const editor = themes.get(settings?.theme)?.editor
-    if (editor) {
-      return editor.base
+    if (settings.theme === DARK || settings.theme === LIGHT) {
+      return {
+        name: settings.theme === DARK ? 'vs-dark' : 'vs-light',
+        data: {},
+        mode: settings.theme
+      }
     }
-    return settings?.theme === 'dark' ? 'vs-dark' : 'vs-light'
+    const theme = themes.get(settings.theme)
+    return {
+      name: settings?.theme,
+      data: theme?.editor || {},
+      mode: theme?.mode || mode
+    }
   }
 
   return { settings, save, clear, getEditorTheme, themes }
