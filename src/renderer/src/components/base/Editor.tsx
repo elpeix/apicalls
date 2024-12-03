@@ -21,7 +21,7 @@ export default function Editor({
 }) {
   const { appSettings } = useContext(AppContext)
   const requestContext = useContext(RequestContext)
-  const [theme, setTheme] = useState(matchMedia.matches ? 'vs-dark' : 'vsi-light')
+  const [theme, setTheme] = useState(matchMedia.matches ? 'vs-dark' : 'vs')
   const editorRef = useRef<Monaco | null>(null)
 
   useEffect(() => {
@@ -29,7 +29,13 @@ export default function Editor({
     if (!editorTheme) {
       return
     }
-    if (editorTheme.data && Object.keys(editorTheme.data).length > 0 && editorTheme.data.colors) {
+    const editorThemeBase = editorTheme.data?.base
+    if (editorThemeBase === 'hc-light' || editorThemeBase === 'hc-black') {
+      setTheme(editorThemeBase)
+      return
+    }
+    if (editorTheme.data && editorTheme.data.colors) {
+      console.log(editorTheme.data)
       const monaco = editorRef.current
       if (monaco) {
         monaco.editor.defineTheme(editorTheme.name, editorTheme.data)
@@ -37,7 +43,7 @@ export default function Editor({
       }
       setTheme(editorTheme.name)
     } else {
-      setTheme(editorTheme.mode === 'dark' ? 'vs-dark' : 'vs-light')
+      setTheme(editorTheme.mode === 'dark' ? 'vs-dark' : 'vs')
     }
   }, [requestContext.isActive, value, appSettings])
 
