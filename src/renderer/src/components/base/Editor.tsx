@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
+import * as monaco from 'monaco-editor'
 import { AppContext } from '../../context/AppContext'
 import { RequestContext } from '../../context/RequestContext'
 
@@ -21,7 +22,10 @@ export default function Editor({
 }) {
   const { appSettings } = useContext(AppContext)
   const requestContext = useContext(RequestContext)
-  const [theme, setTheme] = useState(matchMedia.matches ? 'vs-dark' : 'vs')
+  const [theme, setTheme] = useState(
+    appSettings?.getEditorTheme()?.name || (matchMedia.matches ? 'vs-dark' : 'vs')
+  )
+  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(null)
   const editorRef = useRef<Monaco | null>(null)
 
   useEffect(() => {
@@ -31,21 +35,20 @@ export default function Editor({
     }
     const editorThemeBase = editorTheme.data?.base
     if (editorThemeBase === 'hc-light' || editorThemeBase === 'hc-black') {
+      setThemeData(null)
       setTheme(editorThemeBase)
       return
     }
+    setThemeData(editorTheme.data)
     if (editorTheme.data && editorTheme.data.colors) {
-      console.log(editorTheme.data)
-      const monaco = editorRef.current
-      if (monaco) {
-        monaco.editor.defineTheme(editorTheme.name, editorTheme.data)
-        monaco.editor.setTheme(editorTheme.name)
-      }
+      const monacoEditor = editorRef.current || monaco
+      monacoEditor.editor.defineTheme(editorTheme.name, editorTheme.data)
+      monacoEditor.editor.setTheme(editorTheme.name)
       setTheme(editorTheme.name)
     } else {
       setTheme(editorTheme.mode === 'dark' ? 'vs-dark' : 'vs')
     }
-  }, [requestContext.isActive, value, appSettings])
+  }, [appSettings])
 
   return requestContext.isActive ? (
     <RenderEditor
@@ -55,6 +58,7 @@ export default function Editor({
       readOnly={readOnly}
       wordWrap={wordWrap || false}
       theme={theme}
+      themeData={themeData}
       onChange={onChange}
     />
   ) : (
@@ -69,7 +73,8 @@ function RenderEditor({
   readOnly,
   wordWrap,
   onChange,
-  theme
+  theme,
+  themeData
 }: {
   language: string
   value: string
@@ -78,18 +83,33 @@ function RenderEditor({
   wordWrap: boolean
   onChange?: OnChange
   theme: string
+  themeData: monaco.editor.IStandaloneThemeData | null
 }) {
+  const [themeName, setThemeName] = useState(theme)
+  useEffect(() => {
+    if (themeData && themeData.colors) {
+      monaco.editor.defineTheme(theme, themeData)
+    }
+    setThemeName(theme)
+  }, [])
+  useEffect(() => {
+    setThemeName(theme)
+  }, [theme])
   return (
     <MonacoEditor
       defaultLanguage={language}
       language={language}
       onChange={onChange}
-      theme={theme}
+      theme={themeName}
       height="100%"
       width="100%"
       value={value}
       onMount={(_, monaco) => {
         editorRef.current = monaco
+        if (themeData && themeData.colors) {
+          monaco.editor.defineTheme(themeName, themeData)
+        }
+        monaco.editor.setTheme(themeName)
       }}
       options={{
         minimap: {
