@@ -130,9 +130,21 @@
     "tab-panel-background-color": "var(--color-0)",
     "tab-selected-background-color": "var(--color-2)",
     "tab-selected-color": "var(--base-color)",
-  	"table-border-color": "var(--border-color)"
+    "table-border-color": "var(--border-color)"
   },
   "editor": {
-    "base": "vs"
+    "base": "vs",
+    "inherit": true,
+    "rules": [],
+    "colors": {
+      "editor.foreground": "#db2777",
+      "editor.background": "#ffffff",
+      "editor.selectionBackground": "#fce7f3",
+      "editor.lineHighlightBackground": "#fdf2f8",
+      "editorCursor.foreground": "#db2777",
+      "editorWhitespace.foreground": "#3B3A32",
+      "editorIndentGuide.activeBackground": "#9D550FB0",
+      "editor.selectionHighlightBorder": "#F8F8F0"
+    }
   }
 }

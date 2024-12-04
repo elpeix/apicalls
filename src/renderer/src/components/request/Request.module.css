@@ -114,8 +114,12 @@
   .buttonText {
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--base-color);
     text-transform: uppercase;
+  }
+
+  svg{
+    color: unset !important;
+    transition: unset !important;
   }
 }
 

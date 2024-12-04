@@ -55,15 +55,12 @@ ipcMain.on(VERSION.get, (event) => event.reply(VERSION.getSuccess, app.getVersio
 
 const themesDir = path.join(app.getPath('userData'), 'themes')
 const listThemes = (): Map<string, AppTheme> => {
-  if (!fs.existsSync(themesDir)) {
-    fs.mkdirSync(themesDir)
-    const appThemesDir = path.join(app.getAppPath(), 'themes')
-    // Copy default themes to user data
-    fs.readdirSync(appThemesDir).forEach((file) => {
-      fs.copyFileSync(path.join(appThemesDir, file), path.join(themesDir, file))
+  const files = fs
+    .readdirSync(themesDir)
+    .filter((file) => {
+      return file.endsWith('.json') && file !== 'version.json'
     })
-  }
-  const files = fs.readdirSync(themesDir).filter((file) => file.endsWith('.json'))
+    .sort()
   return new Map(
     files.map((file) => {
       const theme = fs.readFileSync(path.join(themesDir, file), 'utf8')
