@@ -107,7 +107,7 @@
     "select-arrow-color": "var(--color-5)",
     "select-arrow": "var(--base-color)",
     "selected-color": "var(--color-1)",
-    "sidePanel-color-hover": "var(--color-4)",
+    "sidePanel-color-hover": "var(--color-3)",
     "sidePanel-color": "var(--color-2)",
     "sidePanel-icon-color": "var(--color-8)",
     "status-200-color": "var(--color-10)",
