@@ -25,7 +25,9 @@ export default function Editor({
   const [theme, setTheme] = useState(
     appSettings?.getEditorTheme()?.name || (matchMedia.matches ? 'vs-dark' : 'vs')
   )
-  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(null)
+  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(
+    appSettings?.getEditorTheme()?.data || null
+  )
   const editorRef = useRef<Monaco | null>(null)
 
   useEffect(() => {
@@ -85,31 +87,22 @@ function RenderEditor({
   theme: string
   themeData: monaco.editor.IStandaloneThemeData | null
 }) {
-  const [themeName, setThemeName] = useState(theme)
-  useEffect(() => {
-    if (themeData && themeData.colors) {
-      monaco.editor.defineTheme(theme, themeData)
-    }
-    setThemeName(theme)
-  }, [])
-  useEffect(() => {
-    setThemeName(theme)
-  }, [theme])
   return (
     <MonacoEditor
       defaultLanguage={language}
       language={language}
       onChange={onChange}
-      theme={themeName}
+      theme={theme}
       height="100%"
       width="100%"
       value={value}
       onMount={(_, monaco) => {
         editorRef.current = monaco
+        console.log(theme, themeData)
         if (themeData && themeData.colors) {
-          monaco.editor.defineTheme(themeName, themeData)
+          monaco.editor.defineTheme(theme, themeData)
         }
-        monaco.editor.setTheme(themeName)
+        monaco.editor.setTheme(theme)
       }}
       options={{
         minimap: {
