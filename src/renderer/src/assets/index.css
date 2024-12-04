@@ -251,7 +251,7 @@ select {
 
       &:hover {
         color: var(--base-color);
-        background-color: var(--border-color);
+        background-color: var(--hover-background-color);
       }
     }
   }

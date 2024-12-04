@@ -89,9 +89,12 @@
         white-space: nowrap;
       }
 
-      &:hover,
-      &.selected {
+      &:hover {
         background-color: var(--sidePanel-color-hover);
+      }
+
+      &.selected {
+        background-color: var(--sidePanel-active-background-color);
       }
     }
   }

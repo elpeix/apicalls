@@ -20,10 +20,20 @@ export default function Editor({
   wordWrap?: boolean
   onChange?: OnChange
 }) {
+  const getThemeName = (name: string | undefined, base: string | undefined) => {
+    if (!name) {
+      return matchMedia.matches ? 'vs-dark' : 'vs'
+    }
+    if (base === 'hc-light' || base === 'hc-black') {
+      return base
+    }
+    return name
+  }
+
   const { appSettings } = useContext(AppContext)
   const requestContext = useContext(RequestContext)
   const [theme, setTheme] = useState(
-    appSettings?.getEditorTheme()?.name || (matchMedia.matches ? 'vs-dark' : 'vs')
+    getThemeName(appSettings?.getEditorTheme()?.name, appSettings?.getEditorTheme()?.data?.base)
   )
   const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(
     appSettings?.getEditorTheme()?.data || null
@@ -87,6 +97,7 @@ function RenderEditor({
   theme: string
   themeData: monaco.editor.IStandaloneThemeData | null
 }) {
+  console.log(theme, themeData)
   return (
     <MonacoEditor
       defaultLanguage={language}

@@ -1,14 +1,14 @@
 {
-  "name": "Light High Contrast",
-  "mode": "light",
+  "name": "Dark High Contrast",
+  "mode": "dark",
   "colors": {
-    "color-1": "#ffffff",
-    "color-2": "#757575",
-    "color-3": "#424242",
-    "color-4": "#44ddbb",
+    "color-1": "#000000",
+    "color-2": "#555555",
+    "color-3": "#333333",
+    "color-4": "#119988",
     "color-5": "#0033cc",
     "color-6": "#ffa500",
-    "color-7": "#000000",
+    "color-7": "#ffffff",
     "color-8": "#ee0033",
     "color-9": "#33bb00",
     "color-10": "#da0064",
@@ -117,12 +117,12 @@
     "status-unkonwn-color": "var(--color-3)",
     "success-background-color": "var(--color-9)",
     "switch-active-background-color": "var(--color-4)",
-    "switch-active-color": "var(--color-7)",
-    "switch-background-color": "var(--color-6)",
+    "switch-active-color": "var(--color-1)",
+    "switch-background-color": "var(--color-7)",
     "switch-color": "var(--color-3)",
-    "switch-hover-color": "var(--color-7)",
+    "switch-hover-color": "var(--color-2)",
     "switch-text-active-color": "var(--color-7)",
-    "switch-text-color": "var(--color-3)",
+    "switch-text-color": "var(--color-7)",
     "switch-text-hover-color": "var(--color-7)",
     "tab-background-color": "var(--color-1)",
     "tab-color": "var(--base-color)",
@@ -133,6 +133,6 @@
     "table-border-color": "var(--border-color)"
   },
   "editor": {
-    "base": "hc-light"
+    "base": "hc-black"
   }
 }
