@@ -58,7 +58,7 @@
     "dialog-footer-color": "var(--color-7)",
     "dialog-footer-hover-color": "var(--color-9)",
     "droppable-color": "var(--color-7)",
-    "error-background-color": "var(--color-8)",
+    "error-background-color": "var(--color-6)",
     "error-color": "var(--color-8)",
     "gutter-color-drag": "var(--color-8)",
     "gutter-color": "var(--border-color)",
