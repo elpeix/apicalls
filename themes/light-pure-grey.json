@@ -70,7 +70,7 @@
     "input-border-color": "var(--color-4)",
     "input-color": "var(--color-9)",
     "input-disabled-color": "var(--color-5)",
-    "input-hover-background-color": "var(--color-2)",
+    "input-hover-background-color": "var(--color-0)",
     "input-hover-border-color": "var(--color-5)",
     "input-hover-color": "var(--color-9)",
     "input-placeholder-color": "var(--color-5)",

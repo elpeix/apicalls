@@ -20,7 +20,7 @@
   }
 
   &:hover input[type='checkbox'] {
-    border-color: var(--base-color) !important;
+    border-color: var(--input-hover-border-color) !important;
   }
 }
 

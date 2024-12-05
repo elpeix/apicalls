@@ -3,7 +3,7 @@
   "mode": "dark",
   "colors": {
     "color-1": "#000000",
-    "color-2": "#555555",
+    "color-2": "#888888",
     "color-3": "#333333",
     "color-4": "#119988",
     "color-5": "#0033cc",
@@ -72,7 +72,7 @@
     "input-color": "var(--color-7)",
     "input-disabled-color": "var(--color-2)",
     "input-hover-background-color": "var(--color-1)",
-    "input-hover-border-color": "var(--color-3)",
+    "input-hover-border-color": "var(--color-7)",
     "input-hover-color": "var(--color-7)",
     "input-placeholder-color": "var(--color-2)",
     "input-undefined-color": "var(--color-2)",
