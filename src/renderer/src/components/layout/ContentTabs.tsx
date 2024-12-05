@@ -47,20 +47,34 @@ export default function ContentTabs() {
   }, [tabs])
 
   const onSelect = (index: number, _: number, __: Event) => {
+    setSelectedTabIndex(index)
+  }
+
+  const handleMouseDown = (index: number) => {
     tabs?.setActiveTab(index)
-    return true
+    setSelectedTabIndex(index)
   }
 
   return (
     <>
       {hasTabs && (
         <div className="panel-tabs">
-          <Tabs onSelect={onSelect} selectedIndex={selectedTabIndex} forceRenderTabPanel={true}>
+          <Tabs
+            onSelect={onSelect}
+            selectedIndex={selectedTabIndex}
+            forceRenderTabPanel={true}
+            disableUpDownKeys
+            disableLeftRightKeys
+          >
             <div className="panel-tabs-header">
               <HorizontalScroll className="panel-tabs-header-list">
                 <TabList>
-                  {tabList.map((tab) => (
-                    <Tab key={tab.id} className="request-tab">
+                  {tabList.map((tab, index) => (
+                    <Tab
+                      key={tab.id}
+                      className="request-tab"
+                      onMouseDown={() => handleMouseDown(index)}
+                    >
                       <TabTitle tab={tab} />
                     </Tab>
                   ))}

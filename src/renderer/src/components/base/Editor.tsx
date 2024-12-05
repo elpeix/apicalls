@@ -97,7 +97,6 @@ function RenderEditor({
   theme: string
   themeData: monaco.editor.IStandaloneThemeData | null
 }) {
-  console.log(theme, themeData)
   return (
     <MonacoEditor
       defaultLanguage={language}
@@ -109,7 +108,6 @@ function RenderEditor({
       value={value}
       onMount={(_, monaco) => {
         editorRef.current = monaco
-        console.log(theme, themeData)
         if (themeData && themeData.colors) {
           monaco.editor.defineTheme(theme, themeData)
         }
