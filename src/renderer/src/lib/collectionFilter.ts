@@ -37,7 +37,7 @@ const filterElements = (
 
 const partialFilter = (element: RequestType, filter: string): boolean => {
   const methodAndName = `${element.request.method.value} ${element.name}`.toLowerCase()
-  return queryFilter(methodAndName, filter.toLowerCase())
+  return queryFilter(methodAndName, filter.toLowerCase()) > 0
 }
 
 export const toggleCollectionElements = (

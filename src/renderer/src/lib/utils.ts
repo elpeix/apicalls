@@ -46,15 +46,22 @@ export function getValueFromPath(json: string, path: string): string | number | 
   }
 }
 
-export const queryFilter = (text: string, filter: string): boolean => {
+export const queryFilter = (text: string, filter: string): number => {
   let filterIndex = 0
+  let consecutive = 0
+  let consecutiveFound = 0
   for (let i = 0; i < text.length; i++) {
     if (text[i] === filter[filterIndex]) {
       filterIndex++
+      consecutive++
+    } else {
+      consecutiveFound = Math.max(consecutiveFound, consecutive)
+      consecutive = 0
     }
     if (filterIndex === filter.length) {
-      return true
+      consecutiveFound = Math.max(consecutiveFound, consecutive)
+      return consecutiveFound
     }
   }
-  return false
+  return 0
 }
