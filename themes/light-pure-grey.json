@@ -50,7 +50,7 @@
     "cancel-color": "rgba(52, 58, 64, 0.1)",
     "console-background-color": "var(--color-1)",
     "console-color": "var(--color-7)",
-    "danger-color": "#dc3545",
+    "danger-color": "var(--color-9)",
     "dialog-background-color": "var(--color-1)",
     "dialog-border-color": "var(--color-3)",
     "dialog-color": "var(--color-9)",

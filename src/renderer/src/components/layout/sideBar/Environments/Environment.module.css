@@ -163,3 +163,7 @@
     }
   }
 }
+
+.remove {
+  color: var(--danger-color);
+}

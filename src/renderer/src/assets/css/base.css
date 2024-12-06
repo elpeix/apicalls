@@ -100,6 +100,18 @@
   --method-head-color: rgb(151, 151, 151);
   --method-option-color: rgb(158, 78, 248);
 
+  --method-select-background-color: transparent;
+  --method-select-color: var(--base-color);
+  --method-select-border-color: var(--border-color);
+  --method-select-shadow-color: rgba(0, 0, 0, 0.2);
+  --method-select-hover-background-color: var(--input-hover-background-color);
+  --method-select-hover-color: var(--input-hover-color);
+  --method-select-hover-border-color: var(--input-hover-border-color);
+  --method-select-option-background-color: var(--background-base);
+  --method-select-option-color: var(--border-color);
+  --method-select-option-hover-background-color: var(--hover-background-color);
+  --method-select-option-hover-color: var(--base-color);
+
   --gutter-color: var(--color-8);
   --gutter-color-drag: var(--highlight-color);
   --gutter-transition: 0.2s;
@@ -262,6 +274,11 @@
   --method-delete-color: rgb(223, 48, 101);
   --method-head-color: rgb(126, 126, 126);
   --method-option-color: rgb(158, 78, 248);
+
+  --method-select-background-color: var(--color-10);
+  --method-select-option-background-color: var(--color-10);
+  --method-select-hover-color: var(--hover-hover-color);
+  --method-select-hover-background-color: var(--hover-background-color);
 
   --gutter-color: var(--color-7);
   --gutter-color-drag: var(--highlight-color);

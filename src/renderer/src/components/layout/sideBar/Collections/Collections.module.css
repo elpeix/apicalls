@@ -157,6 +157,7 @@
     .menuIcon {
       display: none;
     }
+
   }
 
   &:has(.menuActive),
@@ -178,4 +179,8 @@
 
 .firstElement {
   padding: 0.3rem 0 0;
+}
+
+.remove {
+  color: var(--danger-color);
 }

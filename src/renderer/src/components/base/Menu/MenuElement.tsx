@@ -13,22 +13,24 @@ export function MenuElement({
   title,
   color = '',
   disabled = false,
+  className = '',
   onClick
 }: {
   icon: string
   title: string
   color?: string
   disabled?: boolean
+  className?: string
   onClick: () => void
 }) {
   const style: CSSProperties = color ? { color: color } : {}
   return (
     <div
-      className={`${styles.item} ${disabled ? styles.disabled : ''}`}
+      className={`${styles.item} ${disabled ? styles.disabled : ''} ${className}`}
       onClick={onClick}
       style={style}
     >
-      <Icon icon={icon} color={color} />
+      <Icon icon={icon} className={className} />
       {title}
     </div>
   )

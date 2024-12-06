@@ -84,7 +84,7 @@
     "method-get-color": "var(--color-5)",
     "method-head-color": "var(--color-6)",
     "method-option-color": "var(--color-7)",
-    "method-patch-color": "var(--color-3)",
+    "method-patch-color": "var(--color-5)",
     "method-post-color": "var(--color-7)",
     "method-put-color": "var(--color-6)",
     "overlay-color": "rgba(0, 0, 0, 0.2)",
