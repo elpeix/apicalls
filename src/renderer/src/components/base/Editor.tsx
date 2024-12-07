@@ -20,12 +20,12 @@ export default function Editor({
   wordWrap?: boolean
   onChange?: OnChange
 }) {
-  const getThemeName = (name: string | undefined, base: string | undefined) => {
+  const getThemeName = (name: string | undefined, mode: string | undefined) => {
     if (!name) {
       return matchMedia.matches ? 'vs-dark' : 'vs'
     }
-    if (base === 'hc-light' || base === 'hc-black') {
-      return base
+    if (mode === 'hc-light' || mode === 'hc-black') {
+      return mode
     }
     return name
   }
@@ -33,7 +33,7 @@ export default function Editor({
   const { appSettings } = useContext(AppContext)
   const requestContext = useContext(RequestContext)
   const [theme, setTheme] = useState(
-    getThemeName(appSettings?.getEditorTheme()?.name, appSettings?.getEditorTheme()?.data?.base)
+    getThemeName(appSettings?.getEditorTheme()?.name, appSettings?.getEditorTheme()?.mode)
   )
   const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(
     appSettings?.getEditorTheme()?.data || null
@@ -45,10 +45,11 @@ export default function Editor({
     if (!editorTheme) {
       return
     }
-    const editorThemeBase = editorTheme.data?.base
-    if (editorThemeBase === 'hc-light' || editorThemeBase === 'hc-black') {
+    const editorThemeMode = editorTheme.mode
+    console.log('editorThemeMode', editorThemeMode)
+    if (editorThemeMode === 'hc-light' || editorThemeMode === 'hc-black') {
       setThemeData(null)
-      setTheme(editorThemeBase)
+      setTheme(editorThemeMode)
       return
     }
     setThemeData(editorTheme.data)

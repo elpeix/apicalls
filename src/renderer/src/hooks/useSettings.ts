@@ -5,6 +5,13 @@ import { applyTheme, removeStyleProperties } from '../lib/utils'
 const LIGHT = 'light'
 const DARK = 'dark'
 
+const defaultEditorThemes: Record<string, string> = {
+  light: 'vs',
+  dark: 'vs-dark',
+  'hc-light': 'hc-light',
+  'hc-dark': 'hc-black'
+}
+
 export function useSettings(): AppSettingsHookType {
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
   const [themes, setThemes] = useState<Map<string, AppTheme>>(new Map())
@@ -64,16 +71,15 @@ export function useSettings(): AppSettingsHookType {
   }
 
   const getEditorTheme = (): { name: string; mode: string; data: object } => {
-    // TODO: Return base and colors
     if (!settings || settings.theme === 'system') {
       const themeName = mode === DARK ? 'vs-dark' : 'vs-light'
       return { name: themeName, mode, data: {} }
     }
-    if (settings.theme === DARK || settings.theme === LIGHT) {
+    if (Object.keys(defaultEditorThemes).includes(settings.theme)) {
       return {
-        name: settings.theme === DARK ? 'vs-dark' : 'vs-light',
+        name: settings.theme,
         data: {},
-        mode: settings.theme
+        mode: defaultEditorThemes[settings.theme]
       }
     }
     const theme = themes.get(settings.theme)
