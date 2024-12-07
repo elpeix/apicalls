@@ -81,38 +81,28 @@ export const getMenu = (mainWindow: BrowserWindow) => {
       label: 'View',
       submenu: [
         {
-          label: 'Toggle menu',
-          accelerator: 'CmdOrCtrl+M',
-          click: () => {
-            toggleMenu(mainWindow)
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Show collections',
+          label: 'Collections',
           accelerator: 'CmdOrCtrl+l',
           click: () => {
             mainWindow.webContents.send(ACTIONS.showCollections)
           }
         },
         {
-          label: 'Show environments',
+          label: 'Environments',
           accelerator: 'CmdOrCtrl+e',
           click: () => {
             mainWindow.webContents.send(ACTIONS.showEnvironments)
           }
         },
         {
-          label: 'Show history',
+          label: 'History',
           accelerator: 'CmdOrCtrl+h',
           click: () => {
             mainWindow.webContents.send(ACTIONS.showHistory)
           }
         },
         {
-          label: 'Show settings',
+          label: 'Settings',
           accelerator: 'CmdOrCtrl+,',
           click: () => {
             mainWindow.webContents.send(ACTIONS.showSettings)
@@ -122,21 +112,38 @@ export const getMenu = (mainWindow: BrowserWindow) => {
           type: 'separator'
         },
         {
-          label: 'Toggle Sidebar',
+          label: 'Toggle menu',
+          accelerator: 'CmdOrCtrl+M',
+          click: () => {
+            toggleMenu(mainWindow)
+          }
+        },
+        {
+          label: 'Toggle Request view',
+          accelerator: 'CmdOrCtrl+Shift+L',
+          click: () => {
+            toggleRequestView(mainWindow)
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Sidebar',
           accelerator: 'CmdOrCtrl+B',
           click: () => {
             mainWindow.webContents.send(ACTIONS.toggleSidebar)
           }
         },
         {
-          label: 'Toggle Request Panel',
+          label: 'Request Panel',
           accelerator: 'CmdOrCtrl+Shift+P',
           click: () => {
             mainWindow.webContents.send(ACTIONS.toggleRequestPanel)
           }
         },
         {
-          label: 'Toggle Console',
+          label: 'Console',
           accelerator: 'CmdOrCtrl+Shift+C',
           click: () => {
             mainWindow.webContents.send(ACTIONS.toggleConsole)
@@ -148,7 +155,7 @@ export const getMenu = (mainWindow: BrowserWindow) => {
       label: 'Window',
       submenu: [
         {
-          label: 'Toggle DevTools',
+          label: 'DevTools',
           accelerator: 'F12',
           role: 'toggleDevTools'
         },
@@ -202,5 +209,12 @@ const toggleMenu = (mainWindow: BrowserWindow) => {
   } else {
     mainWindow.setMenuBarVisibility(false)
   }
+  mainWindow.webContents.send(SETTINGS.updated, settings)
+}
+
+const toggleRequestView = (mainWindow: BrowserWindow) => {
+  const settings = getSettings()
+  settings.requestView = settings.requestView === 'horizontal' ? 'vertical' : 'horizontal'
+  setSettings(settings)
   mainWindow.webContents.send(SETTINGS.updated, settings)
 }
