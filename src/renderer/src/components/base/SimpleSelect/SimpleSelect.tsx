@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import styles from './SimpleSelect.module.css'
 
 type OptionType = Partial<{
@@ -28,6 +28,7 @@ export default function SimpleSelect({
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }) {
   const [groupedOptions, setGroupedOptions] = useState<GroupedOptionsType[]>([])
+  const id = useId()
 
   const groupByOptions = (options: OptionType[], groupBy: string): GroupedOptionsType[] => {
     if (!options.length) return []
@@ -54,7 +55,7 @@ export default function SimpleSelect({
       <select value={value} onChange={onChange} className={styles.select} autoFocus={autoFocus}>
         {groupedOptions.map((groupedOption: GroupedOptionsType) => (
           <GroupOptions
-            key={groupedOption.group}
+            key={`${id}_${groupedOption.group}`}
             options={groupedOption.options}
             group={groupedOption.group}
           />
@@ -79,11 +80,9 @@ function GroupOptions({ options, group }: { options: OptionType[]; group: string
   return (
     <optgroup label={group}>
       {options.map((option) => (
-        <>
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        </>
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
       ))}
     </optgroup>
   )

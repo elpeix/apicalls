@@ -51,13 +51,5 @@
       background-color: transparent;
       color: var(--input-disabled-color);
     }
-
-    optgroup:before{
-      content: attr(label);
-      color: var(--optgroup-color);
-      text-transform: uppercase;
-      font-weight: bold;
-      border-bottom: 1px solid var(--border-color);
-    }
   }
 }

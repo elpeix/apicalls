@@ -159,7 +159,7 @@
   --search-list-item-color-2: var(--content-0);
   --search-list-item-color-3: var(--content-1);
   --search-list-item-hover-color: var(--hover-background-color);
-  --search-list-item-active-color: var(--active-background-color);
+  --search-list-item-active-color: var(--transparent-cyan);
   --search-list-highlight-color: var(--transparent-cyan);
 
   --switch-text-color: var(--content-0);
@@ -204,7 +204,7 @@
   --background-2: #333;
   --content-0: #ccc;
   --content-1: #888;
-  --content-2: #276;
+  --content-2: #055;
   --foreground-0: #fff;
   --foreground-1: #eee;
   --foreground-2: #ddd;
@@ -221,6 +221,7 @@
   --active-background-color: var(--content-2);
   --accent-color: var(--cyan);
   --search-list-highlight-color: var(--magenta);
+  --search-list-item-active-color: var(--content-2);
   --transparent-bg: rgba(0, 0, 0, 0.7);
 }
 
@@ -247,6 +248,7 @@
   --active-background-color: var(--content-2);
   --accent-color: var(--content-2);
   --search-list-highlight-color: yellow;
+  --search-list-item-active-color: var(--content-2);
   --transparent-bg: rgba(255, 255, 255, 0.7);
 }
 

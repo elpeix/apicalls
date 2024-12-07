@@ -2,6 +2,17 @@
 @import './css/tabs.css';
 @import './css/sidePanel.css';
 
+a {
+  color: var(--base-color);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: var(--base-color);
+    text-decoration: underline;
+  }
+}
+
 input,
 progress {
   accent-color: var(--accent-color);
@@ -281,7 +292,7 @@ ul.versions {
   & > li {
     list-style: none;
     width: 100%;
-    opacity: 0.5;
+    opacity: 0.8;
   }
 }
 

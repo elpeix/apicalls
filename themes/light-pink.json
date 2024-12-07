@@ -10,7 +10,8 @@
     "content-2": "#ffbcda",
     "foreground-2": "#be185d",
     "foreground-1": "#9d174d",
-    "foreground-0": "#831843"
+    "foreground-0": "#831843",
+    "search-list-item-active-color": "#ffbcda"
   },
   "editor": {
     "base": "vs",
