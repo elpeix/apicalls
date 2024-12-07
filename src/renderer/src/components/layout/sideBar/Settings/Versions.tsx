@@ -24,6 +24,16 @@ function Versions() {
       <li className="chrome-version">Chromium v{versions.chrome}</li>
       <li className="node-version">Node v{versions.node}</li>
       <li className="v8-version">V8 v{versions.v8}</li>
+      <li className="icons">
+        Icons:
+        <a
+          href="https://www.svgrepo.com/collection/solar-outline-icons/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Solar Outline Icons Collection
+        </a>
+      </li>
     </ul>
   )
 }
