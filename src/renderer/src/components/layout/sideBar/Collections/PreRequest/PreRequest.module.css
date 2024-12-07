@@ -37,16 +37,6 @@
         border-top: 0;
         border-bottom: 0;
       }
-
-      .close {
-        width: 2.7rem;
-        height: 2.7rem;
-        transition: background-color 0.2s ease-in-out;
-
-        &:hover {
-          background-color: var(--color-8);
-        }
-      }
     }
   }
 
@@ -57,17 +47,13 @@
     min-height: 12rem;
     overflow-y: auto;
 
-    .tabsPanels {
-      /*min-height: 10rem;*/
-    }
-
     .dataToCapture {
       select {
         border: none;
         padding: 0.32rem 0;
 
         &:hover {
-          background-color: var(--color-11);
+          background-color: var(--background-content);
         }
       }
       .add {
@@ -78,6 +64,8 @@
   }
 
   .footer {
+    background-color: var(--dialog-footer-background-color);
+    color: var(--dialog-footer-color);
     padding: 0.5rem;
     gap: 1rem;
     display: flex;
@@ -96,12 +84,11 @@
         span {
           text-transform: uppercase;
           cursor: pointer;
-          color: var(--color-5);
           transition: color 0.2s ease-in-out;
 
           &:hover,
           &.active {
-            color: var(--color-3);
+            color: var(--dialog-footer-hover-color);
           }
         }
       }
@@ -111,23 +98,6 @@
       display: flex;
       justify-content: flex-end;
       gap: 0.5rem;
-
-      button:focus {
-        box-shadow: 0 0 0 1px var(--focus-color);
-      }
-
-      .cancel {
-        color: var(--color-5);
-      }
-
-      .save {
-        color: var(--color-3);
-        background-color: var(--color-9);
-
-        &:focus {
-          color: var(--highlight-color);
-        }
-      }
     }
   }
 }

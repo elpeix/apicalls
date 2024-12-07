@@ -5,6 +5,7 @@ import Store from 'electron-store'
 import { registerShortcuts } from './shortcutActions'
 import { getMenu } from './menu'
 import { defaultSettings } from '../lib/defaults'
+import { checkAndUpdateThemes } from './themes'
 
 const store = new Store()
 
@@ -65,8 +66,18 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.francescrequesens.apicalls')
 
+  // Set file themes
+  checkAndUpdateThemes()
+
   // Set theme source for nativeTheme
-  nativeTheme.themeSource = store.get('settings.theme', 'system') as 'light' | 'dark' | 'system'
+  const theme = store.get('settings.theme', 'system')
+  if (theme === 'light') {
+    nativeTheme.themeSource = 'light'
+  } else if (theme === 'dark') {
+    nativeTheme.themeSource = 'dark'
+  } else {
+    nativeTheme.themeSource = 'system'
+  }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

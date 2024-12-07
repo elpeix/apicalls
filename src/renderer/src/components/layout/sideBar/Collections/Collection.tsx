@@ -15,7 +15,6 @@ import {
 } from '../../../../lib/collectionFilter'
 import PreRequestEditor from './PreRequest/PreRequestEditor'
 import Scrollable from '../../../base/Scrollable'
-import { REMOVE_COLOR } from '../../../../constant'
 
 export default function Collection({
   collection,
@@ -217,7 +216,7 @@ export default function Collection({
             <MenuSeparator />
             <MenuElement
               icon="delete"
-              color={REMOVE_COLOR}
+              className={styles.remove}
               title="Remove"
               onClick={handleRemoveCollection}
             />

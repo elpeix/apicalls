@@ -8,7 +8,6 @@ import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import CollectionElements from './CollectionElements'
 import styles from './Collections.module.css'
 import Droppable from '../../../base/Droppable/Droppable'
-import { REMOVE_COLOR } from '../../../../constant'
 
 export default function Folder({
   folder,
@@ -158,7 +157,7 @@ export default function Folder({
             <MenuElement
               icon="delete"
               title="Remove"
-              color={REMOVE_COLOR}
+              className={styles.remove}
               onClick={handleRemoveFolder}
             />
           </Menu>

@@ -27,12 +27,12 @@
         user-select: none;
 
         .copy {
-          color: var(--color-5);
+          color: var(--link-color);
           cursor: pointer;
           transition: color 0.2s ease-in-out;
 
           &:hover {
-            color: var(--base-color);
+            color: var(--link-hover-color);
           }
 
           &:active {
@@ -60,14 +60,15 @@
 }
 
 .bodyNoContent {
-  background-color: var(--color-9);
+  background-color: var(--response-no-content-background-color);
+  border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
   width: 100%;
-  color: var(--color-5);
+  color: var(--response-no-content-color);
 }
 
 .footer {
@@ -88,7 +89,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-5);
+  color: var(--response-no-content-color);
   font-size: 14px;
   user-select: none;
 
@@ -98,6 +99,8 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+    padding: 0 20px;
+    text-align: center;
 
     & > .title {
       font-size: 16px;
@@ -120,7 +123,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 5px 0 2px;
+  padding: 0 5px 0 3px;
 
   & > .showConsole {
     align-self: start;

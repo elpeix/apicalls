@@ -72,11 +72,11 @@ export default function Response({
       {!fetching && fetched && fetchError.length === 0 && (
         <div className={styles.response}>
           <div className={styles.content}>
-            <Tabs className="tabs" onSelect={handleSelectTab}>
+            <Tabs className="tabs" onSelect={handleSelectTab} selectedIndex={tabIndex}>
               <div className={styles.tabsList}>
                 <TabList>
-                  <Tab>Response</Tab>
-                  <Tab>Headers</Tab>
+                  <Tab onMouseDown={() => handleSelectTab(0)}>Response</Tab>
+                  <Tab onMouseDown={() => handleSelectTab(1)}>Headers</Tab>
                 </TabList>
                 <div className={styles.responseActions}>
                   <div className={styles.copy} onClick={handleCopy}>

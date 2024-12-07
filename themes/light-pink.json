@@ -1,0 +1,31 @@
+{
+  "name": "Light pink",
+  "mode": "light",
+  "colors": {
+    "background-0": "#fdf2f8",
+    "background-1": "#ffeaf6",
+    "background-2": "#ffdcf0",
+    "content-0": "#f472b6",
+    "content-1": "#ec4899",
+    "content-2": "#ffbcda",
+    "foreground-2": "#be185d",
+    "foreground-1": "#9d174d",
+    "foreground-0": "#831843",
+    "search-list-item-active-color": "#ffbcda"
+  },
+  "editor": {
+    "base": "vs",
+    "inherit": true,
+    "rules": [],
+    "colors": {
+      "editor.foreground": "#be185d",
+      "editor.background": "#fdf2f8",
+      "editor.selectionBackground": "#ff9cc8",
+      "editor.lineHighlightBackground": "#ffdcf0",
+      "editorCursor.foreground": "#be185d",
+      "editorWhitespace.foreground": "#ff9cc8",
+      "editorIndentGuide.activeBackground": "#f472b6",
+      "editor.selectionHighlightBorder": "#ffdcf0"
+    }
+  }
+}

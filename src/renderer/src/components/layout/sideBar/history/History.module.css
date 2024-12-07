@@ -16,7 +16,7 @@
   .url {
     font-size: 0.78rem;
     font-weight: 500;
-    color: var(--color-4);
+    opacity: 0.7;
 
     max-width: 100%;
     white-space: nowrap;
@@ -27,7 +27,7 @@
 
 .date {
   font-size: 0.74rem;
-  color: var(--color-5);
+  opacity: 0.5;
 
   max-width: 100%;
   white-space: nowrap;

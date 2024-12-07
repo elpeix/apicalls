@@ -9,7 +9,7 @@
     overflow-y: auto;
     border: 1px solid var(--border-color);
     border-top: none;
-    background-color: var(--color-11);
+    background-color: var(--background-content);
 
     li {
       padding: 0.5rem;
@@ -17,7 +17,7 @@
       color: var(--base-color);
 
       &.selected {
-        background-color: var(--hover-color);
+        background-color: var(--hover-background-color);
       }
     }
   }

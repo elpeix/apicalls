@@ -7,6 +7,7 @@ import styles from './PreRequest.module.css'
 import Params from '../../../../base/Params/Params'
 import Editor from '../../../../base/Editor'
 import DataToCapture from './DataToCapture'
+import { Button } from '../../../../base/Buttons/Buttons'
 
 export default function PreRequestEditor({
   preRequest,
@@ -116,12 +117,8 @@ export default function PreRequestEditor({
           </label>
         </div>
         <div className={styles.right}>
-          <button className={styles.cancel} onClick={onClose}>
-            Cancel
-          </button>
-          <button className={styles.save} onClick={handleSave}>
-            Save
-          </button>
+          <Button.Cancel onClick={onClose}>Cancel</Button.Cancel>
+          <Button.Ok onClick={handleSave}>Save</Button.Ok>
         </div>
       </div>
     </div>

@@ -8,7 +8,6 @@
     font-size: 0.9rem;
     font-weight: 500;
     padding: 1rem;
-    background-color: var(--color-11);
     min-height: 5rem;
     flex: 1;
 
@@ -22,32 +21,12 @@
     flex-direction: row;
     justify-content: flex-end;
     gap: 0.5rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--dialog-border-color);
+    background-color: var(--dialog-footer-background-color);
     padding: 0.5rem;
 
     button {
       min-width: 6rem;
-    }
-
-    .cancel {
-      color: var(--color-5);
-    }
-
-    .ok {
-      background-color: var(--color-9);
-      color: var(--color-3);
-
-      &:hover {
-        background-color: var(--color-8);
-      }
-
-      &:focus {
-        color: var(--highlight-color);
-      }
-
-      &:active {
-        background-color: var(--color-8);
-      }
     }
   }
 }

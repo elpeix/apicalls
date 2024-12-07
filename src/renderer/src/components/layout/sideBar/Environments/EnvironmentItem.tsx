@@ -4,7 +4,6 @@ import Name from '../../../base/Name'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import Droppable from '../../../base/Droppable/Droppable'
-import { REMOVE_COLOR } from '../../../../constant'
 import { AppContext } from '../../../../context/AppContext'
 
 export default function EnvironmentItem({
@@ -92,7 +91,12 @@ export default function EnvironmentItem({
         <MenuElement icon="edit" title="Edit" onClick={() => selectEnvironment(environment)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(environment.id)} />
         <MenuSeparator />
-        <MenuElement icon="delete" title="Remove" color={REMOVE_COLOR} onClick={handleRemove} />
+        <MenuElement
+          icon="delete"
+          title="Remove"
+          className={styles.remove}
+          onClick={handleRemove}
+        />
       </Menu>
     </Droppable>
   )

@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react'
 import styles from './PopupBoxes.module.css'
+import { Button } from '../Buttons/Buttons'
 
 export default function Confirm({
   message,
@@ -31,10 +32,8 @@ export default function Confirm({
     <div className={styles.popupBox}>
       <div className={styles.message}>{message}</div>
       <div className={styles.buttons}>
-        <button className={styles.cancel} onClick={onCancel}>
-          Cancel
-        </button>
-        <button
+        <Button.Cancel onClick={onCancel}>Cancel</Button.Cancel>
+        <Button.Ok
           className={styles.ok}
           onClick={onConfirm}
           onKeyDown={handleKeyDown}
@@ -42,7 +41,7 @@ export default function Confirm({
           autoFocus
         >
           {confirmName || 'Ok'}
-        </button>
+        </Button.Ok>
       </div>
     </div>
   )

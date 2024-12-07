@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: com.francescrequesens.apicalls
 productName: api-calls
 directories:
   buildResources: build
@@ -33,7 +33,7 @@ linux:
     - AppImage
     - rpm
     - deb
-  maintainer: electronjs.org
+  maintainer: francescrequesens.com
   category: Utility
 rpm:
   depends:

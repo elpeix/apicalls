@@ -34,10 +34,12 @@ export default function FindRequests() {
     }
     const lcValue = (debouncedFilter as string).toLowerCase()
     const requestFiltered = allRequests.map((flatRequest) => {
-      if (queryFilter(flatRequest.filter.toLowerCase(), lcValue)) {
+      const filteredWeight = queryFilter(flatRequest.filter.toLowerCase(), lcValue)
+      if (filteredWeight > 0) {
         const preparedValues = highlight(flatRequest.filter, lcValue, flatRequest.filterPositions)
         return {
           ...flatRequest,
+          weight: filteredWeight,
           childNode: (
             <>
               <div className={styles.foundHead}>
@@ -63,7 +65,16 @@ export default function FindRequests() {
       }
       return null
     })
-    setFiltered(requestFiltered.filter((item) => item !== null))
+    setFiltered(
+      requestFiltered
+        .filter((item) => item !== null)
+        .sort((a, b) => {
+          if (a.weight === b.weight) {
+            return a.filter.localeCompare(b.filter)
+          }
+          return b.weight - a.weight
+        })
+    )
   }, [debouncedFilter, allRequests])
 
   const getAllFlatRequestsWithNode = (flatRequests: FlatRequest[]): FlatRequestWithNode[] => {

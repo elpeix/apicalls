@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styles from './PopupBoxes.module.css'
+import { Button } from '../Buttons/Buttons'
 
 export default function Prompt({
   message,
@@ -42,12 +43,12 @@ export default function Prompt({
         />
       </div>
       <div className={styles.buttons}>
-        <button className={styles.cancel} onClick={handleCancel}>
+        <Button.Cancel className={styles.cancel} onClick={handleCancel}>
           Cancel
-        </button>
-        <button className={styles.ok} onClick={handleOk}>
+        </Button.Cancel>
+        <Button.Ok className={styles.ok} onClick={handleOk}>
           {confirmName || 'Ok'}
-        </button>
+        </Button.Ok>
       </div>
     </div>
   )

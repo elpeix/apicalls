@@ -215,6 +215,12 @@ type AppSettingsHookType = {
   settings: AppSettingsType | null
   save: (settings: AppSettingsType) => void
   clear: () => void
+  themes: Map<string, AppTheme>
+  getEditorTheme: () => {
+    name: string
+    mode: string
+    data: data
+  }
 }
 
 type RequestItem = {
@@ -266,11 +272,20 @@ type RequestContestType = {
   setOpenSaveAs?: (openSaveAs: boolean) => void
 }
 
-type Theme = 'light' | 'dark' | 'system'
+type AppTheme = {
+  name: string
+  mode: string
+  colors: {
+    [key: string]: string
+  }
+  editor: {
+    base: string
+  }
+}
 
 type AppSettingsRequestView = 'horizontal' | 'vertical'
 type AppSettingsType = {
-  theme: Theme
+  theme: string // TODO: AppTheme
   proxy: string
   maxHistory: number
   timeout: number

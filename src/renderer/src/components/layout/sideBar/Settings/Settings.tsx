@@ -4,12 +4,33 @@ import styles from './Settings.module.css'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
 
+const initOpThemes = [
+  { label: 'Auto', value: 'system', mode: 'system' },
+  { label: 'Light', value: 'light', mode: 'light' },
+  { label: 'Dark', value: 'dark', mode: 'dark' },
+  { label: 'High Contrast Light', value: 'hc-light', mode: 'high contrast' },
+  { label: 'High Contrast Dark', value: 'hc-dark', mode: 'high contrast' }
+]
+
 export default function Settings() {
   const { application, appSettings } = useContext(AppContext)
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
+  const [opThemes, setOpThemes] =
+    useState<{ label: string; value: string; mode: string }[]>(initOpThemes)
 
   useEffect(() => {
     setSettings(appSettings?.settings || null)
+    const themes = appSettings?.themes || new Map()
+    const opThemes = [...initOpThemes]
+    themes.forEach((theme, key) => {
+      const opTheme = {
+        label: theme.name,
+        value: key,
+        mode: theme.mode
+      }
+      opThemes.push(opTheme)
+    })
+    setOpThemes([...opThemes])
   }, [appSettings?.settings])
 
   const saveSettings = () => {
@@ -30,10 +51,8 @@ export default function Settings() {
 
   if (!settings) return null
 
-  const getThemeName = (value: string): Theme => {
-    const allowed = ['light', 'dark', 'system']
-    if (!allowed.includes(value)) return 'system'
-    return value as Theme
+  const getThemeName = (value: string): string => {
+    return value
   }
 
   const getRequestView = (value: string): AppSettingsRequestView => {
@@ -41,21 +60,6 @@ export default function Settings() {
     if (!allowed.includes(value)) return 'horizontal'
     return value as AppSettingsRequestView
   }
-
-  const options = [
-    {
-      value: 'light',
-      label: 'Light'
-    },
-    {
-      value: 'dark',
-      label: 'Dark'
-    },
-    {
-      value: 'system',
-      label: 'Auto'
-    }
-  ]
 
   const requestViewOptions = [
     {
@@ -80,7 +84,8 @@ export default function Settings() {
             <SimpleSelect
               value={settings.theme}
               onChange={(e) => setSettings({ ...settings, theme: getThemeName(e.target.value) })}
-              options={options}
+              options={opThemes}
+              groupBy="mode"
             />
           </div>
           <div className={styles.group}>
@@ -142,7 +147,7 @@ export default function Settings() {
 
           <div className={styles.group}>
             <button onClick={saveSettings}>Save</button>
-            <a className={styles.clearSettings} onClick={handleClearSettings}>
+            <a className={`button-text ${styles.clearSettings}`} onClick={handleClearSettings}>
               Clear settings
             </a>
           </div>

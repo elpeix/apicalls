@@ -12,11 +12,11 @@
 
 .tabsList {
   list-style-type: none;
-  background-color: var(--color-11);
-  border-top: 1px solid var(--border-color);
+  background-color: var(--search-list-background-color);
+  border-top: 1px solid var(--search-list-border-color);
   max-height: 20rem;
   overflow-y: auto;
-  overflowi-x: hidden;
+  overflow-x: hidden;
 
   li {
     padding: 0.5rem;
@@ -24,14 +24,15 @@
     user-select: none;
     display: flex;
     flex-direction: column;
+    color: var(--search-list-item-color);
     gap: 0.4rem;
 
     &:hover {
-      background-color: var(--hover-color);
+      background-color: var(--search-list-item-hover-color);
     }
     &:active,
     &.selected {
-      background-color: var(--accent-color);
+      background-color: var(--search-list-item-active-color);
     }
 
     .tabName {
@@ -47,7 +48,7 @@
       font-size: 0.66rem;
 
       .tabRequestUrl {
-        color: var(--color-5);
+        color: var(--search-list-item-color-2);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -58,7 +59,7 @@
 
 .noResults {
   padding: 0.4rem;
-  color: var(--color-6);
+  color: var(--search-list-no-results-color);
   font-style: italic;
   user-select: none;
 }

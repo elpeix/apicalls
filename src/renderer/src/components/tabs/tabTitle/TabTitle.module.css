@@ -2,15 +2,16 @@
   font-size: 13px;
   padding: 0;
   border-right: 1px solid var(--border-color);
+  min-width: 6rem;
 
   .content {
     display: block;
     display: flex;
     flex-direction: row;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.1s ease-in-out;
 
     &:hover {
-      background-color: var(--color-9);
+      background-color: var(--tab-hover-background-color);
       cursor: pointer;
 
       .close {
@@ -38,7 +39,7 @@
   }
 
   .close {
-    color: var(--color-1);
+    color: var(--base-color);
     padding: 0.5rem 0.5rem;
     visibility: hidden;
   }
@@ -73,21 +74,10 @@
       padding-left: 1.2rem;
     }
   }
-
-  .input {
-    background: var(--color-9);
-    font-weight: 500;
-    font-size: 12px;
-    color: var(--color-1);
-    border: 1px solid var(--highlight-color);
-    margin: 0.2rem 0.3rem;
-    padding: 0.15rem 0.4rem 0.25rem;
-    width: 6rem;
-  }
 }
 
 .tooltip {
-  background: var(--color-9);
+  background: var(--tab-hover-background-color);
   border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -103,8 +93,5 @@
 
   .collection {
     font-weight: bold;
-  }
-
-  .request {
   }
 }

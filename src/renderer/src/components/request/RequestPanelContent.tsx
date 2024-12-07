@@ -13,27 +13,26 @@ import { AppContext } from '../../context/AppContext'
 export default function RequestPanelContent() {
   const { appSettings } = useContext(AppContext)
   const { isActive, request, fetching, save, setOpenSaveAs } = useContext(RequestContext)
-  const [requestView, setRequestView] = useState<AppSettingsRequestView>(
+  const [gutterMode, setGutterMode] = useState<'horizontal' | 'vertical'>(
+    appSettings?.settings?.requestView || 'horizontal'
+  )
+  const [panelView, setPanelView] = useState<AppSettingsRequestView>(
     appSettings?.settings?.requestView
       ? appSettings?.settings?.requestView === 'horizontal'
         ? 'vertical'
         : 'horizontal'
       : 'vertical'
   )
-  const [gutterMode, setGutterMode] = useState<'horizontal' | 'vertical'>(
-    appSettings?.settings?.requestView || 'horizontal'
-  )
 
   useEffect(() => {
     if (!appSettings) return
-    setRequestView(
-      appSettings?.settings?.requestView
-        ? appSettings?.settings?.requestView === 'horizontal'
-          ? 'vertical'
-          : 'horizontal'
-        : 'vertical'
-    )
-    setGutterMode(appSettings.settings?.requestView || 'horizontal')
+    if (appSettings?.settings?.requestView === 'horizontal') {
+      setGutterMode('horizontal')
+      setPanelView('vertical')
+    } else {
+      setGutterMode('vertical')
+      setPanelView('horizontal')
+    }
   }, [appSettings])
 
   const requestPanel = useRef<ImperativePanelHandle>(null)
@@ -116,10 +115,10 @@ export default function RequestPanelContent() {
       <RequestBar />
       <PanelGroup direction="vertical">
         <Panel>
-          <PanelGroup direction={requestView}>
+          <PanelGroup direction={panelView} autoSaveId="requestPanelLayout">
             <Panel
-              defaultSize={20}
-              minSize={10}
+              defaultSize={30}
+              minSize={gutterMode === 'horizontal' ? 10 : 25}
               maxSize={90}
               collapsible={true}
               ref={requestPanel}

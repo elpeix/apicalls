@@ -10,7 +10,7 @@
       inset: 0;
       width: 100%;
       height: 0;
-      border-top: 2px solid var(--color-5);
+      border-top: 2px solid var(--droppable-color);
     }
 
     &:has(.dragOver) {
@@ -23,7 +23,7 @@
       height: 100%;
       width: 0;
       border-top: none;
-      border-left: 2px solid var(--color-5);
+      border-left: 2px solid var(--droppable-color);
     }
   }
 }
