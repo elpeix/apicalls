@@ -7,7 +7,9 @@ import { AppContext } from '../../../../context/AppContext'
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
   { label: 'Light', value: 'light', mode: 'light' },
-  { label: 'Dark', value: 'dark', mode: 'dark' }
+  { label: 'Dark', value: 'dark', mode: 'dark' },
+  { label: 'High Contrast Light', value: 'hc-light', mode: 'high contrast' },
+  { label: 'High Contrast Dark', value: 'hc-dark', mode: 'high contrast' }
 ]
 
 export default function Settings() {
@@ -83,6 +85,7 @@ export default function Settings() {
               value={settings.theme}
               onChange={(e) => setSettings({ ...settings, theme: getThemeName(e.target.value) })}
               options={opThemes}
+              groupBy="mode"
             />
           </div>
           <div className={styles.group}>
