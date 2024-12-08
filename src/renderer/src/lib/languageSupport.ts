@@ -28,4 +28,4 @@ const isJson = (str: string) => {
   return true
 }
 const isXml = (source: string) => source.startsWith('<?xml')
-const isHtml = (source: string) => source.startsWith('<!DOCTYPE html')
+const isHtml = (source: string) => source.toLowerCase().startsWith('<!doctype html')
