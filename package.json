@@ -1,6 +1,6 @@
 {
   "name": "api-calls",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "An API calls app",
   "type": "module",
   "main": "./out/main/index.js",
@@ -24,6 +24,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@monaco-editor/react": "^4.6.0",
+    "dompurify": "^3.2.2",
     "electron-store": "^10.0.0",
     "react-resizable-panels": "^2.1.7",
     "react-select": "^5.8.3",

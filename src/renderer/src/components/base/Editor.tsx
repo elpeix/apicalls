@@ -46,7 +46,6 @@ export default function Editor({
       return
     }
     const editorThemeMode = editorTheme.mode
-    console.log('editorThemeMode', editorThemeMode)
     if (editorThemeMode === 'hc-light' || editorThemeMode === 'hc-black') {
       setThemeData(null)
       setTheme(editorThemeMode)
