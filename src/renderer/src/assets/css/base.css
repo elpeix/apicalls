@@ -21,7 +21,7 @@
   --transparent-red: rgba(223, 48, 48, 0.1);
   --transparent-cyan: rgba(0, 230, 255, 0.2);
   --transparent-bg: rgba(0, 0, 0, 0.5);
-  
+
   --background-base: var(--background-1);
   --background-content: var(--background-0);
   --base-color: var(--foreground-0);
@@ -53,12 +53,13 @@
   --input-background-color: transparent;
   --input-color: var(--foreground-2);
   --input-placeholder-color: var(--content-0);
-  --input-border-color: var(--border-color);
+  --input-border-color: var(--content-1);
   --input-hover-background-color: var(--background-1);
   --input-hover-color: var(--foreground-0);
   --input-hover-border-color: var(--content-1);
   --input-disabled-color: var(--content-0);
   --input-undefined-color: var(--content-0);
+  --input-select-background-color: var(--input-hover-background-color);
 
   --button-background-color: transparent;
   --button-color: var(--foreground-0);
@@ -147,7 +148,7 @@
   --response-no-content-background-color: var(--background-2);
   --loading-color: var(--content-0);
   --droppable-color: var(--content-0);
-  --console-background-color: var(--background-1);
+  --console-background-color: var(--background-0);
   --console-color: var(--content-0);
 
   --select-arrow: var(--base-color);
