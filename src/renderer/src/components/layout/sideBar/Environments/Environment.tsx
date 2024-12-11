@@ -89,6 +89,7 @@ export default function Environment({
           name={env.name}
           editMode={editingName}
           className={styles.title}
+          editingClassName={styles.editing}
           update={changeName}
           onBlur={() => setEditingName(false)}
           editOnDoubleClick={true}

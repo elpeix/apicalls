@@ -37,6 +37,10 @@
     &:hover .checkbox input[type='checkbox'] {
       border-color: var(--input-border-color);
     }
+
+    &:has(.editing) .checkbox input[type='checkbox'] {
+      visibility: hidden;
+    }
   }
 
   .title {

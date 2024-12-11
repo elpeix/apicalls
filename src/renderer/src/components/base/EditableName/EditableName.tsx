@@ -9,6 +9,7 @@ export default function EditableName({
   placeholder = 'Name',
   className = '',
   update,
+  editingClassName = '',
   onBlur,
   editOnDoubleClick
 }: {
@@ -16,6 +17,7 @@ export default function EditableName({
   editMode: boolean
   placeholder?: string
   className?: string
+  editingClassName?: string
   update: (name: string) => void
   onBlur?: () => void
   editOnDoubleClick?: boolean
@@ -86,7 +88,7 @@ export default function EditableName({
 
   return (
     <div
-      className={`${styles.name} ${className} ${editingName && styles.editable}`}
+      className={`${styles.name} ${className} ${editingName && `${styles.editable} ${editingClassName}`}`}
       onDoubleClick={editName}
     >
       {editingName && (
