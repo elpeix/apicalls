@@ -58,7 +58,7 @@ export default function Editor({
       monacoEditor.editor.setTheme(editorTheme.name)
       setTheme(editorTheme.name)
     } else {
-      setTheme(editorTheme.mode === 'dark' ? 'vs-dark' : 'vs')
+      setTheme(editorTheme.mode === 'vs-dark' ? 'vs-dark' : 'vs')
     }
   }, [appSettings])
 

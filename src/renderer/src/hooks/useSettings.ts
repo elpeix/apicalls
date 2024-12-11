@@ -72,17 +72,18 @@ export function useSettings(): AppSettingsHookType {
 
   const getEditorTheme = (): { name: string; mode: string; data: object } => {
     if (!settings || settings.theme === 'system') {
-      const themeName = mode === DARK ? 'vs-dark' : 'vs-light'
-      return { name: themeName, mode, data: {} }
+      const theme = mode === DARK ? 'vs-dark' : 'vs'
+      return { name: theme, mode: theme, data: {} }
     }
     if (Object.keys(defaultEditorThemes).includes(settings.theme)) {
       return {
-        name: settings.theme,
+        name: defaultEditorThemes[settings.theme],
         data: {},
         mode: defaultEditorThemes[settings.theme]
       }
     }
     const theme = themes.get(settings.theme)
+
     return {
       name: settings?.theme,
       data: theme?.editor || {},
