@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { VERSION } from '../../../../../../lib/ipcChannels'
 
-function Versions() {
+export default function Versions() {
   const [versions] = useState(window.electron?.process.versions)
   const [appVersion, setAppVersion] = useState('')
 
@@ -19,23 +19,31 @@ function Versions() {
 
   return (
     <ul className="versions">
-      <li className="app-version">App v{appVersion}</li>
-      <li className="electron-version">Electron v{versions.electron}</li>
-      <li className="chrome-version">Chromium v{versions.chrome}</li>
-      <li className="node-version">Node v{versions.node}</li>
-      <li className="v8-version">V8 v{versions.v8}</li>
-      <li className="icons">
-        Icons:
-        <a
-          href="https://www.svgrepo.com/collection/solar-outline-icons/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Solar Outline Icons Collection
-        </a>
-      </li>
+      <VersionValue label="App" value={appVersion} />
+      <VersionValue label="Electron" value={versions.electron} />
+      <VersionValue label="Chromium" value={versions.chrome} />
+      <VersionValue label="Node" value={versions.node} />
+      <VersionValue label="V8" value={versions.v8} />
+      <VersionValue
+        label="Icons"
+        value="Solar Outline Icons"
+        link="https://www.svgrepo.com/collection/solar-outline-icons/"
+      />
     </ul>
   )
 }
 
-export default Versions
+function VersionValue({ label, value, link }: { label: string; value: string; link?: string }) {
+  return (
+    <li>
+      <strong>{label}</strong>
+      {` `}
+      {link && (
+        <a href={link} target="_blank" rel="noreferrer">
+          {value}
+        </a>
+      )}
+      {!link && value}
+    </li>
+  )
+}
