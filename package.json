@@ -23,12 +23,12 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
-    "@monaco-editor/react": "^4.6.0",
+    "@monaco-editor/react": "^4.7.0-rc.0",
     "dompurify": "^3.2.2",
     "electron-store": "^10.0.0",
     "react-resizable-panels": "^2.1.7",
-    "react-select": "^5.8.3",
-    "react-tabs": "^6.0.2",
+    "react-select": "^5.9.0",
+    "react-tabs": "^6.1.0",
     "yaml": "^2.6.0"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.15.0",
-    "@types/react-dom": "^18.3.1",
+    "@types/react-dom": "^19.0.2",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@vitejs/plugin-react": "^4.3.3",
     "electron": "^33.2.0",
@@ -46,8 +46,8 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "globals": "^15.12.0",
     "prettier": "^3.3.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.11",
     "vitest": "^2.1.5"
