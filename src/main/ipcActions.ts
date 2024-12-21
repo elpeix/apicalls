@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron'
+import { app, ipcMain, IpcMainEvent } from 'electron'
 import { restCall, restCancel } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
@@ -31,25 +31,48 @@ ipcMain.on(SETTINGS.toggleMenu, (_, showMenu: boolean) => {
   mainWindow?.setMenuBarVisibility(showMenu)
 })
 
+const requests = new Map<
+  Identifier,
+  (id: Identifier, callRequest: CallRequest, event: IpcMainEvent) => void
+>()
 ipcMain.on(REQUEST.call, async (event, callRequest: CallRequest) => {
+  if (!callRequest.id) {
+    event.reply(REQUEST.failure, {
+      message: 'Request ID is required',
+      request: callRequest,
+      response: null
+    } as CallResponseFailure)
+  }
+  const id = callRequest.id as Identifier
+  if (requests.has(id)) {
+    event.reply(getChannel(REQUEST.cancel, id), id)
+    requests.delete(id)
+  }
+  requests.set(id, requestHandler)
+  requests.get(id)?.(id, callRequest, event)
+})
+
+const requestHandler = async (id: Identifier, callRequest: CallRequest, event: IpcMainEvent) => {
   try {
-    const response = await restCall(callRequest)
-    event.reply(REQUEST.response, response)
+    const response = await restCall(id, callRequest)
+    event.reply(getChannel(REQUEST.response, id), response)
   } catch (error: unknown) {
     const restCallerError = error as RestCallerError
-    event.reply(REQUEST.failure, {
+    event.reply(getChannel(REQUEST.failure, id), {
       message: restCallerError.message,
       request: restCallerError.request,
       response: restCallerError.response
     } as CallResponseFailure)
   }
-})
+}
 
 ipcMain.on(REQUEST.cancel, (event, requestId: Identifier) => {
-  if (restCancel(requestId)) {
-    event.reply(REQUEST.cancelled, requestId)
+  if (requests.has(requestId) && restCancel(requestId)) {
+    event.reply(getChannel(REQUEST.cancelled, requestId), requestId)
   }
 })
+
+const getChannel = (channel: string, id: Identifier = ''): string => `${channel}-${id}`
 
 ipcMain.on(VERSION.get, (event) => event.reply(VERSION.getSuccess, app.getVersion()))
 

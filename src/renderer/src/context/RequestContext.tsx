@@ -10,7 +10,16 @@ import {
 import { useConsole } from '../hooks/useConsole'
 import { getValueFromPath } from '../lib/utils'
 
-export const RequestContext = createContext<RequestContestType>({
+const responseInitialValue: RequestContextResponseType = {
+  body: '',
+  headers: [],
+  cookies: [],
+  status: 0,
+  time: 0,
+  size: 0
+}
+
+export const RequestContext = createContext<RequestContextType>({
   path: [],
   isActive: false,
   collectionId: null,
@@ -18,14 +27,7 @@ export const RequestContext = createContext<RequestContestType>({
   fetching: false,
   fetched: false,
   fetchError: '',
-  response: {
-    body: '',
-    headers: [],
-    cookies: [],
-    status: 0,
-    time: 0,
-    size: 0
-  },
+  response: responseInitialValue,
   save: () => {},
   requestConsole: null
 })
@@ -72,13 +74,7 @@ export default function RequestContextProvider({
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
   const [fetchError, setFetchError] = useState('')
-
-  const [responseBody, setResponseBody] = useState('')
-  const [responseHeaders, setResponseHeaders] = useState<KeyValue[]>([])
-  const [responseCookies, setResponseCookies] = useState<string[][]>([])
-  const [responseStatus, setResponseStatus] = useState(0)
-  const [responseTime, setResponseTime] = useState(0)
-  const [responseSize, setResponseSize] = useState(0)
+  const [response, setResponse] = useState<RequestContextResponseType>(responseInitialValue)
   const requestConsole = useConsole()
 
   useEffect(() => {
@@ -100,10 +96,8 @@ export default function RequestContextProvider({
       setLaunchRequest(false)
       sendRequest()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     tabId,
-    tabs,
     changed,
     saved,
     definedRequest,
@@ -115,6 +109,12 @@ export default function RequestContextProvider({
     requestQueryParams,
     launchRequest
   ])
+
+  const CHANNEL_CALL = REQUEST.call
+  const CHANNEL_CANCEL = REQUEST.cancel
+  const CHANNEL_RESPONSE = `${REQUEST.response}-${tabId}`
+  const CHANNEL_FAILURE = `${REQUEST.failure}-${tabId}`
+  const CHANNEL_CANCELLED = `${REQUEST.cancelled}-${tabId}`
 
   useEffect(() => {
     if (!collectionId || !collections) return
@@ -130,7 +130,7 @@ export default function RequestContextProvider({
   }
 
   const cancel = () => {
-    window.electron?.ipcRenderer.send(REQUEST.cancel, tabId)
+    window.electron?.ipcRenderer.send(CHANNEL_CANCEL, tabId)
   }
 
   const sendRequest = () => {
@@ -159,15 +159,19 @@ export default function RequestContextProvider({
       queryParams: requestQueryParams,
       body: requestBody
     }
-    window.electron?.ipcRenderer.send(REQUEST.call, callApiRequest)
-    window.electron?.ipcRenderer.on(REQUEST.response, (_: unknown, callResponse: CallResponse) => {
+    window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
+    window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       setFetched(true)
-      setResponseTime(callResponse.responseTime.all)
-      setResponseStatus(callResponse.status.code)
-      setResponseSize(callResponse.contentLength)
+      setResponse({
+        body: callResponse.result || '',
+        headers: callResponse.responseHeaders,
+        cookies: [],
+        time: callResponse.responseTime.all,
+        status: callResponse.status.code,
+        size: callResponse.contentLength
+      })
       setFetchedHeaders(callResponse.responseHeaders)
-      setResponseBody(callResponse.result || '')
       setCookies(callResponse.responseHeaders)
       requestConsole?.addAll([
         ...requestLogs,
@@ -181,9 +185,9 @@ export default function RequestContextProvider({
         }
       ])
       setFetching(false)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.failure)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.response)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
     })
 
     const getFullUrl = () => {
@@ -195,7 +199,7 @@ export default function RequestContextProvider({
     }
 
     window.electron?.ipcRenderer.on(
-      REQUEST.failure,
+      CHANNEL_FAILURE,
       (_: unknown, response: CallResponseFailure) => {
         setFetching(false)
         setFetched(true)
@@ -211,13 +215,13 @@ export default function RequestContextProvider({
             failure: response
           }
         ])
-        window.electron?.ipcRenderer.removeAllListeners(REQUEST.failure)
-        window.electron?.ipcRenderer.removeAllListeners(REQUEST.response)
-        window.electron?.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+        window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+        window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+        window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
       }
     )
 
-    window.electron?.ipcRenderer.on(REQUEST.cancelled, (_: unknown, requestId: number) => {
+    window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: number) => {
       if (requestId !== tabId) return
       setFetching(false)
       setFetched(true)
@@ -236,9 +240,9 @@ export default function RequestContextProvider({
           } as CallResponseFailure
         }
       ])
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.failure)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.response)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
     })
   }
 
@@ -266,8 +270,8 @@ export default function RequestContextProvider({
       queryParams: request.queryParams,
       body: request.body
     }
-    window.electron?.ipcRenderer.send(REQUEST.call, callApiRequest)
-    window.electron?.ipcRenderer.on(REQUEST.response, (_: unknown, callResponse: CallResponse) => {
+    window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
+    window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       try {
         preRequestData.dataToCapture.forEach((dataToCapture) => {
@@ -285,13 +289,13 @@ export default function RequestContextProvider({
         request: callApiRequest,
         response: callResponse
       }
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.failure)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.response)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
       sendMainRequest([requestLog])
     })
     window.electron?.ipcRenderer.on(
-      REQUEST.failure,
+      CHANNEL_FAILURE,
       (_: unknown, response: CallResponseFailure) => {
         setFetching(false)
         setFetched(true)
@@ -304,13 +308,13 @@ export default function RequestContextProvider({
           request: callApiRequest,
           failure: response
         })
-        window.electron?.ipcRenderer.removeAllListeners(REQUEST.failure)
-        window.electron?.ipcRenderer.removeAllListeners(REQUEST.response)
-        window.electron?.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+        window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+        window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+        window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
       }
     )
 
-    window.electron?.ipcRenderer.on(REQUEST.cancelled, (_: unknown, requestId: number) => {
+    window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: number) => {
       if (requestId !== tabId) return
       setFetching(false)
       setFetched(true)
@@ -326,9 +330,9 @@ export default function RequestContextProvider({
           message: 'Request was cancelled'
         } as CallResponseFailure
       })
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.failure)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.response)
-      window.electron?.ipcRenderer.removeAllListeners(REQUEST.cancelled)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
     })
   }
 
@@ -385,7 +389,6 @@ export default function RequestContextProvider({
   const saveRequest = () => {
     if (!collections) return
     if (!collectionId) {
-      console.error('No collection selected')
       setOpenSaveAs(true)
       return
     }
@@ -525,12 +528,11 @@ export default function RequestContextProvider({
   }
 
   const setFetchedHeaders = (headers: KeyValue[]) => {
-    setResponseHeaders(headers)
     const cookies = headers
       .filter((header: KeyValue) => header.name === 'set-cookie')
       .map((cookie) => cookie.value.split(';'))
       .map((cookie) => cookie[0].split('='))
-    setResponseCookies(cookies)
+    setResponse((prev: RequestContextResponseType) => ({ ...prev, headers, cookies }))
   }
 
   const setPathParams = (pathParams: KeyValue[]) => {
@@ -632,14 +634,7 @@ export default function RequestContextProvider({
     fetching,
     fetched,
     fetchError,
-    response: {
-      body: responseBody,
-      headers: responseHeaders,
-      cookies: responseCookies,
-      status: responseStatus,
-      time: responseTime,
-      size: responseSize
-    },
+    response: response,
     save: saveRequest,
     saved,
     requestConsole,

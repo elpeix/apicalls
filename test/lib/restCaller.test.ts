@@ -34,7 +34,7 @@ describe('restCaller', () => {
       headers: headers,
       text: async () => RESULT
     })
-    const response = await restCall({
+    const response = await restCall(1, {
       url: 'https://apicalls.dev/get',
       method: 'GET',
       queryParams: [{ name: 'name', value: 'John' }],
@@ -78,7 +78,7 @@ describe('restCaller', () => {
 
     stubFetch.mockRejectedValue(new Error('Network error'))
     try {
-      await restCall({ url: 'https://apicalls.dev/get' })
+      await restCall(1, { url: 'https://apicalls.dev/get' })
       assert.fail('should throw an error')
     } catch (error) {
       expect(error).toBeInstanceOf(Error)
@@ -110,7 +110,7 @@ describe('restCaller', () => {
     )
 
     try {
-      await restCall({
+      await restCall(1, {
         url: 'https://apicalls.dev/post',
         method: 'POST',
         queryParams: [],

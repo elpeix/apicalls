@@ -249,7 +249,15 @@ type RequestContextRequestType = {
   urlIsValid: ({ url }: { url?: string }) => boolean
 }
 
-type RequestContestType = {
+type RequestContextResponseType = {
+  body: string
+  headers: KeyValue[]
+  cookies: string[][]
+  status: number
+  time: number
+  size: number
+}
+type RequestContextType = {
   path: PathItem[]
   isActive: boolean
   collectionId?: Identifier | null
@@ -257,14 +265,7 @@ type RequestContestType = {
   fetching: boolean
   fetched: boolean
   fetchError: string
-  response: {
-    body: string
-    headers: KeyValue[]
-    cookies: string[][]
-    status: number
-    time: number
-    size: number
-  }
+  response: RequestContextResponseType
   save: () => void
   requestConsole?: ConsoleHookType | null
   tabId?: Identifier
@@ -320,6 +321,7 @@ type CallResponse = {
 }
 
 type CallResponseFailure = {
+  requestId?: Identifier
   message: string
   request: CallRequest
   response: CallResponse | null
