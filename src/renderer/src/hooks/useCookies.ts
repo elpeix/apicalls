@@ -1,48 +1,31 @@
 import { useState } from 'react'
+import { clearCookies, filterCookies, getCookieValues, updateCookies } from '../lib/cookies'
 
 export function useCookies(): CookiesHookType {
-  const [items, setItems] = useState<OriginCookies[]>([])
+  const [cookies, setCookies] = useState<Cookie[]>([])
 
-  const upsert = (origin: string, cookies: string[]) => {
-    let originCookies = get(origin)
-    if (originCookies) {
-      update(origin, cookies)
-    } else {
-      originCookies = { origin, cookies }
-      updateOriginCookies([...items, originCookies])
-    }
+  const upsert = (headers: KeyValue[]) => {
+    setCookies((cookies) => updateCookies(cookies, headers))
   }
 
-  const update = (origin: string, cookies: string[]) => {
-    updateOriginCookies(
-      items.map((originCookies) => {
-        if (originCookies.origin === origin) {
-          return { origin, cookies }
-        }
-        return originCookies
-      })
-    )
+  const remove = (url: string) => {
+    setCookies((cookies) => clearCookies(url, cookies))
   }
 
-  const remove = (origin: string) => {
-    updateOriginCookies(items.filter((originCookies) => originCookies.origin !== origin))
-  }
+  const clear = () => setCookies([])
 
-  const updateOriginCookies = (newOriginCookies: OriginCookies[]) => {
-    setItems([...newOriginCookies])
-  }
+  const getAll = () => cookies
 
-  const clear = () => updateOriginCookies([])
+  const get = (url: string) => filterCookies(url, cookies)
 
-  const getAll = () => items
-
-  const get = (origin: string) => items.find((originCookies) => originCookies.origin === origin)
+  const stringify = (url: string) => getCookieValues(url, cookies)
 
   return {
     upsert,
     remove,
     clear,
     getAll,
-    get
+    get,
+    stringify
   }
 }

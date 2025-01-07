@@ -447,10 +447,9 @@ export default function RequestContextProvider({
       })
     }
     if (settings?.settings?.manageCookies) {
-      const origin = getOrigin(getValue(url))
-      const originCookies = cookies?.get(origin)
+      const originCookies = cookies?.stringify(getValue(url))
       if (originCookies) {
-        headers['Cookie'] = originCookies.cookies.join('; ')
+        headers['Cookie'] = originCookies
       }
     }
     return headers
@@ -458,21 +457,8 @@ export default function RequestContextProvider({
 
   const setCookies = (headers: KeyValue[]) => {
     if (settings?.settings?.manageCookies) {
-      const origin = getOrigin(getValue(requestUrl))
-      const responseCookies = headers
-        .filter((header) => header.name === 'set-cookie')
-        .map((header) => header.value.split(';'))
-        .map((cookie) => cookie[0])
-      if (!responseCookies) {
-        return
-      }
-      cookies?.upsert(origin, responseCookies)
+      cookies?.upsert(headers)
     }
-  }
-
-  const getOrigin = (url: string): string => {
-    const urlObject = new URL(url)
-    return `${urlObject.origin}`
   }
 
   const setMethod = (method: Method) => {

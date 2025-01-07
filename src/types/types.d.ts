@@ -198,17 +198,28 @@ type MenuHookType = {
   setExpanded: (expanded: boolean) => void
 }
 
+type Cookie = {
+  name: string
+  value: string
+  domain: string
+  expires: Date
+  httpOnly: boolean
+  path: string
+  sameSite: string
+}
+
 type OriginCookies = {
   origin: string
-  cookies: string[]
+  cookies: Cookie[]
 }
 
 type CookiesHookType = {
-  upsert: (origin: string, cookies: string[]) => void
-  remove: (origin: string) => void
+  upsert: (headers: KeyValue[]) => void
+  remove: (url: string) => void
   clear: () => void
-  getAll: () => OriginCookies[]
-  get: (origin: string) => OriginCookies | undefined
+  getAll: () => Cookies[]
+  get: (url: string) => Cookies[]
+  stringify: (url: string) => string
 }
 
 type AppSettingsHookType = {
