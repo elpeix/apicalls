@@ -19,11 +19,11 @@ export default function Cookies() {
 
   const handleUpdateGroup = (group: string, groupCookies: Cookie[]) => {
     cookies.updateGroup(group, groupCookies)
-    // setGroupedCookies(cookies.getGrouped())
   }
 
   const handleRemoveGroup = (group: string) => {
     cookies.remove(group)
+    setSelectedGroup('')
     setGroups(cookies.getGroups())
     setGroupedCookies(cookies.getGrouped())
   }

@@ -25,6 +25,7 @@ function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
+      contextIsolation: true,
       spellcheck: false
     }
   })
