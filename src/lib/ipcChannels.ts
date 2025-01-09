@@ -41,6 +41,12 @@ export const ENVIRONMENTS = {
   getFailure: 'environments:get-failure'
 }
 
+export const COOKIES = {
+  get: 'cookies:get',
+  loaded: 'cookies:loaded',
+  set: 'cookies:set'
+}
+
 export const ACTIONS = {
   newTab: 'action:new-tab',
   nextTab: 'action:next-tab',

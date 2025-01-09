@@ -110,5 +110,6 @@ import './ipcActions'
 import './ipcCollectionActions'
 import './ipcEnvironmentActions'
 import './ipcTabsActions'
+import './ipcCookiesActions'
 
 export { mainWindow }

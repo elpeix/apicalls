@@ -4,7 +4,7 @@ import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
 import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
-import { COLLECTIONS, ENVIRONMENTS, TABS } from '../../../lib/ipcChannels'
+import { COLLECTIONS, COOKIES, ENVIRONMENTS, TABS } from '../../../lib/ipcChannels'
 import { useCookies } from '../hooks/useCookies'
 import { useSettings as useAppSettings } from '../hooks/useSettings'
 import Dialog from '../components/base/dialog/Dialog'
@@ -32,19 +32,20 @@ export const AppContext = createContext<{
 })
 
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
+  const appSettings = useAppSettings()
   const menu = useMenu()
   const tabs = useTabs([])
   const collections = useCollections()
   const environments = useEnvironments()
   const history = useHistory()
   const cookies = useCookies()
-  const appSettings = useAppSettings()
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(ENVIRONMENTS.get)
     ipcRenderer?.send(COLLECTIONS.get)
     ipcRenderer?.send(TABS.load)
+    ipcRenderer?.send(COOKIES.get)
 
     ipcRenderer?.on(ENVIRONMENTS.updated, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
@@ -58,10 +59,15 @@ export default function AppContextProvider({ children }: { children: React.React
       tabs?.setTabs(tabList)
     })
 
+    ipcRenderer?.on(COOKIES.loaded, (_: unknown, cookieList: Cookie[]) => {
+      cookies?.set(cookieList)
+    })
+
     return () => {
       ipcRenderer?.removeAllListeners(ENVIRONMENTS.updated)
       ipcRenderer?.removeAllListeners(COLLECTIONS.updated)
       ipcRenderer?.removeAllListeners(TABS.loadSuccess)
+      ipcRenderer?.removeAllListeners(COOKIES.loaded)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -6,6 +6,7 @@ export function useMenu(): MenuHookType {
     { id: 'collection', title: 'Collections' },
     { id: 'environment', title: 'Environments' },
     { id: 'history', title: 'History' },
+    { id: 'cookies', title: 'Cookies' },
     { id: '-', spacer: true },
     { id: 'settings', title: 'Settings' }
   ]

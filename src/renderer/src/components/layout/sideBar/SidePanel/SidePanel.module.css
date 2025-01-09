@@ -31,6 +31,7 @@
       &.collection > .collections,
       &.environment > .environment,
       &.history > .history,
+      &.cookies > .cookies,
       &.settings > .settings {
         display: flex;
         flex-direction: column;

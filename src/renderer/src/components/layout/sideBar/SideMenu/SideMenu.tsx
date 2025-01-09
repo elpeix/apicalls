@@ -12,12 +12,20 @@ export default function SideMenu({
   onSelect: () => void
   isCollapsed: boolean
 }) {
-  const { menu } = useContext(AppContext)
+  const { menu, appSettings } = useContext(AppContext)
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [selected, setSelected] = useState<MenuItem>({ id: '', title: '' })
   useEffect(() => {
     if (!menu) return
+    const items = menu.items.filter((item) => {
+      if (item.id === 'cookies') {
+        return appSettings?.settings?.manageCookies || false
+      }
+      return true
+    })
+    setMenuItems(items)
     setSelected(menu.selected)
-  }, [menu])
+  }, [menu, appSettings?.settings?.manageCookies])
 
   const isSelected = (id: Identifier) => showSelected && selected && selected.id === id
   const handleClick = (id: Identifier) => {
@@ -30,7 +38,7 @@ export default function SideMenu({
   return (
     <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''}`}>
       {menu &&
-        menu.items.map((item, index) => (
+        menuItems.map((item, index) => (
           <div
             key={index}
             className={`${styles.item} ${isSelected(item.id) ? styles.active : ''}  ${

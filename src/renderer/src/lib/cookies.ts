@@ -93,12 +93,22 @@ const isSameDomain = (domain: string, cookieDomain: string) => {
 
 export const clearExpiredCookies = (cookies: Cookie[]) => {
   const now = new Date()
-  return cookies.filter((cookie) => cookie.expires > now)
+  return cookies.filter((cookie) => {
+    if (!cookie.expires) {
+      return true
+    }
+    const expires = new Date(cookie.expires)
+    return expires.getTime() > now.getTime()
+  })
 }
 
 export const clearCookies = (url: string, cookies: Cookie[]) => {
   const { hostname } = new URL(url)
   return clearExpiredCookies(cookies).filter((cookie) => isSameDomain(hostname, cookie.domain))
+}
+
+export const removeDomainCookies = (domain: string, cookies: Cookie[]) => {
+  return clearExpiredCookies(cookies).filter((cookie) => cookie.domain !== domain)
 }
 
 export const removeCookie = (cookies: Cookie[], index: number) => {

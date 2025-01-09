@@ -1,0 +1,32 @@
+.group {
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.3rem;
+    width: 100%;
+    border-top: 1px solid var(--border-color);
+
+    .name {
+      padding: 0.5rem 0;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .cookieData {
+      font-size: 0.7rem;
+      user-select: text;
+    }
+  }
+}

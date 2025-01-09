@@ -5,6 +5,7 @@ import History from '../history/History'
 import Environments from '../Environments/Environments'
 import Settings from '../Settings/Settings'
 import Collections from '../Collections/Collections'
+import Cookies from '../Cookies/Cookies'
 
 export default function SidePanel() {
   const { menu } = useContext(AppContext)
@@ -24,6 +25,9 @@ export default function SidePanel() {
             </div>
             <div className={styles.history}>
               <History />
+            </div>
+            <div className={styles.cookies}>
+              <Cookies />
             </div>
             <div className={styles.settings}>
               <Settings />

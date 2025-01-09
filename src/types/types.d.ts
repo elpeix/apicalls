@@ -208,16 +208,15 @@ type Cookie = {
   sameSite: string
 }
 
-type OriginCookies = {
-  origin: string
-  cookies: Cookie[]
-}
-
 type CookiesHookType = {
+  set: (cookies: Cookie[]) => void
   upsert: (headers: KeyValue[]) => void
   remove: (url: string) => void
   clear: () => void
   getAll: () => Cookies[]
+  getGroups: () => string[]
+  getGrouped: () => Map<string, Cookie[]>
+  updateGroup: (group: string, cookies: Cookie[]) => void
   get: (url: string) => Cookies[]
   stringify: (url: string) => string
 }

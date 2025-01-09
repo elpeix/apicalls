@@ -77,9 +77,15 @@ function SimpleTableHeaderCell({
   )
 }
 
-function SimpleTableBody({ children }: { children: React.ReactNode }) {
+function SimpleTableBody({
+  className = '',
+  children
+}: {
+  className?: string
+  children: React.ReactNode
+}) {
   return (
-    <div className={styles.body} role="rowgroup">
+    <div className={`${className} ${styles.body}`} role="rowgroup">
       {children}
     </div>
   )
@@ -164,7 +170,7 @@ function SimpleTableCell({
       <div>
         {!!editable && !showTip && (
           <Input
-            inputRef={inputRef}
+            inputRef={inputRef as React.RefObject<HTMLInputElement>}
             value={editableValue as string}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -177,7 +183,7 @@ function SimpleTableCell({
         )}
         {!!editable && showTip && (
           <Autocompleter
-            inputRef={inputRef}
+            inputRef={inputRef as React.RefObject<HTMLInputElement>}
             value={editableValue as string}
             options={options}
             onChange={handleChange}
