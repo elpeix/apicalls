@@ -28,6 +28,7 @@ export const SETTINGS = {
   clear: 'settings:clear',
   updated: 'settings:updated',
   toggleMenu: 'settings:toggle-menu',
+  toggleMenuCookies: 'settings:toggle-menu-cookies',
   listThemes: 'settings:list-themes'
 }
 
@@ -64,7 +65,8 @@ export const ACTIONS = {
   showSettings: 'action:show-settings',
   showCollections: 'action:show-collections',
   showEnvironments: 'action:show-environments',
-  showHistory: 'action:show-history'
+  showHistory: 'action:show-history',
+  showCookies: 'action:show-cookies'
 }
 
 export const TABS = {

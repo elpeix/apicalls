@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, nativeTheme, Menu } from 'electron'
+import { app, shell, BrowserWindow, nativeTheme, Menu, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
@@ -50,8 +50,18 @@ function createWindow() {
 
   // Set application menu
   const settings = store.get('settings', defaultSettings) as AppSettingsType
-  Menu.setApplicationMenu(getMenu(mainWindow))
+  const menu = getMenu(mainWindow)
+  Menu.setApplicationMenu(menu)
   mainWindow.setMenuBarVisibility(!!settings.menu)
+  mainWindow.setAutoHideMenuBar(!settings.menu)
+
+  ipcMain.on(SETTINGS.toggleMenuCookies, (_, show: boolean) => {
+    const cookiesMenuItem = menu.getMenuItemById('cookies')
+    if (cookiesMenuItem) {
+      cookiesMenuItem.visible = show
+      Menu.setApplicationMenu(menu)
+    }
+  })
 }
 
 // This method will be called when Electron has finished
@@ -111,5 +121,6 @@ import './ipcCollectionActions'
 import './ipcEnvironmentActions'
 import './ipcTabsActions'
 import './ipcCookiesActions'
+import { SETTINGS } from '../lib/ipcChannels'
 
 export { mainWindow }

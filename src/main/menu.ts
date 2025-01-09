@@ -102,6 +102,15 @@ export const getMenu = (mainWindow: BrowserWindow) => {
           }
         },
         {
+          id: 'cookies',
+          label: 'Cookies',
+          accelerator: 'CmdOrCtrl+g',
+          visible: getSettings().manageCookies || false,
+          click: () => {
+            mainWindow.webContents.send(ACTIONS.showCookies)
+          }
+        },
+        {
           label: 'Settings',
           accelerator: 'CmdOrCtrl+,',
           click: () => {
@@ -194,21 +203,15 @@ export const getMenu = (mainWindow: BrowserWindow) => {
     }
   ]
 
-  const menu = Menu.buildFromTemplate(menuTemplate as Array<Electron.MenuItemConstructorOptions>)
-
-  return menu
+  return Menu.buildFromTemplate(menuTemplate as Array<Electron.MenuItemConstructorOptions>)
 }
 
 const toggleMenu = (mainWindow: BrowserWindow) => {
   const settings = getSettings()
   settings.menu = !settings.menu || false
   setSettings(settings)
-
-  if (settings.menu) {
-    mainWindow.setMenuBarVisibility(true)
-  } else {
-    mainWindow.setMenuBarVisibility(false)
-  }
+  mainWindow.setMenuBarVisibility(settings.menu)
+  mainWindow.setAutoHideMenuBar(!settings.menu)
   mainWindow.webContents.send(SETTINGS.updated, settings)
 }
 

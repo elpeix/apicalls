@@ -29,6 +29,7 @@ ipcMain.on(SETTINGS.toggleMenu, (_, showMenu: boolean) => {
   const settings = getSettings()
   setSettings({ ...settings, menu: showMenu })
   mainWindow?.setMenuBarVisibility(showMenu)
+  mainWindow?.setAutoHideMenuBar(!showMenu)
 })
 
 const requests = new Map<

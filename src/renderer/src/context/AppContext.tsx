@@ -10,6 +10,7 @@ import { useSettings as useAppSettings } from '../hooks/useSettings'
 import Dialog from '../components/base/dialog/Dialog'
 import Prompt from '../components/base/PopupBoxes/Prompt'
 import Confirm from '../components/base/PopupBoxes/Confirm'
+import { defaultSettings } from '../../../lib/defaults'
 
 export const AppContext = createContext<{
   application: ApplicationType
@@ -33,7 +34,7 @@ export const AppContext = createContext<{
 
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
   const appSettings = useAppSettings()
-  const menu = useMenu()
+  const menu = useMenu(appSettings.settings || defaultSettings)
   const tabs = useTabs([])
   const collections = useCollections()
   const environments = useEnvironments()

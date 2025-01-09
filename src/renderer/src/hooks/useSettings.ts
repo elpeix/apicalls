@@ -50,18 +50,24 @@ export function useSettings(): AppSettingsHookType {
     })
   }, [matchMedia])
 
-  const save = (settings: AppSettingsType) => {
-    setSettings(settings)
-    document.documentElement.setAttribute('data-theme', settings.theme)
+  const save = (newSettings: AppSettingsType) => {
+    setSettings(newSettings)
+    document.documentElement.setAttribute('data-theme', newSettings.theme)
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.send(SETTINGS.save, settings)
+    ipcRenderer?.send(SETTINGS.save, newSettings)
     removeStyleProperties()
-    const colors = themes.get(settings.theme)?.colors
+    const colors = themes.get(newSettings.theme)?.colors
     if (colors) {
       applyTheme(colors)
     }
-    if (settings.menu !== undefined) {
-      ipcRenderer?.send(SETTINGS.toggleMenu, settings.menu)
+    if (newSettings.menu !== undefined && newSettings.menu !== settings?.menu) {
+      ipcRenderer?.send(SETTINGS.toggleMenu, newSettings.menu)
+    }
+    if (
+      newSettings.manageCookies !== undefined &&
+      newSettings.manageCookies !== settings?.manageCookies
+    ) {
+      ipcRenderer?.send(SETTINGS.toggleMenuCookies, newSettings.manageCookies)
     }
   }
 

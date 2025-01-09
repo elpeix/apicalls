@@ -33,6 +33,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow) => {
     { shortcut: 'commandOrControl+l', action: ACTIONS.showCollections },
     { shortcut: 'commandOrControl+e', action: ACTIONS.showEnvironments },
     { shortcut: 'commandOrControl+h', action: ACTIONS.showHistory },
+    { shortcut: 'commandOrControl+g', action: ACTIONS.showCookies },
 
     { shortcut: 'escape', action: ACTIONS.escape }
   ]
