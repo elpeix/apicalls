@@ -59,7 +59,42 @@ describe('Cookies test', () => {
       }
     ]
     const cookies = processCookies(headers)
+
     expect(cookies).toEqual([])
+  })
+
+  it('should process cookies without domain and default domain', () => {
+    const headers = [
+      {
+        name: 'Set-Cookie',
+        value: 'name=value; domain=example.com; expires=Wed, 21 Oct 2015 07:28:00 GMT'
+      },
+      {
+        name: 'Set-Cookie',
+        value: 'name2=value2; expires=Wed, 21 Oct 2025 07:28:00 GMT'
+      }
+    ]
+    const cookies = processCookies(headers, 'default.domain.com')
+    expect(cookies).toEqual([
+      {
+        name: 'name',
+        value: 'value',
+        domain: 'example.com',
+        expires: new Date('Wed, 21 Oct 2015 07:28:00 GMT'),
+        httpOnly: false,
+        sameSite: '',
+        path: ''
+      },
+      {
+        name: 'name2',
+        value: 'value2',
+        domain: 'default.domain.com',
+        expires: new Date('Wed, 21 Oct 2025 07:28:00 GMT'),
+        httpOnly: false,
+        sameSite: '',
+        path: ''
+      }
+    ])
   })
 
   it('should clear expired cookies', () => {

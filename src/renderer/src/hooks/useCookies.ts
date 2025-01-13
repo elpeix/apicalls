@@ -12,9 +12,9 @@ export function useCookies(): CookiesHookType {
   const [cookies, setCookies] = useState<Cookie[]>([])
   const ipcRenderer = window.electron?.ipcRenderer
 
-  const upsert = (headers: KeyValue[]) => {
+  const upsert = (headers: KeyValue[], defaultUrl: string = '') => {
     setCookies((cookies) => {
-      const updatedCookies = updateCookies(cookies, headers)
+      const updatedCookies = updateCookies(cookies, headers, defaultUrl)
       ipcRenderer?.send(COOKIES.set, updatedCookies)
       return updatedCookies
     })

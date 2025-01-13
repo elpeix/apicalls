@@ -210,7 +210,7 @@ type Cookie = {
 
 type CookiesHookType = {
   set: (cookies: Cookie[]) => void
-  upsert: (headers: KeyValue[]) => void
+  upsert: (headers: KeyValue[], defaultGroup: string) => void
   remove: (url: string) => void
   clear: () => void
   getAll: () => Cookies[]

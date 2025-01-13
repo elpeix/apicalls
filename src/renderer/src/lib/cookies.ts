@@ -1,4 +1,4 @@
-export const processCookies = (headers: KeyValue[]) => {
+export const processCookies = (headers: KeyValue[], defaultDomain: string = '') => {
   const cookies = headers
     .filter((header) => header.name.toLowerCase() === 'set-cookie')
     .map((header) => {
@@ -14,7 +14,7 @@ export const processCookies = (headers: KeyValue[]) => {
       const cookie: Cookie = {
         name: cookieName[0],
         value: cookieName[1],
-        domain: '',
+        domain: defaultDomain,
         expires: new Date(),
         httpOnly: false,
         path: '',
@@ -33,6 +33,8 @@ export const processCookies = (headers: KeyValue[]) => {
           cookie.httpOnly = true
         } else if (trimmedKey === 'samesite') {
           cookie.sameSite = value.trim()
+        } else if (trimmedKey === 'max-age') {
+          cookie.expires = new Date(cookie.expires.getTime() + Number(value.trim()) * 1000)
         }
       })
       return cookie
@@ -41,8 +43,9 @@ export const processCookies = (headers: KeyValue[]) => {
   return cookies
 }
 
-export const updateCookies = (cookies: Cookie[], headers: KeyValue[]) => {
-  const newCookies = processCookies(headers)
+export const updateCookies = (cookies: Cookie[], headers: KeyValue[], defaultUrl: string = '') => {
+  const { hostname } = defaultUrl ? new URL(defaultUrl) : { hostname: '' }
+  const newCookies = processCookies(headers, hostname)
   newCookies.forEach((newCookie) => {
     const index = cookies.findIndex(
       (cookie) => cookie.name === newCookie.name && cookie.domain === newCookie.domain

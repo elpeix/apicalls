@@ -172,7 +172,7 @@ export default function RequestContextProvider({
         size: callResponse.contentLength
       })
       setFetchedHeaders(callResponse.responseHeaders)
-      setCookies(callResponse.responseHeaders)
+      setCookies(callResponse.responseHeaders, requestUrl)
       requestConsole?.addAll([
         ...requestLogs,
         {
@@ -455,9 +455,9 @@ export default function RequestContextProvider({
     return headers
   }
 
-  const setCookies = (headers: KeyValue[]) => {
+  const setCookies = (headers: KeyValue[], url: string) => {
     if (settings?.settings?.manageCookies) {
-      cookies?.upsert(headers)
+      cookies?.upsert(headers, getValue(url))
     }
   }
 
