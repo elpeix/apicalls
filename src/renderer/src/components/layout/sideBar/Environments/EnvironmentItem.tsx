@@ -35,6 +35,14 @@ export default function EnvironmentItem({
     }
   }
 
+  const clickHandler = (e: React.MouseEvent) => {
+    if (e.shiftKey) {
+      selectEnvironment(environment)
+    } else {
+      activeEnvironment(environment.id)
+    }
+  }
+
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     e.dataTransfer.setData('envId', environment.id.toString())
@@ -80,7 +88,8 @@ export default function EnvironmentItem({
       <Name
         className={styles.title}
         name={environment.name}
-        onClick={() => selectEnvironment(environment)}
+        onClick={clickHandler}
+        onDoubleClick={() => selectEnvironment(environment)}
       />
       <Menu
         className={styles.menu}

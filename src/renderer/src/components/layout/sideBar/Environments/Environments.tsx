@@ -69,7 +69,12 @@ export default function Environments() {
   return (
     <>
       <div className="sidePanel-header">
-        <div className="sidePanel-header-title">Environments</div>
+        <div
+          className={`sidePanel-header-title ${selectedEnvironment ? 'cursor-pointer' : ''}`}
+          onClick={() => setSelectedEnvironment(null)}
+        >
+          Environments
+        </div>
         {!selectedEnvironment && (
           <>
             <div>

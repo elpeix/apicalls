@@ -23,7 +23,12 @@ export default function Collections() {
   return (
     <>
       <div className="sidePanel-header">
-        <div className="sidePanel-header-title">Collections</div>
+        <div
+          className={`sidePanel-header-title ${selectedCollection ? 'cursor-pointer' : ''}`}
+          onClick={() => setSelectedCollection(null)}
+        >
+          Collections
+        </div>
         {!selectedCollection && (
           <>
             <div>

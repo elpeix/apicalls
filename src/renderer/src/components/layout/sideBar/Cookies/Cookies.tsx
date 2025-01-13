@@ -31,7 +31,12 @@ export default function Cookies() {
   return (
     <>
       <div className="sidePanel-header">
-        <div className="sidePanel-header-title">Cookies</div>
+        <div
+          className={`sidePanel-header-title ${selectedGroup ? 'cursor-pointer' : ''}`}
+          onClick={() => setSelectedGroup('')}
+        >
+          Cookies
+        </div>
         {!selectedGroup && (
           <div>
             <ButtonIcon icon="clear" onClick={() => cookies.clear()} title="Clear all cookies" />
