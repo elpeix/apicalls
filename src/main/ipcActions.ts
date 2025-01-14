@@ -22,7 +22,10 @@ ipcMain.on(SETTINGS.save, (_, settings) => setSettings(settings))
 
 ipcMain.on(SETTINGS.clear, (event) => {
   clearSettings()
-  event.reply(SETTINGS.updated, getSettings())
+  const settings = getSettings()
+  event.reply(SETTINGS.updated, settings)
+  mainWindow?.setMenuBarVisibility(!!settings.menu)
+  mainWindow?.setAutoHideMenuBar(!settings.menu)
 })
 
 ipcMain.on(SETTINGS.toggleMenu, (_, showMenu: boolean) => {
