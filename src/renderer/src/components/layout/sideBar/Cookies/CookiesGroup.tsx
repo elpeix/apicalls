@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Cookies.module.css'
 import SimpleTable from '../../../base/SimpleTable/SimpleTable'
+import Cookie from './Cookie'
 
 export default function CookiesGroup({
   group,
@@ -16,9 +17,9 @@ export default function CookiesGroup({
   update: (group: string, cookies: Cookie[]) => void
   remove: (group: string) => void
 }) {
-  const [nameSize, setNameSize] = useState(120)
-  const [valueSize, setValueSize] = useState(120)
-  const [pathSize, setPathSize] = useState(80)
+  const [nameSize, setNameSize] = useState(100)
+  const [valueSize, setValueSize] = useState(180)
+  const [pathSize, setPathSize] = useState(50)
   const [cookieList, setCookieList] = useState(cookies)
 
   useEffect(() => {
@@ -35,6 +36,13 @@ export default function CookiesGroup({
 
   const changePathSize = (offset: number) => {
     setPathSize(Math.max(Math.min(pathSize + offset, 300), 40))
+  }
+
+  const updateCookie = (cookie: Cookie, index: number) => {
+    const newCookies = [...cookieList]
+    newCookies[index] = cookie
+    setCookieList(newCookies)
+    update(group, newCookies)
   }
 
   const removeCookie = (index: number) => {
@@ -74,21 +82,13 @@ export default function CookiesGroup({
           </SimpleTable.Header>
           <SimpleTable.Body className={styles.cookieData}>
             {cookieList.map((cookie, index) => (
-              <SimpleTable.Row key={`cookie_${index}`}>
-                <SimpleTable.Cell>{cookie.name}</SimpleTable.Cell>
-                <SimpleTable.Cell>
-                  <div title={cookie.value}>{cookie.value}</div>
-                </SimpleTable.Cell>
-                <SimpleTable.Cell>{cookie.path}</SimpleTable.Cell>
-                <SimpleTable.Cell>{new Date(cookie.expires).toJSON()}</SimpleTable.Cell>
-                <SimpleTable.Cell>
-                  <ButtonIcon
-                    icon="delete"
-                    onClick={() => removeCookie(index)}
-                    title="Remove cookie"
-                  />
-                </SimpleTable.Cell>
-              </SimpleTable.Row>
+              <Cookie
+                key={`cookie_${index}`}
+                cookie={cookie}
+                index={index}
+                update={updateCookie}
+                remove={removeCookie}
+              />
             ))}
           </SimpleTable.Body>
         </SimpleTable>
