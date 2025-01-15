@@ -2,7 +2,7 @@
 
 Simple application to call REST APIs.
 
-![ApiCalls](apiCalls.png)
+![ApiCalls](apicalls.webp)
 
 ## Project Setup
 
