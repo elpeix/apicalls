@@ -1,32 +1,64 @@
 # API Calls
 
-Simple application to call REST APIs.
+**API Calls** is a desktop application built with Electron, designed to
+streamline and simplify the process of making REST API requests.
+
+Whether you're a developer testing endpoints, a QA engineer validating API
+responses, or anyone who regularly interacts with RESTful services, API Calls
+offers an intuitive interface for sending, receiving, and analyzing API
+requests and responses.
 
 ![ApiCalls](apicalls.webp)
 
-## Project Setup
+Feel free to try it out and provide feedback!
 
-### Install
+## Installation guide
 
-```bash
+> **Note:** API Calls installable is available for **Linux**.
+>
+> **MacOs** and **Windows** support is coming soon. You can also run the app
+> from source code (see Development section).
+
+You can download the latest version from the [releases page](https://github.com/elpeix/apicalls/releases).
+
+## Development
+
+You can run API Calls locally by cloning the repository and running the following
+steps:
+
+Clone the repository:
+
+```sh
+git clone https://github.com/elpeix/apicalls.git
+```
+
+Enter the project directory:
+
+```sh
+cd apicalls
+```
+
+Install dependencies:
+
+```sh
 npm install
 ```
 
-### Development
+Start the development server:
 
-```bash
+```sh
 npm run dev
 ```
 
-### Build
+### Building the app
 
-```bash
-# For windows
-$ npm run build:win
-
-# For mac
-$ npm run build:mac
-
+```sh
 # For Linux
-$ npm run build:linux
+npm run build:linux
+
+# For macOS
+npm run build:mac
+
+# For Windows
+npm run build:win
 ```
