@@ -39,7 +39,7 @@
     "@types/react-dom": "^19.0.2",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^33.2.1",
+    "electron": "^34.0.1",
     "electron-builder": "^25.1.8",
     "electron-vite": "^3.0.0-beta.0",
     "eslint-plugin-react": "^7.37.3",
