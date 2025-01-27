@@ -70,7 +70,7 @@ export const getMenu = (mainWindow: BrowserWindow) => {
         },
         {
           label: 'Find Tab',
-          accelerator: 'CmdOrCtrl+Shift+T',
+          accelerator: 'CmdOrCtrl+O',
           click: () => {
             mainWindow.webContents.send(ACTIONS.searchTab)
           }

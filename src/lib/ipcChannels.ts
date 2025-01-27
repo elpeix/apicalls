@@ -54,6 +54,7 @@ export const ACTIONS = {
   prevTab: 'action:prev-tab',
   closeTab: 'action:close-tab',
   searchTab: 'action:search-tab',
+  restoreTab: 'action:restore-tab',
   toggleSidebar: 'action:toggle-sidebar',
   findRequest: 'action:find-request',
   sendRequest: 'action:send-request',

@@ -45,6 +45,10 @@ type RequestTab = RequestType & {
   path?: PathItem[]
 }
 
+type ClosedTab = RequestTab & {
+  index: number
+}
+
 type Environment = {
   id: Identifier
   name: string
@@ -121,6 +125,7 @@ type TabsHookType = {
   removeTab: (tabId: Identifier) => void
   updateTab: (tabId: Identifier, tab: RequestTab) => void
   updateTabRequest: (tabId: Identifier, saved: boolean, request: RequestBase) => void
+  restoreTab: () => void
   hasTabs: () => boolean
   getTab: (tabId: Identifier) => RequestTab | undefined
   getTabs: () => RequestTab[]

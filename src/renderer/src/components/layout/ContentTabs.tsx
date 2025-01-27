@@ -39,10 +39,15 @@ export default function ContentTabs() {
       tabs.setActiveTab(prevTabIndex)
     })
 
+    ipcRenderer?.on(ACTIONS.restoreTab, () => {
+      tabs.restoreTab()
+    })
+
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.closeTab)
       ipcRenderer?.removeAllListeners(ACTIONS.nextTab)
       ipcRenderer?.removeAllListeners(ACTIONS.prevTab)
+      ipcRenderer?.removeAllListeners(ACTIONS.restoreTab)
     }
   }, [tabs])
 

@@ -5,6 +5,7 @@ import { TABS } from '../../../lib/ipcChannels'
 export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const ipcRenderer = window.electron?.ipcRenderer
   const [tabs, setTabs] = useState([...initialTabs])
+  const [closedTabs, setClosedTabs] = useState<ClosedTab[]>([])
 
   const openTab = ({ request, collectionId, path = [], shiftKey = false }: OpenTabArguments) => {
     const tab = getTab(request.id)
@@ -34,6 +35,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const removeTab = (tabId: Identifier) => {
     const index = tabs.findIndex((t) => t.id === tabId)
     if (index === -1) return
+    addCloseTab(tabs[index], index)
     if (tabs[index].active) {
       if (index === 0) {
         _setActiveTab(tabs, 1)
@@ -42,6 +44,28 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
       }
     }
     updateTabs(tabs.filter((tab) => tab.id !== tabId))
+  }
+
+  const addCloseTab = (tab: RequestTab, index: number) => {
+    setClosedTabs((prev) => {
+      if (prev.length >= 10) {
+        prev.pop()
+      }
+      const closedTab: ClosedTab = { ...tab, index }
+      return [closedTab, ...prev]
+    })
+  }
+
+  const restoreTab = () => {
+    if (closedTabs.length > 0) {
+      const [tab, ...rest] = closedTabs
+      setClosedTabs(rest)
+      const index = tab.index
+      const newTabs = [...tabs]
+      newTabs.splice(index, 0, tab)
+      _setActiveTab(newTabs, index)
+      updateTabs(newTabs)
+    }
   }
 
   const updateTab = (tabId: Identifier, tab: RequestTab) => {
@@ -100,6 +124,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     removeTab,
     updateTab,
     updateTabRequest,
+    restoreTab,
     hasTabs,
     getTab,
     getTabs,
