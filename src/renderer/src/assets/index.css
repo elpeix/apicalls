@@ -97,6 +97,37 @@ input[type='checkbox'] {
   }
 }
 
+textarea {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-background-color);
+  color: var(--input-color);
+  padding: 5px 10px;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: var(--input-hover-background-color);
+    color: var(--input-hover-color);
+    border-color: var(--input-hover-border-color);
+  }
+  &:focus {
+    outline: none;
+    border-color: var(--focus-color);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    color: var(--input-disabled-color);
+  }
+}
+
 button {
   border: 1px solid var(--button-border-color);
   background-color: var(--button-background-color);

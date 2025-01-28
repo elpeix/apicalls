@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import SimpleTable from '../SimpleTable/SimpleTable'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Params.module.css'
+import { AppContext } from '../../../context/AppContext'
+import BulkEntry from '../BulkEntry/BulkEntry'
 
 export default function Params({
   items,
@@ -13,9 +15,11 @@ export default function Params({
   showDelete = true,
   addCaption = 'Add param',
   removeCaption = 'Remove param',
+  bulkCaption = 'Bulk entry',
   maxNameSize = 500,
   minNameSize = 100,
-  defaultNameSize = 200
+  defaultNameSize = 200,
+  bulkMode = false
 }: {
   items: KeyValue[]
   onAdd?: () => void
@@ -25,11 +29,14 @@ export default function Params({
   showEnable?: boolean
   showDelete?: boolean
   addCaption?: string
+  bulkCaption?: string
   removeCaption?: string
   maxNameSize?: number
   minNameSize?: number
   defaultNameSize?: number
+  bulkMode?: boolean
 }) {
+  const { application } = useContext(AppContext)
   const [nameSize, setNameSize] = useState(
     Math.max(Math.min(defaultNameSize, maxNameSize), minNameSize)
   )
@@ -42,6 +49,21 @@ export default function Params({
   const enableColumn = showEnable ? '1.9rem' : ''
   const deleteColumn = showDelete ? '2rem' : ''
   const templateColumns = `${enableColumn} ${nameSize}px 1fr ${deleteColumn}`
+
+  const openBulk = () => {
+    application.showDialog({
+      children: (
+        <BulkEntry
+          initialValue={items}
+          onSave={(items) => {
+            application.hideDialog()
+            onSave(items)
+          }}
+          onCancel={application.hideDialog}
+        />
+      )
+    })
+  }
 
   return (
     <div className={styles.params}>
@@ -125,13 +147,22 @@ export default function Params({
           </SimpleTable.Body>
         </SimpleTable>
       )}
-      {onAdd && (
-        <div className={styles.add}>
-          <div>
-            <ButtonIcon icon="more" onClick={onAdd} title={addCaption} />
+      <div className={styles.footerParams}>
+        {onAdd && (
+          <div className={styles.add}>
+            <div>
+              <ButtonIcon icon="more" onClick={onAdd} title={addCaption} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+        {bulkMode && (
+          <div className={styles.bulk}>
+            <div>
+              <ButtonIcon icon="clipboard" onClick={openBulk} title={bulkCaption} />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -4,6 +4,9 @@ import styles from './Environment.module.css'
 import EnvironmentVariables from './EnvironmentVariables'
 import EditableName from '../../../base/EditableName/EditableName'
 import { AppContext } from '../../../../context/AppContext'
+import BulkEntry from '../../../base/BulkEntry/BulkEntry'
+import Menu from '../../../base/Menu/Menu'
+import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 
 export default function Environment({
   environment,
@@ -71,6 +74,21 @@ export default function Environment({
     })
   }
 
+  const openBulk = () => {
+    application.showDialog({
+      children: (
+        <BulkEntry
+          initialValue={env.variables}
+          onSave={(variables) => {
+            application.hideDialog()
+            updateVariables({ variables })
+          }}
+          onCancel={application.hideDialog}
+        />
+      )
+    })
+  }
+
   return (
     <div className={`sidePanel-content ${styles.environment}`}>
       <div className={styles.header}>
@@ -94,8 +112,20 @@ export default function Environment({
           onBlur={() => setEditingName(false)}
           editOnDoubleClick={true}
         />
-        <div className={styles.remove}>
-          <ButtonIcon icon="delete" onClick={handleRemove} title="Remove environment" />
+        <div className={styles.actions}>
+          <Menu>
+            <MenuElement icon="edit" onClick={() => setEditingName(true)} title="Rename" />
+            <MenuSeparator />
+            <MenuElement icon="more" onClick={addVariable} title="Add variable" />
+            <MenuElement icon="clipboard" onClick={openBulk} title="Bulk edit" />
+            <MenuSeparator />
+            <MenuElement
+              icon="delete"
+              onClick={handleRemove}
+              className={styles.remove}
+              title="Remove"
+            />
+          </Menu>
         </div>
       </div>
       <div className={styles.content}>

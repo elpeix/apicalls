@@ -30,3 +30,8 @@
     }
   }
 }
+
+.textarea {
+  resize: none;
+  height: 12rem;
+}

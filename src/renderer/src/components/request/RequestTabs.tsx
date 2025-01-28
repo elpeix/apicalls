@@ -87,6 +87,7 @@ export default function RequestTabs() {
               items={request.headers.items}
               onSave={request.headers.set}
               onAdd={request.headers.add}
+              bulkMode={true}
               addCaption="Add header"
               removeCaption="Remove header"
             />
