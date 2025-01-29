@@ -11,7 +11,7 @@ import { ACTIONS } from '../../../../lib/ipcChannels'
 import { AppContext } from '../../context/AppContext'
 
 export default function RequestPanelContent() {
-  const { appSettings } = useContext(AppContext)
+  const { appSettings, application } = useContext(AppContext)
   const { isActive, request, fetching, save, setOpenSaveAs } = useContext(RequestContext)
   const [gutterMode, setGutterMode] = useState<'horizontal' | 'vertical'>(
     appSettings?.settings?.requestView || 'horizontal'
@@ -43,7 +43,10 @@ export default function RequestPanelContent() {
   useEffect(() => {
     if (!isActive || fetching) return
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.sendRequest, () => request?.fetch())
+    ipcRenderer?.on(ACTIONS.sendRequest, () => {
+      if (application.dialogIsOpen) return
+      return request?.fetch()
+    })
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.sendRequest)
     }

@@ -99,6 +99,7 @@ input[type='checkbox'] {
 
 textarea {
   appearance: none;
+  cursor: auto;
   width: 100%;
   border: 1px solid var(--input-border-color);
   background-color: var(--input-background-color);

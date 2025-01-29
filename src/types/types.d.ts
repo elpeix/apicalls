@@ -363,6 +363,7 @@ type ApplicationType = {
   hidePrompt: () => void
   showConfirm: (confirmProps: ConfirmType) => void
   hideConfirm: () => void
+  dialogIsOpen: boolean
 }
 
 type DialogType = {
@@ -371,6 +372,7 @@ type DialogType = {
   onClose?: () => void
   preventKeyClose?: boolean
   position?: 'top' | 'center'
+  fullWidth?: boolean
 }
 
 type PromptType = {

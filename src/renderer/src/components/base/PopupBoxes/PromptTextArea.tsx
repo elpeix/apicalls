@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './PopupBoxes.module.css'
 import { Button } from '../Buttons/Buttons'
+import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function PromptTextArea({
   initialValue = '',
@@ -25,20 +26,28 @@ export default function PromptTextArea({
     setValue(initialValue)
   }, [initialValue])
 
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ACTIONS.sendRequest, () => onConfirm(value.trim()))
+    return () => {
+      ipcRenderer?.removeAllListeners(ACTIONS.sendRequest)
+    }
+  }, [value, onConfirm])
+
   const handleCancel = () => {
     setValue(initialValue)
     onCancel()
   }
 
   const handleOk = () => {
-    setValue(initialValue)
     onConfirm(value.trim())
   }
   return (
     <div className={styles.popupBox}>
-      <div className={styles.message}>
-        {message}
+      <div className={styles.textareaContainer}>
+        <label htmlFor="textarea">{message}</label>
         <textarea
+          id="textarea"
           className={styles.textarea}
           value={value}
           placeholder={placeholder}

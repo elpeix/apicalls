@@ -72,13 +72,7 @@ export default function AppContextProvider({ children }: { children: React.React
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [dialogProps, setDialogProps] = useState<{
-    children: React.ReactNode
-    className?: string
-    onClose?: () => void
-    preventKeyClose?: boolean
-    position?: 'top' | 'center'
-  } | null>(null)
+  const [dialogProps, setDialogProps] = useState<DialogType | null>(null)
 
   const showDialog = (dialogProps: DialogType) => {
     setDialogProps(dialogProps)
@@ -125,8 +119,18 @@ export default function AppContextProvider({ children }: { children: React.React
     hideDialog()
   }
 
+  const dialogIsOpen = !!dialogProps
+
   const contextValue = {
-    application: { showDialog, hideDialog, showPrompt, hidePrompt, showConfirm, hideConfirm },
+    application: {
+      showDialog,
+      hideDialog,
+      showPrompt,
+      hidePrompt,
+      showConfirm,
+      hideConfirm,
+      dialogIsOpen
+    },
     menu,
     tabs,
     collections,
@@ -145,6 +149,7 @@ export default function AppContextProvider({ children }: { children: React.React
           onClose={hideDialog}
           preventKeyClose={dialogProps.preventKeyClose}
           position={dialogProps.position}
+          fullWidth={dialogProps.fullWidth}
         >
           {dialogProps.children}
         </Dialog>

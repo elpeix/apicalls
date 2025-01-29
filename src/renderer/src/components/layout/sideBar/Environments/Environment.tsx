@@ -85,7 +85,8 @@ export default function Environment({
           }}
           onCancel={application.hideDialog}
         />
-      )
+      ),
+      fullWidth: true
     })
   }
 

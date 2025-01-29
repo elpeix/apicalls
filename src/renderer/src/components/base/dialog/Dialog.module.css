@@ -23,6 +23,7 @@
   inset-inline-end: unset;
   width: unset;
   height: unset;
+  overflow: hidden;
 
   min-width: 10rem;
   min-height: 4rem;
@@ -31,4 +32,9 @@
   background-color: var(--dialog-background-color);
   color: var(--dialog-color);
   border: 1px solid var(--dialog-border-color);
+
+  &.fullWidth {
+    width: 100%;
+    min-width: unset;
+  }
 }

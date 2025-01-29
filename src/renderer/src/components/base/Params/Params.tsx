@@ -15,7 +15,7 @@ export default function Params({
   showDelete = true,
   addCaption = 'Add param',
   removeCaption = 'Remove param',
-  bulkCaption = 'Bulk entry',
+  bulkCaption = 'Bulk edit',
   maxNameSize = 500,
   minNameSize = 100,
   defaultNameSize = 200,
@@ -61,7 +61,8 @@ export default function Params({
           }}
           onCancel={application.hideDialog}
         />
-      )
+      ),
+      fullWidth: true
     })
   }
 
@@ -72,7 +73,11 @@ export default function Params({
           <SimpleTable.Header>
             {showEnable && (
               <SimpleTable.HeaderCell>
-                <></>
+                {bulkMode && (
+                  <div>
+                    <ButtonIcon icon="clipboard" onClick={openBulk} title={bulkCaption} />
+                  </div>
+                )}
               </SimpleTable.HeaderCell>
             )}
             <SimpleTable.HeaderCell draggable={true} onDrag={changeNameSize}>
@@ -155,7 +160,7 @@ export default function Params({
             </div>
           </div>
         )}
-        {bulkMode && (
+        {bulkMode && (!items || !items.length) && (
           <div className={styles.bulk}>
             <div>
               <ButtonIcon icon="clipboard" onClick={openBulk} title={bulkCaption} />

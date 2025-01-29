@@ -7,7 +7,8 @@ export default function Dialog({
   className = '',
   onClose,
   preventKeyClose = false,
-  position = 'center'
+  position = 'center',
+  fullWidth = false
 }: DialogType) {
   const [show, setShow] = useState(true)
 
@@ -34,7 +35,10 @@ export default function Dialog({
           className={`${styles.overlay} ${position === 'top' ? styles.dialogOnTop : ''}`}
           onClick={closeDialog}
         >
-          <dialog className={`${styles.dialog} ${className}`} onClick={dialogClick}>
+          <dialog
+            className={`${styles.dialog} ${className} ${fullWidth ? styles.fullWidth : ''}`}
+            onClick={dialogClick}
+          >
             {children}
           </dialog>
         </div>
