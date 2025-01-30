@@ -43,7 +43,7 @@ export default function PromptTextArea({
     onConfirm(value.trim())
   }
   return (
-    <div className={styles.popupBox}>
+    <div className={styles.popupBoxTextarea}>
       <div className={styles.textareaContainer}>
         <label htmlFor="textarea">{message}</label>
         <textarea

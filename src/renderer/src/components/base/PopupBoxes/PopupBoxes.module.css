@@ -3,31 +3,37 @@
   flex-direction: column;
   min-width: 30rem;
   max-width: 40rem;
+}
 
-  .message {
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 1rem;
-    min-height: 5rem;
-    flex: 1;
+.popupBoxTextarea {
+  display: flex;
+  flex-direction: column;
+  min-width: 15rem;
+}
 
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+.message {
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 1rem;
+  min-height: 5rem;
+  flex: 1;
 
-  .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    border-top: 1px solid var(--dialog-border-color);
-    background-color: var(--dialog-footer-background-color);
-    padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-    button {
-      min-width: 6rem;
-    }
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-top: 1px solid var(--dialog-border-color);
+  background-color: var(--dialog-footer-background-color);
+  padding: 0.5rem;
+
+  button {
+    min-width: 6rem;
   }
 }
 
