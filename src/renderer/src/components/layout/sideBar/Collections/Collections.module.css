@@ -41,6 +41,7 @@
 .collectionContent {
   display: flex;
   flex-direction: column;
+  gap: 0.01rem;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -61,7 +62,7 @@
     align-items: center;
     padding: 0 0.3rem;
     width: 100%;
-    height: 1.86rem;
+    height: 2rem;
     opacity: 0.7;
     transition: opacity 0.2s ease-in-out;
 
@@ -104,6 +105,7 @@
   .folderContent {
     display: flex;
     flex-direction: column;
+    gap: 0.01rem;
     margin-left: 0.86rem;
     border-left: 1px solid var(--border-color);
     transition: border-color 0.2s ease-in-out;
@@ -118,12 +120,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
   padding: 0rem 0.3rem 0rem 0.5rem;
   width: 100%;
   cursor: pointer;
+  height: 2rem;
   opacity: 0.7;
-  height: 1.86rem;
   transition: opacity 0.2s ease-in-out;
 
   &.edit {
@@ -157,7 +158,6 @@
     .menuIcon {
       display: none;
     }
-
   }
 
   &:has(.menuActive),
