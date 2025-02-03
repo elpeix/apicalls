@@ -41,7 +41,7 @@
 .collectionContent {
   display: flex;
   flex-direction: column;
-  gap: 0.01rem;
+  gap: 1px;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -105,7 +105,7 @@
   .folderContent {
     display: flex;
     flex-direction: column;
-    gap: 0.01rem;
+    gap: 1px;
     margin-left: 0.86rem;
     border-left: 1px solid var(--border-color);
     transition: border-color 0.2s ease-in-out;
