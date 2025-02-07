@@ -47,6 +47,8 @@ export default function Autocompleter({
   const [envVariables, setEnvVariables] = useState<string[]>([])
   const [inputValue, setInputValue] = useState(value)
   const [searchValue, setSearchValue] = useState('')
+  const [searchIndex, setSearchIndex] = useState(-1)
+  const [cursorPosition, setCursorPosition] = useState(-1)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selected, setSelected] = useState(0)
   const [immutableOptions, setImmutableOptions] = useState<string[]>([])
@@ -57,26 +59,52 @@ export default function Autocompleter({
     setShowSuggestions(false)
     setSelected(-1)
     setSearchValue('')
+    setSearchIndex(-1)
   }, [immutableOptions])
 
   const assignValue = useCallback(
-    (value: string) => {
+    (value: string, position: number = -1) => {
       setInputValue(value)
       onChange?.(value)
+      if (position > -1) {
+        setCursorPosition(position)
+      }
     },
     [onChange, setInputValue]
   )
 
   const setSuggestion = useCallback(
     (suggestion: string) => {
-      let valueToAssing = suggestion
+      let valueToAssing = `{{${suggestion}}}`
+      let position = valueToAssing.length
       if (searchValue.length > 0) {
-        const regex = new RegExp(`\\b${searchValue}\\b`)
-        valueToAssing = inputValue.replace(regex, suggestion)
+        // Replace value from searchIndex and searchValues
+        if (searchIndex > -1) {
+          valueToAssing =
+            inputValue.slice(0, searchIndex) +
+            `{{${suggestion}}}` +
+            inputValue.slice(searchIndex + searchValue.length)
+          position = searchIndex + suggestion.length + 4
+        } else {
+          // Escape searchValue non \w characters
+          const escapedSearchValue = searchValue.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+          const regex = new RegExp(`${escapedSearchValue}$`)
+          if (regex.test(inputValue)) {
+            valueToAssing = inputValue.replace(regex, `{{${suggestion}}}`)
+          } else {
+            const wordRegex = new RegExp(`\\b${escapedSearchValue}\\b`)
+            if (wordRegex.test(inputValue)) {
+              valueToAssing = inputValue.replace(wordRegex, `{{${suggestion}}}`)
+            } else {
+              valueToAssing = `${inputValue}{{${suggestion}}}`
+            }
+          }
+        }
       } else if (multiple) {
-        valueToAssing = `${inputValue}${suggestion}`
+        valueToAssing = `${inputValue}{{${suggestion}}}`
+        position = valueToAssing.length
       }
-      assignValue(valueToAssing)
+      assignValue(valueToAssing, position)
       clearSuggestions()
     },
     [assignValue, inputValue, multiple, searchValue, clearSuggestions]
@@ -90,7 +118,7 @@ export default function Autocompleter({
     if (showEnvironmentVariables) {
       const variables = environments?.getVariables()
       if (variables) {
-        const tmpVariables = variables.map((variable) => `{{${variable.name}}}`)
+        const tmpVariables = variables.map((variable) => `${variable.name}`)
         if (tmpVariables.length !== envVariables.length) {
           setEnvVariables(tmpVariables)
           return
@@ -117,6 +145,16 @@ export default function Autocompleter({
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
   })
+
+  // Set cursor
+  useEffect(() => {
+    if (cursorPosition > -1) {
+      setTimeout(() => {
+        inputRef.current?.setSelectionRange(cursorPosition, cursorPosition)
+        setCursorPosition(-1)
+      }, 0) // Wait for the cursor to be set. mmm...
+    }
+  }, [cursorPosition])
 
   const handleFocus = () => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -208,6 +246,9 @@ export default function Autocompleter({
       setSearchValue('')
       clearSuggestions()
     } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
+      if (searchValue.length === 0) {
+        setSearchIndex(e.currentTarget.selectionStart || -1)
+      }
       setSearchValue(searchValue + e.key)
     }
 
