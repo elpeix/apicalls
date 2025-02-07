@@ -1,7 +1,11 @@
 import { RestCallerError } from './RestCallerError'
 import { getSettings } from './settings'
 
-const defaultMethod = 'GET'
+const defaultMethod: Method = {
+  value: 'GET',
+  label: 'GET',
+  body: false
+}
 
 const abortControllers: Map<Identifier, AbortController> = new Map()
 
@@ -32,12 +36,12 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
     }
     const initTime = Date.now()
     const requestInit: RequestInit = {
-      method: request.method,
+      method: request.method.value,
       headers: request.headers,
       cache: 'no-cache',
       signal: abortController.signal
     }
-    if (request.body) {
+    if (request.body && request.method.body) {
       requestInit.body = request.body
     }
     const response = await fetch(path, requestInit)

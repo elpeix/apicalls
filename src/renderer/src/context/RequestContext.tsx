@@ -154,7 +154,7 @@ export default function RequestContextProvider({
     const callApiRequest: CallRequest = {
       id: tabId,
       url,
-      method: requestMethod.value,
+      method: requestMethod,
       headers: getHeaders(url),
       queryParams: requestQueryParams,
       body: requestBody
@@ -265,7 +265,7 @@ export default function RequestContextProvider({
     const callApiRequest: CallRequest = {
       id: tabId,
       url,
-      method: request.method.value,
+      method: request.method,
       headers,
       queryParams: request.queryParams,
       body: request.body

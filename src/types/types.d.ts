@@ -313,7 +313,7 @@ type AppSettingsType = {
 type CallRequest = {
   id?: Identifier
   url: string
-  method?: string
+  method?: Method
   headers?: HeadersInit
   queryParams?: KeyValue[]
   body?: string

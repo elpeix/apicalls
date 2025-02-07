@@ -63,10 +63,12 @@ export default function Log({ log }: { log: RequestLog }) {
                 ))}
               </div>
             </div>
-            <div className={styles.row}>
-              <div className={styles.label}>Body</div>
-              <div className={styles.value}>{log.request?.body}</div>
-            </div>
+            {log.request?.method?.body && (
+              <div className={styles.row}>
+                <div className={styles.label}>Body</div>
+                <div className={styles.value}>{log.request?.body}</div>
+              </div>
+            )}
           </div>
           <div className={styles.title}>Response</div>
           <div className={styles.content}>
