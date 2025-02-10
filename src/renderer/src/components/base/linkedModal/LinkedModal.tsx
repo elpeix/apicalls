@@ -12,7 +12,7 @@ export default function LinkedModal({
   useOverlay = false,
   children
 }: {
-  parentRef: React.RefObject<HTMLElement>
+  parentRef: React.RefObject<HTMLElement | null>
   zIndex?: number
   className?: string
   closeModal?: () => void

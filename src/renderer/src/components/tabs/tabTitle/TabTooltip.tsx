@@ -7,7 +7,7 @@ export default function TabTooltip({
   tabRef,
   tab
 }: {
-  tabRef: React.RefObject<HTMLDivElement>
+  tabRef: React.RefObject<HTMLDivElement | null>
   tab: RequestTab
 }) {
   const { collections } = useContext(AppContext)

@@ -148,6 +148,8 @@
     "tab-panel-background-color": "var(--base3)",
     "tab-selected-background-color": "var(--base1)",
     "tab-selected-color": "var(--base-color)",
+    "tab-modal-background-color": "var(--base3)",
+    "tab-modal-border-color": "var(--border-color)",
     "table-border-color": "var(--border-color)"
   },
   "editor": {

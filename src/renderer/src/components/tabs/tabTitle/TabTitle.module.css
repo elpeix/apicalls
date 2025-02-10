@@ -77,14 +77,14 @@
 }
 
 .tooltip {
-  background: var(--tab-hover-background-color);
-  border: 1px solid var(--border-color);
+  background: var(--tab-modal-background-color);
+  border: 1px solid var(--tab-modal-border-color);
   display: flex;
   flex-direction: column;
 
   & > * {
     padding: 0.4rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--tab-modal-border-color);
   }
 
   & > *:last-child {
