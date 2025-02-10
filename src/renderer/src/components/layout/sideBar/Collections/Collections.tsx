@@ -15,7 +15,7 @@ export default function Collections() {
     setSelectedCollection(collection)
   }
 
-  const importHanlder = () => {
+  const importHandler = () => {
     if (!collections) return
     window.electron?.ipcRenderer.send(COLLECTIONS.import)
   }
@@ -32,7 +32,7 @@ export default function Collections() {
         {!selectedCollection && (
           <>
             <div>
-              <ButtonIcon icon="save" onClick={importHanlder} title="Import collection" />
+              <ButtonIcon icon="save" onClick={importHandler} title="Import collection" />
             </div>
             <div>
               <ButtonIcon icon="more" onClick={add} title="New collection" />
