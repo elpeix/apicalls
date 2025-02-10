@@ -5,5 +5,6 @@ export const defaultSettings: AppSettingsType = {
   proxy: '',
   manageCookies: false,
   menu: true,
-  requestView: 'horizontal'
+  requestView: 'horizontal',
+  scrollToActiveRequest: true
 }

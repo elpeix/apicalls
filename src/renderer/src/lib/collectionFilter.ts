@@ -42,13 +42,20 @@ const partialFilter = (element: RequestType, filter: string): boolean => {
 
 export const toggleCollectionElements = (
   elements: (CollectionFolder | RequestType)[],
-  expand: boolean
+  expand: boolean,
+  path: PathItem[] = []
 ) => {
+  const pathCopy = [...path]
   elements.forEach((element) => {
     if (element.type === 'folder') {
       const folder = element as CollectionFolder
-      folder.expanded = expand
-      toggleCollectionElements(folder.elements, expand)
+      if (pathCopy.length === 0) {
+        folder.expanded = expand
+      } else if (pathCopy.length > 0 && pathCopy[0].id === folder.id) {
+        folder.expanded = expand
+        pathCopy.shift()
+      }
+      toggleCollectionElements(folder.elements, expand, pathCopy)
     }
   })
   return elements

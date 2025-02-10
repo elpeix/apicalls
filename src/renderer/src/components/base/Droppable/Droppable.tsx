@@ -15,7 +15,8 @@ export default function Droppable({
   onDragOverDebounced,
   className,
   dragDecorator = 'top',
-  allowedDropTypes = []
+  allowedDropTypes = [],
+  ref
 }: {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
   onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void
@@ -30,6 +31,7 @@ export default function Droppable({
   className?: string
   dragDecorator?: 'top' | 'left'
   allowedDropTypes?: string[]
+  ref?: React.RefObject<HTMLDivElement | null>
 }) {
   const [dragOnOver, setDragOnOver] = useState(false)
   const debouncedDragOnOver = useDebounce(dragOnOver, 500)
@@ -76,6 +78,7 @@ export default function Droppable({
 
   return (
     <div
+      ref={ref}
       className={`${className} ${styles.droppable} ${dragOnOver ? styles.dragOver + ' ' + styles[dragDecorator] : ''}`}
       onMouseDown={onMouseDown}
       draggable={draggable}

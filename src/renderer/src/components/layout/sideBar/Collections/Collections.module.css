@@ -136,6 +136,11 @@
     }
   }
 
+  &.requestActive {
+    background-color: var(--sidePanel-color-hover);
+    opacity: 1;
+  }
+
   .requestMethod {
     text-transform: uppercase;
     font-size: 0.6rem;

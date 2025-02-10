@@ -152,6 +152,19 @@ export default function Settings() {
               <span>Show menu</span>
             </label>
           </div>
+          <div className={styles.groupRow}>
+            <input
+              id="scrollToActiveRequest"
+              type="checkbox"
+              checked={settings.scrollToActiveRequest ?? true}
+              onChange={(e) =>
+                handleChangeSettings({ ...settings, scrollToActiveRequest: e.target.checked })
+              }
+            />
+            <label htmlFor="scrollToActiveRequest">
+              <span>Scroll to active request</span>
+            </label>
+          </div>
 
           <div className={styles.group}>
             <a className={`button-text ${styles.clearSettings}`} onClick={handleClearSettings}>

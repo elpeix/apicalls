@@ -35,8 +35,8 @@ export const AppContext = createContext<{
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
   const appSettings = useAppSettings()
   const menu = useMenu(appSettings.settings || defaultSettings)
-  const tabs = useTabs([])
   const collections = useCollections()
+  const tabs = useTabs([], collections)
   const environments = useEnvironments()
   const history = useHistory()
   const cookies = useCookies()

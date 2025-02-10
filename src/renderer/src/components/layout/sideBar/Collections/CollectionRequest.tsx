@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './Collections.module.css'
 import { AppContext } from '../../../../context/AppContext'
 import Menu from '../../../base/Menu/Menu'
@@ -25,9 +25,10 @@ export default function CollectionRequest({
   addRequest: (request: RequestType) => void
   scrolling: boolean
 }) {
-  const { application, tabs } = useContext(AppContext)
+  const { application, tabs, appSettings } = useContext(AppContext)
   const { request } = collectionRequest
   const [editingName, setEditingName] = useState(false)
+  const [active, setActive] = useState(false)
   const requestPath = [
     ...path,
     {
@@ -35,6 +36,28 @@ export default function CollectionRequest({
       type: 'request'
     }
   ] as PathItem[]
+
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const activeRequest = tabs?.getActiveRequest()
+    if (
+      ref.current &&
+      activeRequest &&
+      activeRequest.collectionId === collectionId &&
+      activeRequest.id === collectionRequest.id
+    ) {
+      if (appSettings?.settings?.scrollToActiveRequest ?? true) {
+        ref.current.scrollIntoView({
+          behavior: 'instant',
+          block: 'nearest'
+        })
+      }
+      setActive(true)
+    } else {
+      setActive(false)
+    }
+  }, [collectionRequest, collectionId, tabs])
 
   const clickHandler = (e: React.MouseEvent) => {
     if (tabs) {
@@ -80,40 +103,39 @@ export default function CollectionRequest({
   }
 
   return (
-    <>
-      <Droppable
-        className={styles.request}
-        onClick={clickHandler}
-        onDrop={handleDrop}
-        allowedDropTypes={['path']}
+    <Droppable
+      className={`${styles.request} ${active ? styles.requestActive : ''}`}
+      onClick={clickHandler}
+      onDrop={handleDrop}
+      allowedDropTypes={['path']}
+      ref={ref}
+    >
+      <div className={`${styles.requestMethod} ${request.method.value}`}>
+        {request.method.label}
+      </div>
+      <EditableName
+        name={collectionRequest.name || 'New request'}
+        editMode={editingName}
+        update={changeName}
+        onBlur={() => setEditingName(false)}
+        editOnDoubleClick={true}
+      />
+      <Menu
+        className={styles.menu}
+        iconClassName={styles.menuIcon}
+        showMenuClassName={styles.menuActive}
+        isMoving={scrolling}
       >
-        <div className={`${styles.requestMethod} ${request.method.value}`}>
-          {request.method.label}
-        </div>
-        <EditableName
-          name={collectionRequest.name || 'New request'}
-          editMode={editingName}
-          update={changeName}
-          onBlur={() => setEditingName(false)}
-          editOnDoubleClick={true}
+        <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
+        <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
+        <MenuSeparator />
+        <MenuElement
+          icon="delete"
+          title="Remove"
+          className={styles.remove}
+          onClick={handleRemove}
         />
-        <Menu
-          className={styles.menu}
-          iconClassName={styles.menuIcon}
-          showMenuClassName={styles.menuActive}
-          isMoving={scrolling}
-        >
-          <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
-          <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
-          <MenuSeparator />
-          <MenuElement
-            icon="delete"
-            title="Remove"
-            className={styles.remove}
-            onClick={handleRemove}
-          />
-        </Menu>
-      </Droppable>
-    </>
+      </Menu>
+    </Droppable>
   )
 }

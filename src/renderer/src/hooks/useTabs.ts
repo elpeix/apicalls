@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import { createRequest } from '../lib/factory'
 import { TABS } from '../../../lib/ipcChannels'
+import { toggleCollectionElements } from '../lib/collectionFilter'
 
-export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
+export default function useTabs(
+  initialTabs: RequestTab[],
+  collections: CollectionsHookType
+): TabsHookType {
   const ipcRenderer = window.electron?.ipcRenderer
   const [tabs, setTabs] = useState([...initialTabs])
   const [closedTabs, setClosedTabs] = useState<ClosedTab[]>([])
+  const [activeRequest, setActiveRequest] = useState<ActiveRequest | null>(null)
 
   const openTab = ({ request, collectionId, path = [], shiftKey = false }: OpenTabArguments) => {
     const tab = getTab(request.id)
@@ -83,10 +88,25 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
   const setActiveTab = (index: number) => updateTabs(_setActiveTab(tabs, index))
 
   const _setActiveTab = (_tabs: RequestTab[], index: number) => {
-    return _tabs.map((tab: RequestTab, i: number) => {
+    const newTabs = _tabs.map((tab: RequestTab, i: number) => {
       tab.active = i === index
       return tab
     })
+    const activeTab = newTabs.find((t) => t.active)
+    if (activeTab && activeTab.collectionId && activeTab.path) {
+      const collection = collections.get(activeTab.collectionId)
+      const path = activeTab.path
+      setActiveRequest({
+        collectionId: activeTab.collectionId,
+        path,
+        id: activeTab.id
+      })
+      if (collection) {
+        toggleCollectionElements(collection.elements, true, path)
+        collections.update(collection)
+      }
+    }
+    return newTabs
   }
 
   const getSelectedTabIndex = () => {
@@ -117,6 +137,8 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     updateTabs(newTabs)
   }
 
+  const getActiveRequest = () => activeRequest
+
   return {
     openTab,
     newTab,
@@ -133,6 +155,7 @@ export default function useTabs(initialTabs: RequestTab[]): TabsHookType {
     setTabs,
     renameTab,
     moveTab,
-    tabs
+    tabs,
+    getActiveRequest
   }
 }

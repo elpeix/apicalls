@@ -45,6 +45,12 @@ type RequestTab = RequestType & {
   path?: PathItem[]
 }
 
+type ActiveRequest = {
+  collectionId: Identifier
+  path: PathItem[]
+  id: Identifier
+}
+
 type ClosedTab = RequestTab & {
   index: number
 }
@@ -131,6 +137,7 @@ type TabsHookType = {
   getTabs: () => RequestTab[]
   setActiveTab: (index: number) => void
   getSelectedTabIndex: () => number
+  getActiveRequest: () => ActiveRequest | null
   renameTab: (tabId: Identifier, name: string) => void
   moveTab: (tabId: Identifier, toBeforeTabId: Identifier) => void
   tabs: RequestTab[]
@@ -308,6 +315,7 @@ type AppSettingsType = {
   manageCookies?: boolean
   menu?: boolean
   requestView?: AppSettingsRequestView
+  scrollToActiveRequest?: boolean
 }
 
 type CallRequest = {
