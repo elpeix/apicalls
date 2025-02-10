@@ -36,7 +36,11 @@ describe('restCaller', () => {
     })
     const response = await restCall(1, {
       url: 'https://apicalls.dev/get',
-      method: 'GET',
+      method: {
+        value: 'GET',
+        label: 'GET',
+        body: false
+      },
       queryParams: [{ name: 'name', value: 'John' }],
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -112,7 +116,11 @@ describe('restCaller', () => {
     try {
       await restCall(1, {
         url: 'https://apicalls.dev/post',
-        method: 'POST',
+        method: {
+          value: 'POST',
+          label: 'POST',
+          body: true
+        },
         queryParams: [],
         headers: new Headers({
           'Content-Type': 'application/json',
