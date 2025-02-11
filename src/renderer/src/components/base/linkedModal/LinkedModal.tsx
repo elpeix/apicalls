@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styles from './LinkedModal.module.css'
+import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function LinkedModal({
   parentRef,
@@ -10,6 +11,7 @@ export default function LinkedModal({
   leftOffset = 0,
   onClick = () => {},
   useOverlay = false,
+  preventKeyClose = false,
   children
 }: {
   parentRef: React.RefObject<HTMLElement | null>
@@ -20,6 +22,7 @@ export default function LinkedModal({
   leftOffset?: number
   useOverlay?: boolean
   onClick?: (e: React.MouseEvent<Element>) => void
+  preventKeyClose?: boolean
   children: React.ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -31,6 +34,13 @@ export default function LinkedModal({
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
   })
+
+  useEffect(() => {
+    if (preventKeyClose) return
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.once(ACTIONS.escape, closeModal)
+    return () => ipcRenderer?.removeListener(ACTIONS.escape, closeModal)
+  }, [closeModal, preventKeyClose])
 
   useLayoutEffect(() => {
     if (ref.current) {
@@ -47,6 +57,8 @@ export default function LinkedModal({
   }, [ref, parentRef])
 
   const handleOutsideClick = (e: MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
     if (
       ref.current &&
       !ref.current.contains(e.target as Node) &&
@@ -78,15 +90,31 @@ export default function LinkedModal({
     return x + leftOffset
   }
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    closeModal()
+  }
+
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    onClick(e)
+  }
+
   return (
     <>
       {useOverlay && (
-        <div className={styles.overlay} onClick={closeModal} style={{ zIndex: zIndex * 100 - 1 }} />
+        <div
+          className={styles.overlay}
+          onClick={handleOverlayClick}
+          style={{ zIndex: zIndex * 100 - 1 }}
+        />
       )}
       <div
         ref={ref}
         className={`${className} ${styles.linkedModal}`}
-        onClick={onClick}
+        onClick={handleModalClick}
         style={{
           top: `${getTop()}px`,
           left: `${getLeft()}px`,

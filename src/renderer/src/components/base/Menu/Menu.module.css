@@ -4,40 +4,41 @@
       visibility: visible !important;
     }
   }
-  .menuModal {
-    background-color: var(--background-content);
-    border: 1px solid var(--border-color);
-    min-width: 10rem;
+}
 
-    .item {
-      padding: 0.4rem 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
+.menuModal {
+  background-color: var(--background-content);
+  border: 1px solid var(--border-color);
+  min-width: 10rem;
 
-      &.disabled {
-        opacity: 0.4;
-        font-style: italic;
-        cursor: not-allowed;
-        pointer-events: none;
-      }
+  .item {
+    padding: 0.4rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
 
-      &:hover {
-        background-color: var(--hover-background-color);
-      }
-
-      .icon {
-        width: 1rem;
-        height: 1rem;
-      }
+    &.disabled {
+      opacity: 0.4;
+      font-style: italic;
+      cursor: not-allowed;
+      pointer-events: none;
     }
-    .itemSeparator {
-      border-top: 1px solid var(--border-color);
-      height: 0;
-      padding: 0;
-      margin: 0;
+
+    &:hover {
+      background-color: var(--hover-background-color);
     }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+  .itemSeparator {
+    border-top: 1px solid var(--border-color);
+    height: 0;
+    padding: 0;
+    margin: 0;
   }
 }

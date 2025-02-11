@@ -5,6 +5,8 @@ import styles from './TabTitle.module.css'
 import Droppable from '../../base/Droppable/Droppable'
 import { useDebounce } from '../../../hooks/useDebounce'
 import TabTooltip from './TabTooltip'
+import { MenuElement, MenuSeparator } from '../../base/Menu/MenuElement'
+import ContextMenu from '../../base/Menu/ContextMenu'
 
 export default function TabTitle({ tab }: { tab: RequestTab }) {
   const { tabs } = useContext(AppContext)
@@ -12,7 +14,8 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   const [saved, setSaved] = useState(tab.saved)
   const [onOver, setOnOver] = useState(false)
   const debouncedOnOver = useDebounce(onOver, 800)
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement | null>(null)
+  const [showMenu, setShowMenu] = useState(false)
 
   useEffect(() => {
     setTabName(tab.name)
@@ -34,15 +37,43 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
 
   const onClose = (e: React.MouseEvent) => {
     e.stopPropagation()
+    closeTab()
+  }
+
+  const closeTab = () => {
     tabs?.removeTab(tab.id)
+    setShowMenu(false)
+  }
+
+  const closeOtherTabs = () => {
+    tabs?.closeOtherTabs(tab.id)
+    setShowMenu(false)
+  }
+
+  const closeAllTabs = () => {
+    tabs?.closeAllTabs()
+    setShowMenu(false)
+  }
+
+  const duplicateTab = () => {
+    tabs?.duplicateTab(tab.id)
+    setShowMenu(false)
   }
 
   const active = tab.active ? styles.active : ''
 
   const onMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 0 && !showMenu) {
+      return
+    }
+    e.stopPropagation()
+    e.preventDefault()
     if (e.button === 1) {
-      e.stopPropagation()
       tabs?.removeTab(tab.id)
+      return
+    }
+    if (e.button === 2) {
+      setShowMenu((prev) => !prev)
     }
   }
 
@@ -84,6 +115,20 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
         </span>
       </div>
       {debouncedOnOver && <TabTooltip tabRef={ref} tab={tab} />}
+      {showMenu && (
+        <ContextMenu
+          parentRef={ref}
+          onClose={() => setShowMenu(false)}
+          topOffset={30}
+          leftOffset={3}
+        >
+          <MenuElement showIcon={false} title="Duplicate tab" onClick={duplicateTab} />
+          <MenuSeparator />
+          <MenuElement showIcon={false} title="Close tab" onClick={closeTab} />
+          <MenuElement showIcon={false} title="Close other tabs" onClick={closeOtherTabs} />
+          <MenuElement showIcon={false} title="Close all tabs" onClick={closeAllTabs} />
+        </ContextMenu>
+      )}
     </Droppable>
   )
 }

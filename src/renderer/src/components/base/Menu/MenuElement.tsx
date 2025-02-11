@@ -10,13 +10,15 @@ export type ReactMenuElement =
 
 export function MenuElement({
   icon = '',
+  showIcon = true,
   title,
   color = '',
   disabled = false,
   className = '',
   onClick
 }: {
-  icon: string
+  icon?: string
+  showIcon?: boolean
   title: string
   color?: string
   disabled?: boolean
@@ -30,7 +32,7 @@ export function MenuElement({
       onClick={onClick}
       style={style}
     >
-      <Icon icon={icon} className={className} />
+      {showIcon && <Icon icon={icon} className={className} />}
       {title}
     </div>
   )

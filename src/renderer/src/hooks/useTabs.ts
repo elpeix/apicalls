@@ -3,6 +3,8 @@ import { createRequest } from '../lib/factory'
 import { TABS } from '../../../lib/ipcChannels'
 import { toggleCollectionElements } from '../lib/collectionFilter'
 
+const MAX_CLOSED_TABS = 10
+
 export default function useTabs(
   initialTabs: RequestTab[],
   collections: CollectionsHookType
@@ -37,6 +39,30 @@ export default function useTabs(
     updateTabs(newTabs)
   }
 
+  const duplicateTab = (tabId: Identifier) => {
+    const tab = getTab(tabId)
+    if (!tab) return
+    const id = (tab.id + new Date().getTime().toString()) as Identifier
+    const pathItem = {
+      id,
+      type: 'request'
+    } as PathItem
+    let path: PathItem[] = []
+    if (tab.path && tab.path.length > 0) {
+      path = tab.path.slice(0, tab.path.length - 1)
+    }
+    path.push(pathItem)
+
+    const newTab = {
+      ...tab,
+      saved: false,
+      path,
+      id,
+      name: tab.name + ' copy'
+    }
+    addTab(newTab)
+  }
+
   const removeTab = (tabId: Identifier) => {
     const index = tabs.findIndex((t) => t.id === tabId)
     if (index === -1) return
@@ -51,13 +77,35 @@ export default function useTabs(
     updateTabs(tabs.filter((tab) => tab.id !== tabId))
   }
 
+  const closeOtherTabs = (tabId: Identifier) => {
+    const index = tabs.findIndex((t) => t.id === tabId)
+    const newTabs = [tabs[index]]
+    _setActiveTab(newTabs, 0)
+    addClosedTabs(tabs.filter((t) => t.id !== tabId))
+    updateTabs(newTabs)
+  }
+
+  const closeAllTabs = () => {
+    addClosedTabs(tabs)
+    updateTabs([])
+  }
+
   const addCloseTab = (tab: RequestTab, index: number) => {
     setClosedTabs((prev) => {
-      if (prev.length >= 10) {
+      if (prev.length >= MAX_CLOSED_TABS) {
         prev.pop()
       }
       const closedTab: ClosedTab = { ...tab, index }
       return [closedTab, ...prev]
+    })
+  }
+
+  const addClosedTabs = (tabs: RequestTab[]) => {
+    const closedTabs = tabs.map((t, i) => ({ ...t, index: i }) as ClosedTab).reverse()
+    setClosedTabs((prev) => {
+      const newClosedTabs = [...closedTabs, ...prev]
+      const result = newClosedTabs.slice(0, MAX_CLOSED_TABS)
+      return result
     })
   }
 
@@ -143,6 +191,7 @@ export default function useTabs(
     openTab,
     newTab,
     addTab,
+    duplicateTab,
     removeTab,
     updateTab,
     updateTabRequest,
@@ -156,6 +205,8 @@ export default function useTabs(
     renameTab,
     moveTab,
     tabs,
-    getActiveRequest
+    getActiveRequest,
+    closeOtherTabs,
+    closeAllTabs
   }
 }
