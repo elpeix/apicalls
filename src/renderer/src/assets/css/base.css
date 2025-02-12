@@ -199,6 +199,7 @@
   --background-2: #e8ebee;
   --background-1: #f2f4f7;
   --background-0: #fafbfc;
+  --transparent-bg: rgba(0, 0, 0, 0.2);
 }
 
 :root[data-theme='hc-dark'] {
@@ -252,7 +253,7 @@
   --accent-color: var(--content-2);
   --search-list-highlight-color: yellow;
   --search-list-item-active-color: var(--content-2);
-  --transparent-bg: rgba(255, 255, 255, 0.7);
+  --transparent-bg: rgba(0, 0, 0, 0.4);
 }
 
 ::selection {

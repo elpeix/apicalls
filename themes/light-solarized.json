@@ -18,6 +18,7 @@
     "blue": "#268bd2",
     "cyan": "#2aa198",
     "green": "#859900",
+    "transparent-bg": "#002b3633",
     "accent-color": "var(--base01)",
     "active-background-color": "var(--base1)",
     "active-color": "var(--base01)",
