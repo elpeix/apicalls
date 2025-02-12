@@ -124,6 +124,7 @@ export default function useTabs(
   const updateTab = (tabId: Identifier, tab: RequestTab) => {
     updateTabs(tabs.map((t) => (t.id === tabId ? tab : t)))
   }
+
   const updateTabRequest = (tabId: Identifier, saved: boolean, request: RequestBase) => {
     const newTabs = tabs.map((tab: RequestTab) =>
       tab.id === tabId ? { ...tab, request, saved } : tab
@@ -185,6 +186,11 @@ export default function useTabs(
     updateTabs(newTabs)
   }
 
+  const updatePaths = (collectionId: Identifier, from: PathItem[], to: PathItem[]) => {
+    console.log({ collectionId, from, to, tabs })
+    // call updateTabsPath from tabUtils
+  }
+
   const getActiveRequest = () => activeRequest
 
   return {
@@ -205,6 +211,7 @@ export default function useTabs(
     renameTab,
     moveTab,
     tabs,
+    updatePaths,
     getActiveRequest,
     closeOtherTabs,
     closeAllTabs

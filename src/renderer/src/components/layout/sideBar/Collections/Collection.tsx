@@ -135,6 +135,7 @@ export default function Collection({
   const handleMove = ({ from, to }: { from: PathItem[]; to: PathItem[] }) => {
     const result = moveElements({ elements: coll.elements, from, to })
     if (result.moved && result.elements) {
+      tabs?.updatePaths(coll.id, from, to)
       update({ ...coll, elements: result.elements })
     }
   }

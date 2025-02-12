@@ -34,7 +34,7 @@ export default function CollectionElements({
     e.stopPropagation()
     const from = JSON.parse(e.dataTransfer.getData('path'))
     const to = [...path]
-    to[to.length - 1] = { ...to[to.length - 1], type: 'collection' }
+    to[to.length - 1] = { ...to[to.length - 1], type: 'folder' }
     move({ from, to })
   }
 
