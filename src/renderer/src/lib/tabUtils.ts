@@ -37,7 +37,8 @@ export const updateTabPaths = ({
       return tab
     }
     updated = true
-    const newPath = [...to, { id: requestId, type: 'request' }]
+    const toSanitized = sanitizeTo(to)
+    const newPath = [...toSanitized, { id: requestId, type: 'request' }]
     return { ...tab, path: newPath } as RequestTab
   })
   return { updated, tabs: newTabs }
@@ -48,4 +49,16 @@ const getLastPath = (path: PathItem[]): PathItem | undefined => {
     return path.at(-1)
   }
   return undefined
+}
+
+const sanitizeTo = (path: PathItem[]): PathItem[] => {
+  const copyPath = [...path]
+  const last = getLastPath(copyPath)
+  if (!last) {
+    return []
+  }
+  if (last.type === 'request') {
+    copyPath.pop()
+  }
+  return copyPath
 }

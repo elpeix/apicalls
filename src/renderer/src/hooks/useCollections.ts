@@ -102,6 +102,13 @@ export function useCollections(): CollectionsHookType {
         elements.splice(index, 1, request)
       } else {
         elements = (elements[index] as CollectionFolder).elements
+        if (elements === undefined) {
+          console.warn('Can not save request', {
+            index,
+            path: [...pathCopy]
+          })
+          break
+        }
       }
     }
     update(newCollection)
