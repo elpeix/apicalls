@@ -402,3 +402,9 @@ type ConfirmType = {
   onConfirm: () => void
   onCancel: () => void
 }
+
+type MoveAction = {
+  from: PathItem[]
+  to: PathItem[]
+  after?: Identifier
+}

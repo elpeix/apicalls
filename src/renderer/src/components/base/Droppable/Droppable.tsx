@@ -8,7 +8,10 @@ export default function Droppable({
   onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation(),
   draggable = false,
   onDragStart = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault(),
-  onDrop,
+  onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  },
   onDragOver,
   onDragEnter,
   onDragLeave,
@@ -22,14 +25,14 @@ export default function Droppable({
   onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void
   draggable?: boolean
   onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void
-  onDrop: (e: React.DragEvent<HTMLDivElement>) => void
+  onDrop?: (e: React.DragEvent<HTMLDivElement>) => void
   onDragOver?: (e: React.DragEvent<HTMLDivElement>) => void
   onDragEnter?: (e: React.DragEvent<HTMLDivElement>) => void
   onDragLeave?: (e: React.DragEvent<HTMLDivElement>) => void
   onDragOverDebounced?: () => void
   children?: React.ReactNode
   className?: string
-  dragDecorator?: 'top' | 'left'
+  dragDecorator?: 'top' | 'left' | 'none'
   allowedDropTypes?: string[]
   ref?: React.RefObject<HTMLDivElement | null>
 }) {

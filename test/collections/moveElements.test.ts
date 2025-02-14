@@ -39,7 +39,8 @@ describe('Move collections', () => {
     const elements: (CollectionFolder | RequestType)[] = [getRequest('1'), getFolder('2')]
     const from: PathItem[] = [{ id: '1', type: 'request' }]
     const to: PathItem[] = []
-    const result = moveElements({ elements, from, to })
+    const after = '2'
+    const result = moveElements({ elements, from, to, after })
     expect(result.moved).toBe(true)
     expect(result.elements?.length).toBe(2)
     expect(result.elements?.[0].id).toBe('2')
@@ -57,6 +58,51 @@ describe('Move collections', () => {
     expect(result.elements?.[1].id).toBe('1')
   })
 
+  it('should do nothing when move to same position in root', () => {
+    const elements: (CollectionFolder | RequestType)[] = [
+      getRequest('1'),
+      getRequest('2'),
+      getRequest('3')
+    ]
+    const from: PathItem[] = [{ id: '3', type: 'request' }]
+    const to: PathItem[] = []
+    const after: Identifier = '3'
+    const result = moveElements({ elements, from, to, after })
+    expect(result.moved).toBe(false)
+    expect(result.elements?.length).toBe(3)
+    expect(result.elements?.[0].id).toBe('1')
+    expect(result.elements?.[1].id).toBe('2')
+    expect(result.elements?.[2].id).toBe('3')
+  })
+
+  it('should do nothing when move to same position in folder', () => {
+    const elements: (CollectionFolder | RequestType)[] = [
+      getRequest('1'),
+      getFolder('2', [getRequest('3'), getRequest('4'), getRequest('5')]),
+      getRequest('6'),
+      getRequest('7')
+    ]
+    const from: PathItem[] = [
+      { id: '2', type: 'folder' },
+      { id: '5', type: 'request' }
+    ]
+    const to: PathItem[] = [{ id: '2', type: 'folder' }]
+    const after: Identifier = '5'
+    const result = moveElements({ elements, from, to, after })
+    expect(result.moved).toBe(false)
+    expect(result.elements?.length).toBe(4)
+    expect(result.elements?.[0].id).toBe('1')
+    expect(result.elements?.[1].id).toBe('2')
+    expect(result.elements?.[2].id).toBe('6')
+    expect(result.elements?.[3].id).toBe('7')
+
+    const folder = result.elements?.[1] as CollectionFolder
+    expect(folder.elements?.length).toBe(3)
+    expect(folder.elements?.[0].id).toBe('3')
+    expect(folder.elements?.[1].id).toBe('4')
+    expect(folder.elements?.[2].id).toBe('5')
+  })
+
   it('should move element to down', () => {
     const elements: (CollectionFolder | RequestType)[] = [
       getRequest('1'),
@@ -64,8 +110,9 @@ describe('Move collections', () => {
       getRequest('3')
     ]
     const from: PathItem[] = [{ id: '1', type: 'request' }]
-    const to: PathItem[] = [{ id: '3', type: 'request' }]
-    const result = moveElements({ elements, from, to })
+    const to: PathItem[] = []
+    const after: Identifier = '2'
+    const result = moveElements({ elements, from, to, after })
     expect(result.moved).toBe(true)
     expect(result.elements?.length).toBe(3)
     expect(result.elements?.[0].id).toBe('2')
@@ -103,14 +150,15 @@ describe('Move collections', () => {
   })
 
   it('should move element in the folder between other elements', () => {
-    const folder = getFolder('2', [getRequest('1'), getRequest('3')])
-    const elements: (CollectionFolder | RequestType)[] = [folder, getRequest('4')]
-    const from: PathItem[] = [{ id: '4', type: 'request' }]
-    const to: PathItem[] = [
-      { id: '2', type: 'folder' },
-      { id: '3', type: 'request' }
+    const elements: (CollectionFolder | RequestType)[] = [
+      getFolder('2', [getRequest('1'), getRequest('3')]),
+      getRequest('4')
     ]
-    const result = moveElements({ elements, from, to })
+    const from: PathItem[] = [{ id: '4', type: 'request' }]
+    const to: PathItem[] = [{ id: '2', type: 'folder' }]
+    const after: Identifier = '1'
+
+    const result = moveElements({ elements, from, to, after })
     expect(result.moved).toBe(true)
     expect(result.elements?.length).toBe(1)
     expect(result.elements?.[0].id).toBe('2')

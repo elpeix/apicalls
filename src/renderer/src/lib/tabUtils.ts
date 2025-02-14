@@ -26,7 +26,8 @@ export const updateTabPaths = ({
       if (path.some((p) => p.id === lastPath.id && p.type === lastPath.type)) {
         updated = true
         const requestPath = getLastPath(path)
-        const newPath = [...to, lastPath, requestPath]
+        const toSanitized = sanitizeTo(to)
+        const newPath = [...toSanitized, lastPath, requestPath]
         return { ...tab, path: newPath } as RequestTab
       }
       return tab

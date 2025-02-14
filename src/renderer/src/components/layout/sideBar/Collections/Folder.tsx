@@ -14,7 +14,7 @@ export default function Folder({
   collectionId,
   path,
   update,
-  move,
+  onMove,
   remove,
   scrolling
 }: {
@@ -22,7 +22,7 @@ export default function Folder({
   collectionId: Identifier
   path: PathItem[]
   update: () => void
-  move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
+  onMove: (moveAction: MoveAction) => void
   remove: (folder: CollectionFolder) => void
   scrolling: boolean
 }) {
@@ -111,21 +111,12 @@ export default function Folder({
     expandFolder(true)
   }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    move({
-      from: JSON.parse(e.dataTransfer.getData('path')),
-      to: folderPath
-    })
-  }
-
   return (
     <>
       <Droppable
         className={styles.folder}
         onDragOverDebounced={handleDragOverDebounced}
-        onDrop={handleDrop}
+        dragDecorator="none"
         allowedDropTypes={['path']}
       >
         <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''}`}>
@@ -168,7 +159,7 @@ export default function Folder({
               collectionId={collectionId}
               elements={folder.elements}
               update={update}
-              move={move}
+              onMove={onMove}
               path={folderPath}
               scrolling={scrolling}
             />

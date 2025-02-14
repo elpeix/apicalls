@@ -131,9 +131,11 @@ export default function Collection({
       onCancel: () => application.hideConfirm()
     })
   }
+  const handleMove = ({ from, to, after }: MoveAction) => {
+    // Force remove className
+    document.querySelector('body')?.classList.remove(styles.movingElements)
 
-  const handleMove = ({ from, to }: { from: PathItem[]; to: PathItem[] }) => {
-    const result = moveElements({ elements: coll.elements, from, to })
+    const result = moveElements({ elements: coll.elements, from, to, after })
     if (result.moved && result.elements) {
       tabs?.updatePaths(coll.id, from, to)
       update({ ...coll, elements: result.elements })
@@ -238,7 +240,7 @@ export default function Collection({
           collectionId={coll.id}
           elements={filteredElements}
           update={handleUpdate}
-          move={handleMove}
+          onMove={handleMove}
           path={[]}
           scrolling={isScrolling}
         />
