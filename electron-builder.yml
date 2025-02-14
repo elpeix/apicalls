@@ -31,8 +31,8 @@ linux:
   icon: ./build/icons/
   target:
     - AppImage
-    - rpm
     - deb
+    - rpm
   maintainer: francescrequesens.com
   category: Utility
 rpm:
