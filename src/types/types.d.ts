@@ -144,6 +144,7 @@ type TabsHookType = {
   renameTab: (tabId: Identifier, name: string) => void
   moveTab: (tabId: Identifier, toBeforeTabId: Identifier) => void
   tabs: RequestTab[]
+  updatePaths: (collectionId: Identifier, from: PathItem[], to: PathItem[]) => void
 }
 
 type RequestLog = {
@@ -400,4 +401,10 @@ type ConfirmType = {
   confirmColor?: 'primary' | 'danger'
   onConfirm: () => void
   onCancel: () => void
+}
+
+type MoveAction = {
+  from: PathItem[]
+  to: PathItem[]
+  after?: Identifier
 }

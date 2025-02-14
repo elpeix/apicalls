@@ -1,20 +1,20 @@
-export const moveElements = (args: {
-  elements: (CollectionFolder | RequestType)[]
-  from: PathItem[]
-  to: PathItem[]
-}): {
+export const moveElements = (
+  args: MoveAction & {
+    elements: (CollectionFolder | RequestType)[]
+  }
+): {
   moved: boolean
   elements?: (CollectionFolder | RequestType)[]
 } => {
   const {
     elements,
     from,
-    to
-  }: {
+    to,
+    after
+  }: MoveAction & {
     elements: (CollectionFolder | RequestType)[]
-    from: PathItem[]
-    to: PathItem[]
-  } = JSON.parse(JSON.stringify(args))
+  } = JSON.parse(JSON.stringify(args)) // clone
+
   let moved = false
 
   if (
@@ -27,39 +27,39 @@ export const moveElements = (args: {
   }
 
   findElement(elements, from, (elementsFrom, elementFrom) => {
+    if (to.length === 0 && elementFrom.id === after) {
+      return
+    }
     const indexFrom = elementsFrom.indexOf(elementFrom)
     if (to.length === 0) {
       moved = true
       elementsFrom.splice(indexFrom, 1)
-      elements.push(elementFrom)
+      elements.splice(getAfterIndex(elements, after), 0, elementFrom)
       return
     }
-    findElement(elements, from, (elementsFrom, elementFrom) => {
-      const indexFrom = elementsFrom.indexOf(elementFrom)
-      if (to.length === 0) {
+    findElement(
+      elements,
+      to,
+      (elementsTo, elementTo) => {
+        if (elementFrom.id === after) {
+          return
+        }
         moved = true
         elementsFrom.splice(indexFrom, 1)
-        elements.push(elementFrom)
-        return
-      }
-      findElement(
-        elements,
-        to,
-        (elementsTo, elementTo) => {
-          moved = true
-          elementsFrom.splice(indexFrom, 1)
-          if (to[to.length - 1].type === 'collection' && elementTo.type === 'folder') {
-            elementTo.elements.push(elementFrom)
-          } else {
-            const indexTo = elementsTo.indexOf(elementTo)
-            elementsTo.splice(indexTo, 0, elementFrom)
-          }
-        },
-        () => {
-          elementsFrom.splice(indexFrom, 0, elementFrom)
+        if (elementTo.type === 'folder') {
+          const indexTo = getAfterIndex(elementTo.elements, after)
+          elementTo.elements.splice(indexTo, 0, elementFrom)
+        } else {
+          console.warn('[to] must be a folder')
+          const indexTo = getAfterIndex(elementsTo, after)
+          elementsTo.splice(indexTo, 0, elementFrom)
         }
-      )
-    })
+      },
+      () => {
+        console.warn('To not found')
+        elementsFrom.splice(indexFrom, 0, elementFrom)
+      }
+    )
   })
   return { moved, elements }
 }
@@ -104,4 +104,14 @@ const findElement = (
     return
   }
   onNotFound?.()
+}
+
+const getAfterIndex = (
+  elements: (CollectionFolder | RequestType)[],
+  after?: Identifier
+): number => {
+  if (after) {
+    return elements.findIndex((e) => e.id === after) + 1
+  }
+  return 0
 }

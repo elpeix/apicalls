@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CollectionElement from './CollectionElement'
 import styles from './Collections.module.css'
 import Droppable from '../../../base/Droppable/Droppable'
@@ -8,16 +8,18 @@ export default function CollectionElements({
   collectionId,
   path,
   update,
-  move,
+  onMove,
   scrolling
 }: {
   elements: (CollectionFolder | RequestType)[]
   collectionId: Identifier
   path: PathItem[]
   update: () => void
-  move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
+  onMove: (moveAction: MoveAction) => void
   scrolling: boolean
 }) {
+  const [droppableActive, setDroppableActive] = useState(false)
+
   const removeElement = (element: CollectionFolder | RequestType) => {
     const index = elements.indexOf(element)
     elements.splice(index, 1)
@@ -29,17 +31,30 @@ export default function CollectionElements({
     update()
   }
 
+  const handleDragOver = () => setDroppableActive(true)
+  const handleDragLeave = () => setDroppableActive(false)
+
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
+    setDroppableActive(false)
     const from = JSON.parse(e.dataTransfer.getData('path'))
     const to = [...path]
-    to[to.length - 1] = { ...to[to.length - 1], type: 'collection' }
-    move({ from, to })
+    if (to.length) {
+      to[to.length - 1] = { ...to[to.length - 1], type: 'folder' }
+    }
+    onMove({ from, to })
   }
 
   return (
     <>
+      <Droppable
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        className={`${styles.droppableElement} ${droppableActive ? styles.droppableActive : ''}`}
+        allowedDropTypes={['path']}
+      />
       {elements.map((element, i) => (
         <CollectionElement
           key={i}
@@ -48,13 +63,12 @@ export default function CollectionElements({
           element={element}
           update={update}
           addRequest={addRequest}
-          move={move}
+          onMove={onMove}
           removeElement={removeElement}
           path={path}
           scrolling={scrolling}
         />
       ))}
-      <Droppable onDrop={handleDrop} className={styles.firstElement} allowedDropTypes={['path']} />
     </>
   )
 }

@@ -25,5 +25,11 @@
       border-top: none;
       border-left: 2px solid var(--droppable-color);
     }
+
+    &.none::before {
+      width: 0;
+      height: 0;
+      border: none;
+    }
   }
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { createRequest } from '../lib/factory'
 import { TABS } from '../../../lib/ipcChannels'
 import { toggleCollectionElements } from '../lib/collectionFilter'
+import { updateTabPaths } from '../lib/tabUtils'
 
 const MAX_CLOSED_TABS = 10
 
@@ -124,6 +125,7 @@ export default function useTabs(
   const updateTab = (tabId: Identifier, tab: RequestTab) => {
     updateTabs(tabs.map((t) => (t.id === tabId ? tab : t)))
   }
+
   const updateTabRequest = (tabId: Identifier, saved: boolean, request: RequestBase) => {
     const newTabs = tabs.map((tab: RequestTab) =>
       tab.id === tabId ? { ...tab, request, saved } : tab
@@ -185,6 +187,18 @@ export default function useTabs(
     updateTabs(newTabs)
   }
 
+  const updatePaths = (collectionId: Identifier, from: PathItem[], to: PathItem[]) => {
+    const updatedTabs = updateTabPaths({
+      collectionId,
+      from,
+      to,
+      tabs
+    })
+    if (updatedTabs.updated) {
+      updateTabs(updatedTabs.tabs)
+    }
+  }
+
   const getActiveRequest = () => activeRequest
 
   return {
@@ -205,6 +219,7 @@ export default function useTabs(
     renameTab,
     moveTab,
     tabs,
+    updatePaths,
     getActiveRequest,
     closeOtherTabs,
     closeAllTabs

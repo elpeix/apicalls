@@ -12,7 +12,6 @@ export default function CollectionRequest({
   path,
   update,
   addRequest,
-  move,
   remove,
   scrolling
 }: {
@@ -21,7 +20,6 @@ export default function CollectionRequest({
   path: PathItem[]
   update: () => void
   remove: (request: RequestType) => void
-  move: (moveAction: { from: PathItem[]; to: PathItem[] }) => void
   addRequest: (request: RequestType) => void
   scrolling: boolean
 }) {
@@ -93,21 +91,12 @@ export default function CollectionRequest({
     addRequest({ ...request, id: Date.now().toString(), name: `${request.name} copy` })
   }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    move({
-      from: JSON.parse(e.dataTransfer.getData('path')),
-      to: requestPath
-    })
-  }
-
   return (
     <Droppable
       className={`${styles.request} ${active ? styles.requestActive : ''}`}
       onClick={clickHandler}
-      onDrop={handleDrop}
       allowedDropTypes={['path']}
+      dragDecorator="none"
       ref={ref}
     >
       <div className={`${styles.requestMethod} ${request.method.value}`}>
