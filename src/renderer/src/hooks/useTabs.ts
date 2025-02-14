@@ -155,6 +155,8 @@ export default function useTabs(
         toggleCollectionElements(collection.elements, true, path)
         collections.update(collection)
       }
+    } else {
+      setActiveRequest(null)
     }
     return newTabs
   }
