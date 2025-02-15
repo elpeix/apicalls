@@ -119,7 +119,7 @@ export default function Folder({
         dragDecorator="none"
         allowedDropTypes={['path']}
       >
-        <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''}`}>
+        <div className={`${styles.folderHeader} ${expanded ? styles.expanded : ''} `}>
           <div>
             <ButtonIcon
               icon="arrow"
@@ -131,6 +131,7 @@ export default function Folder({
             <EditableName
               name={folder.name}
               editMode={editingName}
+              className={`${styles.folderName} ${editingName ? styles.editing : ''}`}
               update={changeName}
               onBlur={() => setEditingName(false)}
             />

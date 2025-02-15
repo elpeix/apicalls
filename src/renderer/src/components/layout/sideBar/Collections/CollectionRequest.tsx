@@ -108,6 +108,7 @@ export default function CollectionRequest({
         name={collectionRequest.name || 'New request'}
         editMode={editingName}
         update={changeName}
+        className={styles.requestName}
         onBlur={() => setEditingName(false)}
         editOnDoubleClick={true}
       />
