@@ -58,6 +58,8 @@ export default function CollectionRequest({
   }, [collectionRequest, collectionId, tabs])
 
   const clickHandler = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (active) return
     if (tabs) {
       tabs.openTab({
         request: collectionRequest,
