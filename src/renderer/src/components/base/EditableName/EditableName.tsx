@@ -25,6 +25,7 @@ export default function EditableName({
   const [editingName, setEditingName] = useState(false)
   const [nameValue, setNameValue] = useState(name)
   const nameRef = useRef<HTMLInputElement>(null)
+  const ipcRenderer = window.electron?.ipcRenderer
 
   useEffect(() => {
     if (editingName) return
@@ -43,22 +44,28 @@ export default function EditableName({
   }, [name])
 
   const cancelEdit = () => {
+    if (!editingName) return
     setEditingName(false)
     setNameValue(name)
     if (onBlur) onBlur()
+    ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
   }
 
   useEffect(() => {
-    const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
-    ipcRenderer?.on(ACTIONS.escape, cancelEdit)
+    if (editingName) {
+      ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
+      ipcRenderer?.once(ACTIONS.escape, cancelEdit)
+    }
     return () => ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
-  }, [])
+  }, [ACTIONS.escape, cancelEdit, editingName])
 
-  const editName = () => {
+  const editName = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
     if (!editOnDoubleClick) return
     setEditingName(true)
     setNameValue(name)
+    ipcRenderer?.on(ACTIONS.escape, cancelEdit)
     setTimeout(() => {
       if (!nameRef.current) return
       nameRef.current.setSelectionRange(0, nameValue.length)
@@ -88,7 +95,7 @@ export default function EditableName({
 
   return (
     <div
-      className={`${styles.name} ${className} ${editingName && `${styles.editable} ${editingClassName}`}`}
+      className={`${styles.name} ${className} ${editingName ? `${styles.editable} ${editingClassName}` : ''}`}
       onDoubleClick={editName}
     >
       {editingName && (
