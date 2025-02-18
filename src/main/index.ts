@@ -19,6 +19,8 @@ function createWindow() {
     width: 900,
     height: 670,
     show: false,
+    resizable: true,
+    maximizable: true,
     icon,
     title: 'API Calls',
     titleBarStyle: 'default',
