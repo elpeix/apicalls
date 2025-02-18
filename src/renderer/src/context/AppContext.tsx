@@ -70,7 +70,7 @@ export default function AppContextProvider({ children }: { children: React.React
       ipcRenderer?.removeAllListeners(TABS.loadSuccess)
       ipcRenderer?.removeAllListeners(COOKIES.loaded)
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   const [dialogProps, setDialogProps] = useState<DialogType | null>(null)
 

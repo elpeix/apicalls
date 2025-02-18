@@ -55,7 +55,6 @@ export default function Collection({
         nameRef.current.focus()
       }, 0)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection, filter, collections?.updateTime])
 
   const handleCreateFolder = () => {
