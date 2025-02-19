@@ -371,6 +371,8 @@ type WindowAPI = {
 type ApplicationType = {
   showDialog: (dialogProps: DialogType) => void
   hideDialog: () => void
+  showAlert: (alertProps: AlertType) => void
+  hideAlert: () => void
   showPrompt: (promptProps: PromptType) => void
   hidePrompt: () => void
   showConfirm: (confirmProps: ConfirmType) => void
@@ -385,6 +387,13 @@ type DialogType = {
   preventKeyClose?: boolean
   position?: 'top' | 'center'
   fullWidth?: boolean
+}
+
+type AlertType = {
+  message: string
+  buttonName?: string
+  buttonColor?: 'primary' | 'danger'
+  onClose?: () => void
 }
 
 type PromptType = {

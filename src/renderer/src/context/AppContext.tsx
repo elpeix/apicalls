@@ -11,6 +11,7 @@ import Dialog from '../components/base/dialog/Dialog'
 import Prompt from '../components/base/PopupBoxes/Prompt'
 import Confirm from '../components/base/PopupBoxes/Confirm'
 import { defaultSettings } from '../../../lib/defaults'
+import Alert from '../components/base/PopupBoxes/Alert'
 
 export const AppContext = createContext<{
   application: ApplicationType
@@ -83,6 +84,26 @@ export default function AppContextProvider({ children }: { children: React.React
     setDialogProps(null)
   }
 
+  const showAlert = (alertProps: AlertType) => {
+    showDialog({
+      children: (
+        <Alert
+          message={alertProps.message}
+          buttonName={alertProps.buttonName}
+          buttonColor={alertProps.buttonColor}
+          onClose={() => {
+            hideAlert()
+            alertProps.onClose?.()
+          }}
+        />
+      )
+    })
+  }
+
+  const hideAlert = () => {
+    hideDialog()
+  }
+
   const showConfirm = (confirmProps: ConfirmType) => {
     showDialog({
       children: (
@@ -125,6 +146,8 @@ export default function AppContextProvider({ children }: { children: React.React
     application: {
       showDialog,
       hideDialog,
+      showAlert,
+      hideAlert,
       showPrompt,
       hidePrompt,
       showConfirm,

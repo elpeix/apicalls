@@ -41,8 +41,8 @@ ipcMain.on(COLLECTIONS.import, async (event) => {
     title: 'Import Collection',
     properties: ['openFile'],
     filters: [
-      { name: 'YAML', extensions: ['yaml', 'yml'] },
       { name: 'JSON', extensions: ['json'] },
+      { name: 'YAML', extensions: ['yaml', 'yml'] },
       { name: 'All Files', extensions: ['*'] }
     ]
   }
@@ -68,7 +68,11 @@ ipcMain.on(COLLECTIONS.import, async (event) => {
       event.reply(COLLECTIONS.updated, store.get(COLLECTIONS_KEY, collections))
     } catch (error) {
       console.error(error)
-      event.reply(COLLECTIONS.importFailure, error)
+      let errorMessage = 'Can not import collection'
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+      event.reply(COLLECTIONS.importFailure, errorMessage)
     }
   })
 })

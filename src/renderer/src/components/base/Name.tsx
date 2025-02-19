@@ -13,7 +13,7 @@ export default function Name({
 }) {
   return (
     <div className={className} onClick={onClick} onDoubleClick={onDoubleClick}>
-      {name.length ? name : <em>Unnamed</em>}
+      {name && name.length ? name : <em>Unnamed</em>}
     </div>
   )
 }

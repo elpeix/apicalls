@@ -7,7 +7,6 @@ export const COLLECTIONS = {
   updated: 'collections:updated',
   getFailure: 'collections:get-failure',
   import: 'collections:import',
-  importSuccess: 'collections:import-success',
   importFailure: 'collections:import-failure',
   importCanceled: 'collections:import-canceled',
   importProgress: 'collections:import-progress',

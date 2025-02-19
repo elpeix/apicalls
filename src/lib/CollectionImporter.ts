@@ -53,6 +53,9 @@ class CollectionImporter {
   }
 
   private parseCollection(data: any): Collection {
+    if (!data.path) {
+      throw Error('Invalid openAPI file')
+    }
     const id = new Date().getTime()
     const collection: Collection = {
       id,
