@@ -2,27 +2,17 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import ResponseBody from './ResponseBody'
 import ResponseHeaders from './ResponseHeaders'
-import ResponseStatus from './ResponseStatus'
 import { RequestContext } from '../../context/RequestContext'
 import Loading from '../base/Loading/Loading'
 import styles from './Response.module.css'
 import Switch from '../base/Switch/Switch'
 import { formatSource, getLanguageName } from '../../lib/languageSupport'
 
-export default function Response({
-  consoleIsHidden,
-  showConsole
-}: {
-  consoleIsHidden: boolean
-  showConsole: () => void
-}) {
+export default function Response() {
   const context = useContext(RequestContext)
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
   const [fetchError, setFetchError] = useState('')
-  const [status, setStatus] = useState(0)
-  const [time, setTime] = useState(0)
-  const [size, setSize] = useState(0)
   const [headers, setHeaders] = useState<KeyValue[]>([])
 
   const [showRaw, setShowRaw] = useState(true)
@@ -35,10 +25,7 @@ export default function Response({
     setFetching(context.fetching)
     setFetched(context.fetched)
     setFetchError(context.fetchError)
-    setStatus(context.response.status)
-    setTime(context.response.time)
     setHeaders(context.response.headers)
-    setSize(context.response.size)
     setRawValue(context.response.body)
     setParsedValue(formatSource(context.response.body))
   }, [context])
@@ -98,15 +85,6 @@ export default function Response({
                 </TabPanel>
               </div>
             </Tabs>
-          </div>
-          <div className={styles.footer}>
-            <ResponseStatus
-              status={status}
-              time={time}
-              size={size}
-              consoleIsHidden={consoleIsHidden}
-              showConsole={showConsole}
-            />
           </div>
         </div>
       )}

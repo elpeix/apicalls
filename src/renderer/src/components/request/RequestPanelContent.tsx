@@ -9,6 +9,7 @@ import Response from '../response/Response'
 import styles from './Request.module.css'
 import { ACTIONS } from '../../../../lib/ipcChannels'
 import { AppContext } from '../../context/AppContext'
+import ResponseStatus from '../response/ResponseStatus'
 
 export default function RequestPanelContent() {
   const { appSettings, application } = useContext(AppContext)
@@ -132,16 +133,18 @@ export default function RequestPanelContent() {
             </Panel>
             <Gutter mode={gutterMode} onDoubleClick={toggleRequestPanel} />
             <Panel>
-              <Response showConsole={expandConsole} consoleIsHidden={consoleCollapsed} />
+              <Response />
             </Panel>
           </PanelGroup>
         </Panel>
         <Gutter mode="horizontal" onDoubleClick={toggleConsole} />
-
+        <div className={styles.footer}>
+          <ResponseStatus consoleIsHidden={consoleCollapsed} toggleConsole={toggleConsole} />
+        </div>
         <Panel
           defaultSize={0}
           minSize={10}
-          maxSize={48}
+          maxSize={gutterMode === 'horizontal' ? 50 : 86}
           collapsible={true}
           ref={consolePanel}
           onCollapse={() => setConsoleCollapsed(true)}
