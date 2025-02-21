@@ -8,7 +8,8 @@ import { AppContext } from '../../context/AppContext'
 
 export default function SaveButton() {
   const { application } = useContext(AppContext)
-  const { path, save, openSaveAs, setOpenSaveAs } = useContext(RequestContext)
+
+  const { tabId, path, save, openSaveAs, setOpenSaveAs } = useContext(RequestContext)
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
 
@@ -35,7 +36,7 @@ export default function SaveButton() {
 
   const openDialog = () => {
     application.showDialog({
-      children: <SaveAs onClose={closeDialog} />,
+      children: <SaveAs tabId={tabId} onClose={closeDialog} />,
       onClose: closeDialog
     })
     setShowModal(false)

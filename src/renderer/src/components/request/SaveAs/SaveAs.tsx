@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './SaveAs.module.css'
-import { RequestContext } from '../../../context/RequestContext'
 import { AppContext } from '../../../context/AppContext'
 import Icon from '../../base/Icon/Icon'
 import { Button } from '../../base/Buttons/Buttons'
@@ -15,9 +14,14 @@ const getFolder = (folders: CollectionFolder[], id: Identifier) => {
   return folders.find((element) => element.id === id)
 }
 
-export default function SaveAs({ onClose }: { onClose: () => void }) {
+export default function SaveAs({
+  tabId,
+  onClose
+}: {
+  tabId: Identifier | undefined
+  onClose: () => void
+}) {
   const { collections, tabs } = useContext(AppContext)
-  const { tabId } = useContext(RequestContext)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -33,7 +37,7 @@ export default function SaveAs({ onClose }: { onClose: () => void }) {
     if (!tabs || !tabId) {
       return
     }
-    const tab = tabs?.getTab(tabId)
+    const tab = tabs.getTab(tabId)
     if (!tab) {
       return
     }
