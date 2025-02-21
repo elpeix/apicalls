@@ -25,7 +25,7 @@
     "background-base": "var(--base2)",
     "background-content": "var(--base3)",
     "base-color": "var(--base02)",
-    "border-color": "var(--base2)",
+    "border-color": "color-mix(in srgb, var(--base2) 85%, var(--base01))",
     "button-active-background-color": "transparent",
     "button-active-border-color": "var(--base01)",
     "button-active-color": "var(--base01)",
