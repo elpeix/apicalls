@@ -20,7 +20,7 @@ export default function Input({
   showTip = false,
   zIndexTip = 1
 }: {
-  inputRef: React.RefObject<HTMLInputElement>
+  inputRef: React.RefObject<HTMLInputElement | null>
   className?: string
   value: string
   onFocus?: () => void

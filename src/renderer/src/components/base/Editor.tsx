@@ -1,21 +1,28 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import * as monaco from 'monaco-editor'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 import { RequestContext } from '../../context/RequestContext'
 
 const base = window || global
 const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
 
+type EditorRefType = {
+  editor: monaco.editor.IStandaloneCodeEditor
+  monaco: Monaco
+}
+
 export default function Editor({
   language = 'json',
   value,
   readOnly = true,
   wordWrap,
-  onChange
+  onChange,
+  type
 }: {
   language: string
   value: string
+  type: 'request' | 'response' | 'none'
   readOnly?: boolean
   wordWrap?: boolean
   onChange?: OnChange
@@ -31,14 +38,16 @@ export default function Editor({
   }
 
   const { appSettings } = useContext(AppContext)
-  const requestContext = useContext(RequestContext)
+  const { isActive, setEditorState, getEditorState } = useContext(RequestContext)
+  const [mustRender, setMustRender] = useState(false)
+  const [viewState, setViewState] = useState<monaco.editor.ICodeEditorViewState | null>(null)
   const [theme, setTheme] = useState(
     getThemeName(appSettings?.getEditorTheme()?.name, appSettings?.getEditorTheme()?.mode)
   )
   const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(
     appSettings?.getEditorTheme()?.data || null
   )
-  const editorRef = useRef<Monaco | null>(null)
+  const editorRef = useRef<EditorRefType | null>(null)
 
   useEffect(() => {
     const editorTheme = appSettings?.getEditorTheme()
@@ -53,7 +62,8 @@ export default function Editor({
     }
     setThemeData(editorTheme.data)
     if (editorTheme.data && editorTheme.data.colors) {
-      const monacoEditor = editorRef.current || monaco
+      const editorRefData = editorRef.current
+      const monacoEditor = editorRefData?.monaco || monaco
       monacoEditor.editor.defineTheme(editorTheme.name, editorTheme.data)
       monacoEditor.editor.setTheme(editorTheme.name)
       setTheme(editorTheme.name)
@@ -62,7 +72,29 @@ export default function Editor({
     }
   }, [appSettings])
 
-  return requestContext.isActive ? (
+  useEffect(() => {
+    if (type === 'none') {
+      return
+    }
+    const rawViewState = getEditorState(type)
+    if (rawViewState) {
+      setViewState(JSON.parse(rawViewState))
+    }
+    return () => {
+      if (editorRef.current && editorRef.current.editor) {
+        const viewState = editorRef.current.editor.saveViewState()
+        if (viewState) {
+          setEditorState(type, JSON.stringify(viewState))
+        }
+      }
+    }
+  }, [isActive])
+
+  useEffect(() => {
+    setMustRender(type === 'none' || value.length < 1024 * 1024 || isActive)
+  }, [value, isActive])
+
+  return mustRender ? (
     <RenderEditor
       language={language}
       value={value}
@@ -72,6 +104,7 @@ export default function Editor({
       theme={theme}
       themeData={themeData}
       onChange={onChange}
+      viewState={viewState}
     />
   ) : (
     <></>
@@ -86,16 +119,18 @@ function RenderEditor({
   wordWrap,
   onChange,
   theme,
-  themeData
+  themeData,
+  viewState
 }: {
   language: string
   value: string
-  editorRef: React.MutableRefObject<Monaco | null>
+  editorRef: React.RefObject<EditorRefType | null>
   readOnly: boolean
   wordWrap: boolean
   onChange?: OnChange
   theme: string
   themeData: monaco.editor.IStandaloneThemeData | null
+  viewState?: monaco.editor.ICodeEditorViewState | null
 }) {
   return (
     <MonacoEditor
@@ -106,8 +141,11 @@ function RenderEditor({
       height="100%"
       width="100%"
       value={value}
-      onMount={(_, monaco) => {
-        editorRef.current = monaco
+      onMount={(editor, monaco) => {
+        editorRef.current = { editor, monaco }
+        if (viewState) {
+          editor.restoreViewState(viewState)
+        }
         if (themeData && themeData.colors) {
           monaco.editor.defineTheme(theme, themeData)
         }

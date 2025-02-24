@@ -100,7 +100,15 @@ export default function PreRequestEditor({
             </TabPanel>
             {method.body && (
               <TabPanel forceRender={true}>
-                <Editor language="json" onChange={handleBodyChange} value={body} readOnly={false} />
+                <div className={styles.editor}>
+                  <Editor
+                    language="json"
+                    onChange={handleBodyChange}
+                    value={body}
+                    readOnly={false}
+                    type="none"
+                  />
+                </div>
               </TabPanel>
             )}
             <TabPanel forceRender={true}>

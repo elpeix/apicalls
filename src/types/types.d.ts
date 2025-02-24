@@ -297,6 +297,8 @@ type RequestContextType = {
   tabId?: Identifier
   openSaveAs?: boolean
   setOpenSaveAs?: (openSaveAs: boolean) => void
+  setEditorState: (type: 'request' | 'response', state: string) => void
+  getEditorState: (type: 'request' | 'response') => string
 }
 
 type AppTheme = {

@@ -17,7 +17,9 @@ export default function ResponseBody({
       {value && (
         <div className={styles.bodyContent}>
           {language === 'html' && <ExternalContent content={value} />}
-          {language !== 'html' && <Editor language={language} value={value} wordWrap={raw} />}
+          {language !== 'html' && (
+            <Editor language={language} value={value} wordWrap={raw} type="response" />
+          )}
         </div>
       )}
       {!value && <div className={styles.noContent}>No content</div>}
