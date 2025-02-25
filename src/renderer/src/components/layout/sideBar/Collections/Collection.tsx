@@ -15,6 +15,7 @@ import {
 } from '../../../../lib/collectionFilter'
 import PreRequestEditor from './PreRequest/PreRequestEditor'
 import Scrollable from '../../../base/Scrollable'
+import SubMenu from '../../../base/Menu/SubMenu'
 
 export default function Collection({
   collection,
@@ -25,15 +26,17 @@ export default function Collection({
   back: () => void
   onRemove?: () => void
 }) {
-  const { application, tabs, collections } = useContext(AppContext)
+  const { application, tabs, environments, collections } = useContext(AppContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
+  const [envs, setEnvs] = useState<Environment[]>([])
   const [editingName, setEditingName] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
   const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
   const [updateTime, setUpdateTime] = useState(0)
+  const [showMenu, setShowMenu] = useState(false)
 
   useEffect(() => {
     let internalCollection: Collection | undefined
@@ -57,7 +60,15 @@ export default function Collection({
     }
   }, [collection, filter, collections?.updateTime])
 
+  useEffect(() => {
+    if (!environments) {
+      return
+    }
+    setEnvs(environments.getAll())
+  }, [environments])
+
   const handleCreateFolder = () => {
+    setShowMenu(false)
     application.showPrompt({
       message: 'Folder name:',
       placeholder: 'Folder name',
@@ -76,6 +87,7 @@ export default function Collection({
   }
 
   const editName = () => {
+    setShowMenu(false)
     setEditingName(true)
     setTimeout(() => {
       if (!nameRef.current) return
@@ -95,6 +107,7 @@ export default function Collection({
   }
 
   const handleAddRequest = () => {
+    setShowMenu(false)
     application.showPrompt({
       message: 'Request name:',
       placeholder: 'Request name',
@@ -118,6 +131,7 @@ export default function Collection({
   }
 
   const handleRemoveCollection = () => {
+    setShowMenu(false)
     application.showConfirm({
       message: 'Are you sure you want to remove this collection?',
       confirmName: 'Remove',
@@ -161,12 +175,14 @@ export default function Collection({
   }
 
   const handlePreRequest = () => {
+    setShowMenu(false)
     application.showDialog({
       children: (
         <PreRequestEditor
           preRequest={coll.preRequest}
           onSave={preRequestSave}
           onClose={() => application.hideDialog()}
+          environmentId={coll.environmentId}
         />
       ),
       preventKeyClose: true
@@ -178,8 +194,17 @@ export default function Collection({
   }
 
   const toggleCollection = (expand: boolean) => {
+    setShowMenu(false)
     toggleCollectionElements(coll.elements, expand)
     update({ ...coll })
+  }
+
+  const selectEnvironment = (environmentId?: Identifier) => {
+    if (coll.environmentId === environmentId) {
+      collections?.setEnvironmentId(coll.id)
+      return
+    }
+    collections?.setEnvironmentId(coll.id, environmentId)
   }
 
   return (
@@ -197,8 +222,41 @@ export default function Collection({
         />
         <div className={styles.actions}>
           <ButtonIcon icon="filter" title="Filter" onClick={handleShowFilter} />
-          <Menu>
+          <Menu
+            menuIsOpen={showMenu}
+            onOpen={() => setShowMenu(true)}
+            onClose={() => setShowMenu(false)}
+            preventCloseOnClick={true}
+          >
             <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
+            <>
+              {environments && environments.hasItems() && (
+                <SubMenu icon="environment" title="Environment">
+                  <>
+                    {envs.map((environment) => (
+                      <MenuElement
+                        key={`menuEnv_${environment.id}`}
+                        title={environment.name}
+                        icon={environment.id === coll.environmentId ? 'check' : ''}
+                        onClick={() => selectEnvironment(environment.id)}
+                      />
+                    ))}
+                    {coll.environmentId !== undefined && (
+                      <>
+                        <MenuSeparator />
+                        <MenuElement
+                          title="Unlink enviroment"
+                          icon="unlink"
+                          onClick={() => selectEnvironment()}
+                          className={styles.remove}
+                        />
+                      </>
+                    )}
+                  </>
+                </SubMenu>
+              )}
+            </>
+            <MenuSeparator />
             <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
             <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
             <MenuElement icon="edit" title="Rename" onClick={editName} />

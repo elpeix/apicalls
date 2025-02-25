@@ -33,7 +33,7 @@ export function MenuElement({
       style={style}
     >
       {showIcon && <Icon icon={icon} className={className} />}
-      {title}
+      <div className={styles.title}>{title}</div>
     </div>
   )
 }

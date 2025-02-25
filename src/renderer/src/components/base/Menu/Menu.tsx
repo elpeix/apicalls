@@ -9,12 +9,20 @@ export default function Menu({
   showMenuClassName = '',
   iconClassName = '',
   isMoving = false,
+  menuIsOpen = false,
+  onOpen = () => {},
+  onClose = () => {},
+  preventCloseOnClick = false,
   children
 }: {
   className?: string
   showMenuClassName?: string
   iconClassName?: string
   isMoving?: boolean
+  menuIsOpen?: boolean
+  onOpen?: () => void
+  onClose?: () => void
+  preventCloseOnClick?: boolean
   children: ReactMenuElement
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
@@ -26,13 +34,27 @@ export default function Menu({
     }
   }, [showMenu, isMoving])
 
+  useEffect(() => {
+    setShowMenu(menuIsOpen)
+  }, [menuIsOpen])
+
+  useEffect(() => {
+    if (showMenu) {
+      onOpen?.()
+    } else {
+      onClose?.()
+    }
+  }, [showMenu])
+
   const handleOnClick = (e: React.MouseEvent<Element>) => {
     e.stopPropagation()
     setShowMenu(!showMenu)
   }
   const handleOnClickModal = (e: React.MouseEvent<Element>) => {
     e.stopPropagation()
-    setShowMenu(false)
+    if (!preventCloseOnClick) {
+      setShowMenu(false)
+    }
   }
 
   const menuClassName = `${styles.menu} ${className} ${showMenu ? `${styles.active} ${showMenuClassName}` : ''}`
@@ -58,7 +80,7 @@ export default function Menu({
           parentRef={menuRef}
           zIndex={1}
           topOffset={23}
-          leftOffset={-136}
+          leftOffset={-134}
           className={styles.menuModal}
           useOverlay={true}
           closeModal={() => setShowMenu(false)}

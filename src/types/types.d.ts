@@ -91,6 +91,7 @@ type Collection = {
   name: string
   preRequest?: PreRequest
   elements: (CollectionFolder | RequestType)[]
+  environmentId?: Identifier
 }
 
 type FlatRequest = RequestType & {
@@ -178,6 +179,8 @@ type CollectionsHookType = {
   clearPreRequest: (collectionId: Identifier) => void
   saveRequest: (saveRequest: SaveRequest) => void
   updateTime: number
+  getEnvironmentId: (collectionId: Identifier) => Identifier | undefined
+  setEnvironmentId: (collectionId: Identifier, environmentId?: Identifier) => void
 }
 
 type EnvironmentsHookType = {
@@ -194,10 +197,11 @@ type EnvironmentsHookType = {
   getActive: () => Environment | undefined
   active: (id: Identifier) => void
   deactive: () => void
-  variableIsDefined: (name: string) => boolean
-  replaceVariables: (value: string) => string
-  getVariableValue: (name: string) => string
+  variableIsDefined: (id: Identifier, name: string) => boolean
+  replaceVariables: (id: Identifier, value: string) => string
+  getVariableValue: (id: Identifier, name: string) => string
   getVariables: (id?: Identifier) => KeyValue[]
+  hasItems: () => boolean
 }
 
 type MenuItem = {
@@ -299,6 +303,7 @@ type RequestContextType = {
   setOpenSaveAs?: (openSaveAs: boolean) => void
   setEditorState: (type: 'request' | 'response', state: string) => void
   getEditorState: (type: 'request' | 'response') => string
+  getRequestEnvironment: () => Environment | null
 }
 
 type AppTheme = {

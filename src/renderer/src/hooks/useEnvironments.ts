@@ -64,23 +64,23 @@ export function useEnvironments(): EnvironmentsHookType {
         return environment
       })
     )
-  const variableIsDefined = (name: string): boolean => {
-    const activeEnvironment = getActive()
-    if (!activeEnvironment) return false
-    return activeEnvironment.variables.some((variable) => variable.name === name)
+  const variableIsDefined = (id: Identifier, name: string): boolean => {
+    const environment = get(id)
+    if (!environment) return false
+    return environment.variables.some((variable) => variable.name === name)
   }
-  const replaceVariables = (value: string) => {
-    const activeEnvironment = getActive()
-    if (!activeEnvironment) return value
-    activeEnvironment.variables.forEach((variable) => {
+  const replaceVariables = (id: Identifier, value: string) => {
+    const environment = get(id)
+    if (!environment) return value
+    environment.variables.forEach((variable) => {
       value = value.replace(`{{${variable.name}}}`, variable.value)
     })
     return value
   }
-  const getVariableValue = (name: string) => {
-    const activeEnvironment = getActive()
-    if (!activeEnvironment) return ''
-    const variable = activeEnvironment.variables.find((variable) => variable.name === name)
+  const getVariableValue = (id: Identifier, name: string) => {
+    const environment = get(id)
+    if (!environment) return ''
+    const variable = environment.variables.find((variable) => variable.name === name)
     if (!variable) return ''
     return variable.value
   }
@@ -105,6 +105,8 @@ export function useEnvironments(): EnvironmentsHookType {
     updateAll(newEnvs)
   }
 
+  const hasItems = () => environments.length > 0
+
   return {
     setEnvironments,
     getAll,
@@ -122,6 +124,7 @@ export function useEnvironments(): EnvironmentsHookType {
     variableIsDefined,
     replaceVariables,
     getVariableValue,
-    getVariables
+    getVariables,
+    hasItems
   }
 }
