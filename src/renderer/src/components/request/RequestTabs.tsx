@@ -103,6 +103,7 @@ export default function RequestTabs() {
                   onChange={handleBodyChange}
                   value={request.body}
                   readOnly={false}
+                  type="request"
                 />
               </div>
             </TabPanel>

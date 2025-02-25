@@ -29,6 +29,9 @@ export const RequestContext = createContext<RequestContextType>({
   fetchError: '',
   response: responseInitialValue,
   save: () => {},
+  setEditorState: () => {},
+  getEditorState: () => '',
+
   requestConsole: null
 })
 
@@ -76,6 +79,9 @@ export default function RequestContextProvider({
   const [fetchError, setFetchError] = useState('')
   const [response, setResponse] = useState<RequestContextResponseType>(responseInitialValue)
   const requestConsole = useConsole()
+
+  const [requestEditorState, setRequestEditorState] = useState('')
+  const [responseEditorState, setResponseEditorState] = useState('')
 
   useEffect(() => {
     if (changed) {
@@ -579,6 +585,21 @@ export default function RequestContextProvider({
     setSaved(false)
   }
 
+  const setEditorState = (type: 'request' | 'response', state: string) => {
+    if (type === 'request') {
+      setRequestEditorState(state)
+    } else {
+      setResponseEditorState(state)
+    }
+  }
+
+  const getEditorState = (type: 'request' | 'response') => {
+    if (type === 'request') {
+      return requestEditorState
+    }
+    return responseEditorState
+  }
+
   const contextValue = {
     path: path || [],
     isActive: tab.active,
@@ -626,7 +647,9 @@ export default function RequestContextProvider({
     requestConsole,
     tabId,
     openSaveAs,
-    setOpenSaveAs
+    setOpenSaveAs,
+    setEditorState,
+    getEditorState
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
