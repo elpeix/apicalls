@@ -50,6 +50,7 @@
     .actions {
       display: flex;
       gap: 0.2rem;
+      height: 100%;
     }
   }
 
@@ -68,7 +69,7 @@
     top: anchor(bottom);
     font-size: 0.8rem !important;
     border: 1px solid var(--border-color);
-    padding: 0.2rem 0.4rem !important;
+    padding: 0.5rem !important;
     background-color: var(--tooltip-background-color);
     max-width: unset !important;
     box-shadow: 0.2rem 0.3rem 0.6rem 0rem var(--transparent-bg);

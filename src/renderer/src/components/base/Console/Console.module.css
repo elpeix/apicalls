@@ -23,7 +23,8 @@
       flex-grow: 1;
     }
 
-    & > .clear {
+    & > .clear,
+    & > .close {
       height: 30px;
     }
   }

@@ -10,7 +10,9 @@ export default function ButtonIcon({
   iconClassName = '',
   disabled = false,
   direction = 'south',
-  title = ''
+  title = '',
+  tooltipOffsetX = 0,
+  tooltipOffsetY = 0
 }: {
   icon: string | number
   color?: string
@@ -21,6 +23,8 @@ export default function ButtonIcon({
   disabled?: boolean
   direction?: 'north' | 'south' | 'east' | 'west'
   title?: string
+  tooltipOffsetX?: number
+  tooltipOffsetY?: number
 }) {
   return (
     <button
@@ -28,6 +32,8 @@ export default function ButtonIcon({
       className={`button-icon ${className}`}
       disabled={disabled}
       title={title}
+      data-tooltip-offset-y={tooltipOffsetY || 0}
+      data-tooltip-offset-x={tooltipOffsetX || 0}
     >
       <Icon icon={icon} color={color} size={size} direction={direction} className={iconClassName} />
     </button>

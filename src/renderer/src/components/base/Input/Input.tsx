@@ -50,7 +50,7 @@ export default function Input({
 
   const [internalValue, setInternalValue] = useState(value)
   const [onOver, setOnOver] = useState(false)
-  const debouncedOnOver = useDebounce(onOver, 700)
+  const debouncedOnOver = useDebounce(onOver, 500)
   const debouncedValue = useDebounce(internalValue, 700)
   const [variableList, setVariableList] = useState<Variable[]>([])
   const [envId, setEnvId] = useState<Identifier | null | undefined>(null)
@@ -143,7 +143,7 @@ export default function Input({
         />
       </div>
       {showLinkedModal() && (
-        <LinkedModal parentRef={inputRef} topOffset={30} zIndex={zIndexTip}>
+        <LinkedModal parentRef={inputRef} topOffset={30} zIndex={zIndexTip} className="fadeIn">
           <div
             className={styles.variableList}
             onMouseOver={mouseOverHandler}

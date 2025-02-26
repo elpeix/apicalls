@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
 
-export function useDebounce(value: string | number | boolean, delay: number, delayOnFalse = 0) {
+export function useDebounce<T>(
+  value: string | number | boolean | T,
+  delay: number,
+  delayOnFalse = 0
+) {
   const [debouncedValue, setDebouncedValue] = useState(value)
 
   useEffect(() => {
-    if (typeof value === 'boolean' && !value) {
+    if ((typeof value === 'boolean' && !value) || (delayOnFalse > 0 && value === null)) {
       const handler = setTimeout(() => setDebouncedValue(value), delayOnFalse)
       return () => clearTimeout(handler)
     }
@@ -12,5 +16,5 @@ export function useDebounce(value: string | number | boolean, delay: number, del
     return () => clearTimeout(handler)
   }, [value, delay, delayOnFalse])
 
-  return debouncedValue
+  return debouncedValue as T
 }

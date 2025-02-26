@@ -12,6 +12,10 @@
   cursor: default;
   user-select: none;
 
+  > div {
+    height: 100%;
+  }
+
   .sidePanel-header-title {
     width: 100%;
     font-size: 13px;
