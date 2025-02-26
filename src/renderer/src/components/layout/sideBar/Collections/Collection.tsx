@@ -15,6 +15,8 @@ import {
 } from '../../../../lib/collectionFilter'
 import PreRequestEditor from './PreRequest/PreRequestEditor'
 import Scrollable from '../../../base/Scrollable'
+import SubMenu from '../../../base/Menu/SubMenu'
+import Icon from '../../../base/Icon/Icon'
 
 export default function Collection({
   collection,
@@ -25,15 +27,18 @@ export default function Collection({
   back: () => void
   onRemove?: () => void
 }) {
-  const { application, tabs, collections } = useContext(AppContext)
+  const { application, tabs, environments, collections } = useContext(AppContext)
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
+  const [envs, setEnvs] = useState<Environment[]>([])
+  const [environmentName, setEnvironmentName] = useState('')
   const [editingName, setEditingName] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
   const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
   const [updateTime, setUpdateTime] = useState(0)
+  const [showMenu, setShowMenu] = useState(false)
 
   useEffect(() => {
     let internalCollection: Collection | undefined
@@ -57,7 +62,28 @@ export default function Collection({
     }
   }, [collection, filter, collections?.updateTime])
 
+  useEffect(() => {
+    if (!environments) {
+      return
+    }
+    setEnvs(environments.getAll())
+  }, [environments])
+
+  useEffect(() => {
+    if (!coll.environmentId || !environments) {
+      setEnvironmentName('')
+      return
+    }
+    const environment = environments.get(coll.environmentId)
+    if (!environment) {
+      setEnvironmentName('')
+      return
+    }
+    setEnvironmentName(environment.name || 'unnamed')
+  }, [coll.environmentId, environments])
+
   const handleCreateFolder = () => {
+    setShowMenu(false)
     application.showPrompt({
       message: 'Folder name:',
       placeholder: 'Folder name',
@@ -76,6 +102,7 @@ export default function Collection({
   }
 
   const editName = () => {
+    setShowMenu(false)
     setEditingName(true)
     setTimeout(() => {
       if (!nameRef.current) return
@@ -95,6 +122,7 @@ export default function Collection({
   }
 
   const handleAddRequest = () => {
+    setShowMenu(false)
     application.showPrompt({
       message: 'Request name:',
       placeholder: 'Request name',
@@ -118,6 +146,7 @@ export default function Collection({
   }
 
   const handleRemoveCollection = () => {
+    setShowMenu(false)
     application.showConfirm({
       message: 'Are you sure you want to remove this collection?',
       confirmName: 'Remove',
@@ -161,12 +190,14 @@ export default function Collection({
   }
 
   const handlePreRequest = () => {
+    setShowMenu(false)
     application.showDialog({
       children: (
         <PreRequestEditor
           preRequest={coll.preRequest}
           onSave={preRequestSave}
           onClose={() => application.hideDialog()}
+          environmentId={coll.environmentId}
         />
       ),
       preventKeyClose: true
@@ -178,51 +209,103 @@ export default function Collection({
   }
 
   const toggleCollection = (expand: boolean) => {
+    setShowMenu(false)
     toggleCollectionElements(coll.elements, expand)
     update({ ...coll })
+  }
+
+  const selectEnvironment = (environmentId?: Identifier) => {
+    if (coll.environmentId === environmentId) {
+      collections?.setEnvironmentId(coll.id)
+      return
+    }
+    collections?.setEnvironmentId(coll.id, environmentId)
   }
 
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
-        <div className={styles.back}>
-          <ButtonIcon icon="arrow" direction="west" onClick={back} />
+        <div className={styles.headerLeft}>
+          <div className={styles.back}>
+            <ButtonIcon icon="arrow" direction="west" onClick={back} />
+          </div>
+          <EditableName
+            name={coll.name}
+            editMode={editingName}
+            update={changeName}
+            editOnDoubleClick={true}
+            onBlur={() => setEditingName(false)}
+          />
         </div>
-        <EditableName
-          name={coll.name}
-          editMode={editingName}
-          update={changeName}
-          editOnDoubleClick={true}
-          onBlur={() => setEditingName(false)}
-        />
-        <div className={styles.actions}>
-          <ButtonIcon icon="filter" title="Filter" onClick={handleShowFilter} />
-          <Menu>
-            <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
-            <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
-            <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
-            <MenuElement icon="edit" title="Rename" onClick={editName} />
-            <MenuSeparator />
-            <MenuElement
-              icon="expand"
-              title="Expand all"
-              disabled={filter !== ''}
-              onClick={() => toggleCollection(true)}
-            />
-            <MenuElement
-              icon="collapse"
-              title="Collapse all"
-              disabled={filter !== ''}
-              onClick={() => toggleCollection(false)}
-            />
-            <MenuSeparator />
-            <MenuElement
-              icon="delete"
-              className={styles.remove}
-              title="Remove"
-              onClick={handleRemoveCollection}
-            />
-          </Menu>
+        <div className={styles.headerRight}>
+          {coll.environmentId !== undefined && (
+            <div className={styles.collectionEnvironment}>
+              <Icon className={styles.environmentIcon} icon="environment" size={16} />
+              <div className={styles.environmentName}>{environmentName}</div>
+            </div>
+          )}
+          <div className={styles.actions}>
+            <ButtonIcon icon="filter" title="Filter" onClick={handleShowFilter} />
+            <Menu
+              menuIsOpen={showMenu}
+              onOpen={() => setShowMenu(true)}
+              onClose={() => setShowMenu(false)}
+              preventCloseOnClick={true}
+            >
+              <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
+              <>
+                {environments && environments.hasItems() && (
+                  <SubMenu icon="environment" title="Environment">
+                    <>
+                      {envs.map((environment) => (
+                        <MenuElement
+                          key={`menuEnv_${environment.id}`}
+                          title={environment.name}
+                          icon={environment.id === coll.environmentId ? 'check' : ''}
+                          onClick={() => selectEnvironment(environment.id)}
+                        />
+                      ))}
+                      {coll.environmentId !== undefined && (
+                        <>
+                          <MenuSeparator />
+                          <MenuElement
+                            title="Unlink enviroment"
+                            icon="unlink"
+                            onClick={() => selectEnvironment()}
+                            className={styles.remove}
+                          />
+                        </>
+                      )}
+                    </>
+                  </SubMenu>
+                )}
+              </>
+              <MenuSeparator />
+              <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
+              <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
+              <MenuElement icon="edit" title="Rename" onClick={editName} />
+              <MenuSeparator />
+              <MenuElement
+                icon="expand"
+                title="Expand all"
+                disabled={filter !== ''}
+                onClick={() => toggleCollection(true)}
+              />
+              <MenuElement
+                icon="collapse"
+                title="Collapse all"
+                disabled={filter !== ''}
+                onClick={() => toggleCollection(false)}
+              />
+              <MenuSeparator />
+              <MenuElement
+                icon="delete"
+                className={styles.remove}
+                title="Remove"
+                onClick={handleRemoveCollection}
+              />
+            </Menu>
+          </div>
         </div>
       </div>
       {showFilter && (

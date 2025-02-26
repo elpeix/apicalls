@@ -10,6 +10,7 @@
   background-color: var(--background-content);
   border: 1px solid var(--border-color);
   min-width: 10rem;
+  max-height: 30rem;
 
   .item {
     padding: 0.4rem 0.5rem;
@@ -17,7 +18,9 @@
     align-items: center;
     gap: 0.6rem;
     cursor: pointer;
+    min-height: 2.2rem;
     transition: background-color 0.2s ease-in-out;
+    position: relative;
 
     &.disabled {
       opacity: 0.4;
@@ -28,11 +31,32 @@
 
     &:hover {
       background-color: var(--hover-background-color);
+      .arrow {
+        position: relative;
+
+        &::after {
+          position: fixed;
+          content: '';
+          height: 6rem;
+          width: 10rem;
+          z-index: 1;
+          margin: -1.5rem -3rem;
+          clip-path: polygon(100% 0, 0 0%, 100% 200%);
+        }
+      }
     }
 
     .icon {
       width: 1rem;
       height: 1rem;
+    }
+
+    .title {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 10rem;
     }
   }
   .itemSeparator {

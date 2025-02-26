@@ -12,11 +12,13 @@ import { Button } from '../../../../base/Buttons/Buttons'
 export default function PreRequestEditor({
   preRequest,
   onSave,
-  onClose
+  onClose,
+  environmentId
 }: {
   preRequest: PreRequest | undefined
   onSave: (data: PreRequest) => void
   onClose: () => void
+  environmentId?: Identifier
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [url, setUrl] = useState('')
@@ -77,6 +79,7 @@ export default function PreRequestEditor({
           showTip={true}
           placeholder="Enter URL..."
           autoFocus={true}
+          environmentId={environmentId}
         />
         <div className={styles.buttons}></div>
       </div>

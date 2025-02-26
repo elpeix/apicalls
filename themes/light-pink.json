@@ -12,7 +12,8 @@
     "foreground-1": "#9d174d",
     "foreground-0": "#831843",
     "transparent-bg": "#83184333",
-    "search-list-item-active-color": "#ffbcda"
+    "search-list-item-active-color": "#ffbcda",
+    "highlight-color": "var(--content-1)"
   },
   "editor": {
     "base": "vs",

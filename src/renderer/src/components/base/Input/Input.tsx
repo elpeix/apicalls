@@ -3,6 +3,7 @@ import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
 import LinkedModal from '../linkedModal/LinkedModal'
+import { RequestContext } from '../../../context/RequestContext'
 
 export default function Input({
   inputRef,
@@ -18,7 +19,8 @@ export default function Input({
   autoFocus = false,
   highlightVars = false,
   showTip = false,
-  zIndexTip = 1
+  zIndexTip = 1,
+  environmentId
 }: {
   inputRef: React.RefObject<HTMLInputElement | null>
   className?: string
@@ -34,6 +36,7 @@ export default function Input({
   highlightVars?: boolean
   showTip?: boolean
   zIndexTip?: number
+  environmentId?: Identifier
 }) {
   type Variable = {
     part: string
@@ -42,23 +45,41 @@ export default function Input({
 
   const REGEX = useMemo(() => /\{\{([^}]+)\}\}/i, []) // Get {{variable}} from string
 
-  const { environments } = useContext(AppContext)
+  const { environments, collections } = useContext(AppContext)
+  const { collectionId } = useContext(RequestContext)
+
   const [internalValue, setInternalValue] = useState(value)
   const [onOver, setOnOver] = useState(false)
   const debouncedOnOver = useDebounce(onOver, 700)
   const debouncedValue = useDebounce(internalValue, 700)
   const [variableList, setVariableList] = useState<Variable[]>([])
+  const [envId, setEnvId] = useState<Identifier | null | undefined>(null)
 
   useEffect(() => {
     setInternalValue(value)
   }, [value])
 
   useEffect(() => {
+    if (environmentId) {
+      setEnvId(environmentId)
+      return
+    }
+    if (collectionId) {
+      const environmentId = collections?.getEnvironmentId(collectionId)
+      if (environmentId) {
+        setEnvId(environmentId)
+        return
+      }
+    }
+    setEnvId(environments?.getActive()?.id)
+  }, [environmentId, environments, collectionId])
+
+  useEffect(() => {
     if (debouncedValue) {
       const variables: Variable[] = []
       internalValue.split(REGEX).forEach((part) => {
-        if (environments?.variableIsDefined(part)) {
-          variables.push({ part, value: environments.getVariableValue(part) })
+        if (envId && environments?.variableIsDefined(envId, part)) {
+          variables.push({ part, value: environments.getVariableValue(envId, part) })
         }
       })
       setVariableList(variables)
@@ -79,9 +100,10 @@ export default function Input({
     if (showTip || highlightVars) {
       return internalValue.split(REGEX).map((part, index) => {
         if (index % 2 === 0) return part
-        const className = environments?.variableIsDefined(part)
-          ? styles.variable
-          : styles.variableUndefined
+        const className =
+          envId && environments?.variableIsDefined(envId, part)
+            ? styles.variable
+            : styles.variableUndefined
         return <mark key={index} className={className}>{`{{${part}}}`}</mark>
       })
     }
@@ -129,16 +151,17 @@ export default function Input({
           >
             {internalValue.split(REGEX).map((part, index) => {
               if (index % 2 === 0) return null
-              const className = environments?.variableIsDefined(part)
-                ? styles.variable
-                : styles.variableUndefined
+              const className =
+                envId && environments?.variableIsDefined(envId, part)
+                  ? styles.variable
+                  : styles.variableUndefined
               return (
                 <div key={index}>
                   <span key={`${index}_${part}`} className={className}>
                     {part}
                   </span>
                   <span key={`${index}_${value}`} className={styles.variableValue}>
-                    {environments?.getVariableValue(part)}
+                    {envId && environments?.getVariableValue(envId, part)}
                   </span>
                 </div>
               )

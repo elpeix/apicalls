@@ -31,8 +31,8 @@ export const RequestContext = createContext<RequestContextType>({
   save: () => {},
   setEditorState: () => {},
   getEditorState: () => '',
-
-  requestConsole: null
+  requestConsole: null,
+  getRequestEnvironment: () => null
 })
 
 export default function RequestContextProvider({
@@ -57,6 +57,8 @@ export default function RequestContextProvider({
   const definedRequest = tab.request
 
   const methods = useMemo(() => getMethods(), [])
+
+  const [collection, setCollection] = useState<Collection | null>(null)
 
   // Pre-request scripts will be executed before the request is sent
   const [preRequestData, setPreRequestData] = useState<PreRequest | null>(null)
@@ -126,6 +128,7 @@ export default function RequestContextProvider({
     if (!collectionId || !collections) return
     const collection = collections.get(collectionId)
     if (!collection) return
+    setCollection(collection)
     if (collection.preRequest) {
       setPreRequestData(collection.preRequest)
     }
@@ -342,6 +345,20 @@ export default function RequestContextProvider({
     })
   }
 
+  const getRequestEnvironment = () => {
+    if (collection && collection.environmentId) {
+      const environment = environments?.get(collection.environmentId)
+      if (environment) {
+        return environment
+      }
+    }
+    const environment = environments?.getActive()
+    if (!environment) {
+      return null
+    }
+    return environment
+  }
+
   const setDataToCapture = (
     callResponse: CallResponse,
     dataToCapture: PreRequestDataToCapture,
@@ -434,7 +451,10 @@ export default function RequestContextProvider({
       value = replacePathParams(value, requestPathParams)
     }
     if (environments) {
-      value = environments.replaceVariables(value)
+      const enviroment = getRequestEnvironment()
+      if (enviroment) {
+        value = environments.replaceVariables(enviroment.id, value)
+      }
     }
     return value
   }
@@ -649,7 +669,8 @@ export default function RequestContextProvider({
     openSaveAs,
     setOpenSaveAs,
     setEditorState,
-    getEditorState
+    getEditorState,
+    getRequestEnvironment
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>

@@ -124,6 +124,20 @@ export function useCollections(): CollectionsHookType {
     ipcRenderer?.send(COLLECTIONS.updateAll, newCollections)
   }
 
+  const getEnvironmentId = (collectionId: Identifier) => {
+    const collection = get(collectionId)
+    return collection?.environmentId
+  }
+
+  const setEnvironmentId = (collectionId: Identifier, environmentId?: Identifier) => {
+    const collection = get(collectionId)
+    if (!collection) {
+      return
+    }
+    collection.environmentId = environmentId
+    update(collection)
+  }
+
   return {
     setCollections,
     create,
@@ -137,6 +151,8 @@ export function useCollections(): CollectionsHookType {
     setPreRequest,
     clearPreRequest,
     saveRequest,
-    updateTime
+    updateTime,
+    getEnvironmentId,
+    setEnvironmentId
   }
 }

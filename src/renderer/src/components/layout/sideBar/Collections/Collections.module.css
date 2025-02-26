@@ -11,6 +11,42 @@
     border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 
+    .headerLeft {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+      flex-grow: 1;
+    }
+
+    .headerRight {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      height: 100%;
+    }
+
+    .collectionEnvironment {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      height: 100%;
+
+      .environmentIcon {
+        color: var(--highlight-color);
+      }
+
+      .environmentName {
+        font-size: 0.7rem;
+        font-weight: 400;
+        color: var(--highlight-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 6rem;
+        padding-right: 0.5rem;
+      }
+    }
+
     .actions {
       display: flex;
       gap: 0.2rem;
@@ -19,6 +55,39 @@
 
   .filter {
     border-bottom: 1px solid var(--border-color);
+  }
+}
+
+@container (max-width: 24rem) {
+  .collectionEnvironment {
+    anchor-name: --environment-name;
+  }
+  .collectionEnvironment .environmentName {
+    position: absolute;
+    position-anchor: --environment-name;
+    top: anchor(bottom);
+    font-size: 0.8rem !important;
+    border: 1px solid var(--border-color);
+    padding: 0.2rem 0.4rem !important;
+    background-color: var(--tooltip-background-color);
+    max-width: unset !important;
+    box-shadow: 0.2rem 0.3rem 0.6rem 0rem var(--transparent-bg);
+    transition-behavior: allow-discrete;
+    transition: all 0.2s ease-in-out;
+    transition-property: opacity;
+    transition-delay: 0.3s;
+    opacity: 0;
+    display: none;
+    z-index: 2;
+  }
+  .collectionEnvironment:hover .environmentName {
+    display: block;
+    opacity: 1;
+  }
+  @starting-style {
+    .collectionEnvironment:hover .environmentName {
+      opacity: 0;
+    }
   }
 }
 

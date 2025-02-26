@@ -1,3 +1,6 @@
+.container-query {
+  container-type: inline-size;
+}
 .sidePanel-header {
   display: flex;
   flex-direction: row;
