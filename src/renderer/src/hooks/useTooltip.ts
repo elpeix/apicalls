@@ -49,7 +49,9 @@ export const useTooltip = () => {
     const handleMouseOut = (event: MouseEvent) => {
       const target = (event.target as HTMLElement).closest('[data-original-title]')
       if (target instanceof HTMLElement && target.hasAttribute('data-original-title')) {
-        target.setAttribute('title', target.getAttribute('data-original-title')!) // Restablim el títol original
+        if (!target.hasAttribute('title')) {
+          target.setAttribute('title', target.getAttribute('data-original-title')!)
+        }
         target.removeAttribute('data-original-title')
       }
       setTooltip(null)
