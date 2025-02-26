@@ -46,7 +46,14 @@ export default function Layout() {
           onSelect={expandSidePanel}
           isCollapsed={!menu?.expanded}
         />
-        <Panel defaultSize={15} minSize={10} maxSize={40} collapsible={true} ref={sidePanel}>
+        <Panel
+          defaultSize={15}
+          minSize={10}
+          maxSize={40}
+          collapsible={true}
+          ref={sidePanel}
+          className="container-query"
+        >
           <SidePanel />
         </Panel>
         <Gutter mode="vertical" onDoubleClick={expandSidePanel} />

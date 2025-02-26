@@ -16,6 +16,7 @@ import {
 import PreRequestEditor from './PreRequest/PreRequestEditor'
 import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
+import Icon from '../../../base/Icon/Icon'
 
 export default function Collection({
   collection,
@@ -30,6 +31,7 @@ export default function Collection({
   const nameRef = useRef<HTMLInputElement>(null)
   const [coll, setColl] = useState(collection)
   const [envs, setEnvs] = useState<Environment[]>([])
+  const [environmentName, setEnvironmentName] = useState('')
   const [editingName, setEditingName] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
@@ -66,6 +68,19 @@ export default function Collection({
     }
     setEnvs(environments.getAll())
   }, [environments])
+
+  useEffect(() => {
+    if (!coll.environmentId || !environments) {
+      setEnvironmentName('')
+      return
+    }
+    const environment = environments.get(coll.environmentId)
+    if (!environment) {
+      setEnvironmentName('')
+      return
+    }
+    setEnvironmentName(environment.name || 'unnamed')
+  }, [coll.environmentId, environments])
 
   const handleCreateFolder = () => {
     setShowMenu(false)
@@ -210,77 +225,87 @@ export default function Collection({
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
-        <div className={styles.back}>
-          <ButtonIcon icon="arrow" direction="west" onClick={back} />
+        <div className={styles.headerLeft}>
+          <div className={styles.back}>
+            <ButtonIcon icon="arrow" direction="west" onClick={back} />
+          </div>
+          <EditableName
+            name={coll.name}
+            editMode={editingName}
+            update={changeName}
+            editOnDoubleClick={true}
+            onBlur={() => setEditingName(false)}
+          />
         </div>
-        <EditableName
-          name={coll.name}
-          editMode={editingName}
-          update={changeName}
-          editOnDoubleClick={true}
-          onBlur={() => setEditingName(false)}
-        />
-        <div className={styles.actions}>
-          <ButtonIcon icon="filter" title="Filter" onClick={handleShowFilter} />
-          <Menu
-            menuIsOpen={showMenu}
-            onOpen={() => setShowMenu(true)}
-            onClose={() => setShowMenu(false)}
-            preventCloseOnClick={true}
-          >
-            <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
-            <>
-              {environments && environments.hasItems() && (
-                <SubMenu icon="environment" title="Environment">
-                  <>
-                    {envs.map((environment) => (
-                      <MenuElement
-                        key={`menuEnv_${environment.id}`}
-                        title={environment.name}
-                        icon={environment.id === coll.environmentId ? 'check' : ''}
-                        onClick={() => selectEnvironment(environment.id)}
-                      />
-                    ))}
-                    {coll.environmentId !== undefined && (
-                      <>
-                        <MenuSeparator />
+        <div className={styles.headerRight}>
+          {coll.environmentId !== undefined && (
+            <div className={styles.collectionEnvironment}>
+              <Icon className={styles.environmentIcon} icon="environment" size={16} />
+              <div className={styles.environmentName}>{environmentName}</div>
+            </div>
+          )}
+          <div className={styles.actions}>
+            <ButtonIcon icon="filter" title="Filter" onClick={handleShowFilter} />
+            <Menu
+              menuIsOpen={showMenu}
+              onOpen={() => setShowMenu(true)}
+              onClose={() => setShowMenu(false)}
+              preventCloseOnClick={true}
+            >
+              <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
+              <>
+                {environments && environments.hasItems() && (
+                  <SubMenu icon="environment" title="Environment">
+                    <>
+                      {envs.map((environment) => (
                         <MenuElement
-                          title="Unlink enviroment"
-                          icon="unlink"
-                          onClick={() => selectEnvironment()}
-                          className={styles.remove}
+                          key={`menuEnv_${environment.id}`}
+                          title={environment.name}
+                          icon={environment.id === coll.environmentId ? 'check' : ''}
+                          onClick={() => selectEnvironment(environment.id)}
                         />
-                      </>
-                    )}
-                  </>
-                </SubMenu>
-              )}
-            </>
-            <MenuSeparator />
-            <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
-            <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
-            <MenuElement icon="edit" title="Rename" onClick={editName} />
-            <MenuSeparator />
-            <MenuElement
-              icon="expand"
-              title="Expand all"
-              disabled={filter !== ''}
-              onClick={() => toggleCollection(true)}
-            />
-            <MenuElement
-              icon="collapse"
-              title="Collapse all"
-              disabled={filter !== ''}
-              onClick={() => toggleCollection(false)}
-            />
-            <MenuSeparator />
-            <MenuElement
-              icon="delete"
-              className={styles.remove}
-              title="Remove"
-              onClick={handleRemoveCollection}
-            />
-          </Menu>
+                      ))}
+                      {coll.environmentId !== undefined && (
+                        <>
+                          <MenuSeparator />
+                          <MenuElement
+                            title="Unlink enviroment"
+                            icon="unlink"
+                            onClick={() => selectEnvironment()}
+                            className={styles.remove}
+                          />
+                        </>
+                      )}
+                    </>
+                  </SubMenu>
+                )}
+              </>
+              <MenuSeparator />
+              <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
+              <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
+              <MenuElement icon="edit" title="Rename" onClick={editName} />
+              <MenuSeparator />
+              <MenuElement
+                icon="expand"
+                title="Expand all"
+                disabled={filter !== ''}
+                onClick={() => toggleCollection(true)}
+              />
+              <MenuElement
+                icon="collapse"
+                title="Collapse all"
+                disabled={filter !== ''}
+                onClick={() => toggleCollection(false)}
+              />
+              <MenuSeparator />
+              <MenuElement
+                icon="delete"
+                className={styles.remove}
+                title="Remove"
+                onClick={handleRemoveCollection}
+              />
+            </Menu>
+          </div>
         </div>
       </div>
       {showFilter && (
