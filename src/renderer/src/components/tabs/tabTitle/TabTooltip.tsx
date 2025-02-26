@@ -16,7 +16,12 @@ export default function TabTooltip({
   const collectionName = collection?.name
 
   return (
-    <LinkedModal parentRef={tabRef} topOffset={35} leftOffset={3} className={styles.tooltip}>
+    <LinkedModal
+      parentRef={tabRef}
+      topOffset={35}
+      leftOffset={3}
+      className={`${styles.tooltip} fadeIn`}
+    >
       {collectionName && (
         <div>
           <span className={styles.collection}>{collectionName}</span>

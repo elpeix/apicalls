@@ -34,11 +34,15 @@ export default function ResponseStatus({
   return (
     <div className={`${styles.statusBar} ${!consoleIsHidden ? styles.opened : ''}`}>
       <div className={styles.showConsole} onClick={toggleConsole}>
-        <ButtonIcon
-          icon="console"
-          size={15}
-          title={`${consoleIsHidden ? 'Show' : 'Close'} console`}
-        />
+        {consoleIsHidden && (
+          <ButtonIcon
+            icon="console"
+            size={15}
+            title={`${consoleIsHidden ? 'Show' : 'Close'} console`}
+            tooltipOffsetY={-51}
+            tooltipOffsetX={-4}
+          />
+        )}
       </div>
       {requestFetched && (
         <div className={styles.status}>

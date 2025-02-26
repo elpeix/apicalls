@@ -349,3 +349,16 @@ ul.versions {
 .OPTIONS {
   color: var(--method-option-color) !important;
 }
+
+.fadeIn {
+  animation: fadeIn 0.2s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

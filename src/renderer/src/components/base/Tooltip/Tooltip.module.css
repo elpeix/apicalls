@@ -1,18 +1,16 @@
 .tooltip {
-  position: relative;
   pointer-events: none;
+  z-index: 10;
 
   .content {
-    visibility: visible;
     max-width: 50rem;
-    background-color: var(--background-base);
-    color: var(--base-color);
+    background-color: var(--tooltip-background-color);
+    color: var(--tooltip-color);
     padding: 0.5rem;
     border: 1px solid var(--border-color);
-    box-shadow: 1px 1px 0.5rem var(--background-content);
-    position: absolute;
-    z-index: 1;
-    top: 100%;
-    left: 0;
+    box-shadow: 0.2rem 0.3rem 0.6rem 0rem var(--transparent-bg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

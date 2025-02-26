@@ -33,7 +33,6 @@
   user-select: none;
   transition: background-color 0.2s ease-in-out;
 
-
   &:has(*:focus) {
     box-shadow: none !important;
   }
@@ -113,7 +112,7 @@
     text-transform: uppercase;
   }
 
-  svg{
+  svg {
     color: unset !important;
     transition: unset !important;
   }
@@ -149,10 +148,7 @@
     background-color: var(--hover-background-color);
   }
 }
-@media (max-width: 480px) {
-  .saveButton {
-    display: none;
-  }
+@media (max-width: 680px) {
   .buttonText {
     display: none;
   }

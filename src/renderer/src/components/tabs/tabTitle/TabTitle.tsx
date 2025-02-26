@@ -13,7 +13,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   const [tabName, setTabName] = useState<string>()
   const [saved, setSaved] = useState(tab.saved)
   const [onOver, setOnOver] = useState(false)
-  const debouncedOnOver = useDebounce(onOver, 800)
+  const debouncedOnOver = useDebounce(onOver, 600)
   const ref = useRef<HTMLDivElement | null>(null)
   const [showMenu, setShowMenu] = useState(false)
 

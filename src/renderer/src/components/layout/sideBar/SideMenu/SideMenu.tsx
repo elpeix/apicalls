@@ -44,11 +44,17 @@ export default function SideMenu({
             className={`${styles.item} ${isSelected(item.id) ? styles.active : ''}  ${
               item.spacer ? styles.spacer : ''
             }`}
-            title={item.title ? item.title : ''}
             onClick={() => !item.spacer && handleClick(item.id)}
           >
             {item.id && !item.spacer && (
-              <ButtonIcon icon={item.id} iconClassName={styles.icon} size={24} title={item.title} />
+              <ButtonIcon
+                icon={item.id}
+                iconClassName={styles.icon}
+                size={24}
+                title={item.title}
+                tooltipOffsetY={-44}
+                tooltipOffsetX={44}
+              />
             )}
           </div>
         ))}
