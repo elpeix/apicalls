@@ -1,13 +1,14 @@
 .tabTitle {
   font-size: 13px;
-  padding: 0;
   border-right: 1px solid var(--border-color);
   min-width: 6rem;
 
   .content {
     display: block;
     display: flex;
-    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
     transition: background-color 0.1s ease-in-out;
 
     &:hover {
@@ -19,13 +20,16 @@
       }
     }
 
+    .method {
+      font-size: 0.6rem;
+    }
+
     .title {
-      padding: 0.5rem 0.1rem 0.5rem 0.7rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       flex-grow: 1;
-      max-width: 16rem;
+      max-width: 8rem;
     }
   }
 
@@ -40,20 +44,19 @@
 
   .close {
     color: var(--base-color);
-    padding: 0.5rem 0.5rem;
     visibility: hidden;
   }
 
-  &.draft span.title {
+  &.draft .title {
     font-style: italic;
     font-weight: 100;
   }
 
-  &.history span.title {
+  &.history .title {
     font-style: italic;
   }
 
-  &.collection span.title {
+  &.collection .title {
     font-weight: 500;
   }
 
@@ -65,13 +68,14 @@
       background: var(--highlight-color);
       height: 0.4rem;
       width: 0.4rem;
-      inset: 0.8rem 0.4rem;
-
+      inset: 0.8rem 0.6rem;
       border-radius: 50%;
     }
-    span.title {
+    .method {
+      padding-left: 1rem;
+    }
+    .title {
       font-style: italic;
-      padding-left: 1.2rem;
     }
   }
 }
