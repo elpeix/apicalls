@@ -11,6 +11,7 @@ import ContextMenu from '../../base/Menu/ContextMenu'
 export default function TabTitle({ tab }: { tab: RequestTab }) {
   const { tabs } = useContext(AppContext)
   const [tabName, setTabName] = useState<string>()
+  const [method, setMethod] = useState<string>()
   const [saved, setSaved] = useState(tab.saved)
   const [onOver, setOnOver] = useState(false)
   const debouncedOnOver = useDebounce(onOver, 600)
@@ -20,6 +21,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   useEffect(() => {
     setTabName(tab.name)
     setSaved(tab.saved || false)
+    setMethod(tab.request?.method.value || 'GET')
   }, [tab])
 
   useEffect(() => {
@@ -109,6 +111,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
         onMouseOut={handleMouseOut}
         ref={ref}
       >
+        <span className={`${styles.method} ${method}`}>{method}</span>
         <span className={styles.title}>{getTabTitle()}</span>
         <span className={styles.close}>
           <ButtonIcon icon="close" size={15} onClick={onClose} />

@@ -18,8 +18,8 @@ export default function TabTooltip({
   return (
     <LinkedModal
       parentRef={tabRef}
-      topOffset={35}
-      leftOffset={3}
+      topOffset={31}
+      leftOffset={-1}
       className={`${styles.tooltip} fadeIn`}
     >
       {collectionName && (
