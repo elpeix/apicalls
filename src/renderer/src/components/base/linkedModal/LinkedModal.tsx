@@ -12,6 +12,7 @@ export default function LinkedModal({
   onClick = () => {},
   useOverlay = false,
   preventKeyClose = false,
+  allowOutsideClick = false,
   children
 }: {
   parentRef: React.RefObject<HTMLElement | null>
@@ -23,6 +24,7 @@ export default function LinkedModal({
   useOverlay?: boolean
   onClick?: (e: React.MouseEvent<Element>) => void
   preventKeyClose?: boolean
+  allowOutsideClick?: boolean
   children: React.ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -58,7 +60,9 @@ export default function LinkedModal({
 
   const handleOutsideClick = (e: MouseEvent) => {
     e.stopPropagation()
-    e.preventDefault()
+    if (!allowOutsideClick) {
+      e.preventDefault()
+    }
     if (
       ref.current &&
       !ref.current.contains(e.target as Node) &&

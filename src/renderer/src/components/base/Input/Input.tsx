@@ -143,7 +143,13 @@ export default function Input({
         />
       </div>
       {showLinkedModal() && (
-        <LinkedModal parentRef={inputRef} topOffset={30} zIndex={zIndexTip} className="fadeIn">
+        <LinkedModal
+          parentRef={inputRef}
+          topOffset={30}
+          zIndex={zIndexTip}
+          className="fadeIn"
+          allowOutsideClick={true}
+        >
           <div
             className={styles.variableList}
             onMouseOver={mouseOverHandler}
