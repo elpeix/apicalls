@@ -14,12 +14,12 @@ Feel free to try it out and provide feedback!
 
 ## Installation guide
 
-> **Note:** API Calls installable is available for **Linux**.
+> **Note:** API Calls installable is available for **Linux** and **MacOs**.
 >
-> **MacOs** and **Windows** support is coming soon. You can also run the app
-> from source code (see Development section).
+> **Windows** support is coming soon. You can also run the application from
+> source code (see Development section).
 
-You can download the latest version from the [releases page](https://github.com/elpeix/apicalls/releases).
+You can download the latest version from the [releases page](https://github.com/elpeix/apicalls/releases/latest).
 
 ## Development
 
@@ -62,3 +62,7 @@ npm run build:mac
 # For Windows
 npm run build:win
 ```
+
+## Documentation - Usage
+
+TODO - I will add the documentation soon.
