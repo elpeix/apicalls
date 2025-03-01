@@ -1,6 +1,7 @@
 import { it, describe, expect } from 'vitest'
 import {
   getPathParamsFromUrl,
+  getQueryParamsFromUrl,
   replacePathParams
 } from '../../../src/renderer/src/lib/paramsCapturer'
 
@@ -50,6 +51,37 @@ describe('Params Capturer Test', () => {
   it('should return an array if url has params with /{any_param}', () => {
     const params = getPathParamsFromUrl('/{any_param}')
     expect(params).toEqual([getKeyValue('any_param')])
+  })
+
+  it('should return decoded query paramaters value', () => {
+    const params = getQueryParamsFromUrl('q=a%26b%25c', [])
+    expect(params).toEqual([getKeyValue('q', 'a&b%c')])
+  })
+
+  it('should return multiple query parameters', () => {
+    const params = getQueryParamsFromUrl('q=a%26b%25c&other=true', [])
+    expect(params).toEqual([getKeyValue('q', 'a&b%c'), getKeyValue('other', 'true')])
+  })
+
+  it('should return an error when query parameters are malformed', () => {
+    try {
+      getQueryParamsFromUrl('q=a&b=c%d', [])
+      expect.fail()
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error)
+      const error = err as Error
+      expect(error.message).toBe('Query param "b" is malformed')
+    }
+  })
+
+  it('should not fail when querye parameters does not have values', () => {
+    const params = getQueryParamsFromUrl('a&b', [])
+    expect(params).toEqual([getKeyValue('a', ''), getKeyValue('b', '')])
+  })
+
+  it('getQueryParamsFromUrl should replace spaces with +', () => {
+    const params = getQueryParamsFromUrl('a=b+c+d', [])
+    expect(params).toEqual([getKeyValue('a', 'b c d')])
   })
 })
 

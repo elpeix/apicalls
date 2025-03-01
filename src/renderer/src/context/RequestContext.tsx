@@ -160,12 +160,13 @@ export default function RequestContextProvider({
 
     saveHistory()
 
+    const queryParams = prepareQueryParams(requestQueryParams)
     const callApiRequest: CallRequest = {
       id: tabId,
       url,
       method: requestMethod,
       headers: getHeaders(url),
-      queryParams: requestQueryParams,
+      queryParams,
       body: requestBody
     }
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
@@ -186,7 +187,7 @@ export default function RequestContextProvider({
         ...requestLogs,
         {
           method: requestMethod.value,
-          url: getFullUrl(),
+          url: getFullUrlForConsole(),
           status: callResponse.status.code,
           time: callResponse.responseTime.all,
           request: callApiRequest,
@@ -199,8 +200,8 @@ export default function RequestContextProvider({
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
     })
 
-    const getFullUrl = () => {
-      const params = requestQueryParams
+    const getFullUrlForConsole = () => {
+      const params = queryParams
         .filter((param) => param.enabled)
         .map((param) => `${param.name}=${param.value}`)
         .join('&')
@@ -217,7 +218,7 @@ export default function RequestContextProvider({
           ...requestLogs,
           {
             method: requestMethod.value,
-            url: getFullUrl(),
+            url: getFullUrlForConsole(),
             status: 999,
             time: 0,
             request: callApiRequest,
@@ -239,7 +240,7 @@ export default function RequestContextProvider({
         ...requestLogs,
         {
           method: requestMethod.value,
-          url: getFullUrl(),
+          url: getFullUrlForConsole(),
           status: 499,
           time: 0,
           request: callApiRequest,
@@ -276,7 +277,7 @@ export default function RequestContextProvider({
       url,
       method: request.method,
       headers,
-      queryParams: request.queryParams,
+      queryParams: prepareQueryParams(request.queryParams || []),
       body: request.body
     }
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
@@ -343,6 +344,18 @@ export default function RequestContextProvider({
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
     })
+  }
+
+  const prepareQueryParams = (queryParams: KeyValue[]) => {
+    return queryParams
+      .filter((queryParam: KeyValue) => queryParam.enabled)
+      .map((queryParam: KeyValue) => {
+        return {
+          name: queryParam.name,
+          value: getValue(queryParam.value || ''),
+          enabled: queryParam.enabled
+        } as KeyValue
+      })
   }
 
   const getRequestEnvironment = () => {
@@ -511,6 +524,27 @@ export default function RequestContextProvider({
     setQueryParams(getQueryParamsFromUrl(params, requestQueryParams))
   }
 
+  const getFullUrl = () => {
+    const queryParams = new URLSearchParams()
+    if (requestQueryParams) {
+      requestQueryParams
+        .filter((param) => param.enabled && param.name)
+        .forEach((param) => {
+          queryParams.append(param.name, param.value)
+        })
+    }
+    let queryParamsValue = queryParams.size ? '?' + queryParams.toString() : ''
+    const environment = getRequestEnvironment()
+    const envVariables = environment?.variables || []
+    envVariables.forEach((variable) => {
+      queryParamsValue = queryParamsValue.replaceAll(
+        `%7B%7B${variable.name}%7D%7D`,
+        `{{${variable.name}}}`
+      )
+    })
+    return `${requestUrl}${queryParamsValue}`
+  }
+
   const setBody = (body: string) => {
     if (body === requestBody) return
     setRequestBody(body)
@@ -652,6 +686,7 @@ export default function RequestContextProvider({
       setMethod,
       setUrl,
       setFullUrl,
+      getFullUrl,
       setBody,
       setAuth,
       fetch,

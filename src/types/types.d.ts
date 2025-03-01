@@ -272,6 +272,7 @@ type RequestContextRequestType = {
   setMethod: (method: Method) => void
   setUrl: (url: string) => void
   setFullUrl: (url: string) => void
+  getFullUrl: () => string
   setBody: (body: string) => void
   setAuth: (auth: RequestAuth) => void
   fetch: () => void

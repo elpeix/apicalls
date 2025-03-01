@@ -73,7 +73,7 @@ export function useEnvironments(): EnvironmentsHookType {
     const environment = get(id)
     if (!environment) return value
     environment.variables.forEach((variable) => {
-      value = value.replace(`{{${variable.name}}}`, variable.value)
+      value = value.replaceAll(`{{${variable.name}}}`, variable.value)
     })
     return value
   }

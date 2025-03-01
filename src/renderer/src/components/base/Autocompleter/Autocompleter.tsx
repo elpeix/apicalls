@@ -21,7 +21,7 @@ export default function Autocompleter({
   offsetX = 0,
   offsetY = 0
 }: {
-  inputRef: React.RefObject<HTMLInputElement>
+  inputRef: React.RefObject<HTMLInputElement | null>
   options?: string[]
   showEnvironmentVariables?: boolean
   value?: string

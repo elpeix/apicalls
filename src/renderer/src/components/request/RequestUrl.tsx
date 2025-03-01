@@ -8,21 +8,17 @@ export default function RequestUrl() {
   const urlRef = useRef<HTMLInputElement>(null)
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState(request?.urlIsValid({}))
+  const [paramsAreValid, setParamsAreValid] = useState(true)
 
   useEffect(() => {
-    const queryParams = request?.queryParams.items
-      .filter((param: KeyValue) => param.enabled)
-      .map((param: KeyValue) => `${param.name}=${param.value}`)
-      .join('&')
-    setUrl(`${request?.url}${queryParams ? '?' + queryParams : ''}`)
+    setUrl(request?.getFullUrl() || '')
     setUrlError(!request?.urlIsValid({}))
   }, [request])
 
   useEffect(() => {
-    if (request?.url) {
-      return
+    if (!request?.url) {
+      urlRef.current?.focus()
     }
-    urlRef.current?.focus()
   }, [urlRef, request?.url])
 
   if (!request) {
@@ -32,14 +28,20 @@ export default function RequestUrl() {
   const handleUrlChange = (value: string) => {
     const [url] = value.split('?')
     setUrlError(url.length > 0 && !request.urlIsValid({ url }))
-    request.setFullUrl(value)
+    try {
+      request.setFullUrl(value)
+      setParamsAreValid(true)
+    } catch (_) {
+      setParamsAreValid(false)
+    }
   }
 
   const handleUrlBlur = (value: string) => {
     request.setFullUrl(value)
   }
 
-  const getClassName = () => `${styles.url} ${url.length && urlError ? styles.error : ''}`
+  const getClassName = () =>
+    `${styles.url} ${url.length && (urlError || !paramsAreValid) ? styles.error : ''}`
 
   return (
     <Autocompleter
