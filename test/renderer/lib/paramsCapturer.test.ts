@@ -7,50 +7,61 @@ import {
 
 describe('Params Capturer Test', () => {
   it('should return an empty array if url is empty', () => {
-    expect(getPathParamsFromUrl('')).toEqual([])
-    expect(getPathParamsFromUrl('  ')).toEqual([])
+    expect(getPathParamsFromUrl('', [])).toEqual([])
+    expect(getPathParamsFromUrl('  ', [])).toEqual([])
   })
 
   it('should return an empty array if url has no path', () => {
-    expect(getPathParamsFromUrl('/')).toEqual([])
-    expect(getPathParamsFromUrl('https://example.com')).toEqual([])
+    expect(getPathParamsFromUrl('/', [])).toEqual([])
+    expect(getPathParamsFromUrl('https://example.com', [])).toEqual([])
   })
 
   it('should return an empty array if url has invalid params', () => {
-    expect(getPathParamsFromUrl('/{}')).toEqual([])
-    expect(getPathParamsFromUrl('https://example.com{:param}')).toEqual([])
-    expect(getPathParamsFromUrl('https://example.com/{')).toEqual([])
-    expect(getPathParamsFromUrl('https://example.com/{}')).toEqual([])
-    expect(getPathParamsFromUrl('https://example.com/{/}')).toEqual([])
+    expect(getPathParamsFromUrl('/{}', [])).toEqual([])
+    expect(getPathParamsFromUrl('https://example.com{:param}', [])).toEqual([])
+    expect(getPathParamsFromUrl('https://example.com/{', [])).toEqual([])
+    expect(getPathParamsFromUrl('https://example.com/{}', [])).toEqual([])
+    expect(getPathParamsFromUrl('https://example.com/{/}', [])).toEqual([])
   })
 
   it('should return an empty array if url has param with /{any}a', () => {
-    expect(getPathParamsFromUrl('/{any}a')).toEqual([])
+    expect(getPathParamsFromUrl('/{any}a', [])).toEqual([])
   })
 
   it('should return an array if url has params with /{any}/', () => {
-    const params = getPathParamsFromUrl('/{any}/')
+    const params = getPathParamsFromUrl('/{any}/', [])
     expect(params).toEqual([getKeyValue('any')])
   })
 
   it('should return an array if url has params with /{any}', () => {
-    const params = getPathParamsFromUrl('/{any}')
+    const params = getPathParamsFromUrl('/{any}', [])
     expect(params).toEqual([getKeyValue('any')])
   })
 
   it('should return an array if url has params with /{any}/{other}', () => {
-    const params = getPathParamsFromUrl('/{any}/{other}')
+    const params = getPathParamsFromUrl('/{any}/{other}', [])
     expect(params).toEqual([getKeyValue('any'), getKeyValue('other')])
   })
 
   it('should return an array if url has params with /{{env}}/{any}/', () => {
-    const params = getPathParamsFromUrl('/{{env}}/{any}/')
+    const params = getPathParamsFromUrl('/{{env}}/{any}/', [])
     expect(params).toEqual([getKeyValue('any')])
   })
 
   it('should return an array if url has params with /{any_param}', () => {
-    const params = getPathParamsFromUrl('/{any_param}')
+    const params = getPathParamsFromUrl('/{any_param}', [])
     expect(params).toEqual([getKeyValue('any_param')])
+  })
+
+  it('should keep values when pathParam are defined previously', () => {
+    const params = getPathParamsFromUrl('/{any_param}/{other}', [
+      {
+        name: 'any_param',
+        value: 'any_value',
+        enabled: true
+      }
+    ])
+    expect(params).toEqual([getKeyValue('any_param', 'any_value'), getKeyValue('other')])
   })
 
   it('should return decoded query paramaters value', () => {

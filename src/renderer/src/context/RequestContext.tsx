@@ -520,7 +520,7 @@ export default function RequestContextProvider({
     setRequestFullUrl(value)
     const [url, params] = value.split('?')
     setUrl(url)
-    setPathParams(getPathParamsFromUrl(url))
+    setPathParams(getPathParamsFromUrl(url, requestPathParams))
     setQueryParams(getQueryParamsFromUrl(params, requestQueryParams))
   }
 
