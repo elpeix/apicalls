@@ -1,32 +1,42 @@
-export const getPathParamsFromUrl = (url: string): KeyValue[] => {
+export const getPathParamsFromUrl = (url: string, previousPathParams: KeyValue[]): KeyValue[] => {
   if (!url || !url.includes('/')) return []
-  return url
+
+  const pathParams = url
     .split('/')
     .filter((p) => canBeParam(p))
     .map((p) => {
+      const name = p.slice(1, -1)
+      const values = (previousPathParams || [])
+        .filter((param) => param.name === name)
+        .map((param) => param.value)
+
       return {
-        name: p.slice(1, -1),
-        value: '',
+        name,
+        value: values[0] || '',
         enabled: true
       } as KeyValue
     })
+
+  return pathParams
 }
 
 export const replacePathParams = (url: string, params: KeyValue[]): string => {
   url = url.trim()
-  params = params.filter((p) => p.enabled)
-  if (!url || !url.includes('/') || !params.length) {
+  const pathParams = params.filter((p) => p.enabled)
+  if (!url || !url.includes('/') || !pathParams.length) {
     return url
   }
+
+  params = pathParams
   return url
     .split('/')
     .map((p: string, _: number) => {
       if (canBeParam(p)) {
         const name = p.slice(1, -1)
-        for (let j = 0; j < params.length; j++) {
-          if (params[j].name === name) {
-            const value = params[j].value
-            params.splice(j, 1)
+        for (let j = 0; j < pathParams.length; j++) {
+          if (pathParams[j].name === name) {
+            const value = pathParams[j].value
+            pathParams.splice(j, 1)
             return value
           }
         }
