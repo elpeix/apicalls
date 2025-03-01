@@ -50,7 +50,7 @@ export const getQueryParamsFromUrl = (
         const entry = param.split('=')
         if (entry.length <= 2) {
           const name = entry[0].trim()
-          const value = entry[1].trim()
+          const value = decodeQueryParam(name, entry[1] || '')
           return { name, value, enabled: true }
         }
       })
@@ -72,4 +72,13 @@ export const getQueryParamsFromUrl = (
     .filter((param) => !param.toBeRemoved)
 
   return [...newQueryParams, ...queryParamList]
+}
+
+const decodeQueryParam = (name: string, value: string): string => {
+  try {
+    value = value.replaceAll('+', ' ')
+    return decodeURIComponent(value.trim())
+  } catch (_) {
+    throw new Error(`Query param "${name}" is malformed`)
+  }
 }
