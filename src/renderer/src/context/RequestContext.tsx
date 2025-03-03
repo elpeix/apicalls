@@ -260,7 +260,7 @@ export default function RequestContextProvider({
     if (!preRequestData || !preRequestData.active) {
       return
     }
-    const environment = environments?.getActive()
+    const environment = getRequestEnvironment()
     if (!environment) {
       return
     }
@@ -323,7 +323,6 @@ export default function RequestContextProvider({
         window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
       }
     )
-
     window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: number) => {
       if (requestId !== tabId) return
       setFetching(false)
