@@ -137,7 +137,33 @@
   "editor": {
     "base": "vs-dark",
     "inherit": true,
-    "rules": [],
+    "rules": [
+      {
+        "background": "1F1F28",
+        "foreground": "DCD7BA",
+        "token": ""
+      },
+      {
+        "foreground": "777777",
+        "token": "comment"
+      },
+      {
+        "foreground": "dca561",
+        "token": "keyword.json"
+      },
+      {
+        "foreground": "DCD7BA",
+        "token": "string.key.json"
+      },
+      {
+        "foreground": "7e9cd8",
+        "token": "number.json"
+      },
+      {
+        "foreground": "76946a",
+        "token": "string.value.json"
+      }
+    ],
     "colors": {
       "editor.foreground": "#DCD7BA",
       "editor.background": "#1F1F28",
