@@ -125,7 +125,7 @@ type OpenTabArguments = {
 }
 
 type TabsHookType = {
-  setTabs: (tabs: RequestTab[]) => void
+  initTabs: (tabs: RequestTab[]) => void
   openTab: (args: OpenTabArguments) => void
   newTab: (itemRequest?: RequestType, collectionId?: Identifier, path?: PathItem[]) => void
   addTab: (tab: RequestTab) => void

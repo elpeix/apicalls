@@ -21,6 +21,7 @@
     font-size: 1.24rem;
     color: var(--text-color);
     flex: 1;
+    white-space: nowrap;
   }
 
   &:hover {
