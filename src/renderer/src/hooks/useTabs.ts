@@ -34,9 +34,15 @@ export default function useTabs(
     addTab(tab)
   }
 
-  const addTab = (tab: RequestTab) => {
-    const newTabs = [...tabs, tab]
-    _setActiveTab(newTabs, tabs.length)
+  const addTab = (tab: RequestTab, index = -1) => {
+    const newTabs = [...tabs]
+    if (index === -1) {
+      newTabs.push(tab)
+      index = tabs.length
+    } else {
+      newTabs.splice(index, 0, tab)
+    }
+    _setActiveTab(newTabs, index)
     updateTabs(newTabs)
   }
 
@@ -52,8 +58,9 @@ export default function useTabs(
     if (tab.path && tab.path.length > 0) {
       path = tab.path.slice(0, tab.path.length - 1)
     }
-    path.push(pathItem)
+    const tabIndex = tabs.findIndex((t) => t.id === tabId)
 
+    path.push(pathItem)
     const newTab = {
       ...tab,
       saved: false,
@@ -61,7 +68,7 @@ export default function useTabs(
       id,
       name: tab.name + ' copy'
     }
-    addTab(newTab)
+    addTab(newTab, tabIndex + 1)
   }
 
   const removeTab = (tabId: Identifier) => {
