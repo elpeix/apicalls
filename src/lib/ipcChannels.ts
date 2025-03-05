@@ -66,7 +66,8 @@ export const ACTIONS = {
   showCollections: 'action:show-collections',
   showEnvironments: 'action:show-environments',
   showHistory: 'action:show-history',
-  showCookies: 'action:show-cookies'
+  showCookies: 'action:show-cookies',
+  setTitle: 'action:set-title'
 }
 
 export const TABS = {

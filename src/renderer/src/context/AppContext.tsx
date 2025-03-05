@@ -58,7 +58,7 @@ export default function AppContextProvider({ children }: { children: React.React
     })
 
     ipcRenderer?.on(TABS.loadSuccess, (_: unknown, tabList: RequestTab[]) => {
-      tabs?.setTabs(tabList)
+      tabs?.initTabs(tabList)
     })
 
     ipcRenderer?.on(COOKIES.loaded, (_: unknown, cookieList: Cookie[]) => {
