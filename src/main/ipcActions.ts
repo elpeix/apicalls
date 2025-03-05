@@ -2,7 +2,7 @@ import { app, ipcMain, IpcMainEvent } from 'electron'
 import { restCall, restCancel } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
-import { REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
+import { ACTIONS, REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
 import { mainWindow } from '.'
 
 import fs from 'fs'
@@ -96,3 +96,7 @@ const listThemes = (): Map<string, AppTheme> => {
     })
   )
 }
+
+ipcMain.on(ACTIONS.setTitle, (_, title: string) => {
+  mainWindow?.setTitle(title || 'Api Calls')
+})

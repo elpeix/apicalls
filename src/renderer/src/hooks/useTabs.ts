@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createRequest } from '../lib/factory'
-import { TABS } from '../../../lib/ipcChannels'
+import { ACTIONS, TABS } from '../../../lib/ipcChannels'
 import { toggleCollectionElements } from '../lib/collectionFilter'
 import { updateTabPaths } from '../lib/tabUtils'
 
@@ -14,6 +14,16 @@ export default function useTabs(
   const [tabs, setTabs] = useState([...initialTabs])
   const [closedTabs, setClosedTabs] = useState<ClosedTab[]>([])
   const [activeRequest, setActiveRequest] = useState<ActiveRequest | null>(null)
+
+  const initTabs = (tabList: RequestTab[]) => {
+    setTabs(tabList)
+    const activeTabIndex = tabList.findIndex((t) => t.active)
+    if (activeTabIndex > -1) {
+      _setActiveTab(tabList, activeTabIndex)
+    } else {
+      ipcRenderer?.send(ACTIONS.setTitle, '')
+    }
+  }
 
   const openTab = ({ request, collectionId, path = [], shiftKey = false }: OpenTabArguments) => {
     const tab = getTab(request.id)
@@ -165,6 +175,13 @@ export default function useTabs(
     } else {
       setActiveRequest(null)
     }
+    let title = ''
+    if (activeTab) {
+      const method = activeTab.request.method.label || 'GET'
+      const name = activeTab.name
+      title = `${method} - ${name}`
+    }
+    ipcRenderer?.send(ACTIONS.setTitle, title)
     return newTabs
   }
 
@@ -224,7 +241,7 @@ export default function useTabs(
     getTabs,
     setActiveTab,
     getSelectedTabIndex,
-    setTabs,
+    initTabs,
     renameTab,
     moveTab,
     tabs,
