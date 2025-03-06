@@ -54,5 +54,13 @@ export function useMenu(settings: AppSettingsType): MenuHookType {
     }
   }
 
-  return { items, selected, select, expanded, setExpanded }
+  const selectAndExpand = (id: Identifier) => {
+    const item = items.find((item) => item.id === id)
+    if (item) {
+      selectMenuItem(item)
+      setExpanded(true)
+    }
+  }
+
+  return { items, selected, select, expanded, setExpanded, selectAndExpand }
 }

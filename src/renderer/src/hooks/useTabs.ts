@@ -161,17 +161,7 @@ export default function useTabs(
     })
     const activeTab = newTabs.find((t) => t.active)
     if (activeTab && activeTab.collectionId && activeTab.path) {
-      const collection = collections.get(activeTab.collectionId)
-      const path = activeTab.path
-      setActiveRequest({
-        collectionId: activeTab.collectionId,
-        path,
-        id: activeTab.id
-      })
-      if (collection) {
-        toggleCollectionElements(collection.elements, true, path)
-        collections.update(collection)
-      }
+      highlightCollectionRequest(activeTab)
     } else {
       setActiveRequest(null)
     }
@@ -183,6 +173,22 @@ export default function useTabs(
     }
     ipcRenderer?.send(ACTIONS.setTitle, title)
     return newTabs
+  }
+
+  const highlightCollectionRequest = (tab: RequestTab) => {
+    if (!tab || !tab.collectionId || !tab.path) {
+      return
+    }
+    const collection = collections.get(tab.collectionId)
+    setActiveRequest({
+      collectionId: tab.collectionId,
+      path: tab.path,
+      id: tab.id
+    })
+    if (collection) {
+      toggleCollectionElements(collection.elements, true, tab.path)
+      collections.update(collection)
+    }
   }
 
   const getSelectedTabIndex = () => {
@@ -241,6 +247,7 @@ export default function useTabs(
     getTabs,
     setActiveTab,
     getSelectedTabIndex,
+    highlightCollectionRequest,
     initTabs,
     renameTab,
     moveTab,

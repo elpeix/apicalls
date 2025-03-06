@@ -142,6 +142,7 @@ type TabsHookType = {
   setActiveTab: (index: number) => void
   getSelectedTabIndex: () => number
   getActiveRequest: () => ActiveRequest | null
+  highlightCollectionRequest: (tab: RequestTab) => void
   renameTab: (tabId: Identifier, name: string) => void
   moveTab: (tabId: Identifier, toBeforeTabId: Identifier) => void
   tabs: RequestTab[]
@@ -181,6 +182,8 @@ type CollectionsHookType = {
   updateTime: number
   getEnvironmentId: (collectionId: Identifier) => Identifier | undefined
   setEnvironmentId: (collectionId: Identifier, environmentId?: Identifier) => void
+  selectedCollection: Collection | null
+  select: (collectionId: Identifier | null) => void
 }
 
 type EnvironmentsHookType = {
@@ -216,6 +219,7 @@ type MenuHookType = {
   select: (id: Identifier) => void
   expanded: boolean
   setExpanded: (expanded: boolean) => void
+  selectAndExpand: (id: Identifier) => void
 }
 
 type Cookie = {

@@ -3,6 +3,7 @@ import { COLLECTIONS } from '../../../lib/ipcChannels'
 
 export function useCollections(): CollectionsHookType {
   const [collections, setCollections] = useState<Collection[]>([])
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
   const [updateTime, setUpdateTime] = useState(0)
   const ipcRenderer = window.electron?.ipcRenderer
 
@@ -138,6 +139,18 @@ export function useCollections(): CollectionsHookType {
     update(collection)
   }
 
+  const select = (collectionId: Identifier | null) => {
+    if (collectionId === selectedCollection?.id) {
+      return
+    }
+    if (collectionId === null) {
+      setSelectedCollection(null)
+      return
+    }
+    const collection = get(collectionId)
+    setSelectedCollection(collection || null)
+  }
+
   return {
     setCollections,
     create,
@@ -153,6 +166,8 @@ export function useCollections(): CollectionsHookType {
     saveRequest,
     updateTime,
     getEnvironmentId,
-    setEnvironmentId
+    setEnvironmentId,
+    select,
+    selectedCollection
   }
 }
