@@ -143,12 +143,11 @@ export default function AppContextProvider({ children }: { children: React.React
   const dialogIsOpen = !!dialogProps
 
   const revealRequest = (tab: RequestTab) => {
-    if (!tab.collectionId) {
-      return
+    if (tab.collectionId) {
+      collections?.select(tab.collectionId)
+      menu?.selectAndExpand('collection')
+      tabs?.highlightCollectionRequest(tab)
     }
-    collections?.select(tab.collectionId)
-    menu?.selectAndExpand('collection')
-    tabs?.highlightCollectionRequest(tab)
   }
 
   const contextValue = {

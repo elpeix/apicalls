@@ -18,11 +18,7 @@ export default function Collections() {
 
   const selectedCollection = collections?.selectedCollection
   const setSelectedCollection = (collection: Collection | null) => {
-    if (collection) {
-      collections?.select(collection.id)
-    } else {
-      collections?.select(null)
-    }
+    collections?.select(collection ? collection.id : null)
   }
 
   const add = () => {

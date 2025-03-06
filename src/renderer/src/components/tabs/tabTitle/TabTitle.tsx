@@ -100,7 +100,6 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   }
 
   const className = `${styles.tabTitle} ${styles[tab.type]} ${active} ${saved ? styles.saved : styles.unsaved}`
-  const showRevealInCollection = !!tab.collectionId
 
   return (
     <Droppable
@@ -133,7 +132,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
         >
           <MenuElement showIcon={false} title="Duplicate tab" onClick={duplicateTab} />
           <MenuSeparator />
-          {showRevealInCollection && (
+          {tab.collectionId && (
             <>
               <MenuElement
                 showIcon={false}
