@@ -390,6 +390,7 @@ type ApplicationType = {
   showConfirm: (confirmProps: ConfirmType) => void
   hideConfirm: () => void
   dialogIsOpen: boolean
+  revealRequest: (tab: RequestTab) => void
 }
 
 type DialogType = {

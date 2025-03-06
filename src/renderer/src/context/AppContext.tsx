@@ -142,6 +142,15 @@ export default function AppContextProvider({ children }: { children: React.React
 
   const dialogIsOpen = !!dialogProps
 
+  const revealRequest = (tab: RequestTab) => {
+    if (!tab.collectionId) {
+      return
+    }
+    collections?.select(tab.collectionId)
+    menu?.selectAndExpand('collection')
+    tabs?.highlightCollectionRequest(tab)
+  }
+
   const contextValue = {
     application: {
       showDialog,
@@ -152,7 +161,8 @@ export default function AppContextProvider({ children }: { children: React.React
       hidePrompt,
       showConfirm,
       hideConfirm,
-      dialogIsOpen
+      dialogIsOpen,
+      revealRequest
     },
     menu,
     tabs,

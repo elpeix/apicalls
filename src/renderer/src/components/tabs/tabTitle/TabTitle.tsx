@@ -9,7 +9,7 @@ import { MenuElement, MenuSeparator } from '../../base/Menu/MenuElement'
 import ContextMenu from '../../base/Menu/ContextMenu'
 
 export default function TabTitle({ tab }: { tab: RequestTab }) {
-  const { tabs, collections, menu } = useContext(AppContext)
+  const { tabs, application } = useContext(AppContext)
   const [tabName, setTabName] = useState<string>()
   const [method, setMethod] = useState<string>()
   const [saved, setSaved] = useState(tab.saved)
@@ -95,12 +95,8 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   const handleMouseOut = () => setOnOver(false)
 
   const showInCollecction = () => {
-    if (tab.collectionId) {
-      collections?.select(tab.collectionId)
-      menu?.selectAndExpand('collection')
-      tabs?.highlightCollectionRequest(tab)
-      setShowMenu(false)
-    }
+    application.revealRequest(tab)
+    setShowMenu(false)
   }
 
   const className = `${styles.tabTitle} ${styles[tab.type]} ${active} ${saved ? styles.saved : styles.unsaved}`
