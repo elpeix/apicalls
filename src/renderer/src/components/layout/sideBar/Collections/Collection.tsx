@@ -44,9 +44,9 @@ export default function Collection({
     let internalCollection: Collection | undefined
     if (updateTime !== collections?.updateTime) {
       setUpdateTime(collections?.updateTime || 0)
-      internalCollection = collections?.get(coll.id)
+      internalCollection = collections?.get(collection.id)
     } else {
-      internalCollection = coll
+      internalCollection = collection
     }
     if (!internalCollection) return
 

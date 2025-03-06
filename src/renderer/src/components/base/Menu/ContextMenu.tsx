@@ -1,7 +1,6 @@
 import React from 'react'
 import LinkedModal from '../linkedModal/LinkedModal'
 import styles from './Menu.module.css'
-import { ReactMenuElement } from './MenuElement'
 
 export default function ContextMenu({
   topOffset = 0,
@@ -14,7 +13,7 @@ export default function ContextMenu({
   leftOffset?: number
   onClose: () => void
   parentRef: React.RefObject<HTMLDivElement | null>
-  children: ReactMenuElement
+  children: React.ReactNode
 }) {
   return (
     <LinkedModal

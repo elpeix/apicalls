@@ -9,7 +9,7 @@ import { MenuElement, MenuSeparator } from '../../base/Menu/MenuElement'
 import ContextMenu from '../../base/Menu/ContextMenu'
 
 export default function TabTitle({ tab }: { tab: RequestTab }) {
-  const { tabs } = useContext(AppContext)
+  const { tabs, application } = useContext(AppContext)
   const [tabName, setTabName] = useState<string>()
   const [method, setMethod] = useState<string>()
   const [saved, setSaved] = useState(tab.saved)
@@ -94,6 +94,11 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   const handleMouseOver = () => setOnOver(true)
   const handleMouseOut = () => setOnOver(false)
 
+  const showInCollecction = () => {
+    application.revealRequest(tab)
+    setShowMenu(false)
+  }
+
   const className = `${styles.tabTitle} ${styles[tab.type]} ${active} ${saved ? styles.saved : styles.unsaved}`
 
   return (
@@ -127,6 +132,16 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
         >
           <MenuElement showIcon={false} title="Duplicate tab" onClick={duplicateTab} />
           <MenuSeparator />
+          {tab.collectionId && (
+            <>
+              <MenuElement
+                showIcon={false}
+                title="Reveal in collection"
+                onClick={showInCollecction}
+              />
+              <MenuSeparator />
+            </>
+          )}
           <MenuElement showIcon={false} title="Close tab" onClick={closeTab} />
           <MenuElement showIcon={false} title="Close other tabs" onClick={closeOtherTabs} />
           <MenuElement showIcon={false} title="Close all tabs" onClick={closeAllTabs} />

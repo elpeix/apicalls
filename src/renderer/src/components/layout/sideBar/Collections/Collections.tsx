@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
@@ -7,7 +7,6 @@ import CollectionItem from './CollectionItem'
 
 export default function Collections() {
   const { application, collections } = useContext(AppContext)
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -16,6 +15,11 @@ export default function Collections() {
     })
     return () => ipcRenderer?.removeAllListeners(COLLECTIONS.importFailure)
   })
+
+  const selectedCollection = collections?.selectedCollection
+  const setSelectedCollection = (collection: Collection | null) => {
+    collections?.select(collection ? collection.id : null)
+  }
 
   const add = () => {
     if (!collections) return
