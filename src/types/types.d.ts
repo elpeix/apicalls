@@ -130,12 +130,13 @@ type TabsHookType = {
   newTab: (itemRequest?: RequestType, collectionId?: Identifier, path?: PathItem[]) => void
   addTab: (tab: RequestTab) => void
   duplicateTab: (tabId: Identifier) => void
-  removeTab: (tabId: Identifier) => void
+  removeTab: (tabId: Identifier, force?: boolean) => void
   updateTab: (tabId: Identifier, tab: RequestTab) => void
   updateTabRequest: (tabId: Identifier, saved: boolean, request: RequestBase) => void
   restoreTab: () => void
-  closeOtherTabs: (tabId: Identifier) => void
-  closeAllTabs: () => void
+  closeOtherTabs: (tabId: Identifier, force?: boolean) => void
+  closeAllTabs: (force?: boolean) => void
+  saveTab: (tabId: Identifier) => void
   hasTabs: () => boolean
   getTab: (tabId: Identifier) => RequestTab | undefined
   getTabs: () => RequestTab[]
@@ -332,6 +333,7 @@ type AppSettingsType = {
   menu?: boolean
   requestView?: AppSettingsRequestView
   scrollToActiveRequest?: boolean
+  confirmCloseUnsavedTab?: boolean
 }
 
 type CallRequest = {
@@ -390,7 +392,12 @@ type ApplicationType = {
   showConfirm: (confirmProps: ConfirmType) => void
   hideConfirm: () => void
   dialogIsOpen: boolean
-  revealRequest: (tab: RequestTab) => void
+  tabActions: {
+    revealRequest: (tab: RequestTab) => void
+    closeTab: (tab: RequestTab) => void
+    closeAllTabs: () => void
+    closeOtherTabs: (tab: RequestTab) => void
+  }
 }
 
 type DialogType = {
@@ -422,6 +429,17 @@ type ConfirmType = {
   confirmName?: string
   confirmColor?: 'primary' | 'danger'
   onConfirm: () => void
+  onCancel: () => void
+}
+
+type YesNoType = {
+  message: string
+  yesName?: string
+  noName?: string
+  yesColor?: 'primary' | 'danger'
+  noColor?: 'primary' | 'danger'
+  onYes: () => void
+  onNo: () => void
   onCancel: () => void
 }
 

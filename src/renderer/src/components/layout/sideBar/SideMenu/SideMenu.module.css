@@ -5,7 +5,7 @@
   height: 100%;
   gap: 0px;
   border-right: 1px solid var(--border-color);
-  background-color: var(--sidePnel-menu-color);
+  background-color: var(--sidePanel-menu-color);
 
   &.mac {
     width: 4.6rem;

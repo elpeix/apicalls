@@ -165,6 +165,19 @@ export default function Settings() {
               <span>Scroll to active request</span>
             </label>
           </div>
+          <div className={styles.groupRow}>
+            <input
+              id="confirmCloseUnsavedTab"
+              type="checkbox"
+              checked={settings.confirmCloseUnsavedTab ?? true}
+              onChange={(e) =>
+                handleChangeSettings({ ...settings, confirmCloseUnsavedTab: e.target.checked })
+              }
+            />
+            <label htmlFor="confirmCloseUnsavedTab">
+              <span>Confirm close unsaved tabs</span>
+            </label>
+          </div>
 
           <div className={styles.group}>
             <a className={`button-text ${styles.clearSettings}`} onClick={handleClearSettings}>
