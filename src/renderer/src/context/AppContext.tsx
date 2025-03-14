@@ -150,7 +150,7 @@ export default function AppContextProvider({ children }: { children: React.React
   }
 
   const closeTab = (tab: RequestTab) => {
-    if (tab.saved) {
+    if (tab.saved || avoidCloseConfirm()) {
       tabs?.removeTab(tab.id, true)
       return
     }
@@ -174,6 +174,10 @@ export default function AppContextProvider({ children }: { children: React.React
 
   const confirmCloseMessage = 'There are unsaved tabs. Do you still want to close?'
   const closeAllTabs = () => {
+    if (avoidCloseConfirm()) {
+      tabs.closeAllTabs(true)
+      return
+    }
     if (tabs?.getTabs().some((tab) => !tab.saved)) {
       showConfirm({
         message: confirmCloseMessage,
@@ -190,6 +194,10 @@ export default function AppContextProvider({ children }: { children: React.React
   }
 
   const closeOtherTabs = (tab: RequestTab) => {
+    if (avoidCloseConfirm()) {
+      tabs.closeOtherTabs(tab.id, true)
+      return
+    }
     const tabsToClose = tabs?.getTabs().filter((t) => t.id !== tab.id)
     if (tabsToClose.some((tab) => !tab.saved)) {
       showConfirm({
@@ -205,6 +213,8 @@ export default function AppContextProvider({ children }: { children: React.React
     }
     tabs.closeOtherTabs(tab.id)
   }
+
+  const avoidCloseConfirm = () => !(appSettings.settings?.confirmCloseUnsavedTab ?? true)
 
   const contextValue = {
     application: {

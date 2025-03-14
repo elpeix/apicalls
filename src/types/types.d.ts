@@ -333,6 +333,7 @@ type AppSettingsType = {
   menu?: boolean
   requestView?: AppSettingsRequestView
   scrollToActiveRequest?: boolean
+  confirmCloseUnsavedTab?: boolean
 }
 
 type CallRequest = {
