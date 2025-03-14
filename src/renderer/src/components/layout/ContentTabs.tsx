@@ -9,7 +9,7 @@ import SearchTabs from '../tabs/SearchTabs/SearchTabs'
 import HorizontalScroll from '../base/HorizontalScroll/HorizontalScroll'
 
 export default function ContentTabs() {
-  const { tabs } = useContext(AppContext)
+  const { tabs, application } = useContext(AppContext)
 
   const [hasTabs, setHasTabs] = useState(false)
   const [tabList, setTabList] = useState<RequestTab[]>([])
@@ -25,7 +25,7 @@ export default function ContentTabs() {
     ipcRenderer?.on(ACTIONS.closeTab, () => {
       const tab = tabs.tabs[tabs.getSelectedTabIndex()]
       if (tab) {
-        tabs.removeTab(tab.id)
+        application.tabActions.closeTab(tab)
       }
     })
 

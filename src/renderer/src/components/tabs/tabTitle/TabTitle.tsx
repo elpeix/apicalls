@@ -20,6 +20,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
 
   useEffect(() => {
     setTabName(tab.name)
+    console.log('tab saved', tab.saved)
     setSaved(tab.saved || false)
     setMethod(tab.request?.method.value || 'GET')
   }, [tab])
@@ -43,17 +44,17 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   }
 
   const closeTab = () => {
-    tabs?.removeTab(tab.id)
+    application.tabActions.closeTab(tab)
     setShowMenu(false)
   }
 
   const closeOtherTabs = () => {
-    tabs?.closeOtherTabs(tab.id)
+    application.tabActions.closeOtherTabs(tab)
     setShowMenu(false)
   }
 
   const closeAllTabs = () => {
-    tabs?.closeAllTabs()
+    application.tabActions.closeAllTabs()
     setShowMenu(false)
   }
 
@@ -71,7 +72,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
     e.stopPropagation()
     e.preventDefault()
     if (e.button === 1) {
-      tabs?.removeTab(tab.id)
+      application.tabActions.closeTab(tab)
       return
     }
     if (e.button === 2) {
@@ -95,7 +96,7 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
   const handleMouseOut = () => setOnOver(false)
 
   const showInCollecction = () => {
-    application.revealRequest(tab)
+    application.tabActions.revealRequest(tab)
     setShowMenu(false)
   }
 

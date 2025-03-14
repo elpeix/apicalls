@@ -3,8 +3,8 @@ import styles from './Request.module.css'
 import Icon from '../base/Icon/Icon'
 import LinkedModal from '../base/linkedModal/LinkedModal'
 import { RequestContext } from '../../context/RequestContext'
-import SaveAs from './SaveAs/SaveAs'
 import { AppContext } from '../../context/AppContext'
+import SaveAs from '../base/SaveAs/SaveAs'
 
 export default function SaveButton() {
   const { application } = useContext(AppContext)

@@ -12,6 +12,7 @@ import Prompt from '../components/base/PopupBoxes/Prompt'
 import Confirm from '../components/base/PopupBoxes/Confirm'
 import { defaultSettings } from '../../../lib/defaults'
 import Alert from '../components/base/PopupBoxes/Alert'
+import ConfirmYesNo from '../components/base/PopupBoxes/ConfirmYesNo'
 
 export const AppContext = createContext<{
   application: ApplicationType
@@ -104,17 +105,15 @@ export default function AppContextProvider({ children }: { children: React.React
     hideDialog()
   }
 
-  const showConfirm = (confirmProps: ConfirmType) => {
+  const showConfirm = (props: ConfirmType) => {
     showDialog({
-      children: (
-        <Confirm
-          message={confirmProps.message}
-          confirmName={confirmProps.confirmName}
-          confirmColor={confirmProps.confirmColor}
-          onConfirm={confirmProps.onConfirm}
-          onCancel={confirmProps.onCancel}
-        />
-      )
+      children: <Confirm {...props} />
+    })
+  }
+
+  const showYesNo = (props: YesNoType) => {
+    showDialog({
+      children: <ConfirmYesNo {...props} />
     })
   }
 
@@ -150,6 +149,63 @@ export default function AppContextProvider({ children }: { children: React.React
     }
   }
 
+  const closeTab = (tab: RequestTab) => {
+    if (tab.saved) {
+      tabs?.removeTab(tab.id, true)
+      return
+    }
+    showYesNo({
+      message: 'Do you want to save changes before closing the tab?',
+      noName: 'Close without save',
+      noColor: 'danger',
+      yesName: 'Save',
+      onYes: () => {
+        tabs?.saveTab(tab.id)
+        tabs?.removeTab(tab.id, true)
+        hideDialog()
+      },
+      onNo: () => {
+        tabs?.removeTab(tab.id, true)
+        hideDialog()
+      },
+      onCancel: hideDialog
+    })
+  }
+
+  const confirmCloseMessage = 'There are unsaved tabs. Do you still want to close?'
+  const closeAllTabs = () => {
+    if (tabs?.getTabs().some((tab) => !tab.saved)) {
+      showConfirm({
+        message: confirmCloseMessage,
+        confirmName: 'Close tabs',
+        onConfirm: () => {
+          tabs.closeAllTabs(true)
+          hideDialog()
+        },
+        onCancel: hideDialog
+      })
+      return
+    }
+    tabs.closeAllTabs()
+  }
+
+  const closeOtherTabs = (tab: RequestTab) => {
+    const tabsToClose = tabs?.getTabs().filter((t) => t.id !== tab.id)
+    if (tabsToClose.some((tab) => !tab.saved)) {
+      showConfirm({
+        message: confirmCloseMessage,
+        confirmName: 'Close tabs',
+        onConfirm: () => {
+          tabs.closeOtherTabs(tab.id, true)
+          hideDialog()
+        },
+        onCancel: hideDialog
+      })
+      return
+    }
+    tabs.closeOtherTabs(tab.id)
+  }
+
   const contextValue = {
     application: {
       showDialog,
@@ -161,7 +217,12 @@ export default function AppContextProvider({ children }: { children: React.React
       showConfirm,
       hideConfirm,
       dialogIsOpen,
-      revealRequest
+      tabActions: {
+        revealRequest,
+        closeTab,
+        closeAllTabs,
+        closeOtherTabs
+      }
     },
     menu,
     tabs,

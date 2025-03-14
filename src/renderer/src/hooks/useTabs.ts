@@ -81,9 +81,12 @@ export default function useTabs(
     addTab(newTab, tabIndex + 1)
   }
 
-  const removeTab = (tabId: Identifier) => {
+  const removeTab = (tabId: Identifier, force?: boolean) => {
     const index = tabs.findIndex((t) => t.id === tabId)
     if (index === -1) return
+    if (!force && !tabs[index].saved) {
+      return
+    }
     addCloseTab(tabs[index], index)
     if (tabs[index].active) {
       if (index === 0) {
@@ -95,15 +98,26 @@ export default function useTabs(
     updateTabs(tabs.filter((tab) => tab.id !== tabId))
   }
 
-  const closeOtherTabs = (tabId: Identifier) => {
+  const closeOtherTabs = (tabId: Identifier, force?: boolean) => {
+    const tabsToClose = tabs.filter((t) => t.id !== tabId)
+    if (!force) {
+      if (tabsToClose.some((tab) => !tab.saved)) {
+        return
+      }
+    }
     const index = tabs.findIndex((t) => t.id === tabId)
     const newTabs = [tabs[index]]
     _setActiveTab(newTabs, 0)
-    addClosedTabs(tabs.filter((t) => t.id !== tabId))
+    addClosedTabs(tabsToClose)
     updateTabs(newTabs)
   }
 
-  const closeAllTabs = () => {
+  const closeAllTabs = (force?: boolean) => {
+    if (!force) {
+      if (tabs.some((tab) => !tab.saved)) {
+        return
+      }
+    }
     addClosedTabs(tabs)
     updateTabs([])
   }
@@ -231,6 +245,26 @@ export default function useTabs(
     }
   }
 
+  const saveTab = (tabId: Identifier) => {
+    const tab = getTab(tabId)
+    if (!tab) {
+      console.error(`Tab [${tabId}] not found`)
+      return
+    }
+    if (!tab.path && !Array.isArray(tab.path)) {
+      console.error(`Tab [${tabId}] does not have path`)
+    }
+    if (!tab.collectionId) {
+      console.warn(`Tab [${tabId}] does not belong to any collection`)
+      return
+    }
+    const path = tab.path as PathItem[]
+    const collectionId = tab.collectionId as Identifier
+    tab.saved = true
+    collections.saveRequest({ path, collectionId, request: tab })
+    updateTab(tabId, tab)
+  }
+
   const getActiveRequest = () => activeRequest
 
   return {
@@ -255,6 +289,7 @@ export default function useTabs(
     updatePaths,
     getActiveRequest,
     closeOtherTabs,
-    closeAllTabs
+    closeAllTabs,
+    saveTab
   }
 }

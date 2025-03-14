@@ -427,22 +427,7 @@ export default function RequestContextProvider({
       setOpenSaveAs(true)
       return
     }
-    const request = {
-      type: 'collection',
-      id: tab.id,
-      name: tab.name,
-      date: new Date().toISOString(),
-      request: {
-        method: requestMethod,
-        url: requestUrl,
-        auth: requestAuth,
-        headers: requestHeaders,
-        pathParams: requestPathParams,
-        queryParams: requestQueryParams,
-        body: requestBody
-      }
-    } as RequestType
-    collections.saveRequest({ path, collectionId, request })
+    tabs?.saveTab(tab.id)
     setSaved(true)
     setChanged(true)
   }
