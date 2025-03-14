@@ -20,7 +20,6 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
 
   useEffect(() => {
     setTabName(tab.name)
-    console.log('tab saved', tab.saved)
     setSaved(tab.saved || false)
     setMethod(tab.request?.method.value || 'GET')
   }, [tab])
