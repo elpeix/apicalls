@@ -7,6 +7,7 @@ import { useDebounce } from '../../../hooks/useDebounce'
 import TabTooltip from './TabTooltip'
 import { MenuElement, MenuSeparator } from '../../base/Menu/MenuElement'
 import ContextMenu from '../../base/Menu/ContextMenu'
+import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function TabTitle({ tab }: { tab: RequestTab }) {
   const { tabs, application } = useContext(AppContext)
@@ -22,6 +23,10 @@ export default function TabTitle({ tab }: { tab: RequestTab }) {
     setTabName(tab.name)
     setSaved(tab.saved || false)
     setMethod(tab.request?.method.value || 'GET')
+    if (tab.active) {
+      const ipcRenderer = window.electron?.ipcRenderer
+      ipcRenderer?.send(ACTIONS.setTitle, `${tab.request.method.label || 'GET'} - ${tab.name}`)
+    }
   }, [tab])
 
   useEffect(() => {
