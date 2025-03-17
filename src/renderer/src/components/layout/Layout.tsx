@@ -38,6 +38,9 @@ export default function Layout() {
 
   const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
 
+  const handleExpand = () => menu?.setExpanded(true)
+  const handleCollapse = () => menu?.setExpanded(false)
+
   return (
     <>
       <PanelGroup direction="horizontal" autoSaveId="panelLayout">
@@ -53,6 +56,8 @@ export default function Layout() {
           collapsible={true}
           ref={sidePanel}
           className="container-query"
+          onExpand={handleExpand}
+          onCollapse={handleCollapse}
         >
           <SidePanel />
         </Panel>
