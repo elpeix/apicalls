@@ -35,14 +35,14 @@
     "@electron-toolkit/eslint-config": "^2.0.0",
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@eslint/compat": "^1.2.7",
-    "@eslint/eslintrc": "^3.3.0",
-    "@eslint/js": "^9.21.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.23.0",
     "@types/react-dom": "^19.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^34.3.2",
+    "electron": "^35.0.3",
     "electron-builder": "^25.1.8",
-    "electron-vite": "^3.0.0",
+    "electron-vite": "^3.1.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^16.0.0",
@@ -50,8 +50,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.8.2",
-    "vite": "^6.2.0",
-    "vitest": "^3.0.7"
+    "vite": "^6.2.3",
+    "vitest": "^3.0.9"
   },
-  "packageManager": "pnpm@10.5.2"
+  "packageManager": "pnpm@10.6.5"
 }
