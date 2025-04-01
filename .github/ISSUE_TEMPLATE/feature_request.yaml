@@ -1,0 +1,33 @@
+name: 'Feature Request'
+description: 'Suggest an enhancement or new feature.'
+labels: [enhancement]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 'Summary'
+      description: 'Describe the feature or enhancement.'
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 'Motivation'
+      description: 'Why is this feature important? What problem does it solve?'
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 'Proposed Solution'
+      description: 'How should it be implemented?'
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 'Alternatives Considered'
+      description: "Describe any alternative solutions or features you've considered."
+  - type: input
+    id: related
+    attributes:
+      label: 'Related Issues'
+      description: 'Link to related issues if applicable.'

@@ -1,4 +1,4 @@
-import { Menu, MenuItemConstructorOptions, BrowserWindow } from 'electron'
+import { Menu, MenuItemConstructorOptions, BrowserWindow, shell } from 'electron'
 import { ACTIONS, SETTINGS } from '../lib/ipcChannels'
 import { getSettings, setSettings } from '../lib/settings'
 
@@ -163,6 +163,15 @@ export const getMenu = (mainWindow: BrowserWindow) => {
     {
       label: 'Window',
       submenu: [
+        {
+          label: 'Submit a bug or idea',
+          click: () => {
+            shell.openExternal('https://github.com/elpeix/apicalls/issues/new')
+          }
+        },
+        {
+          type: 'separator'
+        },
         {
           label: 'DevTools',
           accelerator: 'F12',
