@@ -166,7 +166,7 @@ export const getMenu = (mainWindow: BrowserWindow) => {
         {
           label: 'Submit a bug or idea',
           click: () => {
-            shell.openExternal('https://github.com/elpeix/apicalls/issues/new')
+            shell.openExternal('https://github.com/elpeix/apicalls/issues/new/choose')
           }
         },
         {
