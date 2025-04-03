@@ -310,6 +310,7 @@ type RequestContextType = {
   setEditorState: (type: 'request' | 'response', state: string) => void
   getEditorState: (type: 'request' | 'response') => string
   getRequestEnvironment: () => Environment | null
+  copyAsCurl: () => void
 }
 
 type AppTheme = {
