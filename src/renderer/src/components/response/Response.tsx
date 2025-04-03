@@ -7,8 +7,10 @@ import Loading from '../base/Loading/Loading'
 import styles from './Response.module.css'
 import Switch from '../base/Switch/Switch'
 import { formatSource, getLanguageName } from '../../lib/languageSupport'
+import { AppContext } from '../../context/AppContext'
 
 export default function Response() {
+  const { application } = useContext(AppContext)
   const context = useContext(RequestContext)
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState(false)
@@ -52,6 +54,9 @@ export default function Response() {
         .join('\n')
     }
     navigator.clipboard.writeText(valueToCopy)
+    application.notify({
+      message: 'Response copied to clipboard'
+    })
   }
   return (
     <>

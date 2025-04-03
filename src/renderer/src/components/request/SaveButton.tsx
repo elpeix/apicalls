@@ -5,11 +5,12 @@ import LinkedModal from '../base/linkedModal/LinkedModal'
 import { RequestContext } from '../../context/RequestContext'
 import { AppContext } from '../../context/AppContext'
 import SaveAs from '../base/SaveAs/SaveAs'
+import Menu from '../base/Menu/Menu'
+import { MenuElement } from '../base/Menu/MenuElement'
 
 export default function SaveButton() {
   const { application } = useContext(AppContext)
-
-  const { tabId, path, save, openSaveAs, setOpenSaveAs } = useContext(RequestContext)
+  const { tabId, path, save, openSaveAs, setOpenSaveAs, copyAsCurl } = useContext(RequestContext)
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
 
@@ -28,12 +29,6 @@ export default function SaveButton() {
       save()
     }
   }
-
-  const openModal = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setShowModal(!showModal)
-  }
-
   const openDialog = () => {
     application.showDialog({
       children: <SaveAs tabId={tabId} onClose={closeDialog} />,
@@ -57,9 +52,18 @@ export default function SaveButton() {
         </div>
         <div className={styles.buttonText}>Save</div>
       </button>
-      <div ref={arrowRef} className={styles.buttonArrow} onClick={openModal}>
-        <Icon icon="arrow" />
-      </div>
+      <Menu
+        className={styles.saveAsModal}
+        menuModalClassName={styles.saveAsMenuModal}
+        icon="arrow"
+        iconDirection="south"
+        onClose={() => setShowModal(false)}
+        topOffset={43}
+        leftOffset={-1}
+      >
+        <MenuElement onClick={openDialog} title="Save as..." icon="save" />
+        <MenuElement onClick={copyAsCurl} title="Copy as cURL" icon="copy" />
+      </Menu>
       {showModal && (
         <LinkedModal
           parentRef={arrowRef}

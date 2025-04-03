@@ -178,6 +178,19 @@ export default function Settings() {
               <span>Confirm close unsaved tabs</span>
             </label>
           </div>
+          <div className={styles.groupRow}>
+            <input
+              id="showNotification"
+              type="checkbox"
+              checked={settings.showNotification ?? true}
+              onChange={(e) =>
+                handleChangeSettings({ ...settings, showNotification: e.target.checked })
+              }
+            />
+            <label htmlFor="showNotification">
+              <span>Show notifications</span>
+            </label>
+          </div>
 
           <div className={styles.group}>
             <a className={`button-text ${styles.clearSettings}`} onClick={handleClearSettings}>

@@ -7,5 +7,6 @@ export const defaultSettings: AppSettingsType = {
   menu: true,
   requestView: 'horizontal',
   scrollToActiveRequest: true,
-  confirmCloseUnsavedTab: true
+  confirmCloseUnsavedTab: true,
+  showNotification: true
 }

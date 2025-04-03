@@ -32,7 +32,8 @@ export const RequestContext = createContext<RequestContextType>({
   setEditorState: () => {},
   getEditorState: () => '',
   requestConsole: null,
-  getRequestEnvironment: () => null
+  getRequestEnvironment: () => null,
+  copyAsCurl: () => {}
 })
 
 export default function RequestContextProvider({
@@ -48,6 +49,7 @@ export default function RequestContextProvider({
     tabs,
     collections,
     cookies,
+    application,
     appSettings: settings
   } = useContext(AppContext)
 
@@ -638,6 +640,33 @@ export default function RequestContextProvider({
     return responseEditorState
   }
 
+  const copyAsCurl = () => {
+    const url = getValue(requestUrl)
+    let path = url
+    const queryParams = prepareQueryParams(requestQueryParams)
+    const urlParams = new URLSearchParams()
+    if (queryParams && queryParams.length > 0) {
+      queryParams
+        .filter((param) => param.enabled && param.name)
+        .forEach((param) => {
+          urlParams.append(param.name, param.value)
+        })
+      path += `?${urlParams.toString()}`
+    }
+    const headers: Record<string, string> = getHeaders(url)
+    let curl = `curl -X ${requestMethod.value} '${path}'`
+    if (headers && Object.keys(headers).length > 0) {
+      Object.keys(headers).forEach((key) => {
+        curl += `\\\n  -H '${key}: ${headers[key]}'`
+      })
+    }
+    if (requestBody && requestMethod.body) {
+      curl += ` -d '${requestBody}'`
+    }
+    navigator.clipboard.writeText(curl)
+    application.notify({ message: 'cURL command copied to clipboard' })
+  }
+
   const contextValue = {
     path: path || [],
     isActive: tab.active,
@@ -689,7 +718,8 @@ export default function RequestContextProvider({
     setOpenSaveAs,
     setEditorState,
     getEditorState,
-    getRequestEnvironment
+    getRequestEnvironment,
+    copyAsCurl
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
