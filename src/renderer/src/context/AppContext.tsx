@@ -141,6 +141,19 @@ export default function AppContextProvider({ children }: { children: React.React
 
   const dialogIsOpen = !!dialogProps
 
+  const notify = ({ message }: NotifcationTtype) => {
+    const settings = appSettings.settings
+    if (!(settings?.showNotification ?? true)) {
+      return
+    }
+    const notification = new window.Notification('API Calls', {
+      body: message
+    })
+    notification.onclick = () => {
+      window.focus()
+    }
+  }
+
   const revealRequest = (tab: RequestTab) => {
     if (tab.collectionId) {
       collections?.select(tab.collectionId)
@@ -227,6 +240,7 @@ export default function AppContextProvider({ children }: { children: React.React
       showConfirm,
       hideConfirm,
       dialogIsOpen,
+      notify,
       tabActions: {
         revealRequest,
         closeTab,

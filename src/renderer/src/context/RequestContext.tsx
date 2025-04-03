@@ -49,6 +49,7 @@ export default function RequestContextProvider({
     tabs,
     collections,
     cookies,
+    application,
     appSettings: settings
   } = useContext(AppContext)
 
@@ -663,6 +664,7 @@ export default function RequestContextProvider({
       curl += ` -d '${requestBody}'`
     }
     navigator.clipboard.writeText(curl)
+    application.notify({ message: 'cURL command copied to clipboard' })
   }
 
   const contextValue = {

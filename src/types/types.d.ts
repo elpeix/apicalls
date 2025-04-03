@@ -335,6 +335,7 @@ type AppSettingsType = {
   requestView?: AppSettingsRequestView
   scrollToActiveRequest?: boolean
   confirmCloseUnsavedTab?: boolean
+  showNotification?: boolean
 }
 
 type CallRequest = {
@@ -383,6 +384,10 @@ type WindowAPI = {
   }
 }
 
+type NotifcationTtype = {
+  message: string
+}
+
 type ApplicationType = {
   showDialog: (dialogProps: DialogType) => void
   hideDialog: () => void
@@ -393,6 +398,7 @@ type ApplicationType = {
   showConfirm: (confirmProps: ConfirmType) => void
   hideConfirm: () => void
   dialogIsOpen: boolean
+  notify: ({ message }: NotifcationTtype) => void
   tabActions: {
     revealRequest: (tab: RequestTab) => void
     closeTab: (tab: RequestTab) => void
