@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import styles from './SideMenu.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import { AppContext } from '../../../../context/AppContext'
+import CustomMenu from './CustomMenu'
 
 export default function SideMenu({
   showSelected,
@@ -35,8 +36,11 @@ export default function SideMenu({
     }
   }
 
+  const showCustomMenu = appSettings?.settings?.windowMode === 'custom'
+
   return (
     <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''}`}>
+      {showCustomMenu && <CustomMenu />}
       {menu &&
         menuItems.map((item, index) => (
           <div

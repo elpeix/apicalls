@@ -1,6 +1,6 @@
 import { Menu, MenuItemConstructorOptions, BrowserWindow, shell } from 'electron'
 import { ACTIONS, SETTINGS } from '../lib/ipcChannels'
-import { getSettings, setSettings } from '../lib/settings'
+import { getSettings, setSettings, toggleRequestView } from '../lib/settings'
 
 export const getMenu = (mainWindow: BrowserWindow) => {
   const menuTemplate: Array<MenuItemConstructorOptions> = [
@@ -224,9 +224,9 @@ const toggleMenu = (mainWindow: BrowserWindow) => {
   mainWindow.webContents.send(SETTINGS.updated, settings)
 }
 
-const toggleRequestView = (mainWindow: BrowserWindow) => {
-  const settings = getSettings()
-  settings.requestView = settings.requestView === 'horizontal' ? 'vertical' : 'horizontal'
-  setSettings(settings)
-  mainWindow.webContents.send(SETTINGS.updated, settings)
-}
+// const toggleRequestView = (mainWindow: BrowserWindow) => {
+//   const settings = getSettings()
+//   settings.requestView = settings.requestView === 'horizontal' ? 'vertical' : 'horizontal'
+//   setSettings(settings)
+//   mainWindow.webContents.send(SETTINGS.updated, settings)
+// }

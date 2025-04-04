@@ -58,6 +58,20 @@
       white-space: nowrap;
       max-width: 10rem;
     }
+
+    &.accelerator {
+
+      .accelerator {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        opacity: 0.4;
+        font-weight: 400;
+        text-align: right;
+        flex-grow: 0;
+        flex-shrink: 0;
+        margin-left: auto;
+      }
+    }
   }
   .itemSeparator {
     border-top: 1px solid var(--border-color);

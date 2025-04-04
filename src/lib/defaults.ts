@@ -8,5 +8,6 @@ export const defaultSettings: AppSettingsType = {
   requestView: 'horizontal',
   scrollToActiveRequest: true,
   confirmCloseUnsavedTab: true,
+  windowMode: 'custom',
   showNotification: true
 }

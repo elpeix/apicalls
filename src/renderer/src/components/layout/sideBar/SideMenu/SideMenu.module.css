@@ -58,7 +58,14 @@
 
     &.spacer {
       flex-grow: 1;
-      -webkit-app-region: drag;
     }
   }
+}
+
+.customMenu {
+  min-height: 2.5rem;
+}
+
+.customMenuModal {
+  width: 10rem;
 }

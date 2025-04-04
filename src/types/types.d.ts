@@ -325,8 +325,9 @@ type AppTheme = {
 }
 
 type AppSettingsRequestView = 'horizontal' | 'vertical'
+type AppSettingsWindowMode = 'native' | 'custom'
 type AppSettingsType = {
-  theme: string // TODO: AppTheme
+  theme: string
   proxy: string
   maxHistory: number
   timeout: number
@@ -335,6 +336,7 @@ type AppSettingsType = {
   requestView?: AppSettingsRequestView
   scrollToActiveRequest?: boolean
   confirmCloseUnsavedTab?: boolean
+  windowMode?: AppSettingsWindowMode
   showNotification?: boolean
 }
 

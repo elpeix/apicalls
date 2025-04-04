@@ -13,6 +13,13 @@ const icon = join(__dirname, '../../resources/icon.png')
 
 let mainWindow: BrowserWindow | null
 
+const settings = store.get('settings', defaultSettings) as AppSettingsType
+let titleBarStyle: 'hidden' | 'default' | 'hiddenInset' | 'customButtonsOnHover' | undefined =
+  'hidden'
+if (process.platform !== 'darwin' && settings.windowMode === 'native') {
+  titleBarStyle = 'default'
+}
+
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -23,7 +30,7 @@ function createWindow() {
     maximizable: true,
     icon,
     title: 'API Calls',
-    titleBarStyle: 'default',
+    titleBarStyle,
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
@@ -49,6 +56,13 @@ function createWindow() {
       .then(() => mainWindow?.maximize())
   }
 
+  mainWindow?.on('maximize', () => {
+    mainWindow?.webContents.send(WINDOW_ACTIONS.maximized, true)
+  })
+  mainWindow?.on('unmaximize', () => {
+    mainWindow?.webContents.send(WINDOW_ACTIONS.maximized, false)
+  })
+
   registerShortcuts(mainWindow)
 
   // Set application menu
@@ -73,7 +87,7 @@ function createWindow() {
 app.whenReady().then(() => {
   // Set dock icon for macOS
   if (process.platform === 'darwin') {
-    app.dock.setIcon(icon)
+    app.dock?.setIcon(icon)
   }
 
   // Set app user model id for windows
@@ -124,6 +138,7 @@ import './ipcCollectionActions'
 import './ipcEnvironmentActions'
 import './ipcTabsActions'
 import './ipcCookiesActions'
-import { SETTINGS } from '../lib/ipcChannels'
+import './ipcMenuActions'
+import { SETTINGS, WINDOW_ACTIONS } from '../lib/ipcChannels'
 
 export { mainWindow }

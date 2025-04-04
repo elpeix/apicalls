@@ -7,9 +7,10 @@ import TabTitle from '../tabs/tabTitle/TabTitle'
 import { ACTIONS } from '../../../../lib/ipcChannels'
 import SearchTabs from '../tabs/SearchTabs/SearchTabs'
 import HorizontalScroll from '../base/HorizontalScroll/HorizontalScroll'
+import WindowIcons from '../base/WindowIcons/WindowIcons'
 
 export default function ContentTabs() {
-  const { tabs, application } = useContext(AppContext)
+  const { tabs, application, appSettings } = useContext(AppContext)
 
   const [hasTabs, setHasTabs] = useState(false)
   const [tabList, setTabList] = useState<RequestTab[]>([])
@@ -88,6 +89,7 @@ export default function ContentTabs() {
               <NewTab />
               <div className="panel-tabs-header-spacer" />
               <SearchTabs />
+              {appSettings?.settings?.windowMode === 'custom' && <WindowIcons />}
             </div>
             <div className="panel-tabs-content">
               {tabList.map((tab) => (
@@ -100,9 +102,16 @@ export default function ContentTabs() {
         </div>
       )}
       {!hasTabs && (
-        <div className="panel-empty-tabs">
-          <NewTab showLabel={true} />
-        </div>
+        <>
+          {appSettings?.settings?.windowMode === 'custom' && (
+            <div className="window-bar">
+              <WindowIcons />
+            </div>
+          )}
+          <div className="panel-empty-tabs">
+            <NewTab showLabel={true} />
+          </div>
+        </>
       )}
     </>
   )

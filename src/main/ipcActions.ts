@@ -2,7 +2,7 @@ import { app, ipcMain, IpcMainEvent } from 'electron'
 import { restCall, restCancel } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
-import { ACTIONS, REQUEST, SETTINGS, VERSION } from '../lib/ipcChannels'
+import { ACTIONS, REQUEST, SETTINGS, VERSION, WINDOW_ACTIONS } from '../lib/ipcChannels'
 import { mainWindow } from '.'
 
 import fs from 'fs'
@@ -99,4 +99,31 @@ const listThemes = (): Map<string, AppTheme> => {
 
 ipcMain.on(ACTIONS.setTitle, (_, title: string) => {
   mainWindow?.setTitle(title || 'Api Calls')
+})
+
+ipcMain.on(WINDOW_ACTIONS.minimize, () => {
+  mainWindow?.minimize()
+})
+
+ipcMain.on(WINDOW_ACTIONS.maximize, (event) => {
+  if (mainWindow?.isMaximized()) {
+    mainWindow?.unmaximize()
+    event.reply(WINDOW_ACTIONS.maximized, false)
+  } else {
+    mainWindow?.maximize()
+    event.reply(WINDOW_ACTIONS.maximized, true)
+  }
+})
+
+ipcMain.on(WINDOW_ACTIONS.isMaximized, (event) => {
+  event.reply(WINDOW_ACTIONS.maximized, mainWindow?.isMaximized())
+})
+
+ipcMain.on(WINDOW_ACTIONS.close, () => {
+  mainWindow?.close()
+})
+
+ipcMain.on(WINDOW_ACTIONS.relaunch, () => {
+  app.relaunch()
+  app.exit()
 })

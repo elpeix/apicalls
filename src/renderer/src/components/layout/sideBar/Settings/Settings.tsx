@@ -3,6 +3,7 @@ import Versions from './Versions'
 import styles from './Settings.module.css'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
+import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -61,6 +62,12 @@ export default function Settings() {
     return value as AppSettingsRequestView
   }
 
+  const getWindowMode = (value: string): AppSettingsWindowMode => {
+    const allowed = ['custom', 'native']
+    if (!allowed.includes(value)) return 'custom'
+    return value as AppSettingsWindowMode
+  }
+
   const requestViewOptions = [
     {
       value: 'horizontal',
@@ -69,6 +76,17 @@ export default function Settings() {
     {
       value: 'vertical',
       label: 'Vertical'
+    }
+  ]
+
+  const windowModeOptions = [
+    {
+      value: 'custom',
+      label: 'Custom'
+    },
+    {
+      value: 'native',
+      label: 'Native'
     }
   ]
 
@@ -90,6 +108,29 @@ export default function Settings() {
               groupBy="mode"
             />
           </div>
+
+          {!window.api.os.isMac && (
+            <div className={styles.group}>
+              <label htmlFor="windowMode">Window view (requires restart)</label>
+              <SimpleSelect
+                value={settings.windowMode}
+                onChange={(e) => {
+                  handleChangeSettings({ ...settings, windowMode: getWindowMode(e.target.value) })
+                  application.showConfirm({
+                    message: 'You need to restart the app for this change to take effect.',
+                    onConfirm: () => {
+                      application.hideConfirm()
+                      const ipcRenderer = window.electron?.ipcRenderer
+                      ipcRenderer?.send(WINDOW_ACTIONS.relaunch)
+                    },
+                    onCancel: () => application.hideConfirm()
+                  })
+                }}
+                options={windowModeOptions}
+              />
+            </div>
+          )}
+
           <div className={styles.group}>
             <label htmlFor="requestView">Request view</label>
             <SimpleSelect
@@ -141,17 +182,19 @@ export default function Settings() {
               <span>Manage cookies</span>
             </label>
           </div>
-          <div className={styles.groupRow}>
-            <input
-              id="toggleMenu"
-              type="checkbox"
-              checked={settings.menu}
-              onChange={(e) => handleChangeSettings({ ...settings, menu: e.target.checked })}
-            />
-            <label htmlFor="toggleMenu">
-              <span>Show menu</span>
-            </label>
-          </div>
+          {!window.api.os.isMac && settings.windowMode === 'native' && (
+            <div className={styles.groupRow}>
+              <input
+                id="toggleMenu"
+                type="checkbox"
+                checked={settings.menu}
+                onChange={(e) => handleChangeSettings({ ...settings, menu: e.target.checked })}
+              />
+              <label htmlFor="toggleMenu">
+                <span>Show menu</span>
+              </label>
+            </div>
+          )}
           <div className={styles.groupRow}>
             <input
               id="scrollToActiveRequest"

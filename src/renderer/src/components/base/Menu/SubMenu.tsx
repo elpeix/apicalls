@@ -13,6 +13,8 @@ export default function SubMenu({
   className = '',
   showMenuClassName = '',
   onClick = () => {},
+  closeOnClick = false,
+  delayed = true,
   children
 }: {
   icon?: string
@@ -23,14 +25,22 @@ export default function SubMenu({
   showMenuClassName?: string
   iconClassName?: string
   onClick?: () => void
+  closeOnClick?: boolean
+  delayed?: boolean
   children: ReactMenuElement
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [showMenu, setShowMenu] = useState(false)
-  const debouncedShowMenu = useDebounce(showMenu, 300, 500)
+
+  const delayedShowMenu = delayed ? 300 : 0
+  const delayedHideMenu = delayed ? 500 : 0
+
+  const debouncedShowMenu = useDebounce(showMenu, delayedShowMenu, delayedHideMenu)
 
   const handleOnClickModal = (e: React.MouseEvent<Element>) => {
-    e.stopPropagation()
+    if (!closeOnClick) {
+      e.stopPropagation()
+    }
     onClick?.()
   }
 
