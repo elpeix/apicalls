@@ -100,21 +100,21 @@ export default function CustomMenu() {
         <MenuElement
           showIcon={false}
           title="History"
-          accelerator="CmdOrCtrl+E"
+          accelerator="CmdOrCtrl+H"
           onClick={() => handleMenuAction(MENU_ACTIONS.showHistory)}
         />
         {appSettings?.settings?.manageCookies && (
           <MenuElement
             showIcon={false}
             title="Cookies"
-            accelerator="CmdOrCtrl+E"
+            accelerator="CmdOrCtrl+G"
             onClick={() => handleMenuAction(MENU_ACTIONS.showCookies)}
           />
         )}
         <MenuElement
           showIcon={false}
           title="Settings"
-          accelerator="CmdOrCtrl+E"
+          accelerator="CmdOrCtrl+,"
           onClick={() => handleMenuAction(MENU_ACTIONS.showSettings)}
         />
         <MenuSeparator />
