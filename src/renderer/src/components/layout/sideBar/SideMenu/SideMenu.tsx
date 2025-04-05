@@ -36,7 +36,7 @@ export default function SideMenu({
     }
   }
 
-  const showCustomMenu = appSettings?.settings?.windowMode === 'custom'
+  const showCustomMenu = appSettings?.settings?.windowMode !== 'native'
 
   return (
     <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''}`}>
