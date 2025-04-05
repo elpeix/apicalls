@@ -248,6 +248,7 @@ type CookiesHookType = {
 
 type AppSettingsHookType = {
   settings: AppSettingsType | null
+  isCustomWindowMode: () => boolean
   save: (settings: AppSettingsType) => void
   clear: () => void
   themes: Map<string, AppTheme>

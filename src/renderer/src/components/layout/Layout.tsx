@@ -43,7 +43,7 @@ export default function Layout() {
 
   return (
     <div
-      className={`app ${appSettings?.settings?.windowMode === 'native' ? 'native-window' : 'custom-window'}`}
+      className={`app ${appSettings?.isCustomWindowMode() ? ' custom-window' : 'native-window'}`}
     >
       <PanelGroup direction="horizontal" autoSaveId="panelLayout">
         <SideMenu

@@ -89,7 +89,7 @@ export default function ContentTabs() {
               <NewTab />
               <div className="panel-tabs-header-spacer" />
               <SearchTabs />
-              {appSettings?.settings?.windowMode !== 'native' && <WindowIcons />}
+              {appSettings?.isCustomWindowMode() && <WindowIcons />}
             </div>
             <div className="panel-tabs-content">
               {tabList.map((tab) => (
@@ -103,7 +103,7 @@ export default function ContentTabs() {
       )}
       {!hasTabs && (
         <>
-          {appSettings?.settings?.windowMode !== 'native' && (
+          {appSettings?.isCustomWindowMode() && (
             <div className="window-bar">
               <WindowIcons />
             </div>

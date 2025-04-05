@@ -16,7 +16,9 @@ let mainWindow: BrowserWindow | null
 const settings = store.get('settings', defaultSettings) as AppSettingsType
 let titleBarStyle: 'hidden' | 'default' | 'hiddenInset' | 'customButtonsOnHover' | undefined =
   'hidden'
-if (process.platform !== 'darwin' && settings.windowMode === 'native') {
+if (process.platform === 'darwin') {
+  titleBarStyle = 'default'
+} else if (settings.windowMode === 'native') {
   titleBarStyle = 'default'
 }
 
