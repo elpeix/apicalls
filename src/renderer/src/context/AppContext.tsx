@@ -4,7 +4,7 @@ import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
 import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
-import { COLLECTIONS, COOKIES, ENVIRONMENTS, TABS } from '../../../lib/ipcChannels'
+import { COLLECTIONS, COOKIES, ENVIRONMENTS, TABS, VERSION } from '../../../lib/ipcChannels'
 import { useCookies } from '../hooks/useCookies'
 import { useSettings as useAppSettings } from '../hooks/useSettings'
 import Dialog from '../components/base/dialog/Dialog'
@@ -13,6 +13,7 @@ import Confirm from '../components/base/PopupBoxes/Confirm'
 import { defaultSettings } from '../../../lib/defaults'
 import Alert from '../components/base/PopupBoxes/Alert'
 import ConfirmYesNo from '../components/base/PopupBoxes/ConfirmYesNo'
+import About from '../components/base/About/About'
 
 export const AppContext = createContext<{
   application: ApplicationType
@@ -64,6 +65,12 @@ export default function AppContextProvider({ children }: { children: React.React
 
     ipcRenderer?.on(COOKIES.loaded, (_: unknown, cookieList: Cookie[]) => {
       cookies?.set(cookieList)
+    })
+
+    ipcRenderer?.on(VERSION.show, (_: unknown) => {
+      showDialog({
+        children: <About />
+      })
     })
 
     return () => {

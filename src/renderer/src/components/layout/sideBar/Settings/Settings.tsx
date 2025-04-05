@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Versions from './Versions'
 import styles from './Settings.module.css'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
@@ -242,7 +241,6 @@ export default function Settings() {
           </div>
         </div>
       </div>
-      <Versions />
     </div>
   )
 }

@@ -77,6 +77,7 @@ export const TABS = {
 }
 
 export const VERSION = {
+  show: 'version:show',
   get: 'version:get',
   getSuccess: 'version:get-success'
 }
@@ -117,5 +118,6 @@ export const MENU_ACTIONS = {
   forceReload: 'menu:force-reload',
   resetZoom: 'menu:reset-zoom',
   zoomIn: 'menu:zoom-in',
-  zoomOut: 'menu:zoom-out'
+  zoomOut: 'menu:zoom-out',
+  about: 'menu:about'
 }

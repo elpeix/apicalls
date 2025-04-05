@@ -1,5 +1,5 @@
 import { Menu, MenuItemConstructorOptions, BrowserWindow, shell } from 'electron'
-import { ACTIONS, SETTINGS } from '../lib/ipcChannels'
+import { ACTIONS, SETTINGS, VERSION } from '../lib/ipcChannels'
 import { getSettings, setSettings, toggleRequestView } from '../lib/settings'
 
 export const getMenu = (mainWindow: BrowserWindow) => {
@@ -207,6 +207,15 @@ export const getMenu = (mainWindow: BrowserWindow) => {
           label: 'Zoom Out',
           accelerator: 'CmdOrCtrl+Shift+-',
           role: 'zoomOut'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'About',
+          click: () => {
+            mainWindow.webContents.send(VERSION.show)
+          }
         }
       ]
     }

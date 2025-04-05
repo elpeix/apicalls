@@ -189,6 +189,12 @@ export default function CustomMenu() {
           accelerator="CmdOrCtrl+Shift+-"
           onClick={() => handleMenuAction(MENU_ACTIONS.zoomOut)}
         />
+        <MenuSeparator />
+        <MenuElement
+          showIcon={false}
+          title="About"
+          onClick={() => handleMenuAction(MENU_ACTIONS.about)}
+        />
       </SubMenu>
     </Menu>
   )

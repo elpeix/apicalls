@@ -1,4 +1,4 @@
-import { ACTIONS, MENU_ACTIONS } from '../lib/ipcChannels'
+import { ACTIONS, MENU_ACTIONS, VERSION } from '../lib/ipcChannels'
 import { ipcMain, shell } from 'electron'
 import { mainWindow } from '.'
 import { toggleRequestView } from '../lib/settings'
@@ -62,3 +62,4 @@ ipcMain.on(MENU_ACTIONS.zoomOut, () => {
   if (zoomFactor <= 0.2) return
   mainWindow.webContents.setZoomFactor(zoomFactor - 0.2)
 })
+ipcMain.on(MENU_ACTIONS.about, callback(VERSION.show))
