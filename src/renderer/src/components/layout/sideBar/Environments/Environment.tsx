@@ -114,7 +114,7 @@ export default function Environment({
           editOnDoubleClick={true}
         />
         <div className={styles.actions}>
-          <Menu>
+          <Menu leftOffset={-93} topOffset={26}>
             <MenuElement icon="edit" onClick={() => setEditingName(true)} title="Rename" />
             <MenuSeparator />
             <MenuElement icon="more" onClick={addVariable} title="Add variable" />

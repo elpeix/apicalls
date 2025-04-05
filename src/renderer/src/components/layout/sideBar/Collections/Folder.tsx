@@ -141,6 +141,8 @@ export default function Folder({
             iconClassName={styles.menuIcon}
             showMenuClassName={styles.menuActive}
             isMoving={scrolling}
+            leftOffset={-91}
+            topOffset={25}
           >
             <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
             <MenuElement icon="folder" title="Add folder" onClick={handleAddFolder} />

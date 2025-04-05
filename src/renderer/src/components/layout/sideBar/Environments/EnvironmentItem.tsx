@@ -96,6 +96,8 @@ export default function EnvironmentItem({
         iconClassName={styles.menuIcon}
         showMenuClassName={styles.menuActive}
         isMoving={isScrolling}
+        leftOffset={-69}
+        topOffset={27}
       >
         <MenuElement icon="edit" title="Edit" onClick={() => selectEnvironment(environment)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(environment.id)} />

@@ -15,6 +15,7 @@ export default function SubMenu({
   onClick = () => {},
   closeOnClick = false,
   delayed = true,
+  leftOffset = 158,
   children
 }: {
   icon?: string
@@ -27,6 +28,7 @@ export default function SubMenu({
   onClick?: () => void
   closeOnClick?: boolean
   delayed?: boolean
+  leftOffset?: number
   children: ReactMenuElement
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
@@ -65,7 +67,7 @@ export default function SubMenu({
           parentRef={menuRef}
           zIndex={1}
           topOffset={0}
-          leftOffset={158}
+          leftOffset={leftOffset}
           className={`${styles.menuModal} ${styles.subMenu}`}
           useOverlay={false}
           closeModal={() => setShowMenu(false)}

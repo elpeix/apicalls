@@ -251,11 +251,13 @@ export default function Collection({
               onOpen={() => setShowMenu(true)}
               onClose={() => setShowMenu(false)}
               preventCloseOnClick={true}
+              leftOffset={-123}
+              topOffset={31}
             >
               <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
               <>
                 {environments && environments.hasItems() && (
-                  <SubMenu icon="environment" title="Environment">
+                  <SubMenu icon="environment" title="Environment" leftOffset={147}>
                     <>
                       {envs.map((environment) => (
                         <MenuElement
