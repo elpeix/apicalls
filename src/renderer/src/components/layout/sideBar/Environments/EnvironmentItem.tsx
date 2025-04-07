@@ -96,7 +96,7 @@ export default function EnvironmentItem({
         iconClassName={styles.menuIcon}
         showMenuClassName={styles.menuActive}
         isMoving={isScrolling}
-        leftOffset={-69}
+        leftOffset={-75}
         topOffset={27}
       >
         <MenuElement icon="edit" title="Edit" onClick={() => selectEnvironment(environment)} />
