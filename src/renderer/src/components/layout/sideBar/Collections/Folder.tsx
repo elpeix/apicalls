@@ -90,7 +90,6 @@ export default function Folder({
           type: 'collection'
         })
         folder.elements.push(request)
-        update()
         tabs?.openTab({
           request,
           collectionId,
@@ -102,6 +101,7 @@ export default function Folder({
             }
           ]
         })
+        update()
       },
       onCancel: () => application.hidePrompt()
     })
