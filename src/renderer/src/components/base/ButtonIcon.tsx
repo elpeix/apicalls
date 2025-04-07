@@ -3,7 +3,6 @@ import Icon from './Icon/Icon'
 
 export default function ButtonIcon({
   icon,
-  color = '',
   size = 20,
   onClick = (_: React.MouseEvent) => {},
   className = '',
@@ -15,7 +14,6 @@ export default function ButtonIcon({
   tooltipOffsetY = 0
 }: {
   icon: string | number
-  color?: string
   size?: number
   onClick?: (e: React.MouseEvent) => void
   className?: string
@@ -35,7 +33,7 @@ export default function ButtonIcon({
       data-tooltip-offset-y={tooltipOffsetY || 0}
       data-tooltip-offset-x={tooltipOffsetX || 0}
     >
-      <Icon icon={icon} color={color} size={size} direction={direction} className={iconClassName} />
+      <Icon icon={icon} size={size} direction={direction} className={iconClassName} />
     </button>
   )
 }

@@ -1,0 +1,25 @@
+.windowIcons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin-left: 0.5rem;
+
+  button {
+    width: 2.2rem;
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+      background-color: var(--hover-background-color);
+    }
+  }
+
+  .close:hover {
+    background-color: var(--transparent-red);
+  }
+
+  .windoIcon {
+    color: var(--sidePanel-icon-color);
+
+  }
+}

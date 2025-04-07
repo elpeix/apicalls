@@ -1,6 +1,6 @@
 import { Menu, MenuItemConstructorOptions, BrowserWindow, shell } from 'electron'
-import { ACTIONS, SETTINGS } from '../lib/ipcChannels'
-import { getSettings, setSettings } from '../lib/settings'
+import { ACTIONS, SETTINGS, VERSION } from '../lib/ipcChannels'
+import { getSettings, setSettings, toggleRequestView } from '../lib/settings'
 
 export const getMenu = (mainWindow: BrowserWindow) => {
   const menuTemplate: Array<MenuItemConstructorOptions> = [
@@ -207,6 +207,15 @@ export const getMenu = (mainWindow: BrowserWindow) => {
           label: 'Zoom Out',
           accelerator: 'CmdOrCtrl+Shift+-',
           role: 'zoomOut'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'About',
+          click: () => {
+            mainWindow.webContents.send(VERSION.show)
+          }
         }
       ]
     }
@@ -224,9 +233,9 @@ const toggleMenu = (mainWindow: BrowserWindow) => {
   mainWindow.webContents.send(SETTINGS.updated, settings)
 }
 
-const toggleRequestView = (mainWindow: BrowserWindow) => {
-  const settings = getSettings()
-  settings.requestView = settings.requestView === 'horizontal' ? 'vertical' : 'horizontal'
-  setSettings(settings)
-  mainWindow.webContents.send(SETTINGS.updated, settings)
-}
+// const toggleRequestView = (mainWindow: BrowserWindow) => {
+//   const settings = getSettings()
+//   settings.requestView = settings.requestView === 'horizontal' ? 'vertical' : 'horizontal'
+//   setSettings(settings)
+//   mainWindow.webContents.send(SETTINGS.updated, settings)
+// }

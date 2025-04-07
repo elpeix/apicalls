@@ -248,6 +248,7 @@ type CookiesHookType = {
 
 type AppSettingsHookType = {
   settings: AppSettingsType | null
+  isCustomWindowMode: () => boolean
   save: (settings: AppSettingsType) => void
   clear: () => void
   themes: Map<string, AppTheme>
@@ -325,8 +326,9 @@ type AppTheme = {
 }
 
 type AppSettingsRequestView = 'horizontal' | 'vertical'
+type AppSettingsWindowMode = 'native' | 'custom'
 type AppSettingsType = {
-  theme: string // TODO: AppTheme
+  theme: string
   proxy: string
   maxHistory: number
   timeout: number
@@ -335,6 +337,7 @@ type AppSettingsType = {
   requestView?: AppSettingsRequestView
   scrollToActiveRequest?: boolean
   confirmCloseUnsavedTab?: boolean
+  windowMode?: AppSettingsWindowMode
   showNotification?: boolean
 }
 

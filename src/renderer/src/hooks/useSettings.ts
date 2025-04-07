@@ -97,5 +97,12 @@ export function useSettings(): AppSettingsHookType {
     }
   }
 
-  return { settings, save, clear, getEditorTheme, themes }
+  const isCustomWindowMode = () => {
+    if (window.api.os.isMac) {
+      return false
+    }
+    return settings?.windowMode !== 'native'
+  }
+
+  return { settings, save, clear, getEditorTheme, themes, isCustomWindowMode }
 }

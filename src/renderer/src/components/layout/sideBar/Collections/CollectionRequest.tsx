@@ -117,6 +117,8 @@ export default function CollectionRequest({
         iconClassName={styles.menuIcon}
         showMenuClassName={styles.menuActive}
         isMoving={scrolling}
+        leftOffset={-75}
+        topOffset={25}
       >
         <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />

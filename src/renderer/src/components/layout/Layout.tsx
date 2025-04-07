@@ -9,7 +9,7 @@ import { ACTIONS } from '../../../../lib/ipcChannels'
 import FindRequests from './FindRequests/FindRequests'
 
 export default function Layout() {
-  const { application, menu } = useContext(AppContext)
+  const { application, menu, appSettings } = useContext(AppContext)
   const sidePanel = useRef<ImperativePanelHandle | null>(null)
   const [showSelected, setShowSelected] = useState(false)
 
@@ -42,7 +42,9 @@ export default function Layout() {
   const handleCollapse = () => menu?.setExpanded(false)
 
   return (
-    <>
+    <div
+      className={`app ${appSettings?.isCustomWindowMode() ? ' custom-window' : 'native-window'}`}
+    >
       <PanelGroup direction="horizontal" autoSaveId="panelLayout">
         <SideMenu
           showSelected={showSelected}
@@ -66,6 +68,6 @@ export default function Layout() {
           <ContentTabs />
         </Panel>
       </PanelGroup>
-    </>
+    </div>
   )
 }

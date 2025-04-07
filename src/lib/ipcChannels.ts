@@ -77,6 +77,47 @@ export const TABS = {
 }
 
 export const VERSION = {
+  show: 'version:show',
   get: 'version:get',
   getSuccess: 'version:get-success'
+}
+
+export const WINDOW_ACTIONS = {
+  minimize: 'window:minimize',
+  maximize: 'window:maximize',
+  close: 'window:close',
+  isMaximized: 'window:is-maximized',
+  maximized: 'window:maximized',
+  relaunch: 'window:relaunch'
+}
+
+export const MENU_ACTIONS = {
+  newTab: 'menu:new-tab',
+  closeTab: 'menu:close-tab',
+  saveRequest: 'menu:save-request',
+  saveAsRequest: 'menu:save-as-request',
+  close: WINDOW_ACTIONS.close,
+
+  sendRequest: 'menu:send-request',
+  findRequest: 'menu:find-request',
+  findTab: 'menu:find-tab',
+
+  showCollections: 'menu:show-collections',
+  showEnvironments: 'menu:show-environments',
+  showHistory: 'menu:show-history',
+  showCookies: 'menu:show-cookies',
+  showSettings: 'menu:show-settings',
+  toggleRequestView: 'menu:toggle-request-view',
+  toggleSidebar: 'menu:toggle-sidebar',
+  toggleConsole: 'menu:toggle-console',
+  toggleRequestPanel: 'menu:toggle-request-panel',
+
+  submitBug: 'menu:submit-bug',
+  developerTools: 'menu:developer-tools',
+  reload: 'menu:reload',
+  forceReload: 'menu:force-reload',
+  resetZoom: 'menu:reset-zoom',
+  zoomIn: 'menu:zoom-in',
+  zoomOut: 'menu:zoom-out',
+  about: 'menu:about'
 }

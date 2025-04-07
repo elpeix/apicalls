@@ -13,6 +13,9 @@ export default function SubMenu({
   className = '',
   showMenuClassName = '',
   onClick = () => {},
+  closeOnClick = false,
+  delayed = true,
+  leftOffset = 158,
   children
 }: {
   icon?: string
@@ -23,14 +26,23 @@ export default function SubMenu({
   showMenuClassName?: string
   iconClassName?: string
   onClick?: () => void
+  closeOnClick?: boolean
+  delayed?: boolean
+  leftOffset?: number
   children: ReactMenuElement
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [showMenu, setShowMenu] = useState(false)
-  const debouncedShowMenu = useDebounce(showMenu, 300, 500)
+
+  const delayedShowMenu = delayed ? 300 : 0
+  const delayedHideMenu = delayed ? 500 : 0
+
+  const debouncedShowMenu = useDebounce(showMenu, delayedShowMenu, delayedHideMenu)
 
   const handleOnClickModal = (e: React.MouseEvent<Element>) => {
-    e.stopPropagation()
+    if (!closeOnClick) {
+      e.stopPropagation()
+    }
     onClick?.()
   }
 
@@ -55,7 +67,7 @@ export default function SubMenu({
           parentRef={menuRef}
           zIndex={1}
           topOffset={0}
-          leftOffset={158}
+          leftOffset={leftOffset}
           className={`${styles.menuModal} ${styles.subMenu}`}
           useOverlay={false}
           closeModal={() => setShowMenu(false)}
