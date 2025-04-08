@@ -392,7 +392,7 @@ export default function RequestContextProvider({
     }
     const variable = environment.variables.find((variable) => variable.name === name)
     if (variable) {
-      variable.value = value.toString()
+      variable.value = value as string
     } else {
       environment.variables = [
         ...environment.variables,
