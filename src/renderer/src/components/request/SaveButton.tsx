@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './Request.module.css'
-import Icon from '../base/Icon/Icon'
 import LinkedModal from '../base/linkedModal/LinkedModal'
 import { RequestContext } from '../../context/RequestContext'
 import { AppContext } from '../../context/AppContext'
 import SaveAs from '../base/SaveAs/SaveAs'
 import Menu from '../base/Menu/Menu'
-import { MenuElement } from '../base/Menu/MenuElement'
+import { MenuElement, MenuSeparator } from '../base/Menu/MenuElement'
 
 export default function SaveButton() {
   const { application } = useContext(AppContext)
@@ -21,8 +20,7 @@ export default function SaveButton() {
     }
   }, [openSaveAs])
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleClick = () => {
     if (!path || path.length === 0) {
       openDialog()
     } else {
@@ -46,12 +44,6 @@ export default function SaveButton() {
 
   return (
     <div className={styles.saveButton}>
-      <button className={styles.save} onClick={handleClick}>
-        <div className={styles.buttonIcon}>
-          <Icon icon="save" />
-        </div>
-        <div className={styles.buttonText}>Save</div>
-      </button>
       <Menu
         className={styles.saveAsModal}
         menuModalClassName={styles.saveAsMenuModal}
@@ -61,7 +53,9 @@ export default function SaveButton() {
         topOffset={43}
         leftOffset={-1}
       >
-        <MenuElement onClick={openDialog} title="Save as..." icon="save" />
+        <MenuElement onClick={handleClick} title="Save" icon="save" />
+        <MenuElement onClick={openDialog} title="Save as..." icon="" />
+        <MenuSeparator />
         <MenuElement onClick={copyAsCurl} title="Copy as cURL" icon="copy" />
       </Menu>
       {showModal && (
