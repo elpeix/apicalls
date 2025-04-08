@@ -166,7 +166,15 @@ export default function useTabs(
   const hasTabs = () => tabs.length > 0
   const getTab = (tabId: Identifier) => tabs.find((t) => t.id === tabId)
   const getTabs = () => tabs
-  const setActiveTab = (index: number) => updateTabs(_setActiveTab(tabs, index))
+  const setActiveTab = (index: number) => {
+    if (index < 0 || index >= tabs.length) {
+      return
+    }
+    if (tabs[index].active) {
+      return
+    }
+    updateTabs(_setActiveTab(tabs, index))
+  }
 
   const _setActiveTab = (_tabs: RequestTab[], index: number) => {
     const newTabs = _tabs.map((tab: RequestTab, i: number) => {

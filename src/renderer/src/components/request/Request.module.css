@@ -143,7 +143,6 @@
   background-color: var(--background-content);
   border: 1px solid var(--border-color);
   border-right: none;
-  border-left: none;
 
   &:hover {
     background-color: var(--hover-background-color);
