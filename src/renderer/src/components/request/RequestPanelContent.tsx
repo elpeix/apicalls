@@ -129,10 +129,12 @@ export default function RequestPanelContent() {
               onCollapse={() => setRequestPanelCollapsed(true)}
               onExpand={() => setRequestPanelCollapsed(false)}
             >
-              {isActive && !requestPanelCollapsed && <RequestTabs />}
+              <RequestTabs />
             </Panel>
             <Gutter mode={gutterMode} onDoubleClick={toggleRequestPanel} />
-            <Panel>{isActive && <Response />}</Panel>
+            <Panel>
+              <Response />
+            </Panel>
           </PanelGroup>
         </Panel>
         <Gutter mode="horizontal" onDoubleClick={toggleConsole} />

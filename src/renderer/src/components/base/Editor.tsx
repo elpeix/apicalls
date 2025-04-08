@@ -1,6 +1,6 @@
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import * as monaco from 'monaco-editor'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 import { RequestContext } from '../../context/RequestContext'
 
@@ -62,6 +62,9 @@ export default function Editor({
     }
     setThemeData(editorTheme.data)
     if (editorTheme.data && editorTheme.data.colors) {
+      if (theme === editorTheme.name) {
+        return
+      }
       const editorRefData = editorRef.current
       const monacoEditor = editorRefData?.monaco || monaco
       monacoEditor.editor.defineTheme(editorTheme.name, editorTheme.data)
@@ -94,53 +97,38 @@ export default function Editor({
     setMustRender(type === 'none' || value.length < 1024 * 1024 || isActive)
   }, [value, isActive])
 
-  return mustRender ? (
-    <RenderEditor
-      language={language}
-      value={value}
-      editorRef={editorRef}
-      readOnly={readOnly}
-      wordWrap={wordWrap || false}
-      theme={theme}
-      themeData={themeData}
-      onChange={onChange}
-      viewState={viewState}
-    />
-  ) : (
-    <></>
-  )
-}
+  const options = useMemo(() => {
+    return {
+      minimap: {
+        enabled: false
+      },
+      acceptSuggestionOnCommitCharacter: false,
+      readOnly: readOnly,
+      domReadOnly: readOnly,
+      readOnlyMessage: {
+        value: ''
+      },
+      scrollBeyondLastLine: false,
+      codeLens: false,
+      contextmenu: false,
+      accessibilitySupport: 'off',
+      renderLineHighlight: readOnly ? 'none' : 'all',
+      renderWhitespace: 'none',
+      wordWrap: wordWrap ? 'on' : 'off',
+      fontSize: 12
+    } as monaco.editor.IStandaloneEditorConstructionOptions
+  }, [readOnly, wordWrap])
 
-function RenderEditor({
-  language,
-  value,
-  editorRef,
-  readOnly,
-  wordWrap,
-  onChange,
-  theme,
-  themeData,
-  viewState
-}: {
-  language: string
-  value: string
-  editorRef: React.RefObject<EditorRefType | null>
-  readOnly: boolean
-  wordWrap: boolean
-  onChange?: OnChange
-  theme: string
-  themeData: monaco.editor.IStandaloneThemeData | null
-  viewState?: monaco.editor.ICodeEditorViewState | null
-}) {
+  if (!mustRender) {
+    return <></>
+  }
   return (
-    <MonacoEditor
-      defaultLanguage={language}
+    <EditorWrapped
       language={language}
       onChange={onChange}
-      theme={theme}
-      height="100%"
-      width="100%"
       value={value}
+      theme={theme}
+      options={options}
       onMount={(editor, monaco) => {
         editorRef.current = { editor, monaco }
         if (viewState) {
@@ -151,27 +139,46 @@ function RenderEditor({
         }
         monaco.editor.setTheme(theme)
       }}
-      options={{
-        minimap: {
-          enabled: false
-        },
-        //commandPalette: false,
-        acceptSuggestionOnCommitCharacter: false,
-        readOnly: readOnly,
-        domReadOnly: readOnly,
-        readOnlyMessage: {
-          value: ''
-        },
-        scrollBeyondLastLine: false,
-        codeLens: false,
-        contextmenu: false,
-        //accessibilityHelpUrl: false,
-        accessibilitySupport: 'off',
-        renderLineHighlight: readOnly ? 'none' : 'all',
-        renderWhitespace: 'none',
-        wordWrap: wordWrap ? 'on' : 'off',
-        fontSize: 12
-      }}
     />
   )
 }
+
+const EditorWrapped = memo(
+  ({
+    language,
+    value,
+    onChange,
+    theme,
+    options,
+    onMount
+  }: {
+    language: string
+    value: string
+    onChange?: OnChange
+    theme: string
+    options: monaco.editor.IStandaloneEditorConstructionOptions
+    onMount: (editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => void
+  }) => {
+    return (
+      <MonacoEditor
+        defaultValue={language}
+        language={language}
+        onChange={onChange}
+        theme={theme}
+        height="100%"
+        width="100%"
+        value={value}
+        options={options}
+        onMount={onMount}
+      />
+    )
+  },
+  (prepProps, nextPops) => {
+    return (
+      prepProps.value !== nextPops.value &&
+      prepProps.theme !== nextPops.theme &&
+      prepProps.language !== nextPops.language
+    )
+  }
+)
+EditorWrapped.displayName = 'EditorWrapped'

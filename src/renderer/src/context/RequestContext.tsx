@@ -9,7 +9,6 @@ import {
 } from '../lib/paramsCapturer'
 import { useConsole } from '../hooks/useConsole'
 import { getValueFromPath } from '../lib/utils'
-import { useDebounce } from '../hooks/useDebounce'
 
 const responseInitialValue: RequestContextResponseType = {
   body: '',
@@ -67,7 +66,6 @@ export default function RequestContextProvider({
   const [preRequestData, setPreRequestData] = useState<PreRequest | null>(null)
 
   const [changed, setChanged] = useState(false)
-  const debouncedChanged = useDebounce(changed, 500, 100)
   const [saved, setSaved] = useState(false)
   const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])
   const [requestUrl, setRequestUrl] = useState(definedRequest.url || '')
@@ -90,7 +88,7 @@ export default function RequestContextProvider({
   const [responseEditorState, setResponseEditorState] = useState('')
 
   useEffect(() => {
-    if (debouncedChanged) {
+    if (changed) {
       setChanged(false)
       tabs?.updateTabRequest(tabId, saved, {
         ...definedRequest,
@@ -110,7 +108,7 @@ export default function RequestContextProvider({
     }
   }, [
     tabId,
-    debouncedChanged,
+    changed,
     saved,
     definedRequest,
     requestMethod,
