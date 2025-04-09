@@ -54,7 +54,7 @@ export default function SaveButton() {
         leftOffset={-1}
       >
         <MenuElement onClick={handleClick} title="Save" icon="save" />
-        <MenuElement onClick={openDialog} title="Save as..." icon="" />
+        <MenuElement onClick={openDialog} title="Save as..." icon="save" />
         <MenuSeparator />
         <MenuElement onClick={copyAsCurl} title="Copy as cURL" icon="copy" />
       </Menu>
