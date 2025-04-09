@@ -53,7 +53,7 @@ export default function useTabs(
       newTabs.splice(index, 0, tab)
     }
     _setActiveTab(newTabs, index)
-    updateTabs(newTabs)
+    updateTabsImmediate(newTabs)
   }
 
   const duplicateTab = (tabId: Identifier) => {
@@ -95,7 +95,7 @@ export default function useTabs(
         _setActiveTab(tabs, index - 1)
       }
     }
-    updateTabs(tabs.filter((tab) => tab.id !== tabId))
+    updateTabsImmediate(tabs.filter((tab) => tab.id !== tabId))
   }
 
   const closeOtherTabs = (tabId: Identifier, force?: boolean) => {
@@ -109,7 +109,7 @@ export default function useTabs(
     const newTabs = [tabs[index]]
     _setActiveTab(newTabs, 0)
     addClosedTabs(tabsToClose)
-    updateTabs(newTabs)
+    updateTabsImmediate(newTabs)
   }
 
   const closeAllTabs = (force?: boolean) => {
@@ -119,7 +119,7 @@ export default function useTabs(
       }
     }
     addClosedTabs(tabs)
-    updateTabs([])
+    updateTabsImmediate([])
   }
 
   const addCloseTab = (tab: RequestTab, index: number) => {
@@ -149,12 +149,12 @@ export default function useTabs(
       const newTabs = [...tabs]
       newTabs.splice(index, 0, tab)
       _setActiveTab(newTabs, index)
-      updateTabs(newTabs)
+      updateTabsImmediate(newTabs)
     }
   }
 
   const updateTab = (tabId: Identifier, tab: RequestTab) => {
-    updateTabs(tabs.map((t) => (t.id === tabId ? tab : t)))
+    updateTabsImmediate(tabs.map((t) => (t.id === tabId ? tab : t)))
   }
 
   const updateTabRequest = (tabId: Identifier, saved: boolean, request: RequestBase) => {
@@ -173,7 +173,7 @@ export default function useTabs(
     if (tabs[index].active) {
       return
     }
-    updateTabs(_setActiveTab(tabs, index))
+    updateTabsImmediate(_setActiveTab(tabs, index))
   }
 
   const _setActiveTab = (_tabs: RequestTab[], index: number) => {
@@ -221,7 +221,21 @@ export default function useTabs(
     return index
   }
 
+  let updateTabsTimeout: NodeJS.Timeout | null = null
   const updateTabs = (newTabs: RequestTab[]) => {
+    if (updateTabsTimeout) {
+      clearTimeout(updateTabsTimeout)
+    }
+    updateTabsTimeout = setTimeout(() => {
+      updateTabsImmediate(newTabs)
+    }, 200)
+  }
+
+  const updateTabsImmediate = (newTabs: RequestTab[]) => {
+    if (updateTabsTimeout) {
+      clearTimeout(updateTabsTimeout)
+    }
+    updateTabsTimeout = null
     setTabs(newTabs)
     ipcRenderer?.send(TABS.update, newTabs)
   }
@@ -238,7 +252,7 @@ export default function useTabs(
     const toIndex = newTabs.findIndex((t) => t.id == toBeforeTabId)
     const [removed] = newTabs.splice(fromIndex, 1)
     newTabs.splice(toIndex, 0, removed)
-    updateTabs(newTabs)
+    updateTabsImmediate(newTabs)
   }
 
   const updatePaths = (collectionId: Identifier, from: PathItem[], to: PathItem[]) => {
@@ -249,7 +263,7 @@ export default function useTabs(
       tabs
     })
     if (updatedTabs.updated) {
-      updateTabs(updatedTabs.tabs)
+      updateTabsImmediate(updatedTabs.tabs)
     }
   }
 
