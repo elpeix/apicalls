@@ -14,10 +14,12 @@ type KeyValue = {
 }
 
 type RequestAuthType = 'none' | 'bearer' | 'basic'
-
+type RequestAuthBearer = string
+type RequestAuthBasic = { username: string; password: string }
+type RequestAuthValue = RequestAuthBearer | RequestAuthBasic | null | undefined
 type RequestAuth = {
   type: RequestAuthType
-  value?: string
+  value?: RequestAuthValue
 }
 
 type RequestBase = {
