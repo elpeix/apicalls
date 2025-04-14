@@ -18,7 +18,7 @@ license=('GPLv3')
 
 # Release source
 source=(
-  "${_pkgname}-${pkgver}.tar.xz::$(url)/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
+  "${_pkgname}-${pkgver}.tar.xz::https://github.com/elpeix/apicalls/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
   "${_pkgname}.desktop::https://raw.githubusercontent.com/elpeix/apicalls/v${pkgver}/aur/${_pkgname}.desktop"
   "${_pkgname}.png::https://raw.githubusercontent.com/elpeix/apicalls/v${pkgver}/aur/${_pkgname}.png"
   "${_pkgname}.sh::https://raw.githubusercontent.com/elpeix/apicalls/v${pkgver}/aur/${_pkgname}.sh"
