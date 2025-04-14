@@ -7,3 +7,9 @@ out
 .vscode/*
 !.vscode/extensions.json
 .DS_Store
+
+aur/pkg
+aur/src
+aur/*.tar.xz
+aur/*.tar.zst
+aur/LICENSE*
