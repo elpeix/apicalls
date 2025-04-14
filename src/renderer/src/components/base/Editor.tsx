@@ -161,7 +161,7 @@ const EditorWrapped = memo(
   }) => {
     return (
       <MonacoEditor
-        defaultValue={language}
+        defaultLanguage={language}
         language={language}
         onChange={onChange}
         theme={theme}
