@@ -16,5 +16,6 @@ aur/api-calls-*.desktop
 aur/api-calls-*.png
 aur/api-calls-*.sh
 !aur/api-calls-builder.sh
+aur/api-calls-bin/*
 aur/LICENSE*
 aur/.SRCINFO
