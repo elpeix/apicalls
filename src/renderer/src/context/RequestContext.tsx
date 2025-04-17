@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from './AppContext'
 import { REQUEST } from '../../../lib/ipcChannels'
-import { createAuth, createAuthHeaderValue, getMethods } from '../lib/factory'
+import { createAuth, getMethods } from '../lib/factory'
 import {
   getPathParamsFromUrl,
   getQueryParamsFromUrl,
@@ -466,10 +466,15 @@ export default function RequestContextProvider({
       }
     })
     if (requestAuth.type !== 'none' && requestAuth.value) {
-      headers['Authorization'] = createAuthHeaderValue({
-        type: requestAuth.type,
-        value: getValue(requestAuth.value)
-      })
+      if (requestAuth.type === 'bearer') {
+        const value = getValue(requestAuth.value as string)
+        headers['Authorization'] = `Bearer ${getValue(value)}`
+      } else if (requestAuth.type === 'basic') {
+        const requestAuthRecord = requestAuth.value as RequestAuthBasic
+        const username = requestAuthRecord.username || ''
+        const password = requestAuthRecord.password || ''
+        headers['Authorization'] = `Basic ${btoa(`${getValue(username)}:${getValue(password)}`)}`
+      }
     }
     if (settings?.settings?.manageCookies) {
       const originCookies = cookies?.stringify(getValue(url))

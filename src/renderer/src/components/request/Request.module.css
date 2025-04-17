@@ -211,8 +211,26 @@
   flex-direction: row;
   gap: 0.5rem;
 
+  &.basic {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   .select {
     max-width: 10rem;
+  }
+
+  .basicAuth {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    label {
+      font-size: 0.8rem;
+      color: var(--base-color);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
   }
 
   .authorizationInput {
