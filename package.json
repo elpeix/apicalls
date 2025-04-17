@@ -1,6 +1,6 @@
 {
   "name": "api-calls",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "An API calls app",
   "type": "module",
   "main": "./out/main/index.js",
@@ -32,15 +32,15 @@
     "yaml": "^2.7.1"
   },
   "devDependencies": {
-    "@electron-toolkit/eslint-config": "^2.0.0",
+    "@electron-toolkit/eslint-config": "^2.1.0",
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@eslint/compat": "^1.2.8",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.24.0",
-    "@types/react-dom": "^19.1.1",
+    "@types/react-dom": "^19.1.2",
     "@typescript-eslint/eslint-plugin": "^8.29.1",
     "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^35.1.4",
+    "electron": "^35.1.5",
     "electron-builder": "^26.0.12",
     "electron-vite": "^3.1.0",
     "eslint-plugin-react": "^7.37.5",
@@ -50,8 +50,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "typescript": "^5.8.3",
-    "vite": "^6.2.5",
+    "vite": "^6.2.6",
     "vitest": "^3.1.1"
   },
-  "packageManager": "pnpm@10.8.0"
+  "packageManager": "pnpm@10.8.1"
 }

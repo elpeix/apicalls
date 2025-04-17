@@ -14,12 +14,12 @@ Feel free to try it out and provide feedback!
 
 ## Installation guide
 
-> **Note:** API Calls installable is available for **Linux** and **MacOs**.
->
-> **Windows** support is coming soon. You can also run the application from
-> source code (see Development section).
+> **Note:** API Calls installable is available for **Linux**, **MacOs** or
+> **Windows**.
 
 You can download the latest version from the [releases page](https://github.com/elpeix/apicalls/releases/latest).
+
+Install on Arch (via AUR). Package name: **api-calls-bin**.
 
 ## Development
 

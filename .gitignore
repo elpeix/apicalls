@@ -7,3 +7,15 @@ out
 .vscode/*
 !.vscode/extensions.json
 .DS_Store
+
+aur/pkg
+aur/src
+aur/*.tar.xz
+aur/*.tar.zst
+aur/api-calls-*.desktop
+aur/api-calls-*.png
+aur/api-calls-*.sh
+!aur/api-calls-builder.sh
+aur/api-calls-bin/*
+aur/LICENSE*
+aur/.SRCINFO
