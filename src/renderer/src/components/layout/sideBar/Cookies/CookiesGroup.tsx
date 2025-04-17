@@ -60,7 +60,7 @@ export default function CookiesGroup({
         </div>
         <div className={styles.name}>{group}</div>
         <div>
-          <ButtonIcon icon="delete" onClick={() => remove(group)} title="Remove domain cookies" />
+          <ButtonIcon icon="clear" onClick={() => remove(group)} title="Clear domain cookies" />
         </div>
       </div>
       <div className={styles.content}>
