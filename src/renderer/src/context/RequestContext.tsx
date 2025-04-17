@@ -9,6 +9,7 @@ import {
 } from '../lib/paramsCapturer'
 import { useConsole } from '../hooks/useConsole'
 import { getValueFromPath } from '../lib/utils'
+import { getGeneralDefaultUserAgent } from '../../../lib/defaults'
 
 const responseInitialValue: RequestContextResponseType = {
   body: '',
@@ -269,11 +270,19 @@ export default function RequestContextProvider({
     const request = preRequestData.request
     const url = getValue(request.url)
     const headers: HeadersInit = {}
+    let userAgentDefined = false
     request.headers?.forEach((header) => {
       if (header.enabled && header.name) {
-        headers[getValue(header.name)] = getValue(header.value)
+        const headerName = getValue(header.name)
+        headers[headerName] = getValue(header.value)
+        if (headerName === 'User-Agent') {
+          userAgentDefined = true
+        }
       }
     })
+    if (!userAgentDefined) {
+      headers['User-Agent'] = getDefaultUserAgent()
+    }
     const callApiRequest: CallRequest = {
       id: tabId,
       url,
@@ -345,6 +354,10 @@ export default function RequestContextProvider({
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
     })
+  }
+
+  const getDefaultUserAgent = () => {
+    return settings?.settings?.defaultUserAgent || getGeneralDefaultUserAgent(application.version)
   }
 
   const prepareQueryParams = (queryParams: KeyValue[]) => {
@@ -460,11 +473,19 @@ export default function RequestContextProvider({
 
   const getHeaders = (url: string) => {
     const headers: HeadersInit = {}
+    let userAgentDefined = false
     requestHeaders.forEach((header) => {
       if (header.enabled && header.name) {
-        headers[getValue(header.name)] = getValue(header.value)
+        const headerName = getValue(header.name)
+        headers[headerName] = getValue(header.value)
+        if (headerName === 'User-Agent') {
+          userAgentDefined = true
+        }
       }
     })
+    if (!userAgentDefined) {
+      headers['User-Agent'] = getDefaultUserAgent()
+    }
     if (requestAuth.type !== 'none' && requestAuth.value) {
       if (requestAuth.type === 'bearer') {
         const value = getValue(requestAuth.value as string)

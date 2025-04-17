@@ -37,6 +37,7 @@ export const AppContext = createContext<{
 
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
   const appSettings = useAppSettings()
+  const [appVersion, setAppVersion] = useState('')
   const menu = useMenu(appSettings.settings || defaultSettings)
   const collections = useCollections()
   const tabs = useTabs([], collections)
@@ -50,6 +51,7 @@ export default function AppContextProvider({ children }: { children: React.React
     ipcRenderer?.send(COLLECTIONS.get)
     ipcRenderer?.send(TABS.load)
     ipcRenderer?.send(COOKIES.get)
+    ipcRenderer?.send(VERSION.get)
 
     ipcRenderer?.on(ENVIRONMENTS.updated, (_: unknown, environmentList: Environment[]) => {
       environments?.setEnvironments(environmentList)
@@ -73,11 +75,16 @@ export default function AppContextProvider({ children }: { children: React.React
       })
     })
 
+    ipcRenderer?.on(VERSION.getSuccess, (_: unknown, version: string) => {
+      setAppVersion(version)
+    })
+
     return () => {
       ipcRenderer?.removeAllListeners(ENVIRONMENTS.updated)
       ipcRenderer?.removeAllListeners(COLLECTIONS.updated)
       ipcRenderer?.removeAllListeners(TABS.loadSuccess)
       ipcRenderer?.removeAllListeners(COOKIES.loaded)
+      ipcRenderer?.removeAllListeners(VERSION.get)
     }
   }, [])
 
@@ -253,7 +260,8 @@ export default function AppContextProvider({ children }: { children: React.React
         closeTab,
         closeAllTabs,
         closeOtherTabs
-      }
+      },
+      version: appVersion
     },
     menu,
     tabs,

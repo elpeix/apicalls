@@ -341,6 +341,7 @@ type AppSettingsType = {
   confirmCloseUnsavedTab?: boolean
   windowMode?: AppSettingsWindowMode
   showNotification?: boolean
+  defaultUserAgent?: string
 }
 
 type CallRequest = {
@@ -410,6 +411,7 @@ type ApplicationType = {
     closeAllTabs: () => void
     closeOtherTabs: (tab: RequestTab) => void
   }
+  version: string
 }
 
 type DialogType = {

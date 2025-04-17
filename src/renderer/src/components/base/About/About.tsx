@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { VERSION } from '../../../../../lib/ipcChannels'
+import React, { useContext, useState } from 'react'
 import AppIcon from '../../../assets/icons/app.svg'
 import styles from './About.module.css'
 import { AppContext } from '../../../context/AppContext'
@@ -7,20 +6,7 @@ import { AppContext } from '../../../context/AppContext'
 export default function About() {
   const { application } = useContext(AppContext)
   const [versions] = useState(window.electron?.process.versions)
-  const [appVersion, setAppVersion] = useState('')
   const link = 'https://github.com/elpeix/apicalls'
-
-  useEffect(() => {
-    const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.send(VERSION.get)
-    ipcRenderer?.on(VERSION.getSuccess, (_: unknown, version: string) => {
-      setAppVersion(version)
-    })
-
-    return () => {
-      ipcRenderer?.removeAllListeners(VERSION.get)
-    }
-  }, [setAppVersion])
 
   return (
     <div className={styles.about}>
@@ -34,7 +20,7 @@ export default function About() {
         </a>
       </div>
       <ul className={styles.versions}>
-        <VersionValue label="Version" value={appVersion} />
+        <VersionValue label="Version" value={application.version} />
         <VersionValue label="Electron" value={versions.electron} />
         <VersionValue label="Chromium" value={versions.chrome} />
         <VersionValue label="Node" value={versions.node} />
