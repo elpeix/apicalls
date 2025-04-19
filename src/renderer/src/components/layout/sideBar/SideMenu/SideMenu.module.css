@@ -8,14 +8,21 @@
   background-color: var(--sidePanel-menu-color);
 
   &.mac {
-    width: 4.6rem;
-    margin-top: 2.5rem;
-    border-top: 1px solid var(--border-color);
-    height: calc(100% - 2rem);
+    width: 4rem;
+
+    div.macSpacer {
+      width: 4rem;
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      height: 1.9rem;
+    }
   }
 
   &.collapsed {
     border-right-color: transparent;
+    .macSpacer {
+      border-right: none !important;
+    }
   }
 
   & > .item {

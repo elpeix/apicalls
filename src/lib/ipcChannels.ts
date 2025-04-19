@@ -88,6 +88,7 @@ export const WINDOW_ACTIONS = {
   close: 'window:close',
   isMaximized: 'window:is-maximized',
   maximized: 'window:maximized',
+  fullScreen: 'window:fullscreen',
   relaunch: 'window:relaunch'
 }
 
