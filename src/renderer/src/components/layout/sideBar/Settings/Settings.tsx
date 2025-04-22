@@ -3,6 +3,7 @@ import styles from './Settings.module.css'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
 import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
+import { getGeneralDefaultUserAgent } from '../../../../../../lib/defaults'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -41,11 +42,15 @@ export default function Settings() {
   }
 
   const handleClearSettings = () => {
+    const requiresRestart = !window.api.os.isMac && settings.windowMode === 'native'
     application.showConfirm({
       message: 'Are you sure you want to clear settings?',
       onConfirm: () => {
         appSettings?.clear()
         application.hideConfirm()
+        if (requiresRestart) {
+          restartApplication('Window view has changed.')
+        }
       },
       onCancel: () => application.hideConfirm()
     })
@@ -65,6 +70,18 @@ export default function Settings() {
     const allowed = ['custom', 'native']
     if (!allowed.includes(value)) return 'custom'
     return value as AppSettingsWindowMode
+  }
+
+  const restartApplication = (message: string = '') => {
+    application.showConfirm({
+      message: `${message} You need to restart the app for this change to take effect.`,
+      onConfirm: () => {
+        application.hideConfirm()
+        const ipcRenderer = window.electron?.ipcRenderer
+        ipcRenderer?.send(WINDOW_ACTIONS.relaunch)
+      },
+      onCancel: () => application.hideConfirm()
+    })
   }
 
   const requestViewOptions = [
@@ -115,15 +132,7 @@ export default function Settings() {
                 value={settings.windowMode}
                 onChange={(e) => {
                   handleChangeSettings({ ...settings, windowMode: getWindowMode(e.target.value) })
-                  application.showConfirm({
-                    message: 'You need to restart the app for this change to take effect.',
-                    onConfirm: () => {
-                      application.hideConfirm()
-                      const ipcRenderer = window.electron?.ipcRenderer
-                      ipcRenderer?.send(WINDOW_ACTIONS.relaunch)
-                    },
-                    onCancel: () => application.hideConfirm()
-                  })
+                  restartApplication()
                 }}
                 options={windowModeOptions}
               />
@@ -165,6 +174,18 @@ export default function Settings() {
               placeholder="1000"
               onChange={(e) =>
                 handleChangeSettings({ ...settings, timeout: Number(e.target.value) })
+              }
+            />
+          </div>
+          <div className={styles.group}>
+            <label htmlFor="defaultUserAgent">User Agent</label>
+            <input
+              id="defaultUserAgent"
+              type="text"
+              value={settings.defaultUserAgent}
+              placeholder={getGeneralDefaultUserAgent(application.version)}
+              onChange={(e) =>
+                handleChangeSettings({ ...settings, defaultUserAgent: e.target.value })
               }
             />
           </div>
