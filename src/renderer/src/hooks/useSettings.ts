@@ -74,6 +74,7 @@ export function useSettings(): AppSettingsHookType {
   const clear = () => {
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(SETTINGS.clear)
+    removeStyleProperties()
   }
 
   const getEditorTheme = (): { name: string; mode: string; data: object } => {

@@ -42,11 +42,15 @@ export default function Settings() {
   }
 
   const handleClearSettings = () => {
+    const requiresRestart = !window.api.os.isMac && settings.windowMode === 'native'
     application.showConfirm({
       message: 'Are you sure you want to clear settings?',
       onConfirm: () => {
         appSettings?.clear()
         application.hideConfirm()
+        if (requiresRestart) {
+          restartApplication('Window view has changed.')
+        }
       },
       onCancel: () => application.hideConfirm()
     })
@@ -66,6 +70,18 @@ export default function Settings() {
     const allowed = ['custom', 'native']
     if (!allowed.includes(value)) return 'custom'
     return value as AppSettingsWindowMode
+  }
+
+  const restartApplication = (message: string = '') => {
+    application.showConfirm({
+      message: `${message} You need to restart the app for this change to take effect.`,
+      onConfirm: () => {
+        application.hideConfirm()
+        const ipcRenderer = window.electron?.ipcRenderer
+        ipcRenderer?.send(WINDOW_ACTIONS.relaunch)
+      },
+      onCancel: () => application.hideConfirm()
+    })
   }
 
   const requestViewOptions = [
@@ -116,15 +132,7 @@ export default function Settings() {
                 value={settings.windowMode}
                 onChange={(e) => {
                   handleChangeSettings({ ...settings, windowMode: getWindowMode(e.target.value) })
-                  application.showConfirm({
-                    message: 'You need to restart the app for this change to take effect.',
-                    onConfirm: () => {
-                      application.hideConfirm()
-                      const ipcRenderer = window.electron?.ipcRenderer
-                      ipcRenderer?.send(WINDOW_ACTIONS.relaunch)
-                    },
-                    onCancel: () => application.hideConfirm()
-                  })
+                  restartApplication()
                 }}
                 options={windowModeOptions}
               />
