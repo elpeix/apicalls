@@ -100,7 +100,7 @@ export function useSettings(): AppSettingsHookType {
 
   const isCustomWindowMode = () => {
     if (window.api.os.isMac) {
-      return false
+      return true
     }
     return settings?.windowMode !== 'native'
   }

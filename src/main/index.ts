@@ -17,7 +17,7 @@ const settings = store.get('settings', defaultSettings) as AppSettingsType
 let titleBarStyle: 'hidden' | 'default' | 'hiddenInset' | 'customButtonsOnHover' | undefined =
   'hidden'
 if (process.platform === 'darwin') {
-  titleBarStyle = 'default'
+  titleBarStyle = 'hiddenInset'
 } else if (settings.windowMode === 'native') {
   titleBarStyle = 'default'
 }
@@ -82,6 +82,13 @@ function createWindow() {
       cookiesMenuItem.visible = show
       Menu.setApplicationMenu(menu)
     }
+  })
+  mainWindow?.on('enter-full-screen', () => {
+    mainWindow?.webContents.send(WINDOW_ACTIONS.fullScreen, true)
+  })
+
+  mainWindow?.on('leave-full-screen', () => {
+    mainWindow?.webContents.send(WINDOW_ACTIONS.fullScreen, false)
   })
 }
 

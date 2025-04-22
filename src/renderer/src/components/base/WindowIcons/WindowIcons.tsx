@@ -4,6 +4,9 @@ import styles from './WindowIcons.module.css'
 import ButtonIcon from '../ButtonIcon'
 
 export default function WindowIcons() {
+  if (window.api.os.isMac) {
+    return null
+  }
   const ipcRenderer = window.electron?.ipcRenderer
 
   const [isMaximized, setIsMaximized] = useState(false)

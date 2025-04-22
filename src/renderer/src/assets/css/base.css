@@ -290,6 +290,7 @@ body {
   font-family: var(--font-family);
   font-size: var(--font-size);
   overflow: hidden;
+  padding-top: env(safe-area-inset-top);
 }
 
 *,
@@ -317,3 +318,4 @@ body {
   height: 100%;
   overflow: hidden;
 }
+

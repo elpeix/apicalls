@@ -3,6 +3,7 @@ import styles from './SideMenu.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import { AppContext } from '../../../../context/AppContext'
 import CustomMenu from './CustomMenu'
+import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
 
 export default function SideMenu({
   showSelected,
@@ -16,6 +17,16 @@ export default function SideMenu({
   const { menu, appSettings } = useContext(AppContext)
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [selected, setSelected] = useState<MenuItem>({ id: '', title: '' })
+  const [isFullScreen, setIsFullScreen] = useState(false)
+  const ipcRenderer = window.electron?.ipcRenderer
+
+  useEffect(() => {
+    ipcRenderer?.on(WINDOW_ACTIONS.fullScreen, (_: unknown, fullScreen: boolean) => {
+      setIsFullScreen(fullScreen)
+    })
+    return () => ipcRenderer?.removeAllListeners(WINDOW_ACTIONS.fullScreen)
+  }, [])
+
   useEffect(() => {
     if (!menu) return
     const items = menu.items.filter((item) => {
@@ -35,12 +46,16 @@ export default function SideMenu({
       onSelect()
     }
   }
+  const isMac = window.api.os.isMac
 
-  const showCustomMenu = appSettings?.isCustomWindowMode()
+  const showCustomMenu = appSettings?.isCustomWindowMode() && !isMac
 
   return (
-    <div className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''}`}>
+    <div
+      className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''} ${isMac && !isFullScreen ? styles.mac : ''}`}
+    >
       {showCustomMenu && <CustomMenu />}
+      {isMac && !isFullScreen && <div className={styles.macSpacer}></div>}
       {menu &&
         menuItems.map((item, index) => (
           <div
