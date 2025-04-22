@@ -3,6 +3,7 @@ import styles from './Settings.module.css'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
 import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
+import { getGeneralDefaultUserAgent } from '../../../../../../lib/defaults'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -165,6 +166,18 @@ export default function Settings() {
               placeholder="1000"
               onChange={(e) =>
                 handleChangeSettings({ ...settings, timeout: Number(e.target.value) })
+              }
+            />
+          </div>
+          <div className={styles.group}>
+            <label htmlFor="defaultUserAgent">User Agent</label>
+            <input
+              id="defaultUserAgent"
+              type="text"
+              value={settings.defaultUserAgent}
+              placeholder={getGeneralDefaultUserAgent(application.version)}
+              onChange={(e) =>
+                handleChangeSettings({ ...settings, defaultUserAgent: e.target.value })
               }
             />
           </div>

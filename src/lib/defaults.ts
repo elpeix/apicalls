@@ -9,5 +9,10 @@ export const defaultSettings: AppSettingsType = {
   scrollToActiveRequest: true,
   confirmCloseUnsavedTab: true,
   windowMode: 'custom',
-  showNotification: true
+  showNotification: true,
+  defaultUserAgent: ''
+}
+
+export const getGeneralDefaultUserAgent = (version: string) => {
+  return `Api-Calls/${version} (${window.api.os.platform}; ${window.api.os.arch})`
 }
