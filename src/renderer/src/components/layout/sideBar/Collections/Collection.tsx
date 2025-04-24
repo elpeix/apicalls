@@ -134,12 +134,12 @@ export default function Collection({
           type: 'collection'
         })
         coll.elements.push(request)
-        update({ ...coll })
         tabs?.openTab({
           request,
           collectionId: coll.id,
           path: [{ id: request.id, type: 'request' }]
         })
+        update({ ...coll })
       },
       onCancel: () => application.hidePrompt()
     })
