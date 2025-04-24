@@ -3,6 +3,7 @@ import styles from './Autocompleter.module.css'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 import Input from '../Input/Input'
 import { AppContext } from '../../../context/AppContext'
+import { stringArrayEqual } from '../../../lib/utils'
 
 export default function Autocompleter({
   inputRef,
@@ -51,6 +52,7 @@ export default function Autocompleter({
   const [cursorPosition, setCursorPosition] = useState(-1)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selected, setSelected] = useState(0)
+  const [baseOptions, setBaseOptions] = useState<string[]>(options || [])
   const [immutableOptions, setImmutableOptions] = useState<string[]>([])
   const [suggestions, setSuggestions] = useState<string[]>([])
 
@@ -77,7 +79,10 @@ export default function Autocompleter({
     (suggestion: string) => {
       let valueToAssing = `{{${suggestion}}}`
       let position = valueToAssing.length
-      if (searchValue.length > 0) {
+      if (options && options.indexOf(suggestion) > -1) {
+        valueToAssing = suggestion
+        position = valueToAssing.length
+      } else if (searchValue.length > 0) {
         // Replace value from searchIndex and searchValues
         if (searchIndex > -1) {
           valueToAssing =
@@ -138,6 +143,15 @@ export default function Autocompleter({
     const tmpOptions = [...(options || []), ...envVariables]
     setImmutableOptions(tmpOptions)
     setSuggestions(tmpOptions)
+  }, [envVariables])
+
+  useEffect(() => {
+    if (options !== undefined && !stringArrayEqual(baseOptions, options)) {
+      setBaseOptions(options || [])
+      const tmpOptions = [...(options || []), ...envVariables]
+      setImmutableOptions(tmpOptions)
+      setSuggestions(tmpOptions)
+    }
   }, [envVariables, options])
 
   // Handle Outside Click

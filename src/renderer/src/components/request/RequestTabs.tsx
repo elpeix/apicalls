@@ -7,6 +7,7 @@ import styles from './Request.module.css'
 import RequestAuth from './RequestAuth'
 import Params from '../base/Params/Params'
 import HorizontalScroll from '../base/HorizontalScroll/HorizontalScroll'
+import { defaultHttpHeaders } from '../../lib/factory'
 
 const getTabIndexes = (showPathParams: boolean, showBody: boolean) => {
   let [pathParams, queryParams, headers, auth, body] = [0, 1, 2, 3, 4]
@@ -87,6 +88,7 @@ export default function RequestTabs() {
               items={request.headers.items}
               onSave={request.headers.set}
               onAdd={request.headers.add}
+              helperValues={defaultHttpHeaders}
               bulkMode={true}
               addCaption="Add header"
               removeCaption="Remove header"
