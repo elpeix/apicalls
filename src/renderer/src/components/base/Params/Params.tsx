@@ -4,6 +4,7 @@ import ButtonIcon from '../ButtonIcon'
 import styles from './Params.module.css'
 import { AppContext } from '../../../context/AppContext'
 import BulkEntry from '../BulkEntry/BulkEntry'
+import ParamLine from './ParamLine'
 
 export default function Params({
   items,
@@ -19,7 +20,8 @@ export default function Params({
   maxNameSize = 500,
   minNameSize = 100,
   defaultNameSize = 200,
-  bulkMode = false
+  bulkMode = false,
+  helperValues = {}
 }: {
   items: KeyValue[]
   onAdd?: () => void
@@ -35,6 +37,7 @@ export default function Params({
   minNameSize?: number
   defaultNameSize?: number
   bulkMode?: boolean
+  helperValues?: { [key: string]: string[] }
 }) {
   const { application } = useContext(AppContext)
   const [nameSize, setNameSize] = useState(
@@ -66,6 +69,28 @@ export default function Params({
     })
   }
 
+  const changeEnabledHandler = (index: number, enabled: boolean) => {
+    const newItems = [...items]
+    newItems[index] = { ...newItems[index], enabled }
+    onSave(newItems)
+  }
+
+  const changeNameHandler = (index: number, name: string) => {
+    const newItems = [...items]
+    newItems[index] = { ...newItems[index], name }
+    onSave(newItems)
+  }
+  const changeValueHandler = (index: number, value: string) => {
+    const newItems = [...items]
+    newItems[index] = { ...newItems[index], value }
+    onSave(newItems)
+  }
+  const deleteHandler = (index: number) => {
+    const newItems = [...items]
+    newItems.splice(index, 1)
+    onSave(newItems)
+  }
+
   return (
     <div className={styles.params}>
       {items && items.length > 0 && (
@@ -92,62 +117,20 @@ export default function Params({
           </SimpleTable.Header>
           <SimpleTable.Body>
             {items.map((item: KeyValue, index: number) => (
-              <SimpleTable.Row
+              <ParamLine
                 key={index}
-                className={item.enabled === undefined || item.enabled ? styles.rowEnabled : ''}
-              >
-                {showEnable && (
-                  <SimpleTable.Cell>
-                    <input
-                      type="checkbox"
-                      checked={item.enabled}
-                      onChange={(e) => {
-                        const newItems = [...items]
-                        newItems[index] = { ...newItems[index], enabled: e.target.checked }
-                        onSave(newItems)
-                      }}
-                    />
-                  </SimpleTable.Cell>
-                )}
-                <SimpleTable.Cell
-                  editable={editableName}
-                  autoFocus={item.name === ''}
-                  value={item.name}
-                  placeholder="Name"
-                  changeOnKeyUp={true}
-                  onChange={(value) => {
-                    const newItems = [...items]
-                    newItems[index] = { ...newItems[index], name: value }
-                    onSave(newItems)
-                  }}
-                  showTip={true}
-                />
-                <SimpleTable.Cell
-                  editable={editableValue}
-                  value={item.value}
-                  placeholder="Value"
-                  changeOnKeyUp={true}
-                  onChange={(value) => {
-                    const newItems = [...items]
-                    newItems[index] = { ...newItems[index], value }
-                    onSave(newItems)
-                  }}
-                  showTip={true}
-                />
-                {showDelete && (
-                  <SimpleTable.Cell>
-                    <ButtonIcon
-                      icon="delete"
-                      onClick={() => {
-                        const nesItems = [...items]
-                        nesItems.splice(index, 1)
-                        onSave(nesItems)
-                      }}
-                      title={removeCaption}
-                    />
-                  </SimpleTable.Cell>
-                )}
-              </SimpleTable.Row>
+                item={item}
+                helperValues={helperValues}
+                editableName={editableName}
+                editableValue={editableValue}
+                showEnable={showEnable}
+                showDelete={showDelete}
+                removeCaption={removeCaption}
+                onChangeEnabled={(enabled) => changeEnabledHandler(index, enabled)}
+                onChangeName={(value) => changeNameHandler(index, value)}
+                onChangeValue={(value) => changeValueHandler(index, value)}
+                onDelete={() => deleteHandler(index)}
+              />
             ))}
           </SimpleTable.Body>
         </SimpleTable>

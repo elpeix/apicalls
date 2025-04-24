@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-import { createMethod } from '../../../../../lib/factory'
+import { defaultHttpHeaders, createMethod } from '../../../../../lib/factory'
 import Input from '../../../../base/Input/Input'
 import MethodSelect from '../../../../base/MethodSelect/MethodSelect'
 import styles from './PreRequest.module.css'
@@ -97,6 +97,7 @@ export default function PreRequestEditor({
                 onSave={setHeaders}
                 onAdd={() => setHeaders([...headers, { name: '', value: '', enabled: true }])}
                 showEnable={false}
+                helperValues={defaultHttpHeaders}
                 addCaption="Add header"
                 removeCaption="Remove header"
               />

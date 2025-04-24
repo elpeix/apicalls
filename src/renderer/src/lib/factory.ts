@@ -54,3 +54,26 @@ export const getMethods = (): Method[] => [
   createMethod('HEAD'),
   createMethod('OPTIONS')
 ]
+
+export const defaultHttpHeaders = {
+  Accept: ['application/json', 'text/html', 'application/xml', '*/*'],
+  'Accept-Encoding': ['gzip', 'deflate', 'br'],
+  'Accept-Language': [],
+  Authorization: [],
+  'Cache-Control': ['no-cache', 'no-store', 'max-age='],
+  Connection: ['keep-alive', 'close'],
+  'Content-Length': [],
+  'Content-Type': [
+    'application/json',
+    'application/xml',
+    'application/x-www-form-urlencoded',
+    'multipart/form-data',
+    'text/plain'
+  ],
+  Cookie: [],
+  Host: [],
+  'If-None-Match': [],
+  Origin: [],
+  Referer: [],
+  'User-Agent': []
+}
