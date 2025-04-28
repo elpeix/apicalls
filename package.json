@@ -16,17 +16,17 @@
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build && electron-builder --mac --config",
-    "build:linux": "npm run build && electron-builder --linux --config",
+    "build:linux": "npm run build && electron-builder --linux --config --x64 --arm64",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@monaco-editor/react": "^4.7.0",
     "dompurify": "^3.2.5",
     "electron-store": "^10.0.1",
-    "react-resizable-panels": "^2.1.7",
+    "react-resizable-panels": "^2.1.9",
     "react-select": "^5.10.1",
     "react-tabs": "^6.1.0",
     "yaml": "^2.7.1"
@@ -36,11 +36,11 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@eslint/compat": "^1.2.8",
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.24.0",
+    "@eslint/js": "^9.25.1",
     "@types/react-dom": "^19.1.2",
-    "@typescript-eslint/eslint-plugin": "^8.29.1",
-    "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^35.1.5",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "electron": "^35.2.1",
     "electron-builder": "^26.0.12",
     "electron-vite": "^3.1.0",
     "eslint-plugin-react": "^7.37.5",
@@ -50,8 +50,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "typescript": "^5.8.3",
-    "vite": "^6.2.6",
-    "vitest": "^3.1.1"
+    "vite": "^6.3.3",
+    "vitest": "^3.1.2"
   },
-  "packageManager": "pnpm@10.8.1"
+  "packageManager": "pnpm@10.10.0"
 }
