@@ -2,12 +2,12 @@ import React, { useContext, useState } from 'react'
 import { RequestContext } from '../../context/RequestContext'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import RequestTab from './RequestTab'
-import Editor from '../base/Editor'
 import styles from './Request.module.css'
 import RequestAuth from './RequestAuth'
 import Params from '../base/Params/Params'
 import HorizontalScroll from '../base/HorizontalScroll/HorizontalScroll'
 import { defaultHttpHeaders } from '../../lib/factory'
+import RequestBody from './RequestBody'
 
 const getTabIndexes = (showPathParams: boolean, showBody: boolean) => {
   let [pathParams, queryParams, headers, auth, body] = [0, 1, 2, 3, 4]
@@ -35,11 +35,6 @@ export default function RequestTabs() {
   const activeHeaders = request.headers.getActiveLength()
 
   const tabIndexes = getTabIndexes(request.pathParams.items.length > 0, showBody)
-
-  const handleBodyChange = (value: string | undefined) => {
-    if (value === undefined) return
-    request.setBody(value)
-  }
 
   const handleTabSelect = (index: number) => {
     setTabIndex(index)
@@ -99,15 +94,7 @@ export default function RequestTabs() {
           </TabPanel>
           {showBody && (
             <TabPanel>
-              <div className={styles.requestBody}>
-                <Editor
-                  language="json"
-                  onChange={handleBodyChange}
-                  value={request.body}
-                  readOnly={false}
-                  type="request"
-                />
-              </div>
+              <RequestBody />
             </TabPanel>
           )}
         </div>
