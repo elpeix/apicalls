@@ -7,20 +7,10 @@ import { getMenu } from './menu'
 import { defaultSettings } from '../lib/defaults'
 import { checkAndUpdateThemes } from './themes'
 
-const store = new Store()
+const settingsStore = new Store()
 
 const icon = join(__dirname, '../../resources/icon.png')
-
 let mainWindow: BrowserWindow | null
-
-const settings = store.get('settings', defaultSettings) as AppSettingsType
-let titleBarStyle: 'hidden' | 'default' | 'hiddenInset' | 'customButtonsOnHover' | undefined =
-  'hidden'
-if (process.platform === 'darwin') {
-  titleBarStyle = 'hiddenInset'
-} else if (settings.windowMode === 'native') {
-  titleBarStyle = 'default'
-}
 
 function createWindow() {
   // Create the browser window.
@@ -34,7 +24,7 @@ function createWindow() {
     maximizable: true,
     icon,
     title: 'API Calls',
-    titleBarStyle,
+    titleBarStyle: getTitleBarStyle(),
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
@@ -70,7 +60,7 @@ function createWindow() {
   registerShortcuts(mainWindow)
 
   // Set application menu
-  const settings = store.get('settings', defaultSettings) as AppSettingsType
+  const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType
   const menu = getMenu(mainWindow)
   Menu.setApplicationMenu(menu)
   mainWindow.setMenuBarVisibility(!!settings.menu)
@@ -96,6 +86,14 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // Migrate
+  onChangeVersion((previousVersion: string, currentVersion: string) => {
+    console.info(`The version has changed: ${previousVersion} -> ${currentVersion}.`)
+    if (previousVersion < '0.8.2') {
+      backupConfig()
+    }
+  })
+
   // Set dock icon for macOS
   if (process.platform === 'darwin') {
     app.dock?.setIcon(icon)
@@ -108,7 +106,7 @@ app.whenReady().then(() => {
   checkAndUpdateThemes()
 
   // Set theme source for nativeTheme
-  const theme = store.get('settings.theme', 'system')
+  const theme = settingsStore.get('settings.theme', 'system')
   if (theme === 'light') {
     nativeTheme.themeSource = 'light'
   } else if (theme === 'dark') {
@@ -142,6 +140,17 @@ app.on('window-all-closed', () => {
   }
 })
 
+function getTitleBarStyle() {
+  const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType
+  if (process.platform === 'darwin') {
+    return 'hiddenInset'
+  }
+  if (settings.windowMode === 'native') {
+    return 'default'
+  }
+  return 'hidden'
+}
+
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 import './ipcActions'
@@ -151,5 +160,7 @@ import './ipcTabsActions'
 import './ipcCookiesActions'
 import './ipcMenuActions'
 import { SETTINGS, WINDOW_ACTIONS } from '../lib/ipcChannels'
+import { onChangeVersion } from './versionDetector'
+import { backupConfig } from './migrations'
 
 export { mainWindow }

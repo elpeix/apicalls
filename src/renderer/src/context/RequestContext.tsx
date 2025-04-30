@@ -8,7 +8,7 @@ import {
   replacePathParams
 } from '../lib/paramsCapturer'
 import { useConsole } from '../hooks/useConsole'
-import { getValueFromPath } from '../lib/utils'
+import { getBody, getContentType, getValueFromPath } from '../lib/utils'
 import { getGeneralDefaultUserAgent } from '../../../lib/defaults'
 
 const responseInitialValue: RequestContextResponseType = {
@@ -70,7 +70,7 @@ export default function RequestContextProvider({
   const [saved, setSaved] = useState(false)
   const [requestMethod, setRequestMethod] = useState(definedRequest.method || methods[0])
   const [requestUrl, setRequestUrl] = useState(definedRequest.url || '')
-  const [requestBody, setRequestBody] = useState(definedRequest.body || '')
+  const [requestBody, setRequestBody] = useState<BodyType>(definedRequest.body || '')
   const [requestAuth, setRequestAuth] = useState(definedRequest.auth || createAuth('none'))
   const [requestHeaders, setRequestHeaders] = useState(definedRequest.headers || [])
   const [requestPathParams, setRequestPathParams] = useState(definedRequest.pathParams || [])
@@ -170,7 +170,7 @@ export default function RequestContextProvider({
       method: requestMethod,
       headers: getHeaders(url),
       queryParams,
-      body: requestBody
+      body: getBody(requestBody)
     }
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
     window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
@@ -289,7 +289,7 @@ export default function RequestContextProvider({
       method: request.method,
       headers,
       queryParams: prepareQueryParams(request.queryParams || []),
-      body: request.body
+      body: getBody(request.body || '')
     }
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
     window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
@@ -474,18 +474,26 @@ export default function RequestContextProvider({
   const getHeaders = (url: string) => {
     const headers: HeadersInit = {}
     let userAgentDefined = false
+    let contentTypeDefined = false
     requestHeaders.forEach((header) => {
       if (header.enabled && header.name) {
         const headerName = getValue(header.name)
         headers[headerName] = getValue(header.value)
-        if (headerName === 'User-Agent') {
+        if (headerName.toLowerCase() === 'user-agent') {
           userAgentDefined = true
+        }
+        if (headerName.toLowerCase() === 'content-type') {
+          contentTypeDefined = true
         }
       }
     })
     if (!userAgentDefined) {
       headers['User-Agent'] = getDefaultUserAgent()
     }
+    if (!contentTypeDefined && requestMethod.body && typeof requestBody !== 'string') {
+      headers['Content-Type'] = getContentType(requestBody)
+    }
+
     if (requestAuth.type !== 'none' && requestAuth.value) {
       if (requestAuth.type === 'bearer') {
         const value = getValue(requestAuth.value as string)
@@ -557,8 +565,15 @@ export default function RequestContextProvider({
     return `${requestUrl}${queryParamsValue}`
   }
 
-  const setBody = (body: string) => {
-    if (body === requestBody) return
+  const setBody = (body: BodyType) => {
+    if (
+      typeof requestBody !== 'string' &&
+      typeof body !== 'string' &&
+      requestBody.contentType === body.contentType &&
+      requestBody.value === body.value
+    ) {
+      return
+    }
     setRequestBody(body)
     setChanged(true)
     setSaved(false)

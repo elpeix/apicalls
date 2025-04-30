@@ -245,3 +245,21 @@
   width: 100%;
   border-top: 1px solid var(--border-color);
 }
+
+.requestBodyType {
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+
+  > span {
+    opacity: 0.8;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+
+  .contentType {
+    max-width: 10rem;
+  }
+}

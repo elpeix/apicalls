@@ -22,6 +22,14 @@ type RequestAuth = {
   value?: RequestAuthValue
 }
 
+type ContentTypes = 'json' | 'xml' | 'text'
+type BodyType =
+  | {
+      contentType: ContentTypes
+      value: string
+    }
+  | string
+
 type RequestBase = {
   url: string
   method: Method
@@ -29,7 +37,7 @@ type RequestBase = {
   headers?: KeyValue[]
   pathParams?: KeyValue[]
   queryParams?: KeyValue[]
-  body?: string
+  body?: BodyType
 }
 
 type RequestType = {
@@ -272,7 +280,7 @@ type RequestItem = {
 type RequestContextRequestType = {
   method: Method
   url: string
-  body: string
+  body: BodyType
   auth: RequestAuth
   headers: RequestItem
   queryParams: RequestItem
@@ -281,7 +289,7 @@ type RequestContextRequestType = {
   setUrl: (url: string) => void
   setFullUrl: (url: string) => void
   getFullUrl: () => string
-  setBody: (body: string) => void
+  setBody: (body: BodyType) => void
   setAuth: (auth: RequestAuth) => void
   fetch: () => void
   cancel: () => void

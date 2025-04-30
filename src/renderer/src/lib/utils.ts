@@ -77,3 +77,18 @@ export const stringArrayEqual = (a: string[], b: string[]): boolean => {
   }
   return true
 }
+
+export const getBody = (body: BodyType): string => {
+  return typeof body === 'string' ? body : body.value || ''
+}
+export const getContentType = (body: BodyType): string => {
+  const contentTypes: Record<ContentTypes, string> = {
+    json: 'application/json',
+    xml: 'application/xml',
+    text: 'text/plain'
+  }
+  if (typeof body === 'string') {
+    return contentTypes.text
+  }
+  return contentTypes[body.contentType]
+}
