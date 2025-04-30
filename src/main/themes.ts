@@ -1,6 +1,7 @@
 import fs from 'fs'
 import * as path from 'path'
 import { app } from 'electron'
+import { getVersion } from './versionDetector'
 
 const userDataThemesPath = path.join(app.getPath('userData'), 'themes')
 const bundledThemesPath = path.join(app.getAppPath(), 'themes')
@@ -12,15 +13,6 @@ export function checkAndUpdateThemes() {
   const bundledVersion = getVersion(bundledVersionPath)
   if (userVersion !== bundledVersion) {
     updateThemes()
-  }
-}
-
-function getVersion(filePath: string): string | null {
-  try {
-    const versionData = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-    return versionData.version
-  } catch (_) {
-    return null
   }
 }
 
