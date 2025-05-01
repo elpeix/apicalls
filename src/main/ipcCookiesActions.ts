@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron'
-import Store from 'electron-store'
 import { COOKIES } from '../lib/ipcChannels'
+import { getWorkspaceStore } from '../lib/appStore'
 
-const store = new Store()
+const store = getWorkspaceStore()
 
 const COOKIES_KEY = 'cookies'
 

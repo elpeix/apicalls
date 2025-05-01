@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron'
-import Store from 'electron-store'
 import { TABS } from '../lib/ipcChannels'
+import { getWorkspaceStore } from '../lib/appStore'
 
-const store = new Store()
+const store = getWorkspaceStore()
 
 ipcMain.on(TABS.update, (_, tabs: RequestTab[]) => {
   store.set('tabs', tabs)
