@@ -1,9 +1,9 @@
 import { dialog, ipcMain } from 'electron'
-import Store from 'electron-store'
 import CollectionImporter from '../lib/CollectionImporter'
 import { COLLECTIONS } from '../lib/ipcChannels'
+import { getWorkspaceStore } from '../lib/appStore'
 
-const store = new Store()
+const store = getWorkspaceStore()
 const COLLECTIONS_KEY = 'collections'
 
 ipcMain.on(COLLECTIONS.create, (event, collection: Collection) => {

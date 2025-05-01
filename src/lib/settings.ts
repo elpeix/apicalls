@@ -1,9 +1,9 @@
-import Store from 'electron-store'
 import { defaultSettings } from './defaults'
 import { SETTINGS } from './ipcChannels'
 import { BrowserWindow } from 'electron'
+import { getSettingsStore } from './appStore'
 
-const store = new Store()
+const store = getSettingsStore()
 
 export const getSettings = (): AppSettingsType => {
   return store.get('settings', defaultSettings) as AppSettingsType

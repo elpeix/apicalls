@@ -7,12 +7,10 @@ import { getMenu } from './menu'
 import { defaultSettings } from '../lib/defaults'
 import { checkAndUpdateThemes } from './themes'
 
-const settingsStore = new Store()
-
 const icon = join(__dirname, '../../resources/icon.png')
 let mainWindow: BrowserWindow | null
 
-function createWindow() {
+function createWindow(settingsStore: Store) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 900,
@@ -24,7 +22,7 @@ function createWindow() {
     maximizable: true,
     icon,
     title: 'API Calls',
-    titleBarStyle: getTitleBarStyle(),
+    titleBarStyle: getTitleBarStyle(settingsStore),
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
@@ -90,9 +88,12 @@ app.whenReady().then(() => {
   onChangeVersion((previousVersion: string, currentVersion: string) => {
     console.info(`The version has changed: ${previousVersion} -> ${currentVersion}.`)
     if (previousVersion < '0.8.2') {
-      backupConfig()
+      backupConfig(previousVersion)
+      splitConfig()
     }
   })
+
+  const settingsStore = getSettingsStore()
 
   // Set dock icon for macOS
   if (process.platform === 'darwin') {
@@ -122,12 +123,14 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  createWindow()
+  createWindow(settingsStore)
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow(settingsStore)
+    }
   })
 })
 
@@ -140,7 +143,7 @@ app.on('window-all-closed', () => {
   }
 })
 
-function getTitleBarStyle() {
+function getTitleBarStyle(settingsStore: Store) {
   const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType
   if (process.platform === 'darwin') {
     return 'hiddenInset'
@@ -161,6 +164,7 @@ import './ipcCookiesActions'
 import './ipcMenuActions'
 import { SETTINGS, WINDOW_ACTIONS } from '../lib/ipcChannels'
 import { onChangeVersion } from './versionDetector'
-import { backupConfig } from './migrations'
+import { backupConfig, splitConfig } from './migrations'
+import { getSettingsStore } from '../lib/appStore'
 
 export { mainWindow }

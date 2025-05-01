@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron'
-import Store from 'electron-store'
 import { ENVIRONMENTS } from '../lib/ipcChannels'
+import { getWorkspaceStore } from '../lib/appStore'
 
-const store = new Store()
+const store = getWorkspaceStore()
 
 const ENVIRONMENTS_KEY = 'environments'
 
