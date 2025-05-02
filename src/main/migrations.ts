@@ -4,17 +4,22 @@ import { app } from 'electron'
 import { defaultSettings } from '../lib/defaults'
 
 export function backupConfig(previousVersion: string) {
-  console.info('Backup config.json')
   const userDataPath = getUserDataPath()
   const configPath = path.join(userDataPath, 'config.json')
-  const configBakPath = path.join(userDataPath, `config.bak-${previousVersion}.json`)
-  fs.copyFileSync(configPath, configBakPath)
+  if (fs.existsSync(configPath)) {
+    console.info('Backup config.json')
+    const configBakPath = path.join(userDataPath, `config.bak-${previousVersion}.json`)
+    fs.copyFileSync(configPath, configBakPath)
+  }
 }
 
 export function splitConfig() {
-  console.info('Split config.json: settings.json & workspace.json')
   const userDataPath = getUserDataPath()
   const configPath = path.join(userDataPath, 'config.json')
+  if (!fs.existsSync(configPath)) {
+    return
+  }
+  console.info('Split config.json: settings.json & workspace.json')
   const config = getData(configPath)
 
   const settings = {
