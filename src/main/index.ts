@@ -87,7 +87,7 @@ app.whenReady().then(() => {
   // Migrate
   onChangeVersion((previousVersion: string, currentVersion: string) => {
     console.info(`The version has changed: ${previousVersion} -> ${currentVersion}.`)
-    if (previousVersion < '0.8.2') {
+    if (previousVersion < '0.9.0') {
       backupConfig(previousVersion)
       splitConfig()
     }
