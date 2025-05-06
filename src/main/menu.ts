@@ -49,6 +49,18 @@ export const getMenu = (mainWindow: BrowserWindow) => {
       ]
     },
     {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'selectAll' }
+      ]
+    },
+    {
       label: 'Actions',
       submenu: [
         {
@@ -232,10 +244,3 @@ const toggleMenu = (mainWindow: BrowserWindow) => {
   mainWindow.setAutoHideMenuBar(!settings.menu)
   mainWindow.webContents.send(SETTINGS.updated, settings)
 }
-
-// const toggleRequestView = (mainWindow: BrowserWindow) => {
-//   const settings = getSettings()
-//   settings.requestView = settings.requestView === 'horizontal' ? 'vertical' : 'horizontal'
-//   setSettings(settings)
-//   mainWindow.webContents.send(SETTINGS.updated, settings)
-// }
