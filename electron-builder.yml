@@ -1,5 +1,5 @@
 appId: com.francescrequesens.apicalls
-productName: api-calls
+productName: API Calls
 directories:
   buildResources: build
 files:
@@ -26,8 +26,10 @@ mac:
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
+  icon: ./build/icon.icns
 dmg:
   artifactName: ${name}-${version}.${ext}
+  icon: ./build/icon.icns
 linux:
   icon: ./build/icons/
   target:

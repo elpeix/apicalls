@@ -7,7 +7,6 @@ import { getMenu } from './menu'
 import { defaultSettings } from '../lib/defaults'
 import { checkAndUpdateThemes } from './themes'
 
-const icon = join(__dirname, '../../resources/icon.png')
 let mainWindow: BrowserWindow | null
 
 function createWindow(settingsStore: Store) {
@@ -20,7 +19,7 @@ function createWindow(settingsStore: Store) {
     show: false,
     resizable: true,
     maximizable: true,
-    icon,
+    icon: getIcon(),
     title: 'API Calls',
     titleBarStyle: getTitleBarStyle(settingsStore),
     webPreferences: {
@@ -97,7 +96,7 @@ app.whenReady().then(() => {
 
   // Set dock icon for macOS
   if (process.platform === 'darwin') {
-    app.dock?.setIcon(icon)
+    app.dock?.setIcon(getIcon())
   }
 
   // Set app user model id for windows
@@ -142,6 +141,13 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+function getIcon() {
+  if (process.platform === 'darwin') {
+    return join(__dirname, '../../resources/icon_darwin.png')
+  }
+  return join(__dirname, '../../resources/icon.png')
+}
 
 function getTitleBarStyle(settingsStore: Store) {
   const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType
