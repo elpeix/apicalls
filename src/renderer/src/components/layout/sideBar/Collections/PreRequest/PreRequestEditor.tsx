@@ -26,7 +26,7 @@ export default function PreRequestEditor({
   const [method, setMethod] = useState<Method>(createMethod('GET'))
   const [headers, setHeaders] = useState<KeyValue[]>([])
   const [queryParams, setQueryParams] = useState<KeyValue[]>([])
-  const [body, setBody] = useState<string>('')
+  const [body, setBody] = useState<BodyType>('')
   const [dataToCapture, setDataToCapture] = useState<PreRequestDataToCapture[]>([])
   const [active, setActive] = useState(
     preRequest && preRequest.active !== undefined ? preRequest.active : true
@@ -108,7 +108,7 @@ export default function PreRequestEditor({
                   <Editor
                     language="json"
                     onChange={handleBodyChange}
-                    value={body}
+                    value={body as string}
                     readOnly={false}
                     type="none"
                   />
