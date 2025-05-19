@@ -14,6 +14,9 @@ export default function SidePanel() {
 
   return (
     <aside className={styles.sidePanel}>
+      <div className={styles.workspace}>
+        <div className={styles.name}>Workspace</div>
+      </div>
       <div className={styles.content}>
         {menu && (
           <div className={`${styles.sidePanel} ${styles[classNameSelected]}`}>

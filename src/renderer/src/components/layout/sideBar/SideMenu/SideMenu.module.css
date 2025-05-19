@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 3rem;
   height: 100%;
-  gap: 0px;
+  gap: 0;
   border-right: 1px solid var(--border-color);
   background-color: var(--sidePanel-menu-color);
 
@@ -25,20 +25,32 @@
     }
   }
 
+  & .workspace {
+    position: relative;
+    width: 100%;
+    padding: 0.38rem 0 0.3rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -1px;
+      width: 1px;
+      height: 100%;
+      background-color: var(--sidePanel-menu-color);
+    }
+  }
+
   & > .item {
     position: relative;
     width: 100%;
-    height: 56px;
+    height: 3.5rem;
 
     &.active {
       background-color: var(--sidePanel-color);
       border: 1px solid var(--border-color);
       border-left: none;
       border-right: none;
-
-      &:first-child {
-        border-top: none;
-      }
 
       &:last-child {
         border-bottom: none;
@@ -70,7 +82,18 @@
 }
 
 .customMenu {
-  min-height: 2.5rem;
+  min-height: 1.96rem;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 1px;
+    height: 100%;
+    background-color: var(--sidePanel-menu-color);
+  }
 }
 
 .customMenuModal {

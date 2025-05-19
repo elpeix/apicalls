@@ -42,6 +42,7 @@
   --sidePanel-color-hover: var(--content-2);
   --sidePanel-active-background-color: var(--sidePanel-color-hover);
   --sidePanel-icon-color: var(--foreground-1);
+  --sidePanel-menu-color: var(--background-base);
 
   --success-background-color: var(--transparent-cyan);
   --error-background-color: var(--transparent-red);
@@ -318,4 +319,3 @@ body {
   height: 100%;
   overflow: hidden;
 }
-

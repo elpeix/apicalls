@@ -48,14 +48,21 @@ export default function SideMenu({
   }
   const isMac = window.api.os.isMac
 
-  const showCustomMenu = appSettings?.isCustomWindowMode() && !isMac
+  const showCustomMenu = !isMac && appSettings?.isCustomWindowMode()
+  const showWorkspaceIcon = !isMac && !appSettings?.isCustomWindowMode()
+  const showMacSpacer = isMac && !isFullScreen
 
   return (
     <div
       className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''} ${isMac && !isFullScreen ? styles.mac : ''}`}
     >
       {showCustomMenu && <CustomMenu />}
-      {isMac && !isFullScreen && <div className={styles.macSpacer}></div>}
+      {showWorkspaceIcon && (
+        <div className={styles.workspace}>
+          <ButtonIcon icon="workspace" size={20} onClick={onSelect} />
+        </div>
+      )}
+      {showMacSpacer && <div className={styles.macSpacer}></div>}
       {menu &&
         menuItems.map((item, index) => (
           <div
