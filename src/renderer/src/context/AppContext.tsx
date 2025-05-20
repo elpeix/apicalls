@@ -46,6 +46,9 @@ export default function AppContextProvider({ children }: { children: React.React
   const cookies = useCookies()
 
   useEffect(() => {
+    if (window.api.os.isMac) {
+      window.document.body.classList.add('mac')
+    }
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(ENVIRONMENTS.get)
     ipcRenderer?.send(COLLECTIONS.get)

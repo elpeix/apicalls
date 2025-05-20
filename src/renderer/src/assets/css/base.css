@@ -294,6 +294,9 @@ body {
   overflow: hidden;
   padding-top: env(safe-area-inset-top);
 }
+body.mac {
+  --top-bar-height: 2.2rem;
+}
 
 *,
 *::before,
