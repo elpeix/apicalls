@@ -65,7 +65,6 @@
       content: '';
       position: absolute;
       background: var(--highlight-color);
-      height: 0.4rem;
       width: 0.4rem;
       inset: 0.8rem 0.6rem;
       border-radius: 50%;

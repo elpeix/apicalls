@@ -190,6 +190,7 @@
 
   --font-family: 'Ubuntu', 'DejaVu', 'Helvetica Neue', sans-serif;
   --font-size: 0.8rem;
+  --top-bar-height: 2rem;
 }
 
 :root[data-theme='light'] {

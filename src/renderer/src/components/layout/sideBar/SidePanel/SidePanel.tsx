@@ -16,6 +16,7 @@ export default function SidePanel() {
     <aside className={styles.sidePanel}>
       <div className={styles.workspace}>
         <div className={styles.name}>Workspace</div>
+        <div className={`${styles.workspaceDrag} drag-region`}></div>
       </div>
       <div className={styles.content}>
         {menu && (

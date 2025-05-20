@@ -76,6 +76,7 @@
     flex-direction: column;
 
     .panel-tabs-header {
+      height: var(--top-bar-height);
       display: flex;
 
       .panel-tabs-header-spacer {
@@ -114,4 +115,3 @@
     -webkit-app-region: no-drag;
   }
 }
-
