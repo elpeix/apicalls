@@ -8,11 +8,11 @@
   background-color: var(--sidePanel-menu-color);
 
   &.mac {
-    width: 5rem;
+    --mac-spacer: 4.8rem;
+    width: var(--mac-spacer);
 
     div.macSpacer {
-      width: 5rem;
-      border-top: 1px solid var(--border-color);
+      width: var(--mac-spacer);
       border-right: 1px solid var(--sidePanel-menu-color);
       height: var(--top-bar-height);
     }

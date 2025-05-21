@@ -49,8 +49,10 @@ export default function SideMenu({
   const isMac = window.api.os.isMac
 
   const showCustomMenu = !isMac && appSettings?.isCustomWindowMode()
-  const showWorkspaceIcon = !isMac && !appSettings?.isCustomWindowMode()
+  const showWorkspaceIcon =
+    (!isMac && !appSettings?.isCustomWindowMode()) || (isMac && isFullScreen)
   const showMacSpacer = isMac && !isFullScreen
+  const tooltipOffsetX = isMac && !isFullScreen ? 66 : 44
 
   return (
     <div
@@ -79,7 +81,7 @@ export default function SideMenu({
                 size={24}
                 title={item.title}
                 tooltipOffsetY={-44}
-                tooltipOffsetX={44}
+                tooltipOffsetX={tooltipOffsetX}
               />
             )}
           </div>
