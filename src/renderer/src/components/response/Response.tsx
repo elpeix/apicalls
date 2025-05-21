@@ -8,6 +8,7 @@ import styles from './Response.module.css'
 import Switch from '../base/Switch/Switch'
 import { formatSource, getLanguageName } from '../../lib/languageSupport'
 import { AppContext } from '../../context/AppContext'
+import Icon from '../base/Icon/Icon'
 
 export default function Response() {
   const { application } = useContext(AppContext)
@@ -72,13 +73,16 @@ export default function Response() {
                   <Tab onMouseDown={() => handleSelectTab(1)}>Headers</Tab>
                 </TabList>
                 <div className={styles.responseActions}>
-                  <div className={styles.copy} onClick={handleCopy}>
-                    Copy
-                  </div>
-                  {showRaw && <Switch text="Raw" active={raw} onChange={setRaw} />}
                   {language === 'html' && (
                     <Switch text="JS" active={allowScripts} onChange={setAllowScripts} />
                   )}
+                  {showRaw && <Switch text="Raw" active={raw} onChange={setRaw} />}
+                  <div className={styles.copy} onClick={handleCopy}>
+                    <div>
+                      <Icon icon="copy" />
+                    </div>
+                    Copy
+                  </div>
                 </div>
               </div>
               <div className="tab-panel-wrapper">

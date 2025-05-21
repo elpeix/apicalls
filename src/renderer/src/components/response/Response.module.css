@@ -30,9 +30,20 @@
           color: var(--link-color);
           cursor: pointer;
           transition: color 0.2s ease-in-out;
+          display: flex;
+          align-items: center;
+          gap: 0.2rem;
+
+          div {
+            opacity: 0.5;
+            transition: opacity 0.2s ease-in-out;
+          }
 
           &:hover {
             color: var(--link-hover-color);
+            div {
+              opacity: 1;
+            }
           }
 
           &:active {
