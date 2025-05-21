@@ -8,6 +8,7 @@ import styles from './Response.module.css'
 import Switch from '../base/Switch/Switch'
 import { formatSource, getLanguageName } from '../../lib/languageSupport'
 import { AppContext } from '../../context/AppContext'
+import Icon from '../base/Icon/Icon'
 
 export default function Response() {
   const { application } = useContext(AppContext)
@@ -22,6 +23,7 @@ export default function Response() {
   const [rawValue, setRawValue] = useState('')
   const [parsedValue, setParsedValue] = useState('')
   const [tabIndex, setTabIndex] = useState(0)
+  const [allowScripts, setAllowScripts] = useState(false)
 
   useEffect(() => {
     setFetching(context.fetching)
@@ -71,10 +73,16 @@ export default function Response() {
                   <Tab onMouseDown={() => handleSelectTab(1)}>Headers</Tab>
                 </TabList>
                 <div className={styles.responseActions}>
+                  {language === 'html' && (
+                    <Switch text="JS" active={allowScripts} onChange={setAllowScripts} />
+                  )}
+                  {showRaw && <Switch text="Raw" active={raw} onChange={setRaw} />}
                   <div className={styles.copy} onClick={handleCopy}>
+                    <div>
+                      <Icon icon="copy" />
+                    </div>
                     Copy
                   </div>
-                  {showRaw && <Switch text="Raw" active={raw} onChange={setRaw} />}
                 </div>
               </div>
               <div className="tab-panel-wrapper">
@@ -83,6 +91,7 @@ export default function Response() {
                     value={raw ? rawValue : parsedValue}
                     raw={raw}
                     language={language}
+                    allowScripts={allowScripts}
                   />
                 </TabPanel>
                 <TabPanel async forceRender={true}>

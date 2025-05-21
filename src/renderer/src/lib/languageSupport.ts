@@ -28,4 +28,13 @@ const isJson = (str: string) => {
   return true
 }
 const isXml = (source: string) => source.startsWith('<?xml')
-const isHtml = (source: string) => source.toLowerCase().startsWith('<!doctype html')
+const isHtml = (source: string) => {
+  const trimmed = source.trim().toLowerCase()
+  return (
+    trimmed.startsWith('<!doctype html') ||
+    trimmed.startsWith('<html') ||
+    trimmed.startsWith('<body') ||
+    trimmed.startsWith('<head') ||
+    /<([a-z]+)[\s>]/.test(trimmed) // matches e.g. <div>, <span>, <p>, etc.
+  )
+}
