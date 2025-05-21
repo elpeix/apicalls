@@ -22,6 +22,7 @@ export default function Response() {
   const [rawValue, setRawValue] = useState('')
   const [parsedValue, setParsedValue] = useState('')
   const [tabIndex, setTabIndex] = useState(0)
+  const [allowScripts, setAllowScripts] = useState(false)
 
   useEffect(() => {
     setFetching(context.fetching)
@@ -75,6 +76,9 @@ export default function Response() {
                     Copy
                   </div>
                   {showRaw && <Switch text="Raw" active={raw} onChange={setRaw} />}
+                  {language === 'html' && (
+                    <Switch text="JS" active={allowScripts} onChange={setAllowScripts} />
+                  )}
                 </div>
               </div>
               <div className="tab-panel-wrapper">
@@ -83,6 +87,7 @@ export default function Response() {
                     value={raw ? rawValue : parsedValue}
                     raw={raw}
                     language={language}
+                    allowScripts={allowScripts}
                   />
                 </TabPanel>
                 <TabPanel async forceRender={true}>
