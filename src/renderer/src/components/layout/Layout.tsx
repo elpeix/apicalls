@@ -40,6 +40,7 @@ export default function Layout() {
 
   const handleExpand = () => menu?.setExpanded(true)
   const handleCollapse = () => menu?.setExpanded(false)
+  const toggleSidePanel = () => menu?.setExpanded(!menu.expanded)
 
   return (
     <div
@@ -50,6 +51,7 @@ export default function Layout() {
           showSelected={showSelected}
           onSelect={expandSidePanel}
           isCollapsed={!menu?.expanded}
+          toggleCollapse={toggleSidePanel}
         />
         <Panel
           defaultSize={15}

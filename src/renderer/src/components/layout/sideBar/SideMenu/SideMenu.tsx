@@ -8,11 +8,13 @@ import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
 export default function SideMenu({
   showSelected,
   onSelect,
-  isCollapsed
+  isCollapsed,
+  toggleCollapse
 }: {
   showSelected: boolean
   onSelect: () => void
   isCollapsed: boolean
+  toggleCollapse?: () => void
 }) {
   const { menu, appSettings } = useContext(AppContext)
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -61,7 +63,7 @@ export default function SideMenu({
       {showCustomMenu && <CustomMenu />}
       {showWorkspaceIcon && (
         <div className={styles.workspace}>
-          <ButtonIcon icon="workspace" size={20} onClick={onSelect} />
+          <ButtonIcon icon="workspace" size={20} onClick={toggleCollapse} />
         </div>
       )}
       {showMacSpacer && <div className={styles.macSpacer}></div>}

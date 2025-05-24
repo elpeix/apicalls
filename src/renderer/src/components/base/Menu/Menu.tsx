@@ -33,7 +33,7 @@ export default function Menu({
   preventCloseOnClick?: boolean
   topOffset?: number
   leftOffset?: number
-  children: ReactMenuElement
+  children: ReactMenuElement | ReactMenuElement[] | React.ReactNode
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [showMenu, setShowMenu] = useState(false)
@@ -81,12 +81,14 @@ export default function Menu({
         e.preventDefault()
       }}
     >
-      <ButtonIcon
-        className={menuIconClassName}
-        icon={icon}
-        direction={iconDirection}
-        onClick={handleOnClick}
-      />
+      {icon && (
+        <ButtonIcon
+          className={menuIconClassName}
+          icon={icon}
+          direction={iconDirection}
+          onClick={handleOnClick}
+        />
+      )}
       {showMenu && (
         <LinkedModal
           parentRef={menuRef}

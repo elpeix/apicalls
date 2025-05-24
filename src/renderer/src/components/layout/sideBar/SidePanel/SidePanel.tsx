@@ -6,6 +6,7 @@ import Environments from '../Environments/Environments'
 import Settings from '../Settings/Settings'
 import Collections from '../Collections/Collections'
 import Cookies from '../Cookies/Cookies'
+import Workspaces from './Workspace/Workspaces'
 
 export default function SidePanel() {
   const { menu } = useContext(AppContext)
@@ -14,10 +15,7 @@ export default function SidePanel() {
 
   return (
     <aside className={styles.sidePanel}>
-      <div className={styles.workspace}>
-        <div className={styles.name}>Workspace</div>
-        <div className={`${styles.workspaceDrag} drag-region`}></div>
-      </div>
+      <Workspaces />
       <div className={styles.content}>
         {menu && (
           <div className={`${styles.sidePanel} ${styles[classNameSelected]}`}>

@@ -1,0 +1,33 @@
+.workspaces {
+  height: var(--top-bar-height);
+  min-height: var(--top-bar-height);
+  background-color: var(--sidePanel-menu-color);
+  display: flex;
+
+  .content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .name {
+      color: var(--icon-color);
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0.7;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 8rem;
+    }
+  }
+
+  .workspaceDrag {
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+
+.remove {
+  color: var(--danger-color);
+}

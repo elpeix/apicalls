@@ -402,6 +402,23 @@ type NotifcationTtype = {
   message: string
 }
 
+type WorkspaceType = {
+  id: Identifier
+  name: string
+  selected?: boolean
+}
+
+type WorkspacesHookType = {
+  workspaces: WorkspaceType[]
+  selectedWorkspace: WorkspaceType | null
+  create: (name: string) => void
+  duplicate: (id: Identifier) => void
+  update: (id: Identifier, name: string) => void
+  remove: (id: Identifier) => void
+  select: (id: Identifier) => void
+  reload: () => void
+}
+
 type ApplicationType = {
   showDialog: (dialogProps: DialogType) => void
   hideDialog: () => void
