@@ -11,6 +11,7 @@ export const WORKSPACES = {
   list: 'workspaces:list',
   getSelected: 'workspaces:get-selected',
   selected: 'workspaces:selected',
+  changed: 'workspaces:changed',
   select: 'workspaces:select',
   error: 'workspaces:error'
 }
