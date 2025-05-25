@@ -8,7 +8,7 @@
   button {
     width: 2.2rem;
     transition: all 0.2s ease-in-out;
-    
+
     &:hover {
       background-color: var(--hover-background-color);
     }
@@ -18,8 +18,7 @@
     background-color: var(--transparent-red);
   }
 
-  .windoIcon {
-    color: var(--sidePanel-icon-color);
-
+  .windowIcon {
+    color: var(--window-icon-color);
   }
 }

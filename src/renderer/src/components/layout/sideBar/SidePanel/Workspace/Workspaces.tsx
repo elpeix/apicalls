@@ -83,7 +83,6 @@ export default function Workspaces() {
         <Menu
           menuIsOpen={showMenu}
           icon=""
-          iconDirection="south"
           onOpen={() => setShowMenu(true)}
           onClose={() => setShowMenu(false)}
           leftOffset={0}
@@ -107,6 +106,7 @@ export default function Workspaces() {
                 key={workspace.id}
                 icon={workspace.id === workspaces.selectedWorkspace?.id ? 'check' : 'none'}
                 title={workspace.name}
+                className={`${styles.menuWorkspacesItem} ${workspace.id === workspaces.selectedWorkspace?.id ? styles.active : ''}`}
                 onClick={() => {
                   workspaces.select(workspace.id)
                 }}

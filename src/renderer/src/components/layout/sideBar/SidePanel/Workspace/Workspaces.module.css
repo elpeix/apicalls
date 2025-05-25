@@ -57,6 +57,16 @@
   max-height: 15rem;
   padding: 0;
 }
+
+.menuWorkspacesItem {
+  &.active {
+    font-weight: bold;
+  }
+  *:not(div) {
+    color: var(--workspace-title-color);
+  }
+}
+
 .remove {
   color: var(--danger-color);
 }
