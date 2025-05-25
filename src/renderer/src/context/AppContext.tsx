@@ -95,9 +95,8 @@ export default function AppContextProvider({ children }: { children: React.React
 
     ipcRenderer?.on(WORKSPACES.error, (_: unknown, error: { message: string }) => {
       console.error('Error in Workspaces:', error.message)
-      // Optionally, you can show an error dialog or notification here
       showAlert({
-        message: `Error in Workspaces: ${error.message}`,
+        message: error.message,
         buttonName: 'OK',
         buttonColor: 'danger',
         onClose: () => {}

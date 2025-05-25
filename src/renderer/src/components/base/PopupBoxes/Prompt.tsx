@@ -29,8 +29,10 @@ export default function Prompt({
   }
 
   const handleOk = () => {
-    setInputValue('')
-    onConfirm(inputValue)
+    if (value) {
+      setInputValue('')
+      onConfirm(inputValue)
+    }
   }
   return (
     <div className={styles.popupBox}>

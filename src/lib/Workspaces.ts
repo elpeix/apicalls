@@ -43,6 +43,7 @@ export class Workspaces {
   }
 
   create(name: string): WorkspaceType {
+    name = name.trim()
     if (!name) {
       throw new Error('Workspace name is required')
     }
@@ -63,13 +64,14 @@ export class Workspaces {
   }
 
   update(id: Identifier, name: string): WorkspaceType {
-    const workspace = this.#getWorkspace(id)
+    name = name.trim()
     if (!name) {
       throw new Error('Workspace name is required')
     }
     if (this.workspaces.find((w) => w.name === name && w.id !== id)) {
       throw new Error('Workspace with this name already exists')
     }
+    const workspace = this.#getWorkspace(id)
     workspace.name = name
     this.workspaces = this.workspaces.map((w) => (w.id === id ? workspace : w))
     this.#saveWorkspaces()
