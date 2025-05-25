@@ -162,6 +162,7 @@ export default function AppContextProvider({ children }: { children: React.React
         <Prompt
           message={promptProps.message}
           placeholder={promptProps.placeholder}
+          value={promptProps.value}
           confirmName={promptProps.confirmName}
           onConfirm={promptProps.onConfirm}
           onCancel={promptProps.onCancel}

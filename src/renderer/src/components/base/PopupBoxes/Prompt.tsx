@@ -6,29 +6,31 @@ export default function Prompt({
   message,
   placeholder,
   confirmName,
+  value = '',
   onConfirm,
   onCancel
 }: {
   message: string
   confirmName?: string
   placeholder?: string
+  value?: string
   onConfirm: (value: string) => void
   onCancel: () => void
 }) {
-  const [value, setValue] = useState('')
+  const [inputValue, setInputValue] = useState(value)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleOk()
     }
   }
   const handleCancel = () => {
-    setValue('')
+    setInputValue('')
     onCancel()
   }
 
   const handleOk = () => {
-    setValue('')
-    onConfirm(value)
+    setInputValue('')
+    onConfirm(inputValue)
   }
   return (
     <div className={styles.popupBox}>
@@ -38,7 +40,8 @@ export default function Prompt({
           type="text"
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
-          onChange={(e) => setValue(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           autoFocus
         />
       </div>

@@ -6,19 +6,33 @@
 
   .content {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
 
     .name {
-      color: var(--icon-color);
+      color: var(--workspace-title-color);
       text-transform: uppercase;
       cursor: pointer;
       user-select: none;
       opacity: 0.7;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 8rem;
+      transition: opacity ease-in-out 0.1s;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+
+      &:hover,
+      &.active {
+        opacity: 1;
+      }
+
+      div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 10rem;
+      }
+
+      .icon {
+        color: var(--workspace-title-color);
+      }
     }
   }
 
@@ -28,6 +42,21 @@
   }
 }
 
+.menuWorkspaces {
+  text-transform: uppercase;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--workspace-title-color);
+  user-select: none;
+  cursor: default;
+  min-width: 13rem;
+}
+
+.menuWorkspacesList {
+  overflow-y: auto;
+  max-height: 15rem;
+  padding: 0;
+}
 .remove {
   color: var(--danger-color);
 }

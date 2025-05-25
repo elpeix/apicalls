@@ -54,7 +54,6 @@ ipcMain.on(WORKSPACES.getSelected, (event) => {
 ipcMain.on(WORKSPACES.select, (event, { id }) => {
   try {
     const workspace = workspaces.select(id)
-    console.log('Selected workspace on ipc:', workspace)
     event.reply(WORKSPACES.selected, workspace)
   } catch (error) {
     event.reply(WORKSPACES.error, {

@@ -184,6 +184,7 @@
   --table-border-color: var(--border-color);
   --tooltip-color: var(--base-color);
   --tooltip-background-color: var(--background-base);
+  --workspace-title-color: var(--base-color);
 
   background-color: var(--background-base);
   color: var(--base-color);

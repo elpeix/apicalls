@@ -1,4 +1,4 @@
-import { IStore, IStorerFactory } from './appStore'
+import { destroyStore, IStore, IStorerFactory } from './appStore'
 
 type WorkspaceDataType = {
   tabs: unknown
@@ -8,6 +8,7 @@ type WorkspaceDataType = {
 }
 
 const DEFAULT_WORKSPACE_ID = 'workspace'
+const DEFAULT_WORKSPACE_NAME = 'Default Workspace'
 
 export class Workspaces {
   private workspaces: WorkspaceType[]
@@ -95,6 +96,7 @@ export class Workspaces {
     this.storerFactory.getWorkspaceStore(id.toString()).clear()
     // Note: In electron-store, delete is not available.
     //       The store file should be removed manually.
+    destroyStore(id.toString())
   }
 
   duplicate(id: Identifier): WorkspaceType {
@@ -147,7 +149,7 @@ export class Workspaces {
     if (!workspaces || workspaces.length === 0) {
       const defaultWorkspace: WorkspaceType = {
         id: DEFAULT_WORKSPACE_ID as Identifier,
-        name: 'Workspace',
+        name: DEFAULT_WORKSPACE_NAME,
         selected: true
       }
       this.#getAppStore().set('workspaces', [defaultWorkspace])

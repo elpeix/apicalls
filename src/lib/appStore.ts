@@ -1,4 +1,7 @@
 import Store from 'electron-store'
+import { app } from 'electron'
+import fs from 'fs'
+import * as path from 'path'
 
 export interface IStore {
   get(key: string, defaultValue: unknown): unknown
@@ -44,4 +47,12 @@ export const StorerFactory: IStorerFactory = {
   getAppStore: () => new BaseStore('app'),
   getSettingsStore: () => new BaseStore('settings'),
   getWorkspaceStore: (name: string, data?: Record<string, unknown>) => new BaseStore(name, data)
+}
+
+export const destroyStore = (name: string): void => {
+  const storePath = path.join(app.getPath('userData'), `${name}.json`)
+  if (!fs.existsSync(storePath)) {
+    return
+  }
+  fs.rmSync(storePath)
 }

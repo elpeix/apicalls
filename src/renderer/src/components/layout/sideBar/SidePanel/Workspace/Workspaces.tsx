@@ -3,11 +3,12 @@ import styles from './Workspaces.module.css'
 import Menu from '../../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../../base/Menu/MenuElement'
 import { AppContext } from '../../../../../context/AppContext'
-import ButtonIcon from '../../../../base/ButtonIcon'
+import Icon from '../../../../base/Icon/Icon'
 
 export default function Workspaces() {
   const { application, workspaces } = useContext(AppContext)
   const [showMenu, setShowMenu] = useState(false)
+  const menuOffset = window.api.os.isMac ? 35 : 28
 
   if (!workspaces || !workspaces.selectedWorkspace) {
     return null
@@ -30,7 +31,7 @@ export default function Workspaces() {
 
   const handleDuplicateWorkspace = () => {
     application.showConfirm({
-      message: 'Are you sure you want to duplicate this workspace?',
+      message: `Are you sure you want to duplicate workspace ${workspaces.selectedWorkspace?.name}?`,
       onConfirm: () => {
         if (!workspaces.selectedWorkspace) {
           console.warn('No workspace selected for duplication')
@@ -48,6 +49,7 @@ export default function Workspaces() {
       message: 'Enter the new name for the workspace:',
       confirmName: 'Rename',
       placeholder: 'New workspace name',
+      value: workspaces.selectedWorkspace?.name,
       onConfirm: (newName) => {
         if (newName && workspaces.selectedWorkspace) {
           workspaces.update(workspaces.selectedWorkspace.id, newName)
@@ -61,7 +63,7 @@ export default function Workspaces() {
 
   const handleRemoveWorkspace = () => {
     application.showConfirm({
-      message: 'Are you sure you want to remove this workspace?',
+      message: `Are you sure you want to remove workspace ${workspaces.selectedWorkspace?.name}?`,
       confirmName: 'Remove',
       onConfirm: () => {
         if (!workspaces.selectedWorkspace) {
@@ -85,35 +87,43 @@ export default function Workspaces() {
           onOpen={() => setShowMenu(true)}
           onClose={() => setShowMenu(false)}
           leftOffset={0}
-          topOffset={16}
+          topOffset={menuOffset}
         >
-          <MenuElement icon="more" title="Create workspace" onClick={handleCreateWorkspace} />
-          <MenuSeparator />
-          <MenuElement icon="copy" title="Duplicate" onClick={handleDuplicateWorkspace} />
           <MenuElement icon="edit" title="Rename" onClick={handleRenameWorkspace} />
-          <MenuElement
-            icon="delete"
-            title="Remove"
-            onClick={handleRemoveWorkspace}
-            className={styles.remove}
-          />
-          <MenuSeparator />
-          {workspaces.workspaces.map((workspace: WorkspaceType) => (
+          <MenuElement icon="copy" title="Duplicate" onClick={handleDuplicateWorkspace} />
+          {workspaces.selectedWorkspace.id !== 'workspace' && (
             <MenuElement
-              key={workspace.id}
-              icon={workspace.id === workspaces.selectedWorkspace?.id ? 'check' : 'none'}
-              title={workspace.name}
-              onClick={() => {
-                workspaces.select(workspace.id)
-              }}
+              icon="delete"
+              title="Remove"
+              onClick={handleRemoveWorkspace}
+              className={styles.remove}
             />
-          ))}
+          )}
+          <MenuSeparator />
+          <div className={styles.menuWorkspaces}>Workspaces</div>
+          <div className={styles.menuWorkspacesList}>
+            {workspaces.workspaces.map((workspace: WorkspaceType) => (
+              <MenuElement
+                key={workspace.id}
+                icon={workspace.id === workspaces.selectedWorkspace?.id ? 'check' : 'none'}
+                title={workspace.name}
+                onClick={() => {
+                  workspaces.select(workspace.id)
+                }}
+              />
+            ))}
+          </div>
+          <MenuSeparator />
+          <MenuElement icon="more" title="Create workspace" onClick={handleCreateWorkspace} />
         </Menu>
-        <div className={styles.name} onClick={() => setShowMenu(!showMenu)}>
-          {workspaces.selectedWorkspace.name}
-        </div>
-        <div>
-          <ButtonIcon className={styles.icon} icon="arrow" onClick={() => setShowMenu(!showMenu)} />
+        <div
+          className={`${styles.name} ${showMenu ? styles.active : ''}`}
+          onClick={() => setShowMenu(!showMenu)}
+        >
+          <div>{workspaces.selectedWorkspace.name}</div>
+          <div>
+            <Icon className={styles.icon} icon="arrow" />
+          </div>
         </div>
       </div>
       <div className={`${styles.workspaceDrag} drag-region`}></div>
