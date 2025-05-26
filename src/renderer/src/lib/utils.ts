@@ -79,14 +79,16 @@ export const stringArrayEqual = (a: string[], b: string[]): boolean => {
 }
 
 export const getBody = (body: BodyType): string => {
+  if (body === 'none' || body === '') return ''
   return typeof body === 'string' ? body : body.value || ''
 }
-export const getContentType = (body: BodyType): string => {
-  const contentTypes: Record<ContentTypes, string> = {
+export const getContentType = (body: BodyType): string | undefined => {
+  const contentTypes: Record<Exclude<ContentTypes, 'none'>, string> = {
     json: 'application/json',
     xml: 'application/xml',
     text: 'text/plain'
   }
+  if (body === 'none' || body === '') return undefined
   if (typeof body === 'string') {
     return contentTypes.text
   }

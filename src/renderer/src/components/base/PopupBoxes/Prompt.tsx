@@ -40,9 +40,9 @@ export default function Prompt({
   }
 
   const handleOk = () => {
-    if (value) {
-      setInputValue('')
+    if (inputValue) {
       onConfirm(inputValue)
+      setInputValue('')
     }
   }
   return (

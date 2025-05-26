@@ -170,7 +170,7 @@ export default function RequestContextProvider({
       method: requestMethod,
       headers: getHeaders(url),
       queryParams,
-      body: getBody(requestBody)
+      body: requestBody === 'none' || requestBody === '' ? undefined : getBody(requestBody)
     }
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
     window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
@@ -491,7 +491,10 @@ export default function RequestContextProvider({
       headers['User-Agent'] = getDefaultUserAgent()
     }
     if (!contentTypeDefined && requestMethod.body && typeof requestBody !== 'string') {
-      headers['Content-Type'] = getContentType(requestBody)
+      const contentType = getContentType(requestBody)
+      if (contentType) {
+        headers['Content-Type'] = contentType
+      }
     }
 
     if (requestAuth.type !== 'none' && requestAuth.value) {

@@ -11,11 +11,16 @@ export default function RequestBody() {
   if (!request) return null
 
   const [contentType, setContentType] = useState<ContentTypes>(
-    request.body && typeof request.body !== 'string' ? request.body.contentType : 'json'
+    request.body === 'none' || request.body === ''
+      ? 'none'
+      : typeof request.body !== 'string'
+      ? request.body.contentType
+      : 'json'
   )
   const [value, setValue] = useState(getBody(request.body))
 
   const contentTypes: Record<ContentTypes, string> = {
+    none: 'None',
     json: 'Json',
     xml: 'Xml',
     text: 'Text'
@@ -27,21 +32,28 @@ export default function RequestBody() {
   }))
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const contentType = e.target.value as ContentTypes
-    setContentType(contentType)
-    request.setBody({
-      contentType,
-      value
-    })
+    const selected = e.target.value as ContentTypes
+    setContentType(selected)
+    if (selected === 'none') {
+      setValue('')
+      request.setBody('none')
+    } else {
+      request.setBody({
+        contentType: selected,
+        value
+      })
+    }
   }
 
   const handleBodyChange = (value: string | undefined) => {
     value = value || ''
     setValue(value)
-    request.setBody({
-      contentType,
-      value: value as string
-    })
+    if (contentType !== 'none') {
+      request.setBody({
+        contentType: contentType as Exclude<ContentTypes, 'none'>,
+        value: value as string
+      })
+    }
   }
 
   return (
@@ -55,13 +67,15 @@ export default function RequestBody() {
           onChange={handleSelectChange}
         />
       </label>
-      <Editor
-        language={contentType}
-        onChange={handleBodyChange}
-        value={value}
-        readOnly={false}
-        type="request"
-      />
+      {contentType !== 'none' && (
+        <Editor
+          language={contentType}
+          onChange={handleBodyChange}
+          value={value}
+          readOnly={false}
+          type="request"
+        />
+      )}
     </div>
   )
 }
