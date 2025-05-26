@@ -22,13 +22,14 @@ type RequestAuth = {
   value?: RequestAuthValue
 }
 
-type ContentTypes = 'json' | 'xml' | 'text'
+type ContentTypes = 'json' | 'xml' | 'text' | 'none'
 type BodyType =
   | {
-      contentType: ContentTypes
+      contentType: Exclude<ContentTypes, 'none'>
       value: string
     }
-  | string
+  | ''
+  | 'none'
 
 type RequestBase = {
   url: string
