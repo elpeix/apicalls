@@ -63,7 +63,7 @@ export default function SideMenu({
       {showCustomMenu && <CustomMenu />}
       {showWorkspaceIcon && (
         <div className={styles.workspace}>
-          <ButtonIcon icon="workspace" size={20} onClick={toggleCollapse} />
+          <ButtonIcon icon="sidebar" size={20} onClick={toggleCollapse} />
         </div>
       )}
       {showMacSpacer && <div className={styles.macSpacer}></div>}
