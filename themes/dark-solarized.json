@@ -148,7 +148,8 @@
     "tab-selected-color": "var(--base-color)",
     "tab-modal-background-color": "var(--base02)",
     "tab-modal-border-color": "var(--base01)",
-    "table-border-color": "var(--border-color)"
+    "table-border-color": "var(--border-color)",
+    "workspace-title-color": "var(--yellow)"
   },
   "editor": {
     "base": "vs-dark",

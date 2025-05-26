@@ -1,7 +1,6 @@
 import { app, shell, BrowserWindow, nativeTheme, Menu, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import Store from 'electron-store'
 import { registerShortcuts } from './shortcutActions'
 import { getMenu } from './menu'
 import { defaultSettings } from '../lib/defaults'
@@ -9,7 +8,7 @@ import { checkAndUpdateThemes } from './themes'
 
 let mainWindow: BrowserWindow | null
 
-function createWindow(settingsStore: Store) {
+function createWindow(settingsStore: IStore) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 900,
@@ -92,7 +91,7 @@ app.whenReady().then(() => {
     }
   })
 
-  const settingsStore = getSettingsStore()
+  const settingsStore = StorerFactory.getSettingsStore()
 
   // Set dock icon for macOS
   if (process.platform === 'darwin') {
@@ -149,7 +148,7 @@ function getIcon() {
   return join(__dirname, '../../resources/icon.png')
 }
 
-function getTitleBarStyle(settingsStore: Store) {
+function getTitleBarStyle(settingsStore: IStore) {
   const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType
   if (process.platform === 'darwin') {
     return 'hiddenInset'
@@ -160,9 +159,12 @@ function getTitleBarStyle(settingsStore: Store) {
   return 'hidden'
 }
 
+const workspaces = new Workspaces(StorerFactory)
+
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 import './ipcActions'
+import './ipcWorkspaceActions'
 import './ipcCollectionActions'
 import './ipcEnvironmentActions'
 import './ipcTabsActions'
@@ -171,6 +173,7 @@ import './ipcMenuActions'
 import { SETTINGS, WINDOW_ACTIONS } from '../lib/ipcChannels'
 import { onChangeVersion } from './versionDetector'
 import { backupConfig, splitConfig } from './migrations'
-import { getSettingsStore } from '../lib/appStore'
+import { IStore, StorerFactory } from '../lib/appStore'
+import { Workspaces } from '../lib/Workspaces'
 
-export { mainWindow }
+export { workspaces, mainWindow }

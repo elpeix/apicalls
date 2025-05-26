@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 0.3rem;
+    padding: 0.05rem 0.3rem;
     width: 100%;
     gap: 0.5rem;
     border-top: 1px solid var(--border-color);
@@ -111,7 +111,6 @@
 .collectionContent {
   display: flex;
   flex-direction: column;
-  gap: 1px;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;

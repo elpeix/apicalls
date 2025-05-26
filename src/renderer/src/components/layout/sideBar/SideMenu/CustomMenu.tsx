@@ -20,8 +20,8 @@ export default function CustomMenu() {
     <Menu
       icon="menu"
       iconDirection="south"
-      topOffset={36}
-      leftOffset={12}
+      topOffset={28}
+      leftOffset={10}
       menuIsOpen={menuIsOpen}
       onOpen={() => setMenuIsOpen(true)}
       onClose={() => setMenuIsOpen(false)}

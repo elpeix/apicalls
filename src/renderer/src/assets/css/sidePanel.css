@@ -1,5 +1,7 @@
 .container-query {
   container-type: inline-size;
+  height: 100%;
+  overflow: hidden;
 }
 .sidePanel-header {
   display: flex;
@@ -31,15 +33,8 @@
   }
 }
 
-.custom-window .sidePanel-header {
+.custom-window .drag-region {
   -webkit-app-region: drag;
-  * {
-    -webkit-app-region: no-drag;
-  }
-  .sidePanel-header-title {
-    cursor: default;
-    -webkit-app-region: drag;
-  }
 }
 
 .sidePanel-content {

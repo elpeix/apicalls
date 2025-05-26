@@ -3,10 +3,35 @@ import { ACTIONS, SETTINGS, VERSION } from '../lib/ipcChannels'
 import { getSettings, setSettings, toggleRequestView } from '../lib/settings'
 
 export const getMenu = (mainWindow: BrowserWindow) => {
+  const isMac = process.platform === 'darwin'
+
   const menuTemplate: Array<MenuItemConstructorOptions> = [
     {
       label: 'File',
       submenu: [
+        {
+          label: 'About API Calls',
+          visible: isMac,
+          click: () => {
+            mainWindow.webContents.send(VERSION.show)
+          }
+        },
+        {
+          type: 'separator',
+          visible: isMac
+        },
+        {
+          label: 'Settings',
+          accelerator: 'CmdOrCtrl+,',
+          visible: isMac,
+          click: () => {
+            mainWindow.webContents.send(ACTIONS.showSettings)
+          }
+        },
+        {
+          type: 'separator',
+          visible: isMac
+        },
         {
           label: 'New Tab',
           accelerator: 'CmdOrCtrl+T',
@@ -125,6 +150,7 @@ export const getMenu = (mainWindow: BrowserWindow) => {
         {
           label: 'Settings',
           accelerator: 'CmdOrCtrl+,',
+          visible: !isMac,
           click: () => {
             mainWindow.webContents.send(ACTIONS.showSettings)
           }
@@ -221,10 +247,12 @@ export const getMenu = (mainWindow: BrowserWindow) => {
           role: 'zoomOut'
         },
         {
-          type: 'separator'
+          type: 'separator',
+          visible: !isMac
         },
         {
           label: 'About',
+          visible: !isMac,
           click: () => {
             mainWindow.webContents.send(VERSION.show)
           }

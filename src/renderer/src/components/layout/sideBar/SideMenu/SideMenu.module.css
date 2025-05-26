@@ -3,18 +3,18 @@
   flex-direction: column;
   width: 3rem;
   height: 100%;
-  gap: 0px;
+  gap: 0;
   border-right: 1px solid var(--border-color);
   background-color: var(--sidePanel-menu-color);
 
   &.mac {
-    width: 5rem;
+    --mac-spacer: 4.8rem;
+    width: var(--mac-spacer);
 
     div.macSpacer {
-      width: 5rem;
-      border-top: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-      height: 2.2rem;
+      width: var(--mac-spacer);
+      border-right: 1px solid var(--sidePanel-menu-color);
+      height: var(--top-bar-height);
     }
   }
 
@@ -25,20 +25,33 @@
     }
   }
 
+  & .workspace {
+    position: relative;
+    width: 100%;
+    height: var(--top-bar-height);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -1px;
+      width: 1px;
+      height: 100%;
+      background-color: var(--sidePanel-menu-color);
+    }
+  }
+
   & > .item {
     position: relative;
     width: 100%;
-    height: 56px;
+    height: 3.5rem;
+    min-height: 3.5rem;
 
     &.active {
       background-color: var(--sidePanel-color);
       border: 1px solid var(--border-color);
       border-left: none;
       border-right: none;
-
-      &:first-child {
-        border-top: none;
-      }
 
       &:last-child {
         border-bottom: none;
@@ -70,7 +83,19 @@
 }
 
 .customMenu {
-  min-height: 2.5rem;
+  min-height: 1.96rem;
+  height: var(--top-bar-height) !important;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 1px;
+    height: 100%;
+    background-color: var(--sidePanel-menu-color);
+  }
 }
 
 .customMenuModal {

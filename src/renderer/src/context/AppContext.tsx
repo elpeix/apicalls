@@ -4,7 +4,14 @@ import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
 import { useMenu } from '../hooks/useMenu'
 import { useCollections } from '../hooks/useCollections'
-import { COLLECTIONS, COOKIES, ENVIRONMENTS, TABS, VERSION } from '../../../lib/ipcChannels'
+import {
+  COLLECTIONS,
+  COOKIES,
+  ENVIRONMENTS,
+  TABS,
+  VERSION,
+  WORKSPACES
+} from '../../../lib/ipcChannels'
 import { useCookies } from '../hooks/useCookies'
 import { useSettings as useAppSettings } from '../hooks/useSettings'
 import Dialog from '../components/base/dialog/Dialog'
@@ -14,9 +21,11 @@ import { defaultSettings } from '../../../lib/defaults'
 import Alert from '../components/base/PopupBoxes/Alert'
 import ConfirmYesNo from '../components/base/PopupBoxes/ConfirmYesNo'
 import About from '../components/base/About/About'
+import { useWorkspaces } from '../hooks/useWorkspaces'
 
 export const AppContext = createContext<{
   application: ApplicationType
+  workspaces: WorkspacesHookType | null
   menu: MenuHookType | null
   tabs: TabsHookType | null
   collections: CollectionsHookType | null
@@ -26,6 +35,7 @@ export const AppContext = createContext<{
   appSettings: AppSettingsHookType | null
 }>({
   application: {} as ApplicationType,
+  workspaces: null,
   menu: null,
   tabs: null,
   collections: null,
@@ -38,6 +48,7 @@ export const AppContext = createContext<{
 export default function AppContextProvider({ children }: { children: React.ReactNode }) {
   const appSettings = useAppSettings()
   const [appVersion, setAppVersion] = useState('')
+  const workspaces = useWorkspaces()
   const menu = useMenu(appSettings.settings || defaultSettings)
   const collections = useCollections()
   const tabs = useTabs([], collections)
@@ -46,6 +57,9 @@ export default function AppContextProvider({ children }: { children: React.React
   const cookies = useCookies()
 
   useEffect(() => {
+    if (window.api.os.isMac) {
+      window.document.body.classList.add('mac')
+    }
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(ENVIRONMENTS.get)
     ipcRenderer?.send(COLLECTIONS.get)
@@ -77,6 +91,16 @@ export default function AppContextProvider({ children }: { children: React.React
 
     ipcRenderer?.on(VERSION.getSuccess, (_: unknown, version: string) => {
       setAppVersion(version)
+    })
+
+    ipcRenderer?.on(WORKSPACES.error, (_: unknown, error: { message: string }) => {
+      console.error('Error in Workspaces:', error.message)
+      showAlert({
+        message: error.message,
+        buttonName: 'OK',
+        buttonColor: 'danger',
+        onClose: () => {}
+      })
     })
 
     return () => {
@@ -115,9 +139,7 @@ export default function AppContextProvider({ children }: { children: React.React
     })
   }
 
-  const hideAlert = () => {
-    hideDialog()
-  }
+  const hideAlert = () => hideDialog()
 
   const showConfirm = (props: ConfirmType) => {
     showDialog({
@@ -131,9 +153,7 @@ export default function AppContextProvider({ children }: { children: React.React
     })
   }
 
-  const hideConfirm = () => {
-    hideDialog()
-  }
+  const hideConfirm = () => hideDialog()
 
   const showPrompt = (promptProps: PromptType) => {
     showDialog({
@@ -141,6 +161,8 @@ export default function AppContextProvider({ children }: { children: React.React
         <Prompt
           message={promptProps.message}
           placeholder={promptProps.placeholder}
+          value={promptProps.value}
+          valueSelected={promptProps.valueSelected}
           confirmName={promptProps.confirmName}
           onConfirm={promptProps.onConfirm}
           onCancel={promptProps.onCancel}
@@ -149,9 +171,7 @@ export default function AppContextProvider({ children }: { children: React.React
     })
   }
 
-  const hidePrompt = () => {
-    hideDialog()
-  }
+  const hidePrompt = () => hideDialog()
 
   const dialogIsOpen = !!dialogProps
 
@@ -263,6 +283,7 @@ export default function AppContextProvider({ children }: { children: React.React
       },
       version: appVersion
     },
+    workspaces,
     menu,
     tabs,
     collections,

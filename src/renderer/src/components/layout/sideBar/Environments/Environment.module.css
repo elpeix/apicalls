@@ -30,6 +30,7 @@
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+    height: 2.1rem;
     padding: 0 0.3rem;
     width: 100%;
     border-top: 1px solid var(--border-color);
@@ -134,7 +135,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0.6rem 0;
+    padding: 0.5rem 0;
   }
 
   .edit {

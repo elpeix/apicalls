@@ -76,6 +76,7 @@
     flex-direction: column;
 
     .panel-tabs-header {
+      height: var(--top-bar-height);
       display: flex;
 
       .panel-tabs-header-spacer {
@@ -106,12 +107,10 @@
 .custom-window .window-bar {
   display: flex;
   justify-content: right;
-  height: 2rem;
-  border-bottom: 1px solid var(--border-color);
+  height: var(--top-bar-height);
   -webkit-app-region: drag;
 
   * {
     -webkit-app-region: no-drag;
   }
 }
-

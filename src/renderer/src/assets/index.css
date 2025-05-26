@@ -260,7 +260,7 @@ select {
 
   .select__control {
     height: 100%;
-    min-height: 42px;
+    min-height: 40px;
     box-shadow: inset 0 0 0 1px transparent;
     transition: background-color 0.2s ease-in-out;
     background-color: var(--method-select-background-color);

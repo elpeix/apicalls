@@ -1,3 +1,21 @@
+export const WORKSPACES = {
+  create: 'workspaces:create',
+  created: 'workspaces:created',
+  update: 'workspaces:update',
+  updated: 'workspaces:updated',
+  remove: 'workspaces:remove',
+  removed: 'workspaces:removed',
+  duplicate: 'workspaces:duplicate',
+  duplicated: 'workspaces:duplicated',
+  getList: 'workspaces:get-list',
+  list: 'workspaces:list',
+  getSelected: 'workspaces:get-selected',
+  selected: 'workspaces:selected',
+  changed: 'workspaces:changed',
+  select: 'workspaces:select',
+  error: 'workspaces:error'
+}
+
 export const COLLECTIONS = {
   get: 'collections:get',
   create: 'collections:create',

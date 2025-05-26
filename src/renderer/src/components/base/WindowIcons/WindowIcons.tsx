@@ -28,19 +28,19 @@ export default function WindowIcons() {
       <ButtonIcon
         icon="minimize"
         title="Minimize"
-        iconClassName={styles.windoIcon}
+        iconClassName={styles.windowIcon}
         onClick={minimizeWindow}
       />
       <ButtonIcon
         icon={isMaximized ? 'maximized' : 'unmaximized'}
         title={isMaximized ? 'Restore' : 'Maximize'}
-        iconClassName={styles.windoIcon}
+        iconClassName={styles.windowIcon}
         onClick={maximizeWindow}
       />
       <ButtonIcon
         icon="close"
         title="Close"
-        iconClassName={styles.windoIcon}
+        iconClassName={styles.windowIcon}
         onClick={closeWindow}
         className={styles.close}
       />

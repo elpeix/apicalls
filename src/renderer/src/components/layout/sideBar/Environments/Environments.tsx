@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Environment from './Environment'
@@ -15,6 +16,14 @@ export default function Environments() {
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
   const [isScrolling, setIsScrolling] = useState(false)
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(WORKSPACES.changed, () => {
+      setSelectedEnvironment(null)
+    })
+    return () => ipcRenderer?.removeAllListeners(WORKSPACES.changed)
+  }, [environments, setSelectedEnvironment])
 
   useEffect(() => {
     if (!environments) return

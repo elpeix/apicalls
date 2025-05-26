@@ -132,7 +132,8 @@
     "tab-panel-background-color": "var(--color-0)",
     "tab-selected-background-color": "var(--color-3)",
     "tab-selected-color": "var(--base-color)",
-    "table-border-color": "var(--border-color)"
+    "table-border-color": "var(--border-color)",
+    "workspace-title-color": "var(--cyan)"
   },
   "editor": {
     "base": "vs-dark",

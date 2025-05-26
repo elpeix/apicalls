@@ -1,0 +1,72 @@
+.workspaces {
+  height: var(--top-bar-height);
+  min-height: var(--top-bar-height);
+  background-color: var(--sidePanel-menu-color);
+  display: flex;
+
+  .content {
+    display: flex;
+
+    .name {
+      color: var(--workspace-title-color);
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0.7;
+      transition: opacity ease-in-out 0.1s;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+
+      &:hover,
+      &.active {
+        opacity: 1;
+      }
+
+      div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 10rem;
+      }
+
+      .icon {
+        color: var(--workspace-title-color);
+      }
+    }
+  }
+
+  .workspaceDrag {
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+
+.menuWorkspaces {
+  text-transform: uppercase;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--workspace-title-color);
+  user-select: none;
+  cursor: default;
+  min-width: 13rem;
+}
+
+.menuWorkspacesList {
+  overflow-y: auto;
+  max-height: 15rem;
+  padding: 0;
+}
+
+.menuWorkspacesItem {
+  &.active {
+    font-weight: bold;
+  }
+  *:not(div) {
+    color: var(--workspace-title-color);
+  }
+}
+
+.remove {
+  color: var(--danger-color);
+}

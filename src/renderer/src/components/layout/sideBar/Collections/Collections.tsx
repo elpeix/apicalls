@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
+import { COLLECTIONS, WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Collection from './Collection'
@@ -13,7 +13,13 @@ export default function Collections() {
     ipcRenderer?.on(COLLECTIONS.importFailure, (_: unknown, message: string) => {
       application.showAlert({ message })
     })
-    return () => ipcRenderer?.removeAllListeners(COLLECTIONS.importFailure)
+    ipcRenderer?.on(WORKSPACES.changed, () => {
+      collections?.select(null)
+    })
+    return () => {
+      ipcRenderer?.removeAllListeners(COLLECTIONS.importFailure)
+      ipcRenderer?.removeAllListeners(WORKSPACES.changed)
+    }
   })
 
   const selectedCollection = collections?.selectedCollection

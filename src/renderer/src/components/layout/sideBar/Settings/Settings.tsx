@@ -4,6 +4,7 @@ import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
 import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
 import { getGeneralDefaultUserAgent } from '../../../../../../lib/defaults'
+import ButtonIcon from '../../../base/ButtonIcon'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -41,10 +42,10 @@ export default function Settings() {
     appSettings?.save(newSettings)
   }
 
-  const handleClearSettings = () => {
+  const handleResetSettings = () => {
     const requiresRestart = !window.api.os.isMac && settings.windowMode === 'native'
     application.showConfirm({
-      message: 'Are you sure you want to clear settings?',
+      message: 'Are you sure you want to reset settings?',
       onConfirm: () => {
         appSettings?.clear()
         application.hideConfirm()
@@ -110,6 +111,9 @@ export default function Settings() {
     <div className={styles.settings}>
       <div className="sidePanel-header">
         <div className="sidePanel-header-title">Settings</div>
+        <div>
+          <ButtonIcon icon="clear" onClick={handleResetSettings} title="Reset settings" />
+        </div>
       </div>
       <div className={`sidePanel-content ${styles.content}`}>
         <div className={styles.main}>
@@ -253,12 +257,6 @@ export default function Settings() {
             <label htmlFor="showNotification">
               <span>Show notifications</span>
             </label>
-          </div>
-
-          <div className={styles.group}>
-            <a className={`button-text ${styles.clearSettings}`} onClick={handleClearSettings}>
-              Clear settings
-            </a>
           </div>
         </div>
       </div>

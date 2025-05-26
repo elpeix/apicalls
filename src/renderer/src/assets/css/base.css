@@ -42,6 +42,7 @@
   --sidePanel-color-hover: var(--content-2);
   --sidePanel-active-background-color: var(--sidePanel-color-hover);
   --sidePanel-icon-color: var(--foreground-1);
+  --sidePanel-menu-color: var(--background-base);
 
   --success-background-color: var(--transparent-cyan);
   --error-background-color: var(--transparent-red);
@@ -183,12 +184,15 @@
   --table-border-color: var(--border-color);
   --tooltip-color: var(--base-color);
   --tooltip-background-color: var(--background-base);
+  --window-icon-color: var(--sidePanel-icon-color);
+  --workspace-title-color: var(--base-color);
 
   background-color: var(--background-base);
   color: var(--base-color);
 
   --font-family: 'Ubuntu', 'DejaVu', 'Helvetica Neue', sans-serif;
   --font-size: 0.8rem;
+  --top-bar-height: 2rem;
 }
 
 :root[data-theme='light'] {
@@ -292,6 +296,9 @@ body {
   overflow: hidden;
   padding-top: env(safe-area-inset-top);
 }
+body.mac {
+  --top-bar-height: 2.2rem;
+}
 
 *,
 *::before,
@@ -318,4 +325,3 @@ body {
   height: 100%;
   overflow: hidden;
 }
-

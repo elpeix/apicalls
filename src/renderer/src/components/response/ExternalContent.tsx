@@ -4,7 +4,8 @@ import DOMpurify from 'dompurify'
 const style: CSSProperties = {
   width: '100%',
   height: '100%',
-  border: 'none'
+  border: 'none',
+  background: 'white'
 }
 
 export default function ExternalContent({

@@ -1,12 +1,12 @@
 import { dialog, ipcMain } from 'electron'
 import CollectionImporter from '../lib/CollectionImporter'
 import { COLLECTIONS } from '../lib/ipcChannels'
-import { getWorkspaceStore } from '../lib/appStore'
+import { workspaces } from '.'
 
-const store = getWorkspaceStore()
 const COLLECTIONS_KEY = 'collections'
 
 ipcMain.on(COLLECTIONS.create, (event, collection: Collection) => {
+  const store = workspaces.getStore()
   const collections = store.get(COLLECTIONS_KEY, []) as Collection[]
   collections.push(collection)
   store.set(COLLECTIONS_KEY, collections)
@@ -14,6 +14,7 @@ ipcMain.on(COLLECTIONS.create, (event, collection: Collection) => {
 })
 
 ipcMain.on(COLLECTIONS.update, (event, collection: Collection) => {
+  const store = workspaces.getStore()
   const collections = store.get(COLLECTIONS_KEY, []) as Collection[]
   const newCollections = collections.map((c) => (c.id === collection.id ? collection : c))
   store.set(COLLECTIONS_KEY, newCollections)
@@ -21,15 +22,18 @@ ipcMain.on(COLLECTIONS.update, (event, collection: Collection) => {
 })
 
 ipcMain.on(COLLECTIONS.updateAll, (event, collections: Collection[]) => {
+  const store = workspaces.getStore()
   store.set(COLLECTIONS_KEY, collections)
   event.reply(COLLECTIONS.updated, collections)
 })
 
 ipcMain.on(COLLECTIONS.get, (event) => {
+  const store = workspaces.getStore()
   event.reply(COLLECTIONS.updated, store.get(COLLECTIONS_KEY, []))
 })
 
 ipcMain.on(COLLECTIONS.remove, (event, collectionId: string) => {
+  const store = workspaces.getStore()
   const collections = store.get(COLLECTIONS_KEY, []) as Collection[]
   const newCollections = collections.filter((collection) => collection.id !== collectionId)
   store.set(COLLECTIONS_KEY, newCollections)
@@ -62,6 +66,7 @@ ipcMain.on(COLLECTIONS.import, async (event) => {
         filePath: result.filePaths[0],
         collection: importer.getCollection()
       })
+      const store = workspaces.getStore()
       const collections = store.get(COLLECTIONS_KEY, []) as Collection[]
       collections.push(importer.getCollection())
       store.set(COLLECTIONS_KEY, collections)

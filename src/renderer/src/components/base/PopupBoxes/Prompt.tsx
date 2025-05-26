@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, FocusEvent, useState } from 'react'
 import styles from './PopupBoxes.module.css'
 import { Button } from '../Buttons/Buttons'
 
@@ -6,29 +6,44 @@ export default function Prompt({
   message,
   placeholder,
   confirmName,
+  value = '',
+  valueSelected = false,
   onConfirm,
   onCancel
 }: {
   message: string
   confirmName?: string
   placeholder?: string
+  value?: string
+  valueSelected?: boolean
   onConfirm: (value: string) => void
   onCancel: () => void
 }) {
-  const [value, setValue] = useState('')
+  const [inputValue, setInputValue] = useState(value)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleOk()
     }
   }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)
+
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+    if (valueSelected) {
+      e.target.select()
+    }
+  }
+
   const handleCancel = () => {
-    setValue('')
+    setInputValue('')
     onCancel()
   }
 
   const handleOk = () => {
-    setValue('')
-    onConfirm(value)
+    if (value) {
+      setInputValue('')
+      onConfirm(inputValue)
+    }
   }
   return (
     <div className={styles.popupBox}>
@@ -38,7 +53,9 @@ export default function Prompt({
           type="text"
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
-          onChange={(e) => setValue(e.target.value)}
+          value={inputValue}
+          onChange={handleChange}
+          onFocus={handleFocus}
           autoFocus
         />
       </div>

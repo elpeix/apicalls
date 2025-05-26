@@ -19,7 +19,7 @@
     align-items: center;
     border-bottom: 1px solid var(--table-border-color);
     border-right: 1px solid var(--table-border-color);
-    min-height: 1.9rem;
+    min-height: 2rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

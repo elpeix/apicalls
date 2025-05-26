@@ -8,11 +8,13 @@ import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
 export default function SideMenu({
   showSelected,
   onSelect,
-  isCollapsed
+  isCollapsed,
+  toggleCollapse
 }: {
   showSelected: boolean
   onSelect: () => void
   isCollapsed: boolean
+  toggleCollapse?: () => void
 }) {
   const { menu, appSettings } = useContext(AppContext)
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -48,14 +50,23 @@ export default function SideMenu({
   }
   const isMac = window.api.os.isMac
 
-  const showCustomMenu = appSettings?.isCustomWindowMode() && !isMac
+  const showCustomMenu = !isMac && appSettings?.isCustomWindowMode()
+  const showWorkspaceIcon =
+    (!isMac && !appSettings?.isCustomWindowMode()) || (isMac && isFullScreen)
+  const showMacSpacer = isMac && !isFullScreen
+  const tooltipOffsetX = isMac && !isFullScreen ? 66 : 44
 
   return (
     <div
       className={`${styles.sideMenu} ${isCollapsed ? styles.collapsed : ''} ${isMac && !isFullScreen ? styles.mac : ''}`}
     >
       {showCustomMenu && <CustomMenu />}
-      {isMac && !isFullScreen && <div className={styles.macSpacer}></div>}
+      {showWorkspaceIcon && (
+        <div className={styles.workspace}>
+          <ButtonIcon icon="sidebar" size={20} onClick={toggleCollapse} />
+        </div>
+      )}
+      {showMacSpacer && <div className={styles.macSpacer}></div>}
       {menu &&
         menuItems.map((item, index) => (
           <div
@@ -72,7 +83,7 @@ export default function SideMenu({
                 size={24}
                 title={item.title}
                 tooltipOffsetY={-44}
-                tooltipOffsetX={44}
+                tooltipOffsetX={tooltipOffsetX}
               />
             )}
           </div>
