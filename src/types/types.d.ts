@@ -460,6 +460,7 @@ type PromptType = {
   confirmName?: string
   placeholder?: string
   value?: string
+  valueSelected?: boolean
   onConfirm: (value: string) => void
   onCancel: () => void
 }

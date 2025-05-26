@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, FocusEvent, useState } from 'react'
 import styles from './PopupBoxes.module.css'
 import { Button } from '../Buttons/Buttons'
 
@@ -7,6 +7,7 @@ export default function Prompt({
   placeholder,
   confirmName,
   value = '',
+  valueSelected = false,
   onConfirm,
   onCancel
 }: {
@@ -14,6 +15,7 @@ export default function Prompt({
   confirmName?: string
   placeholder?: string
   value?: string
+  valueSelected?: boolean
   onConfirm: (value: string) => void
   onCancel: () => void
 }) {
@@ -23,6 +25,15 @@ export default function Prompt({
       handleOk()
     }
   }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)
+
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+    if (valueSelected) {
+      e.target.select()
+    }
+  }
+
   const handleCancel = () => {
     setInputValue('')
     onCancel()
@@ -43,7 +54,8 @@ export default function Prompt({
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={handleChange}
+          onFocus={handleFocus}
           autoFocus
         />
       </div>

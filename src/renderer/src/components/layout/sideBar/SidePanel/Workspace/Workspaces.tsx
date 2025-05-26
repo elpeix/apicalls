@@ -50,6 +50,7 @@ export default function Workspaces() {
       confirmName: 'Rename',
       placeholder: 'New workspace name',
       value: workspaces.selectedWorkspace?.name,
+      valueSelected: true,
       onConfirm: (newName) => {
         if (newName && workspaces.selectedWorkspace) {
           workspaces.update(workspaces.selectedWorkspace.id, newName)
