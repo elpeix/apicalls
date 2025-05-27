@@ -8,7 +8,7 @@ import Icon from '../../../../base/Icon/Icon'
 export default function Workspaces() {
   const { application, workspaces } = useContext(AppContext)
   const [showMenu, setShowMenu] = useState(false)
-  const menuOffset = window.api.os.isMac ? 35 : 28
+  const menuOffset = window.api.os.isMac ? 35 : 30
 
   if (!workspaces || !workspaces.selectedWorkspace) {
     return null
@@ -121,8 +121,8 @@ export default function Workspaces() {
           className={`${styles.name} ${showMenu ? styles.active : ''}`}
           onClick={() => setShowMenu(!showMenu)}
         >
-          <div>{workspaces.selectedWorkspace.name}</div>
-          <div>
+          <div className={styles.nameText}>{workspaces.selectedWorkspace.name}</div>
+          <div className={styles.nameIcon}>
             <Icon className={styles.icon} icon="arrow" />
           </div>
         </div>

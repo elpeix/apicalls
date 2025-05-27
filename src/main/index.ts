@@ -6,6 +6,9 @@ import { getMenu } from './menu'
 import { defaultSettings } from '../lib/defaults'
 import { checkAndUpdateThemes } from './themes'
 
+// Prevent GTK error on Gnome 47+
+app.commandLine.appendSwitch('gtk-version', '3')
+
 let mainWindow: BrowserWindow | null
 
 function createWindow(settingsStore: IStore) {
