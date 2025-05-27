@@ -34,6 +34,7 @@ linux:
   icon: ./build/icons/
   target:
     - AppImage
+    - deb
   maintainer: francescrequesens.com
   category: Utility
 rpm:
