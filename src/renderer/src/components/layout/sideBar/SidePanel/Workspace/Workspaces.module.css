@@ -6,14 +6,17 @@
 
   .content {
     display: flex;
+    overflow: hidden;
 
     .name {
+      flex-shrink: 0;
+      width: 100%;
       color: var(--workspace-title-color);
       text-transform: uppercase;
       cursor: pointer;
       user-select: none;
       opacity: 0.7;
-      transition: opacity ease-in-out 0.1s;
+      transition: opacity ease-in 0.1s;
       display: flex;
       gap: 0.5rem;
       align-items: center;
@@ -23,11 +26,15 @@
         opacity: 1;
       }
 
-      div {
+      div.nameText {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 10rem;
+      }
+
+      div.nameIcon {
+        flex-shrink: 0;
       }
 
       .icon {
@@ -37,8 +44,9 @@
   }
 
   .workspaceDrag {
-    flex-grow: 1;
+    flex: 1;
     height: 100%;
+    min-width: 2rem;
   }
 }
 
