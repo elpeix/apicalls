@@ -241,25 +241,34 @@
 }
 
 .requestBody {
+  --type-height: 3.1rem;
+
   height: 100%;
   width: 100%;
   border-top: 1px solid var(--border-color);
-}
-
-.requestBodyType {
-  padding: 0.5rem 0.5rem;
   display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  border-bottom: 1px solid var(--border-color);
+  flex-direction: column;
 
-  > span {
-    opacity: 0.8;
-    font-size: 0.8rem;
-    font-weight: bold;
+  .requestBodyType {
+    padding: 0.5rem 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    height: var(--type-height);
+
+    > span {
+      opacity: 0.8;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .contentType {
+      max-width: 10rem;
+    }
   }
 
-  .contentType {
-    max-width: 10rem;
+  .contentBody {
+    height: calc(100% - var(--type-height));
+    border-top: 1px solid var(--border-color);
   }
 }
