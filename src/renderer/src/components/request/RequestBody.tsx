@@ -14,8 +14,8 @@ export default function RequestBody() {
     request.body === 'none' || request.body === ''
       ? 'none'
       : typeof request.body !== 'string'
-      ? request.body.contentType
-      : 'json'
+        ? request.body.contentType
+        : 'json'
   )
   const [value, setValue] = useState(getBody(request.body))
 
@@ -68,13 +68,15 @@ export default function RequestBody() {
         />
       </label>
       {contentType !== 'none' && (
-        <Editor
-          language={contentType}
-          onChange={handleBodyChange}
-          value={value}
-          readOnly={false}
-          type="request"
-        />
+        <div className={styles.contentBody}>
+          <Editor
+            language={contentType}
+            onChange={handleBodyChange}
+            value={value}
+            readOnly={false}
+            type="request"
+          />
+        </div>
       )}
     </div>
   )
