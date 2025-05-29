@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
@@ -47,6 +47,7 @@ export default function Input({
 
   const { environments, collections } = useContext(AppContext)
   const { collectionId } = useContext(RequestContext)
+  const inputWrapperRef = useRef(null)
 
   const [internalValue, setInternalValue] = useState(value)
   const [onOver, setOnOver] = useState(false)
@@ -125,6 +126,7 @@ export default function Input({
         className={`${styles.input} ${className || ''}`}
         onMouseOver={mouseOverHandler}
         onMouseOut={mouseOutHandler}
+        ref={inputWrapperRef}
       >
         <div style={style}>
           <div>{highlight()}</div>
@@ -144,8 +146,8 @@ export default function Input({
       </div>
       {showLinkedModal() && (
         <LinkedModal
-          parentRef={inputRef}
-          topOffset={30}
+          parentRef={inputWrapperRef}
+          topOffset={28}
           zIndex={zIndexTip}
           className="fadeIn"
           allowOutsideClick={true}
