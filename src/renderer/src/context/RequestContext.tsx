@@ -280,9 +280,13 @@ export default function RequestContextProvider({
         }
       }
     })
+
     if (!userAgentDefined) {
       headers['User-Agent'] = getDefaultUserAgent()
     }
+
+    setDefaultHeaders(headers)
+
     const callApiRequest: CallRequest = {
       id: tabId,
       url,
@@ -364,6 +368,23 @@ export default function RequestContextProvider({
       return getValue(settingsHeader.value)
     }
     return getGeneralDefaultUserAgent(application.version)
+  }
+
+  const setDefaultHeaders = (headers: Record<string, string>) => {
+    if (settings?.settings?.defaultHeaders) {
+      const headerNamesLower = Object.keys(headers).map((h) => h.toLowerCase())
+
+      settings.settings.defaultHeaders.forEach((header) => {
+        if (
+          header.enabled &&
+          header.name &&
+          !headerNamesLower.includes(header.name.toLowerCase())
+        ) {
+          headers[header.name] = getValue(header.value)
+          headerNamesLower.push(header.name.toLowerCase())
+        }
+      })
+    }
   }
 
   const prepareQueryParams = (queryParams: KeyValue[]) => {
@@ -479,16 +500,24 @@ export default function RequestContextProvider({
 
   const getHeaders = (url: string) => {
     const headers: HeadersInit = {}
+    let userAgentDefined = false
     let contentTypeDefined = false
     requestHeaders.forEach((header) => {
       if (header.enabled && header.name) {
         const headerName = getValue(header.name)
         headers[headerName] = getValue(header.value)
+        if (headerName.toLowerCase() === 'user-agent') {
+          userAgentDefined = true
+        }
         if (headerName.toLowerCase() === 'content-type') {
           contentTypeDefined = true
         }
       }
     })
+    if (!userAgentDefined) {
+      headers['User-Agent'] = getDefaultUserAgent()
+    }
+
     if (!contentTypeDefined && requestMethod.body && typeof requestBody !== 'string') {
       const contentType = getContentType(requestBody)
       if (contentType) {
@@ -496,13 +525,7 @@ export default function RequestContextProvider({
       }
     }
 
-    if (settings?.settings?.defaultHeaders) {
-      settings.settings.defaultHeaders.forEach((header) => {
-        if (header.enabled && header.name && !headers[header.name]) {
-          headers[header.name] = getValue(header.value)
-        }
-      })
-    }
+    setDefaultHeaders(headers)
 
     if (requestAuth.type !== 'none' && requestAuth.value) {
       if (requestAuth.type === 'bearer') {
