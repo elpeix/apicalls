@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import SimpleTable from '../SimpleTable/SimpleTable'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Params.module.css'
@@ -21,7 +21,9 @@ export default function Params({
   minNameSize = 100,
   defaultNameSize = 200,
   bulkMode = false,
-  helperValues = {}
+  helperValues = {},
+  className = '',
+  scrollContainerRef
 }: {
   items: KeyValue[]
   onAdd?: () => void
@@ -38,8 +40,11 @@ export default function Params({
   defaultNameSize?: number
   bulkMode?: boolean
   helperValues?: { [key: string]: string[] }
+  className?: string
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>
 }) {
   const { application } = useContext(AppContext)
+  const paramsRef = useRef(null)
   const [nameSize, setNameSize] = useState(
     Math.max(Math.min(defaultNameSize, maxNameSize), minNameSize)
   )
@@ -92,7 +97,7 @@ export default function Params({
   }
 
   return (
-    <div className={styles.params}>
+    <div className={`${styles.params} ${className}`} ref={paramsRef}>
       {items && items.length > 0 && (
         <SimpleTable templateColumns={templateColumns}>
           <SimpleTable.Header>
@@ -130,23 +135,24 @@ export default function Params({
                 onChangeName={(value) => changeNameHandler(index, value)}
                 onChangeValue={(value) => changeValueHandler(index, value)}
                 onDelete={() => deleteHandler(index)}
+                scrollContainerRef={scrollContainerRef ? scrollContainerRef : paramsRef}
               />
             ))}
           </SimpleTable.Body>
         </SimpleTable>
       )}
       <div className={styles.footerParams}>
-        {onAdd && (
-          <div className={styles.add}>
-            <div>
-              <ButtonIcon icon="more" onClick={onAdd} title={addCaption} />
-            </div>
-          </div>
-        )}
         {bulkMode && (!items || !items.length) && (
           <div className={styles.bulk}>
             <div>
               <ButtonIcon icon="clipboard" onClick={openBulk} title={bulkCaption} />
+            </div>
+          </div>
+        )}
+        {onAdd && (
+          <div className={styles.add}>
+            <div>
+              <ButtonIcon icon="more" onClick={onAdd} title={addCaption} />
             </div>
           </div>
         )}

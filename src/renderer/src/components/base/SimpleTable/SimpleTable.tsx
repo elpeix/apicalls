@@ -119,7 +119,8 @@ function SimpleTableCell({
   changeOnKeyUp = false,
   options,
   children,
-  showTip = false
+  showTip = false,
+  scrollContainerRef
 }: {
   editable?: boolean
   autoFocus?: boolean
@@ -130,6 +131,7 @@ function SimpleTableCell({
   options?: string[]
   children?: React.ReactNode
   showTip?: boolean
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>
 }) {
   const [editableValue, setEditableValue] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -184,6 +186,7 @@ function SimpleTableCell({
         {!!editable && showTip && (
           <Autocompleter
             inputRef={inputRef as React.RefObject<HTMLInputElement>}
+            scrollContainerRef={scrollContainerRef}
             value={editableValue as string}
             options={options}
             onChange={handleChange}
