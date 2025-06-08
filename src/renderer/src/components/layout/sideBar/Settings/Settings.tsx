@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from './Settings.module.css'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
 import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
-import { getGeneralDefaultUserAgent } from '../../../../../../lib/defaults'
 import ButtonIcon from '../../../base/ButtonIcon'
+import Params from '../../../base/Params/Params'
+import { defaultHttpHeaders } from '../../../../lib/factory'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -15,6 +16,7 @@ const initOpThemes = [
 ]
 
 export default function Settings() {
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const { application, appSettings } = useContext(AppContext)
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
   const [opThemes, setOpThemes] =
@@ -54,6 +56,19 @@ export default function Settings() {
         }
       },
       onCancel: () => application.hideConfirm()
+    })
+  }
+
+  const addHeader = () => {
+    const headers = settings.defaultHeaders || []
+    headers.push({
+      name: '',
+      value: '',
+      enabled: true
+    } as KeyValue)
+    handleChangeSettings({
+      ...settings,
+      defaultHeaders: headers
     })
   }
 
@@ -115,7 +130,7 @@ export default function Settings() {
           <ButtonIcon icon="clear" onClick={handleResetSettings} title="Reset settings" />
         </div>
       </div>
-      <div className={`sidePanel-content ${styles.content}`}>
+      <div className={`sidePanel-content ${styles.content}`} ref={scrollContainerRef}>
         <div className={styles.main}>
           <div className={styles.group}>
             <label htmlFor="theme">Theme</label>
@@ -178,18 +193,6 @@ export default function Settings() {
               placeholder="1000"
               onChange={(e) =>
                 handleChangeSettings({ ...settings, timeout: Number(e.target.value) })
-              }
-            />
-          </div>
-          <div className={styles.group}>
-            <label htmlFor="defaultUserAgent">User Agent</label>
-            <input
-              id="defaultUserAgent"
-              type="text"
-              value={settings.defaultUserAgent}
-              placeholder={getGeneralDefaultUserAgent(application.version)}
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, defaultUserAgent: e.target.value })
               }
             />
           </div>
@@ -257,6 +260,24 @@ export default function Settings() {
             <label htmlFor="showNotification">
               <span>Show notifications</span>
             </label>
+          </div>
+          <div className={styles.group}>
+            <label>Headers</label>
+            <Params
+              items={settings.defaultHeaders || []}
+              onSave={(headers) => {
+                handleChangeSettings({ ...settings, defaultHeaders: headers })
+              }}
+              onAdd={addHeader}
+              maxNameSize={240}
+              minNameSize={80}
+              helperValues={defaultHttpHeaders}
+              bulkMode={true}
+              addCaption="Add header"
+              removeCaption="Remove header"
+              className={styles.defaultHeaders}
+              scrollContainerRef={scrollContainerRef}
+            />
           </div>
         </div>
       </div>

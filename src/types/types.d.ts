@@ -350,7 +350,7 @@ type AppSettingsType = {
   confirmCloseUnsavedTab?: boolean
   windowMode?: AppSettingsWindowMode
   showNotification?: boolean
-  defaultUserAgent?: string
+  defaultHeaders?: KeyValue[]
 }
 
 type CallRequest = {

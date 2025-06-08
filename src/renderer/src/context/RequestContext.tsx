@@ -357,7 +357,13 @@ export default function RequestContextProvider({
   }
 
   const getDefaultUserAgent = () => {
-    return settings?.settings?.defaultUserAgent || getGeneralDefaultUserAgent(application.version)
+    const settingsHeader = settings?.settings?.defaultHeaders?.find(
+      (header) => header.name === 'User-Agent'
+    )
+    if (settingsHeader && settingsHeader.enabled && settingsHeader.value) {
+      return getValue(settingsHeader.value)
+    }
+    return getGeneralDefaultUserAgent(application.version)
   }
 
   const prepareQueryParams = (queryParams: KeyValue[]) => {
@@ -473,28 +479,29 @@ export default function RequestContextProvider({
 
   const getHeaders = (url: string) => {
     const headers: HeadersInit = {}
-    let userAgentDefined = false
     let contentTypeDefined = false
     requestHeaders.forEach((header) => {
       if (header.enabled && header.name) {
         const headerName = getValue(header.name)
         headers[headerName] = getValue(header.value)
-        if (headerName.toLowerCase() === 'user-agent') {
-          userAgentDefined = true
-        }
         if (headerName.toLowerCase() === 'content-type') {
           contentTypeDefined = true
         }
       }
     })
-    if (!userAgentDefined) {
-      headers['User-Agent'] = getDefaultUserAgent()
-    }
     if (!contentTypeDefined && requestMethod.body && typeof requestBody !== 'string') {
       const contentType = getContentType(requestBody)
       if (contentType) {
         headers['Content-Type'] = contentType
       }
+    }
+
+    if (settings?.settings?.defaultHeaders) {
+      settings.settings.defaultHeaders.forEach((header) => {
+        if (header.enabled && header.name && !headers[header.name]) {
+          headers[header.name] = getValue(header.value)
+        }
+      })
     }
 
     if (requestAuth.type !== 'none' && requestAuth.value) {
