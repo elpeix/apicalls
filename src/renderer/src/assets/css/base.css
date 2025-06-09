@@ -34,6 +34,7 @@
   --border-color: var(--content-2);
   --hover-color: var(--foreground-1);
   --hover-background-color: var(--background-2);
+  --hover-border-color: var(--content-1);
   --active-color: var(--color-1);
   --active-background-color: var(--content-1);
   --highlight-color: var(--cyan);
@@ -166,14 +167,16 @@
   --search-list-item-active-color: var(--transparent-cyan);
   --search-list-highlight-color: var(--transparent-cyan);
 
-  --switch-text-color: var(--content-0);
-  --switch-text-hover-color: var(--foreground-2);
-  --switch-text-active-color: var(--foreground-2);
+  --switch-text-color: var(--foreground-2);
+  --switch-text-hover-color: var(--foreground-0);
+  --switch-text-active-color: var(--foreground-1);
   --switch-color: var(--content-0);
+  --switch-border-color: var(--border-color);
+  --switch-hover-border-color: var(--hover-border-color);
   --switch-hover-color: var(--foreground-2);
   --switch-active-color: var(--foreground-2);
   --switch-background-color: var(--content-2);
-  --switch-active-background-color: var(--success-background-color);
+  --switch-active-background-color: var(--content-2);
 
   --scrollbar-background-color: var(--background-base);
   --scrollbar-border-color: var(--border-color);
@@ -214,7 +217,7 @@
   --background-2: #333;
   --content-0: #ccc;
   --content-1: #888;
-  --content-2: #055;
+  --content-2: #066;
   --foreground-0: #fff;
   --foreground-1: #eee;
   --foreground-2: #ddd;

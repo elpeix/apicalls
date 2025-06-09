@@ -54,7 +54,10 @@ type RequestTab = RequestType & {
   saved?: boolean
   collectionId?: Identifier
   path?: PathItem[]
+  response?: RequestResponseType
 }
+
+type FetchedType = true | false | 'old'
 
 type ActiveRequest = {
   collectionId: Identifier
@@ -297,7 +300,7 @@ type RequestContextRequestType = {
   urlIsValid: ({ url }: { url?: string }) => boolean
 }
 
-type RequestContextResponseType = {
+type RequestResponseType = {
   body: string
   headers: KeyValue[]
   cookies: string[][]
@@ -311,9 +314,9 @@ type RequestContextType = {
   collectionId?: Identifier | null
   request: RequestContextRequestType | null
   fetching: boolean
-  fetched: boolean
+  fetched: FetchedType
   fetchError: string
-  response: RequestContextResponseType
+  response: RequestResponseType
   save: () => void
   requestConsole?: ConsoleHookType | null
   tabId?: Identifier
@@ -351,6 +354,7 @@ type AppSettingsType = {
   windowMode?: AppSettingsWindowMode
   showNotification?: boolean
   defaultHeaders?: KeyValue[]
+  saveLastResponse?: boolean
 }
 
 type CallRequest = {

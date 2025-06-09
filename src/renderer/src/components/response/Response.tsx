@@ -14,7 +14,7 @@ export default function Response() {
   const { application } = useContext(AppContext)
   const context = useContext(RequestContext)
   const [fetching, setFetching] = useState(false)
-  const [fetched, setFetched] = useState(false)
+  const [fetched, setFetched] = useState<FetchedType>(false)
   const [fetchError, setFetchError] = useState('')
   const [headers, setHeaders] = useState<KeyValue[]>([])
 
@@ -74,9 +74,14 @@ export default function Response() {
                 </TabList>
                 <div className={styles.responseActions}>
                   {language === 'html' && (
-                    <Switch text="JS" active={allowScripts} onChange={setAllowScripts} />
+                    <Switch
+                      text="JS"
+                      active={allowScripts}
+                      reverse={true}
+                      onChange={setAllowScripts}
+                    />
                   )}
-                  {showRaw && <Switch text="Raw" active={raw} onChange={setRaw} />}
+                  {showRaw && <Switch text="Raw" active={raw} reverse={true} onChange={setRaw} />}
                   <div className={styles.copy} onClick={handleCopy}>
                     <div>
                       <Icon icon="copy" />

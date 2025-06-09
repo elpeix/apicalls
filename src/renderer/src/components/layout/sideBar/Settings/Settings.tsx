@@ -6,6 +6,7 @@ import { WINDOW_ACTIONS } from '../../../../../../lib/ipcChannels'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Params from '../../../base/Params/Params'
 import { defaultHttpHeaders } from '../../../../lib/factory'
+import Switch from '../../../base/Switch/Switch'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -39,7 +40,7 @@ export default function Settings() {
 
   if (!settings) return null
 
-  const handleChangeSettings = (newSettings: AppSettingsType) => {
+  const changeSettings = (newSettings: AppSettingsType) => {
     setSettings(newSettings)
     appSettings?.save(newSettings)
   }
@@ -66,7 +67,7 @@ export default function Settings() {
       value: '',
       enabled: true
     } as KeyValue)
-    handleChangeSettings({
+    changeSettings({
       ...settings,
       defaultHeaders: headers
     })
@@ -136,9 +137,7 @@ export default function Settings() {
             <label htmlFor="theme">Theme</label>
             <SimpleSelect
               value={settings.theme}
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, theme: getThemeName(e.target.value) })
-              }
+              onChange={(e) => changeSettings({ ...settings, theme: getThemeName(e.target.value) })}
               options={opThemes}
               groupBy="mode"
             />
@@ -150,7 +149,7 @@ export default function Settings() {
               <SimpleSelect
                 value={settings.windowMode}
                 onChange={(e) => {
-                  handleChangeSettings({ ...settings, windowMode: getWindowMode(e.target.value) })
+                  changeSettings({ ...settings, windowMode: getWindowMode(e.target.value) })
                   restartApplication()
                 }}
                 options={windowModeOptions}
@@ -163,7 +162,7 @@ export default function Settings() {
             <SimpleSelect
               value={settings.requestView}
               onChange={(e) =>
-                handleChangeSettings({ ...settings, requestView: getRequestView(e.target.value) })
+                changeSettings({ ...settings, requestView: getRequestView(e.target.value) })
               }
               options={requestViewOptions}
             />
@@ -177,9 +176,7 @@ export default function Settings() {
               min={3}
               max={100}
               placeholder="100"
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, maxHistory: Number(e.target.value) })
-              }
+              onChange={(e) => changeSettings({ ...settings, maxHistory: Number(e.target.value) })}
             />
           </div>
           <div className={styles.group}>
@@ -191,82 +188,67 @@ export default function Settings() {
               max={10000}
               value={settings.timeout}
               placeholder="1000"
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, timeout: Number(e.target.value) })
-              }
+              onChange={(e) => changeSettings({ ...settings, timeout: Number(e.target.value) })}
             />
           </div>
-          <div className={styles.groupRow}>
-            <input
-              id="manageCookies"
-              type="checkbox"
-              checked={settings.manageCookies}
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, manageCookies: e.target.checked })
-              }
+          <div className={styles.switchRow}>
+            <Switch
+              text="Manage cookies"
+              active={settings.manageCookies}
+              onChange={(active) => changeSettings({ ...settings, manageCookies: active })}
             />
-            <label htmlFor="manageCookies">
-              <span>Manage cookies</span>
-            </label>
+          </div>
+          <div className={styles.switchRow}>
+            <Switch
+              text="Save last response"
+              active={settings.saveLastResponse}
+              onChange={(active) => {
+                changeSettings({ ...settings, saveLastResponse: active })
+              }}
+            />
           </div>
           {!window.api.os.isMac && settings.windowMode === 'native' && (
-            <div className={styles.groupRow}>
-              <input
-                id="toggleMenu"
-                type="checkbox"
-                checked={settings.menu}
-                onChange={(e) => handleChangeSettings({ ...settings, menu: e.target.checked })}
+            <div className={styles.switchRow}>
+              <Switch
+                text="Show menu"
+                active={settings.menu}
+                onChange={(active) => changeSettings({ ...settings, menu: active })}
               />
-              <label htmlFor="toggleMenu">
-                <span>Show menu</span>
-              </label>
             </div>
           )}
-          <div className={styles.groupRow}>
-            <input
-              id="scrollToActiveRequest"
-              type="checkbox"
-              checked={settings.scrollToActiveRequest ?? true}
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, scrollToActiveRequest: e.target.checked })
-              }
+          <div className={styles.switchRow}>
+            <Switch
+              text="Scroll to active request"
+              active={settings.scrollToActiveRequest}
+              onChange={(active) => {
+                changeSettings({ ...settings, scrollToActiveRequest: active })
+              }}
             />
-            <label htmlFor="scrollToActiveRequest">
-              <span>Scroll to active request</span>
-            </label>
           </div>
-          <div className={styles.groupRow}>
-            <input
-              id="confirmCloseUnsavedTab"
-              type="checkbox"
-              checked={settings.confirmCloseUnsavedTab ?? true}
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, confirmCloseUnsavedTab: e.target.checked })
-              }
+          <div className={styles.switchRow}>
+            <Switch
+              text="Confirm close unsaved tabs"
+              active={settings.confirmCloseUnsavedTab ?? true}
+              onChange={(active) => {
+                changeSettings({ ...settings, confirmCloseUnsavedTab: active })
+              }}
             />
-            <label htmlFor="confirmCloseUnsavedTab">
-              <span>Confirm close unsaved tabs</span>
-            </label>
           </div>
-          <div className={styles.groupRow}>
-            <input
-              id="showNotification"
-              type="checkbox"
-              checked={settings.showNotification ?? true}
-              onChange={(e) =>
-                handleChangeSettings({ ...settings, showNotification: e.target.checked })
-              }
+          <div className={styles.switchRow}>
+            <Switch
+              text="Show notifications"
+              active={settings.showNotification ?? true}
+              onChange={(active) => {
+                changeSettings({ ...settings, showNotification: active })
+              }}
             />
-            <label htmlFor="showNotification">
-              <span>Show notifications</span>
-            </label>
           </div>
           <div className={styles.group}>
             <label>Default headers</label>
             <Params
               items={settings.defaultHeaders || []}
               onSave={(headers) => {
-                handleChangeSettings({ ...settings, defaultHeaders: headers })
+                changeSettings({ ...settings, defaultHeaders: headers })
               }}
               onAdd={addHeader}
               maxNameSize={240}

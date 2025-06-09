@@ -26,6 +26,9 @@
 
       label {
         font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .group {
         display: flex;
@@ -46,6 +49,10 @@
         label {
           flex: 1;
         }
+      }
+
+      .switchRow {
+        display: flex;
       }
 
       .defaultHeaders {
