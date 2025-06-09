@@ -3,12 +3,12 @@ import styles from './Switch.module.css'
 
 export default function Switch({
   text,
-  active,
+  active = false,
   reverse = false,
   onChange
 }: {
   text: string
-  active: boolean | undefined
+  active?: boolean
   reverse?: boolean
   onChange: (active: boolean) => void
 }) {
