@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SETTINGS } from '../../../lib/ipcChannels'
+import { SETTINGS, SYSTEM_ACTIONS } from '../../../lib/ipcChannels'
 import { applyTheme, removeStyleProperties } from '../lib/utils'
 
 const LIGHT = 'light'
@@ -54,26 +54,26 @@ export function useSettings(): AppSettingsHookType {
     const ipcRenderer = window.electron?.ipcRenderer
 
     // Listen for system theme changes from main process
-    ipcRenderer?.on('system-theme-changed', (_: unknown, systemTheme: string) => {
+    ipcRenderer?.on(SYSTEM_ACTIONS.systemThemeChanged, (_: unknown, systemTheme: string) => {
       if (settings?.theme === 'system') {
         document.documentElement.setAttribute('data-theme', systemTheme)
         removeStyleProperties()
       }
     })
-    return () => ipcRenderer?.removeAllListeners('system-theme-changed')
+    return () => ipcRenderer?.removeAllListeners(SYSTEM_ACTIONS.systemThemeChanged)
   }, [settings])
 
   useEffect(() => {
-    matchMedia.addEventListener('change', (e) => {
-      setMode(e.matches ? DARK : LIGHT)
-    })
+    const handleChange = (e: MediaQueryListEvent) => setMode(e.matches ? DARK : LIGHT)
+    matchMedia.addEventListener('change', handleChange)
+
+    return () => matchMedia.removeEventListener('change', handleChange)
   }, [matchMedia])
 
   const save = (newSettings: AppSettingsType) => {
     setSettings(newSettings)
     if (newSettings.theme === 'system') {
       document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
-      removeStyleProperties()
     } else {
       document.documentElement.setAttribute('data-theme', newSettings.theme)
     }

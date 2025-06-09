@@ -110,6 +110,10 @@ export const WINDOW_ACTIONS = {
   relaunch: 'window:relaunch'
 }
 
+export const SYSTEM_ACTIONS = {
+  systemThemeChanged: 'system-theme-changed'
+}
+
 export const MENU_ACTIONS = {
   newTab: 'menu:new-tab',
   closeTab: 'menu:close-tab',

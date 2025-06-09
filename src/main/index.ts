@@ -118,7 +118,7 @@ app.whenReady().then(() => {
   nativeTheme.on('updated', () => {
     if (mainWindow) {
       mainWindow.webContents.send(
-        'system-theme-changed',
+        SYSTEM_ACTIONS.systemThemeChanged,
         nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
       )
     }
@@ -180,7 +180,7 @@ import './ipcEnvironmentActions'
 import './ipcTabsActions'
 import './ipcCookiesActions'
 import './ipcMenuActions'
-import { SETTINGS, WINDOW_ACTIONS } from '../lib/ipcChannels'
+import { SETTINGS, SYSTEM_ACTIONS, WINDOW_ACTIONS } from '../lib/ipcChannels'
 import { onChangeVersion } from './versionDetector'
 import { handleMigrations } from './migrations'
 import './migrations/migrationsImporter'
