@@ -14,7 +14,7 @@ export default function Response() {
   const { application } = useContext(AppContext)
   const context = useContext(RequestContext)
   const [fetching, setFetching] = useState(false)
-  const [fetched, setFetched] = useState(false)
+  const [fetched, setFetched] = useState<FetchedType>(false)
   const [fetchError, setFetchError] = useState('')
   const [headers, setHeaders] = useState<KeyValue[]>([])
 

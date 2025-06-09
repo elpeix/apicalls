@@ -11,7 +11,7 @@ import { useConsole } from '../hooks/useConsole'
 import { getBody, getContentType, getValueFromPath } from '../lib/utils'
 import { getGeneralDefaultUserAgent } from '../../../lib/defaults'
 
-const responseInitialValue: RequestContextResponseType = {
+const responseInitialValue: RequestResponseType = {
   body: '',
   headers: [],
   cookies: [],
@@ -80,9 +80,11 @@ export default function RequestContextProvider({
 
   const [launchRequest, setLaunchRequest] = useState(false)
   const [fetching, setFetching] = useState(false)
-  const [fetched, setFetched] = useState(false)
+  const [fetched, setFetched] = useState<FetchedType>(tab.response ? 'old' : false)
   const [fetchError, setFetchError] = useState('')
-  const [response, setResponse] = useState<RequestContextResponseType>(responseInitialValue)
+  const [response, setResponse] = useState<RequestResponseType>(
+    tab.response || responseInitialValue
+  )
   const requestConsole = useConsole()
 
   const [requestEditorState, setRequestEditorState] = useState('')
@@ -172,11 +174,12 @@ export default function RequestContextProvider({
       queryParams,
       body: requestBody === 'none' || requestBody === '' ? undefined : getBody(requestBody)
     }
+    tab.response = undefined
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
     window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       setFetched(true)
-      setResponse({
+      setRequestResponse({
         body: callResponse.result || '',
         headers: callResponse.responseHeaders,
         cookies: [],
@@ -257,6 +260,13 @@ export default function RequestContextProvider({
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
     })
+  }
+
+  const setRequestResponse = (response: RequestResponseType) => {
+    setResponse(response)
+    tab.response = settings?.settings?.saveLastResponse ? response : undefined
+    console.log(settings?.settings?.saveLastResponse, tab.response)
+    tabs?.updateTab(tab.id, tab)
   }
 
   const sendPreRequest = () => {
@@ -638,7 +648,7 @@ export default function RequestContextProvider({
       .filter((header: KeyValue) => header.name === 'set-cookie')
       .map((cookie) => cookie.value.split(';'))
       .map((cookie) => cookie[0].split('='))
-    setResponse((prev: RequestContextResponseType) => ({ ...prev, headers, cookies }))
+    setResponse((prev: RequestResponseType) => ({ ...prev, headers, cookies }))
   }
 
   const setPathParams = (pathParams: KeyValue[]) => {

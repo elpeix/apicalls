@@ -48,6 +48,10 @@
         }
       }
 
+      .switchRow {
+        display: flex;
+      }
+
       .defaultHeaders {
         border: 1px solid var(--border-color);
 
