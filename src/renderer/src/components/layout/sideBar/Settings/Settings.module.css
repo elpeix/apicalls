@@ -21,7 +21,7 @@
       flex-direction: column;
       justify-content: center;
       width: 100%;
-      gap: 1.5rem;
+      gap: 1.2rem;
       padding: 0 0.2rem;
 
       label {
@@ -36,7 +36,6 @@
         justify-content: center;
         width: 100%;
         gap: 0.5rem;
-        padding: 0 0.2rem;
       }
 
       .groupRow {
@@ -56,11 +55,9 @@
       }
 
       .defaultHeaders {
+        flex: 1;
         border: 1px solid var(--border-color);
-
-        div {
-          border-top: none;
-        }
+        overflow: unset;
       }
     }
   }
