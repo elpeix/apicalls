@@ -14,7 +14,8 @@ export default function ParamLine({
   onChangeEnabled = () => {},
   onChangeName = () => {},
   onChangeValue = () => {},
-  onDelete = () => {}
+  onDelete = () => {},
+  scrollContainerRef
 }: {
   item: KeyValue
   editableName?: boolean
@@ -27,6 +28,7 @@ export default function ParamLine({
   onChangeName?: (value: string) => void
   onChangeValue?: (value: string) => void
   onDelete?: () => void
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>
 }) {
   const getAvialableNames = () => {
     return Object.keys(helperValues)
@@ -54,6 +56,7 @@ export default function ParamLine({
         onChange={onChangeName}
         showTip={true}
         options={getAvialableNames()}
+        scrollContainerRef={scrollContainerRef}
       />
       <SimpleTable.Cell
         editable={editableValue}
@@ -63,6 +66,7 @@ export default function ParamLine({
         onChange={onChangeValue}
         showTip={true}
         options={helperValues[item.name] || []}
+        scrollContainerRef={scrollContainerRef}
       />
       {showDelete && (
         <SimpleTable.Cell>

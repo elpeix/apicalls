@@ -34,10 +34,6 @@
         width: 100%;
         gap: 0.5rem;
         padding: 0 0.2rem;
-
-        button {
-          margin-top: 2rem;
-        }
       }
 
       .groupRow {
@@ -51,12 +47,14 @@
           flex: 1;
         }
       }
+
+      .defaultHeaders {
+        border: 1px solid var(--border-color);
+
+        div {
+          border-top: none;
+        }
+      }
     }
   }
-}
-
-.clearSettings {
-  cursor: pointer;
-  margin: 0.5rem 0 1rem;
-  transition: color ease-in-out 0.2s;
 }

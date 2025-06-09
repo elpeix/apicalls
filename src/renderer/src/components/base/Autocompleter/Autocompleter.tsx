@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
 import styles from './Autocompleter.module.css'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 import Input from '../Input/Input'
@@ -7,6 +7,7 @@ import { stringArrayEqual } from '../../../lib/utils'
 
 export default function Autocompleter({
   inputRef,
+  scrollContainerRef,
   options,
   showEnvironmentVariables = true,
   multiple = true,
@@ -23,6 +24,7 @@ export default function Autocompleter({
   offsetY = 0
 }: {
   inputRef: React.RefObject<HTMLInputElement | null>
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null> | null
   options?: string[]
   showEnvironmentVariables?: boolean
   value?: string
@@ -45,6 +47,8 @@ export default function Autocompleter({
   const ref = useRef<HTMLDivElement>(null)
   const refSuggestions = useRef<HTMLUListElement>(null)
 
+  const inputId = useId()
+
   const [envVariables, setEnvVariables] = useState<string[]>([])
   const [inputValue, setInputValue] = useState(value)
   const [searchValue, setSearchValue] = useState('')
@@ -55,6 +59,33 @@ export default function Autocompleter({
   const [baseOptions, setBaseOptions] = useState<string[]>(options || [])
   const [immutableOptions, setImmutableOptions] = useState<string[]>([])
   const [suggestions, setSuggestions] = useState<string[]>([])
+  const [maxSuggestionsHeight, setMaxSuggestionsHeight] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    if (!showSuggestions || !inputRef.current) return
+
+    const rect = inputRef.current.getBoundingClientRect()
+    const spaceBelow = window.innerHeight - rect.bottom
+    const spaceAbove = rect.top
+
+    const maxHeight = Math.min(Math.max(spaceBelow - 8, 32), 260)
+    if (maxHeight < 40 && spaceAbove > spaceBelow) {
+      setShowSuggestions(false)
+    }
+    setMaxSuggestionsHeight(maxHeight)
+  }, [showSuggestions, inputRef.current])
+
+  // Close suggestions on resize or scroll
+  useEffect(() => {
+    if (!showSuggestions) return
+    const handle = () => setShowSuggestions(false)
+    window.addEventListener('resize', handle)
+    scrollContainerRef?.current?.addEventListener('scroll', handle)
+    return () => {
+      window.removeEventListener('resize', handle)
+      scrollContainerRef?.current?.removeEventListener('scroll', handle)
+    }
+  }, [showSuggestions, scrollContainerRef])
 
   const clearSuggestions = useCallback(() => {
     setSuggestions(immutableOptions)
@@ -307,6 +338,7 @@ export default function Autocompleter({
         highlightVars={true}
         showTip={!showSuggestions}
         zIndexTip={Z_INDEX}
+        inputId={inputId}
       />
       {showSuggestions && (
         <ul
@@ -314,8 +346,12 @@ export default function Autocompleter({
           ref={refSuggestions}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px)`,
+            // @ts-expect-error - property not yet supported by React types
+            positionAnchor: `--${inputId}`,
             width: `${ref.current?.clientWidth ?? 0 - offsetX}px`,
-            zIndex: Z_INDEX
+            zIndex: Z_INDEX,
+            maxHeight: maxSuggestionsHeight ? `${maxSuggestionsHeight}px` : '160px',
+            overflowY: 'auto'
           }}
         >
           {suggestions.map((suggestion, index) => (

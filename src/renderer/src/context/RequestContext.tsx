@@ -280,9 +280,13 @@ export default function RequestContextProvider({
         }
       }
     })
+
     if (!userAgentDefined) {
       headers['User-Agent'] = getDefaultUserAgent()
     }
+
+    setDefaultHeaders(headers)
+
     const callApiRequest: CallRequest = {
       id: tabId,
       url,
@@ -357,7 +361,30 @@ export default function RequestContextProvider({
   }
 
   const getDefaultUserAgent = () => {
-    return settings?.settings?.defaultUserAgent || getGeneralDefaultUserAgent(application.version)
+    const settingsHeader = settings?.settings?.defaultHeaders?.find(
+      (header) => header.name === 'User-Agent'
+    )
+    if (settingsHeader && settingsHeader.enabled && settingsHeader.value) {
+      return getValue(settingsHeader.value)
+    }
+    return getGeneralDefaultUserAgent(application.version)
+  }
+
+  const setDefaultHeaders = (headers: Record<string, string>) => {
+    if (settings?.settings?.defaultHeaders) {
+      const headerNamesLower = Object.keys(headers).map((h) => h.toLowerCase())
+
+      settings.settings.defaultHeaders.forEach((header) => {
+        if (
+          header.enabled &&
+          header.name &&
+          !headerNamesLower.includes(header.name.toLowerCase())
+        ) {
+          headers[header.name] = getValue(header.value)
+          headerNamesLower.push(header.name.toLowerCase())
+        }
+      })
+    }
   }
 
   const prepareQueryParams = (queryParams: KeyValue[]) => {
@@ -490,12 +517,15 @@ export default function RequestContextProvider({
     if (!userAgentDefined) {
       headers['User-Agent'] = getDefaultUserAgent()
     }
+
     if (!contentTypeDefined && requestMethod.body && typeof requestBody !== 'string') {
       const contentType = getContentType(requestBody)
       if (contentType) {
         headers['Content-Type'] = contentType
       }
     }
+
+    setDefaultHeaders(headers)
 
     if (requestAuth.type !== 'none' && requestAuth.value) {
       if (requestAuth.type === 'bearer') {

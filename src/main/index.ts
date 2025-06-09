@@ -88,10 +88,7 @@ app.whenReady().then(() => {
   // Migrate
   onChangeVersion((previousVersion: string, currentVersion: string) => {
     console.info(`The version has changed: ${previousVersion} -> ${currentVersion}.`)
-    if (previousVersion < '0.9.0') {
-      backupConfig(previousVersion)
-      splitConfig()
-    }
+    handleMigrations(previousVersion, currentVersion)
   })
 
   const settingsStore = StorerFactory.getSettingsStore()
@@ -175,7 +172,8 @@ import './ipcCookiesActions'
 import './ipcMenuActions'
 import { SETTINGS, WINDOW_ACTIONS } from '../lib/ipcChannels'
 import { onChangeVersion } from './versionDetector'
-import { backupConfig, splitConfig } from './migrations'
+import { handleMigrations } from './migrations'
+import './migrations/migrationsImporter'
 import { IStore, StorerFactory } from '../lib/appStore'
 import { Workspaces } from '../lib/Workspaces'
 

@@ -20,7 +20,8 @@ export default function Input({
   highlightVars = false,
   showTip = false,
   zIndexTip = 1,
-  environmentId
+  environmentId,
+  inputId
 }: {
   inputRef: React.RefObject<HTMLInputElement | null>
   className?: string
@@ -37,6 +38,7 @@ export default function Input({
   showTip?: boolean
   zIndexTip?: number
   environmentId?: Identifier
+  inputId?: string
 }) {
   type Variable = {
     part: string
@@ -118,7 +120,10 @@ export default function Input({
     return showTip && debouncedOnOver && variableList.length > 0 && REGEX.test(internalValue)
   }
 
-  const style = { fontSize: `${fontSize}px` }
+  const style = {
+    fontSize: `${fontSize}px`,
+    anchorName: inputId ? `--${inputId}` : undefined
+  }
 
   return (
     <>

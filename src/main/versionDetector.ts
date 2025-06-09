@@ -1,6 +1,7 @@
 import fs from 'fs'
 import * as path from 'path'
 import { app } from 'electron'
+import { compareVersions } from '../lib/utils'
 
 const appVersionPath = path.join(app.getPath('userData'), 'version.json')
 const currentVersion = app.getVersion()
@@ -9,7 +10,7 @@ export function onChangeVersion(
   callback: (previousVersion: string, currentVersion: string) => void
 ) {
   const appVersion = getVersion(appVersionPath)
-  if (appVersion < currentVersion) {
+  if (compareVersions(appVersion, currentVersion) < 0) {
     saveAppVersion()
     callback(appVersion, currentVersion)
   }

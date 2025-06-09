@@ -7,6 +7,10 @@
     min-width: 10rem;
     max-height: 16rem;
     overflow-y: auto;
+
+    inset-block-start: anchor(end);
+    inset-inline-start: anchor(start);
+
     border: 1px solid var(--border-color);
     border-top: none;
     background-color: var(--background-content);

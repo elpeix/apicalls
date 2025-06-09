@@ -10,7 +10,7 @@ export const defaultSettings: AppSettingsType = {
   confirmCloseUnsavedTab: true,
   windowMode: 'custom',
   showNotification: true,
-  defaultUserAgent: ''
+  defaultHeaders: []
 }
 
 export const getGeneralDefaultUserAgent = (version: string) => {
