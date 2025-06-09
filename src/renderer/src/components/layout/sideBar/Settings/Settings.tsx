@@ -262,7 +262,7 @@ export default function Settings() {
             </label>
           </div>
           <div className={styles.group}>
-            <label>Headers</label>
+            <label>Default headers</label>
             <Params
               items={settings.defaultHeaders || []}
               onSave={(headers) => {
@@ -270,7 +270,8 @@ export default function Settings() {
               }}
               onAdd={addHeader}
               maxNameSize={240}
-              minNameSize={80}
+              minNameSize={60}
+              defaultNameSize={90}
               helperValues={defaultHttpHeaders}
               bulkMode={true}
               addCaption="Add header"
