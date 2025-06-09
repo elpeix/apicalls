@@ -4,7 +4,7 @@ const migrations: Migration[] = []
 
 export abstract class Migration {
   abstract getMinVersion(): string
-  abstract run(previousVersion: string): void
+  abstract run(previousVersion: string, currentVersion: string): void
 }
 
 export function migrationRegister(migration: Migration) {
@@ -12,16 +12,17 @@ export function migrationRegister(migration: Migration) {
     console.warn(`Migration for version ${migration.getMinVersion()} already registered.`)
     return
   }
-  console.info(`Registering migration for versions greather than ${migration.getMinVersion()}.`)
   migrations.push(migration)
 }
 
-export function handleMigrations(previousVersion: string) {
-  console.info(`Handling migrations for version ${previousVersion}.`)
+export function handleMigrations(previousVersion: string, currentVersion: string) {
   migrations.forEach((migration) => {
-    if (compareVersions(previousVersion, migration.getMinVersion()) < 0) {
+    if (
+      compareVersions(previousVersion, migration.getMinVersion()) < 0 &&
+      compareVersions(currentVersion, migration.getMinVersion()) > -1
+    ) {
       console.info(`Running migration for version ${migration.getMinVersion()}.`)
-      migration.run(previousVersion)
+      migration.run(previousVersion, currentVersion)
     }
   })
 }

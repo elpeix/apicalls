@@ -7,7 +7,7 @@ class MigrationUserAgent extends Migration {
     return '0.11.0'
   }
 
-  run(_: string): void {
+  run(_: string, __: string): void {
     const settingsStore = StorerFactory.getSettingsStore()
     const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType & {
       defaultUserAgent?: string

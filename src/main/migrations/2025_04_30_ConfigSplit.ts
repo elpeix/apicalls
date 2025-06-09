@@ -9,7 +9,7 @@ class MigrationConfigSplit extends Migration {
     return '0.9.0'
   }
 
-  run(previousVersion: string) {
+  run(previousVersion: string, _: string) {
     this.backupConfig(previousVersion)
     this.splitConfig()
   }

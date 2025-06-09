@@ -88,7 +88,7 @@ app.whenReady().then(() => {
   // Migrate
   onChangeVersion((previousVersion: string, currentVersion: string) => {
     console.info(`The version has changed: ${previousVersion} -> ${currentVersion}.`)
-    handleMigrations(previousVersion)
+    handleMigrations(previousVersion, currentVersion)
   })
 
   const settingsStore = StorerFactory.getSettingsStore()
