@@ -38,9 +38,20 @@ export function useSettings(): AppSettingsHookType {
       }
       setThemes(themes)
     })
+    // Listen for system theme changes from main process
+    ipcRenderer?.on('system-theme-changed', (_: unknown, systemTheme: string) => {
+      if (settings?.theme === 'system') {
+        document.documentElement.setAttribute('data-theme', systemTheme)
+        const colors = themes.get(systemTheme)?.colors
+        if (colors) {
+          applyTheme(colors)
+        }
+      }
+    })
     return () => {
       ipcRenderer?.removeAllListeners(SETTINGS.updated)
       ipcRenderer?.removeAllListeners(SETTINGS.listThemes)
+      ipcRenderer?.removeAllListeners('system-theme-changed')
     }
   }, [])
 

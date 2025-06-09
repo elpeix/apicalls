@@ -117,6 +117,13 @@ app.whenReady().then(() => {
     nativeTheme.themeSource = 'system'
   }
 
+  // Listen for system theme changes and notify renderer
+  nativeTheme.on('updated', () => {
+    if (mainWindow) {
+      mainWindow.webContents.send('system-theme-changed', nativeTheme.shouldUseDarkColors ? 'dark' : 'light')
+    }
+  })
+
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
