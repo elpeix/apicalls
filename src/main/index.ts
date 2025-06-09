@@ -120,7 +120,10 @@ app.whenReady().then(() => {
   // Listen for system theme changes and notify renderer
   nativeTheme.on('updated', () => {
     if (mainWindow) {
-      mainWindow.webContents.send('system-theme-changed', nativeTheme.shouldUseDarkColors ? 'dark' : 'light')
+      mainWindow.webContents.send(
+        'system-theme-changed',
+        nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+      )
     }
   })
 

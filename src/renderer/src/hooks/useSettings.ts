@@ -26,7 +26,12 @@ export function useSettings(): AppSettingsHookType {
     ipcRenderer?.send(SETTINGS.get)
     ipcRenderer?.on(SETTINGS.updated, (_: unknown, settings: AppSettingsType) => {
       setSettings(settings)
-      document.documentElement.setAttribute('data-theme', settings.theme)
+      if (settings?.theme === 'system') {
+        document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
+        removeStyleProperties()
+      } else {
+        document.documentElement.setAttribute('data-theme', settings.theme)
+      }
     })
     ipcRenderer?.on(SETTINGS.listThemes, (_: unknown, themes: Map<string, AppTheme>) => {
       const theme = document.documentElement.getAttribute('data-theme')
@@ -38,22 +43,25 @@ export function useSettings(): AppSettingsHookType {
       }
       setThemes(themes)
     })
+
+    return () => {
+      ipcRenderer?.removeAllListeners(SETTINGS.updated)
+      ipcRenderer?.removeAllListeners(SETTINGS.listThemes)
+    }
+  }, [])
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+
     // Listen for system theme changes from main process
     ipcRenderer?.on('system-theme-changed', (_: unknown, systemTheme: string) => {
       if (settings?.theme === 'system') {
         document.documentElement.setAttribute('data-theme', systemTheme)
-        const colors = themes.get(systemTheme)?.colors
-        if (colors) {
-          applyTheme(colors)
-        }
+        removeStyleProperties()
       }
     })
-    return () => {
-      ipcRenderer?.removeAllListeners(SETTINGS.updated)
-      ipcRenderer?.removeAllListeners(SETTINGS.listThemes)
-      ipcRenderer?.removeAllListeners('system-theme-changed')
-    }
-  }, [])
+    return () => ipcRenderer?.removeAllListeners('system-theme-changed')
+  }, [settings])
 
   useEffect(() => {
     matchMedia.addEventListener('change', (e) => {
@@ -63,7 +71,12 @@ export function useSettings(): AppSettingsHookType {
 
   const save = (newSettings: AppSettingsType) => {
     setSettings(newSettings)
-    document.documentElement.setAttribute('data-theme', newSettings.theme)
+    if (newSettings.theme === 'system') {
+      document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
+      removeStyleProperties()
+    } else {
+      document.documentElement.setAttribute('data-theme', newSettings.theme)
+    }
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(SETTINGS.save, newSettings)
     removeStyleProperties()
