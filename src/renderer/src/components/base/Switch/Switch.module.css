@@ -13,6 +13,10 @@
 
   &.reverse {
     flex-direction: row-reverse;
+
+    .text {
+      flex: unset;
+    }
   }
 
   .switch {
@@ -29,7 +33,10 @@
       height: 16px;
       background-color: var(--switch-background-color);
       border-radius: 10px;
-      transition: background-color 0.2s ease-in-out;
+      border: 1px solid var(--switch-border-color);
+      transition:
+        background-color 0.2s ease-in-out,
+        border-color 0.2s ease-in-out;
     }
 
     &::after {
@@ -47,7 +54,17 @@
     }
   }
 
+  .text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
   &:hover {
+    .switch::before {
+      border-color: var(--switch-hover-border-color);
+    }
     .switch::after {
       background-color: var(--switch-hover-color);
     }
