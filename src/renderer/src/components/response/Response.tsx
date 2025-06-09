@@ -74,9 +74,14 @@ export default function Response() {
                 </TabList>
                 <div className={styles.responseActions}>
                   {language === 'html' && (
-                    <Switch text="JS" active={allowScripts} onChange={setAllowScripts} />
+                    <Switch
+                      text="JS"
+                      active={allowScripts}
+                      reverse={true}
+                      onChange={setAllowScripts}
+                    />
                   )}
-                  {showRaw && <Switch text="Raw" active={raw} onChange={setRaw} />}
+                  {showRaw && <Switch text="Raw" active={raw} reverse={true} onChange={setRaw} />}
                   <div className={styles.copy} onClick={handleCopy}>
                     <div>
                       <Icon icon="copy" />
