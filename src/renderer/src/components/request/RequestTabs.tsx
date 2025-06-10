@@ -76,6 +76,7 @@ export default function RequestTabs() {
               items={request.queryParams.items}
               onSave={request.queryParams.set}
               onAdd={request.queryParams.add}
+              draggable={true}
             />
           </TabPanel>
           <TabPanel forceRender={true}>
@@ -85,6 +86,7 @@ export default function RequestTabs() {
               onAdd={request.headers.add}
               helperValues={defaultHttpHeaders}
               bulkMode={true}
+              draggable={true}
               addCaption="Add header"
               removeCaption="Remove header"
             />
