@@ -42,7 +42,7 @@ export default function ParamLine({
   onDelete?: () => void
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>
 }) {
-  const getAvialableNames = () => {
+  const getAvailableNames = () => {
     return Object.keys(helperValues)
   }
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
@@ -97,7 +97,7 @@ export default function ParamLine({
         changeOnKeyUp={true}
         onChange={onChangeName}
         showTip={showTip}
-        options={getAvialableNames()}
+        options={getAvailableNames()}
         scrollContainerRef={scrollContainerRef}
       />
       <SimpleTable.Cell
