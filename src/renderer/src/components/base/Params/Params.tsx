@@ -14,6 +14,7 @@ export default function Params({
   editableName = true,
   editableValue = true,
   showDelete = true,
+  showTip = true,
   addCaption = 'Add param',
   removeCaption = 'Remove param',
   bulkCaption = 'Bulk edit',
@@ -23,7 +24,9 @@ export default function Params({
   bulkMode = false,
   helperValues = {},
   className = '',
-  scrollContainerRef
+  scrollContainerRef,
+  draggable = false,
+  dragFormat = 'param'
 }: {
   items: KeyValue[]
   onAdd?: () => void
@@ -32,6 +35,7 @@ export default function Params({
   editableValue?: boolean
   showEnable?: boolean
   showDelete?: boolean
+  showTip?: boolean
   addCaption?: string
   bulkCaption?: string
   removeCaption?: string
@@ -42,6 +46,8 @@ export default function Params({
   helperValues?: { [key: string]: string[] }
   className?: string
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>
+  draggable?: boolean
+  dragFormat?: string
 }) {
   const { application } = useContext(AppContext)
   const paramsRef = useRef(null)
@@ -54,9 +60,10 @@ export default function Params({
     setNameSize(Math.max(Math.min(newSize, maxNameSize), minNameSize))
   }
 
-  const enableColumn = showEnable ? '1.9rem' : ''
+  const showHelperColumn = showEnable || draggable
+  const helperColumn = showEnable && draggable ? '2.8rem' : showHelperColumn ? '1.9rem' : ''
   const deleteColumn = showDelete ? '2rem' : ''
-  const templateColumns = `${enableColumn} ${nameSize}px 1fr ${deleteColumn}`
+  const templateColumns = `${helperColumn} ${nameSize}px 1fr ${deleteColumn}`
 
   const openBulk = () => {
     application.showDialog({
@@ -96,12 +103,22 @@ export default function Params({
     onSave(newItems)
   }
 
+  const dragHandler = (from: number, to: number) => {
+    if (!draggable || from === to) {
+      return
+    }
+    const newItems = [...items]
+    const [fromItem] = newItems.splice(from, 1)
+    newItems.splice(to, 0, fromItem)
+    onSave(newItems)
+  }
+
   return (
     <div className={`${styles.params} ${className}`} ref={paramsRef}>
       {items && items.length > 0 && (
         <SimpleTable templateColumns={templateColumns}>
           <SimpleTable.Header>
-            {showEnable && (
+            {showHelperColumn && (
               <SimpleTable.HeaderCell>
                 {bulkMode && (
                   <div>
@@ -128,13 +145,18 @@ export default function Params({
                 helperValues={helperValues}
                 editableName={editableName}
                 editableValue={editableValue}
+                showTip={showTip}
                 showEnable={showEnable}
                 showDelete={showDelete}
+                draggable={draggable}
+                dragFormat={dragFormat}
+                index={index}
                 removeCaption={removeCaption}
                 onChangeEnabled={(enabled) => changeEnabledHandler(index, enabled)}
                 onChangeName={(value) => changeNameHandler(index, value)}
                 onChangeValue={(value) => changeValueHandler(index, value)}
                 onDelete={() => deleteHandler(index)}
+                onDrag={dragHandler}
                 scrollContainerRef={scrollContainerRef ? scrollContainerRef : paramsRef}
               />
             ))}

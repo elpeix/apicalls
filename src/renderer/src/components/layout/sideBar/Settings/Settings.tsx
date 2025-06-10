@@ -256,6 +256,8 @@ export default function Settings() {
               defaultNameSize={90}
               helperValues={defaultHttpHeaders}
               bulkMode={true}
+              draggable={true}
+              dragFormat="settings"
               addCaption="Add header"
               removeCaption="Remove header"
               className={styles.defaultHeaders}

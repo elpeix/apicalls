@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Environment.module.css'
-import EnvironmentVariables from './EnvironmentVariables'
 import EditableName from '../../../base/EditableName/EditableName'
 import { AppContext } from '../../../../context/AppContext'
 import BulkEntry from '../../../base/BulkEntry/BulkEntry'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
+import Params from '../../../base/Params/Params'
 
 export default function Environment({
   environment,
@@ -20,7 +20,6 @@ export default function Environment({
   remove: (id: Identifier) => void
 }) {
   const { application, environments } = useContext(AppContext)
-
   const nameRef = useRef<HTMLInputElement>(null)
   const [env, setEnv] = useState(environment)
   const [editingName, setEditingName] = useState(false)
@@ -53,10 +52,10 @@ export default function Environment({
 
   const addVariable = () => {
     const variables = [...env.variables, { name: '', value: '' }]
-    updateVariables({ variables })
+    updateVariables(variables)
   }
 
-  const updateVariables = ({ variables }: { variables: KeyValue[] }) => {
+  const updateVariables = (variables: KeyValue[]) => {
     setEnv({ ...env, variables })
     update({ ...env, variables })
   }
@@ -81,7 +80,7 @@ export default function Environment({
           initialValue={env.variables}
           onSave={(variables) => {
             application.hideDialog()
-            updateVariables({ variables })
+            updateVariables(variables)
           }}
           onCancel={application.hideDialog}
         />
@@ -130,12 +129,21 @@ export default function Environment({
         </div>
       </div>
       <div className={styles.content}>
-        <EnvironmentVariables variables={env.variables} update={updateVariables} />
-      </div>
-      <div className={styles.footer}>
-        <div>
-          <ButtonIcon icon="more" onClick={addVariable} title="Add variable" />
-        </div>
+        <Params
+          items={env.variables}
+          onSave={updateVariables}
+          onAdd={addVariable}
+          maxNameSize={240}
+          minNameSize={60}
+          defaultNameSize={90}
+          bulkMode={true}
+          showEnable={false}
+          draggable={true}
+          showTip={false}
+          dragFormat="EnvironmentVariables"
+          addCaption="Add variable"
+          removeCaption="Remove variable"
+        />
       </div>
     </div>
   )
