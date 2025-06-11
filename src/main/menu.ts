@@ -8,70 +8,7 @@ export const getMenu = (mainWindow: BrowserWindow) => {
   const menuTemplate: Array<MenuItemConstructorOptions> = [
     {
       label: 'File',
-      submenu: [
-        {
-          label: 'About API Calls',
-          visible: isMac,
-          click: () => {
-            mainWindow.webContents.send(VERSION.show)
-          }
-        },
-        {
-          type: 'separator',
-          visible: isMac
-        },
-        {
-          label: 'Settings',
-          accelerator: 'CmdOrCtrl+,',
-          visible: isMac,
-          click: () => {
-            mainWindow.webContents.send(ACTIONS.showSettings)
-          }
-        },
-        {
-          type: 'separator',
-          visible: isMac
-        },
-        {
-          label: 'New Tab',
-          accelerator: 'CmdOrCtrl+T',
-          click: () => {
-            mainWindow.webContents.send(ACTIONS.newTab)
-          }
-        },
-        {
-          label: 'Close Tab',
-          accelerator: 'CmdOrCtrl+W',
-          click: () => {
-            mainWindow.webContents.send(ACTIONS.closeTab)
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Save Request',
-          accelerator: 'CmdOrCtrl+S',
-          click: () => {
-            mainWindow.webContents.send(ACTIONS.saveRequest)
-          }
-        },
-        {
-          label: 'Save Request As',
-          accelerator: 'CmdOrCtrl+Shift+S',
-          click: () => {
-            mainWindow.webContents.send(ACTIONS.saveAsRequest)
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Exit',
-          accelerator: 'CmdOrCtrl+Q',
-          role: 'quit'
-        }
-      ]
+      submenu: getFileSubmenu(mainWindow, isMac)
     },
     {
       label: 'Edit',
@@ -271,4 +208,64 @@ const toggleMenu = (mainWindow: BrowserWindow) => {
   mainWindow.setMenuBarVisibility(settings.menu)
   mainWindow.setAutoHideMenuBar(!settings.menu)
   mainWindow.webContents.send(SETTINGS.updated, settings)
+}
+
+const getFileSubmenu = (
+  mainWindow: BrowserWindow,
+  isMac: boolean
+): Array<MenuItemConstructorOptions> => {
+  const fileSubmenu: Array<MenuItemConstructorOptions> = []
+  if (isMac) {
+    fileSubmenu.push({
+      label: 'About API Calls',
+      click: () => {
+        mainWindow.webContents.send(VERSION.show)
+      }
+    })
+    fileSubmenu.push({ type: 'separator' })
+    fileSubmenu.push({
+      label: 'Settings',
+      accelerator: 'CmdOrCtrl+,',
+      click: () => {
+        mainWindow.webContents.send(ACTIONS.showSettings)
+      }
+    })
+    fileSubmenu.push({ type: 'separator' })
+  }
+  fileSubmenu.push({
+    label: 'New Tab',
+    accelerator: 'CmdOrCtrl+T',
+    click: () => {
+      mainWindow.webContents.send(ACTIONS.newTab)
+    }
+  })
+  fileSubmenu.push({
+    label: 'Close Tab',
+    accelerator: 'CmdOrCtrl+W',
+    click: () => {
+      mainWindow.webContents.send(ACTIONS.closeTab)
+    }
+  })
+  fileSubmenu.push({ type: 'separator' })
+  fileSubmenu.push({
+    label: 'Save Request',
+    accelerator: 'CmdOrCtrl+S',
+    click: () => {
+      mainWindow.webContents.send(ACTIONS.saveRequest)
+    }
+  })
+  fileSubmenu.push({
+    label: 'Save Request As',
+    accelerator: 'CmdOrCtrl+Shift+S',
+    click: () => {
+      mainWindow.webContents.send(ACTIONS.saveAsRequest)
+    }
+  })
+  fileSubmenu.push({ type: 'separator' })
+  fileSubmenu.push({
+    label: 'Exit',
+    accelerator: 'CmdOrCtrl+Q',
+    role: 'quit'
+  })
+  return fileSubmenu
 }
