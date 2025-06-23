@@ -402,7 +402,7 @@ export default function RequestContextProvider({
       .filter((queryParam: KeyValue) => queryParam.enabled)
       .map((queryParam: KeyValue) => {
         return {
-          name: queryParam.name,
+          name: getValue(queryParam.name),
           value: getValue(queryParam.value || ''),
           enabled: queryParam.enabled
         } as KeyValue
@@ -745,7 +745,7 @@ export default function RequestContextProvider({
       })
     }
     if (requestBody && requestMethod.body) {
-      curl += ` -d '${requestBody}'`
+      curl += `\\\n  -d '${getBody(requestBody)}'`
     }
     navigator.clipboard.writeText(curl)
     application.notify({ message: 'cURL command copied to clipboard' })
