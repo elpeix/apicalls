@@ -104,10 +104,13 @@
         & > .url {
           color: var(--base-color);
           flex-grow: 1;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
 
-        & > .log-time {
-          color: var(--console-color);
+        & > .time {
+          white-space: nowrap;
         }
       }
 

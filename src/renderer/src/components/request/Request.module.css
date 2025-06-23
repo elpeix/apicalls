@@ -217,7 +217,7 @@
   }
 
   .select {
-    max-width: 10rem;
+    width: 6rem;
   }
 
   .basicAuth {
@@ -237,6 +237,7 @@
     flex-grow: 1;
     border: 1px solid var(--border-color);
     padding: 0.5rem;
+    width: calc(100% - 7rem);
   }
 }
 
