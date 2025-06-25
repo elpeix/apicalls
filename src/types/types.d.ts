@@ -326,6 +326,7 @@ type RequestContextType = {
   getEditorState: (type: 'request' | 'response') => string
   getRequestEnvironment: () => Environment | null
   copyAsCurl: () => void
+  pasteCurl: (curl: string) => void
 }
 
 type AppTheme = {

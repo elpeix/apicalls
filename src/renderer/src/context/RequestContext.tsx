@@ -10,6 +10,7 @@ import {
 import { useConsole } from '../hooks/useConsole'
 import { getBody, getContentType, getValueFromPath } from '../lib/utils'
 import { getGeneralDefaultUserAgent } from '../../../lib/defaults'
+import { parseCurl } from '../lib/curl'
 
 const responseInitialValue: RequestResponseType = {
   body: '',
@@ -34,7 +35,8 @@ export const RequestContext = createContext<RequestContextType>({
   getEditorState: () => '',
   requestConsole: null,
   getRequestEnvironment: () => null,
-  copyAsCurl: () => {}
+  copyAsCurl: () => {},
+  pasteCurl: () => {}
 })
 
 export default function RequestContextProvider({
@@ -751,6 +753,19 @@ export default function RequestContextProvider({
     application.notify({ message: 'cURL command copied to clipboard' })
   }
 
+  const pasteCurl = (curlCommand: string) => {
+    const requestBase = parseCurl(curlCommand)
+    if (!requestBase) {
+      application.notify({ message: 'Invalid cURL command' })
+      return
+    }
+
+    setRequestMethod(requestBase.method)
+    setRequestUrl(requestBase.url)
+    setRequestHeaders(requestBase.headers || [])
+    setRequestBody(requestBase.body || 'none')
+  }
+
   const contextValue = {
     path: path || [],
     isActive: tab.active,
@@ -803,7 +818,8 @@ export default function RequestContextProvider({
     setEditorState,
     getEditorState,
     getRequestEnvironment,
-    copyAsCurl
+    copyAsCurl,
+    pasteCurl
   }
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>

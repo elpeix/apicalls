@@ -4,7 +4,7 @@ import { RequestContext } from '../../context/RequestContext'
 import Autocompleter from '../base/Autocompleter/Autocompleter'
 
 export default function RequestUrl() {
-  const { request } = useContext(RequestContext)
+  const { request, pasteCurl } = useContext(RequestContext)
   const urlRef = useRef<HTMLInputElement>(null)
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState(request?.urlIsValid({}))
@@ -40,8 +40,17 @@ export default function RequestUrl() {
     request.setFullUrl(value)
   }
 
-  const getClassName = () =>
-    `${styles.url} ${url.length && (urlError || !paramsAreValid) ? styles.error : ''}`
+  const getClassName = () => {
+    return `${styles.url} ${url.length && (urlError || !paramsAreValid) ? styles.error : ''}`
+  }
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const value = e.clipboardData.getData('text/plain')
+    if (value.startsWith('curl ')) {
+      e.preventDefault()
+      pasteCurl(value)
+    }
+  }
 
   return (
     <Autocompleter
@@ -50,6 +59,7 @@ export default function RequestUrl() {
       value={url}
       onChange={handleUrlChange}
       onBlur={handleUrlBlur}
+      onPaste={handlePaste}
       placeholder="Enter URL..."
       offsetX={-11}
       offsetY={11}

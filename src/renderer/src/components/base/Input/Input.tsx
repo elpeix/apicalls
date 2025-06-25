@@ -14,6 +14,7 @@ export default function Input({
   onBlur,
   onKeyUp,
   onKeyDown,
+  onPaste = () => {},
   placeholder,
   fontSize = 14,
   autoFocus = false,
@@ -31,6 +32,7 @@ export default function Input({
   onBlur?: (value: string) => void
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void
   placeholder?: string
   fontSize?: number
   autoFocus?: boolean
@@ -144,6 +146,7 @@ export default function Input({
           onBlur={handleBlur}
           onKeyUp={onKeyUp}
           onKeyDown={onKeyDown}
+          onPaste={onPaste}
           value={internalValue}
           style={style}
           autoFocus={autoFocus}

@@ -32,7 +32,7 @@ export default function MethodSelect({
         }
       }}
       onChange={onChange}
-      defaultValue={method}
+      value={method}
       isClearable={false}
       isSearchable={false}
       unstyled={true}

@@ -18,6 +18,7 @@ export default function Autocompleter({
   onBlur,
   onKeyUp,
   onKeyDown,
+  onPaste = () => {},
   fontSize = 14,
   autoFocus = false,
   offsetX = 0,
@@ -35,6 +36,7 @@ export default function Autocompleter({
   onBlur?: (value: string) => void
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  onPaste?: (e: React.ClipboardEvent<HTMLInputElement>) => void
   fontSize?: number
   autoFocus?: boolean
   offsetX?: number
@@ -333,6 +335,7 @@ export default function Autocompleter({
         onKeyUp={onKeyUp}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        onPaste={onPaste}
         autoFocus={autoFocus}
         fontSize={fontSize}
         highlightVars={true}
