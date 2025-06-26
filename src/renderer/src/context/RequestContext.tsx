@@ -763,6 +763,7 @@ export default function RequestContextProvider({
     setRequestMethod(requestBase.method)
     setRequestUrl(requestBase.url)
     setRequestHeaders(requestBase.headers || [])
+    setQueryParams(requestBase.queryParams || [])
     setRequestBody(requestBase.body || 'none')
   }
 
