@@ -45,4 +45,5 @@ appImage:
 npmRebuild: false
 publish:
   provider: generic
-  url: https://example.com/auto-updates
+  url: https://github.com/elpeix/apicalls/releases/download/v0.12.0/
+  channel: latest
