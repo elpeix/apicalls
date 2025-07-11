@@ -497,3 +497,5 @@ type MoveAction = {
   to: PathItem[]
   after?: Identifier
 }
+
+type ImportExportFormat = 'JSON' | 'OpenAPI' | 'Postman'

@@ -28,7 +28,10 @@ export const COLLECTIONS = {
   importFailure: 'collections:import-failure',
   importCanceled: 'collections:import-canceled',
   importProgress: 'collections:import-progress',
-  importResult: 'collections:import-result'
+  importResult: 'collections:import-result',
+  export: 'collections:export',
+  exportFailure: 'collections:export-failure',
+  exportResult: 'collections:export-result'
 }
 
 export const REQUEST = {

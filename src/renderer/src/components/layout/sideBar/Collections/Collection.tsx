@@ -17,6 +17,7 @@ import PreRequestEditor from './PreRequest/PreRequestEditor'
 import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
+import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
 
 export default function Collection({
   collection,
@@ -81,6 +82,14 @@ export default function Collection({
     }
     setEnvironmentName(environment.name || 'unnamed')
   }, [coll.environmentId, environments])
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(COLLECTIONS.exportFailure, (_: unknown, { message }: { message: string }) => {
+      application.showAlert({ message })
+    })
+    return () => ipcRenderer?.removeAllListeners(COLLECTIONS.exportFailure)
+  }, [])
 
   const handleCreateFolder = () => {
     setShowMenu(false)
@@ -222,6 +231,16 @@ export default function Collection({
     collections?.setEnvironmentId(coll.id, environmentId)
   }
 
+  const exportToOpenAPI = () => {
+    setShowMenu(false)
+    window.electron?.ipcRenderer.send(COLLECTIONS.export, coll.id, 'OpenAPI')
+  }
+
+  const exportToPostman = () => {
+    setShowMenu(false)
+    window.electron?.ipcRenderer.send(COLLECTIONS.export, coll.id, 'Postman')
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -299,6 +318,11 @@ export default function Collection({
                 disabled={filter !== ''}
                 onClick={() => toggleCollection(false)}
               />
+              <MenuSeparator />
+              <SubMenu title="Export" leftOffset={147} icon="save">
+                <MenuElement showIcon={false} title="OpenAPI (Beta)" onClick={exportToOpenAPI} />
+                <MenuElement showIcon={false} title="Postman (Beta)" onClick={exportToPostman} />
+              </SubMenu>
               <MenuSeparator />
               <MenuElement
                 icon="delete"
