@@ -59,4 +59,15 @@ describe('CollectionExporter', () => {
     expect(openApi.paths['/users/{id}'].get.summary).toBe('Get User By Id')
     expect(openApi.paths['/users/{id}'].get.parameters[0].name).toBe('id')
   })
+
+  it('exportToPostman returns a valid Postman collection JSON', () => {
+    const exporter = new CollectionExporter(mockCollection)
+    const postmanJson = exporter.exportToPostman()
+    const postmanCollection = JSON.parse(postmanJson)
+    expect(postmanCollection.info.name).toBe('Test Collection')
+    expect(postmanCollection.item[0].name).toBe('Get Users')
+    expect(postmanCollection.item[0].request.method).toBe('GET')
+    expect(postmanCollection.item[1].name).toBe('User Folder')
+    expect(postmanCollection.item[1].item[0].name).toBe('Get User By Id')
+  })
 })

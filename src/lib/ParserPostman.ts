@@ -1,29 +1,11 @@
+import { PostmanCollection, PostmanItem, PostmanRequest } from './ImportExportTypes'
 import { ParserCollection } from './ParserCollection'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export type PostmanRequest = {
-  method: string
-  url: { raw: string; protocol?: string; host?: string[]; query?: string } | string
-  header?: any[]
-  body?: { raw: string }
-}
-
-export type PostmanItem = {
-  id?: string
-  name: string
-  item?: PostmanItem[]
-  request?: PostmanRequest | string
-}
-
-export type PostmanCollection = {
-  info: { _postman_id?: string; name: string; schema?: string }
-  item: PostmanItem[]
-}
 
 export class ParserPostman extends ParserCollection {
   count: number = 0
   id: Identifier = ''
   // @Override (classic man)
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   public parse(data: any): Collection {
     if (!data || !data.item) {
       throw Error('Invalid collection')

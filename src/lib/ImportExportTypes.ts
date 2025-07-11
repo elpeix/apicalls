@@ -43,3 +43,45 @@ export type OpenApiType = {
     }
   }
 }
+
+export type PostmanQuery = {
+  key: string | null
+  value: string | null
+  description?: string
+  disabled?: boolean
+}
+
+export type PostmanUrl = {
+  raw: string
+  protocol?: string
+  host?: string[]
+  path?: string[]
+  query?: PostmanQuery[]
+  variable?: Array<{ key: string; value: string; description?: string }>
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export type PostmanRequest = {
+  method: string
+  url: PostmanUrl
+  header?: any[]
+  body?: { raw: string }
+}
+
+export type PostmanItem = {
+  id?: string
+  name: string
+  description?: string
+  item?: PostmanItem[]
+  request?: PostmanRequest | string
+}
+
+export type PostmanCollection = {
+  info: {
+    _postman_id?: string
+    name: string
+    description?: string
+    schema?: string
+  }
+  item: PostmanItem[]
+}
