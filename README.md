@@ -65,4 +65,4 @@ npm run build:win
 
 ## Documentation - Usage
 
-TODO - I will add the documentation soon.
+TODO - I will add the documentation some day.
