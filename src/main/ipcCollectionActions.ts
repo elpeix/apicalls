@@ -2,6 +2,8 @@ import { dialog, ipcMain } from 'electron'
 import CollectionImporter from '../lib/CollectionImporter'
 import { COLLECTIONS } from '../lib/ipcChannels'
 import { workspaces } from '.'
+import CollectionExporter from '../lib/CollectionExporter'
+import fs from 'fs'
 
 const COLLECTIONS_KEY = 'collections'
 
@@ -80,4 +82,55 @@ ipcMain.on(COLLECTIONS.import, async (event) => {
       event.reply(COLLECTIONS.importFailure, errorMessage)
     }
   })
+})
+
+ipcMain.on(COLLECTIONS.export, (event, collectionId: Identifier, format: ImportExportFormat) => {
+  const store = workspaces.getStore()
+  const collections = store.get(COLLECTIONS_KEY, []) as Collection[]
+  const collection = collections.find((c) => c.id === collectionId)
+  if (!collection) {
+    const message = 'Collection not found. Please select a valid collection to export.'
+    event.reply(COLLECTIONS.exportFailure, { collectionId, format, message })
+    return
+  }
+
+  try {
+    const collectionExporter = new CollectionExporter(collection)
+
+    let result = ''
+
+    if (format === 'Postman') {
+      result = collectionExporter.exportToPostman()
+    } else if (format === 'OpenAPI') {
+      result = collectionExporter.exportToOpenAPI()
+    }
+
+    if (!result) {
+      throw new Error('Export result is empty')
+    }
+
+    const dialogOptions: Electron.SaveDialogSyncOptions = {
+      title: `Export ${format} Collection`,
+      defaultPath: `${collection.name}.json`,
+      filters: [{ name: 'JSON', extensions: ['json'] }]
+    }
+
+    const filePath = dialog.showSaveDialogSync(dialogOptions)
+    console.log(`Exporting ${format} to:`, filePath)
+    if (!filePath) {
+      return
+    }
+
+    fs.writeFileSync(filePath, result, 'utf-8')
+  } catch (error) {
+    console.error(error)
+    let errorMessage = `Can not export collection to ${format}`
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    event.reply(COLLECTIONS.exportFailure, { collectionId, format, errorMessage })
+    return
+  }
+
+  event.reply(COLLECTIONS.exportResult, { collectionId, format })
 })

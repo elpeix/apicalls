@@ -19,6 +19,6 @@ export abstract class ParserCollection {
   }
 
   protected getPathParams(path: string): KeyValue[] {
-    return getPathParamsFromUrl(path)
+    return getPathParamsFromUrl(path, [])
   }
 }

@@ -45,6 +45,7 @@ type RequestType = {
   type: 'draft' | 'history' | 'collection'
   id: Identifier
   name?: string
+  description?: string
   date?: string
   request: RequestBase
 }
@@ -103,6 +104,7 @@ type CollectionFolder = {
 type Collection = {
   id: Identifier
   name: string
+  description?: string
   preRequest?: PreRequest
   elements: (CollectionFolder | RequestType)[]
   environmentId?: Identifier
@@ -495,3 +497,5 @@ type MoveAction = {
   to: PathItem[]
   after?: Identifier
 }
+
+type ImportExportFormat = 'JSON' | 'OpenAPI' | 'Postman'
