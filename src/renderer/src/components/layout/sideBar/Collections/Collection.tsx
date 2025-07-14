@@ -18,6 +18,7 @@ import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
+import PromptTextArea from '../../../base/PopupBoxes/PromptTextArea'
 
 export default function Collection({
   collection,
@@ -241,6 +242,26 @@ export default function Collection({
     window.electron?.ipcRenderer.send(COLLECTIONS.export, coll.id, 'Postman')
   }
 
+  const editDescription = () => {
+    setShowMenu(false)
+    application.showDialog({
+      children: (
+        <PromptTextArea
+          initialValue={coll.description}
+          message="Edit notes for the collection"
+          placeholder=""
+          onConfirm={(description: string) => {
+            update({ ...coll, description })
+            application.hideDialog()
+          }}
+          onCancel={() => application.hideDialog()}
+        />
+      ),
+      preventKeyClose: true,
+      fullWidth: true
+    })
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -323,6 +344,8 @@ export default function Collection({
                 <MenuElement showIcon={false} title="OpenAPI (Beta)" onClick={exportToOpenAPI} />
                 <MenuElement showIcon={false} title="Postman (Beta)" onClick={exportToPostman} />
               </SubMenu>
+              <MenuSeparator />
+              <MenuElement icon="notes" title="Notes" onClick={editDescription} />
               <MenuSeparator />
               <MenuElement
                 icon="delete"

@@ -17,6 +17,7 @@ export class ParserPostman extends ParserCollection {
       return {
         id: data.info._postman_id || this.id,
         name: data.info.name,
+        description: data.info.description || '',
         elements: this.parseItems(data.item)
       }
     } catch (error) {

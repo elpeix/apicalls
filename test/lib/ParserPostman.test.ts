@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { ParserPostman, PostmanCollection, PostmanRequest } from '../../src/lib/ParserPostman'
+import { ParserPostman } from '../../src/lib/ParserPostman'
+import { PostmanCollection, PostmanRequest } from '../../src/lib/ImportExportTypes'
 
 describe('ParserPostman tests', () => {
   it('should thow an error if data is null', () => {
@@ -18,6 +19,7 @@ describe('ParserPostman tests', () => {
 
     expect(collection.id).toBeDefined()
     expect(collection.name).toBe('Test collection')
+    expect(collection.description).toBe('Test collection description')
     expect(collection.elements).toHaveLength(1)
 
     const element = collection.elements[0]
@@ -360,6 +362,7 @@ const getSimpleCollection = ({
     info: {
       _postman_id: postmanId,
       name: 'Test collection',
+      description: 'Test collection description',
       schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
     },
     item: [
