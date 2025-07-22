@@ -318,6 +318,7 @@ type RequestContextType = {
   fetching: boolean
   fetched: FetchedType
   fetchError: string
+  fetchErrorCause: string
   response: RequestResponseType
   save: () => void
   requestConsole?: ConsoleHookType | null

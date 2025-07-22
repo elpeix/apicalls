@@ -29,6 +29,7 @@ export const RequestContext = createContext<RequestContextType>({
   fetching: false,
   fetched: false,
   fetchError: '',
+  fetchErrorCause: '',
   response: responseInitialValue,
   save: () => {},
   setEditorState: () => {},
@@ -84,6 +85,7 @@ export default function RequestContextProvider({
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState<FetchedType>(tab.response ? 'old' : false)
   const [fetchError, setFetchError] = useState('')
+  const [fetchErrorCause, setFetchErrorCause] = useState('')
   const [response, setResponse] = useState<RequestResponseType>(
     tab.response || responseInitialValue
   )
@@ -154,6 +156,7 @@ export default function RequestContextProvider({
     setFetching(true)
     setFetched(false)
     setFetchError('')
+    setFetchErrorCause('')
 
     if (preRequestData && preRequestData.active) {
       sendPreRequest()
@@ -224,7 +227,7 @@ export default function RequestContextProvider({
         setFetching(false)
         setFetched(true)
         setFetchError(response.message)
-        console.error(response.cause)
+        setFetchErrorCause(response.cause ? response.cause.toString() : '')
         requestConsole?.addAll([
           ...requestLogs,
           {
@@ -817,6 +820,7 @@ export default function RequestContextProvider({
     fetching,
     fetched,
     fetchError,
+    fetchErrorCause,
     response: response,
     save: saveRequest,
     saved,

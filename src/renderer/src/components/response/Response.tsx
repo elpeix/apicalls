@@ -16,6 +16,7 @@ export default function Response() {
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState<FetchedType>(false)
   const [fetchError, setFetchError] = useState('')
+  const [fetchErrorCause, setFetchErrorCause] = useState('')
   const [headers, setHeaders] = useState<KeyValue[]>([])
 
   const [showRaw, setShowRaw] = useState(true)
@@ -29,6 +30,7 @@ export default function Response() {
     setFetching(context.fetching)
     setFetched(context.fetched)
     setFetchError(context.fetchError)
+    setFetchErrorCause(context.fetchErrorCause)
     setHeaders(context.response.headers)
     setRawValue(context.response.body)
     setParsedValue(formatSource(context.response.body))
@@ -123,6 +125,12 @@ export default function Response() {
               <span className={styles.errorMessageTitle}>Message:</span>
               <span className={styles.errorMessageDetails}>{fetchError}</span>
             </div>
+            {fetchErrorCause && (
+              <div className={styles.message}>
+                <span className={styles.errorMessageTitle}>Cause:</span>
+                <span className={styles.errorMessageDetails}>{fetchErrorCause}</span>
+              </div>
+            )}
           </div>
         </div>
       )}

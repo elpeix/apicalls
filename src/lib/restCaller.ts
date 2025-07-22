@@ -82,7 +82,7 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       responseHeaders: headers
     } as CallResponse
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Rest call error'
+    const message = 'Rest call error'
     const response = {
       id,
       result: String(error),
