@@ -133,136 +133,160 @@ export default function Settings() {
       </div>
       <div className={`sidePanel-content ${styles.content}`} ref={scrollContainerRef}>
         <div className={styles.main}>
-          <div className={styles.group}>
-            <label htmlFor="theme">Theme</label>
-            <SimpleSelect
-              value={settings.theme}
-              onChange={(e) => changeSettings({ ...settings, theme: getThemeName(e.target.value) })}
-              options={opThemes}
-              groupBy="mode"
-            />
-          </div>
-
-          {!window.api.os.isMac && (
+          <div className={styles.section}>
+            <div className={styles.subTitle}>Appearance</div>
             <div className={styles.group}>
-              <label htmlFor="windowMode">Window view (requires restart)</label>
+              <label htmlFor="theme">Theme</label>
               <SimpleSelect
-                value={settings.windowMode}
-                onChange={(e) => {
-                  changeSettings({ ...settings, windowMode: getWindowMode(e.target.value) })
-                  restartApplication()
-                }}
-                options={windowModeOptions}
+                value={settings.theme}
+                onChange={(e) =>
+                  changeSettings({ ...settings, theme: getThemeName(e.target.value) })
+                }
+                options={opThemes}
+                groupBy="mode"
               />
             </div>
-          )}
 
-          <div className={styles.group}>
-            <label htmlFor="requestView">Request view</label>
-            <SimpleSelect
-              value={settings.requestView}
-              onChange={(e) =>
-                changeSettings({ ...settings, requestView: getRequestView(e.target.value) })
-              }
-              options={requestViewOptions}
-            />
+            {!window.api.os.isMac && (
+              <div className={styles.group}>
+                <label htmlFor="windowMode">Window view (requires restart)</label>
+                <SimpleSelect
+                  value={settings.windowMode}
+                  onChange={(e) => {
+                    changeSettings({ ...settings, windowMode: getWindowMode(e.target.value) })
+                    restartApplication()
+                  }}
+                  options={windowModeOptions}
+                />
+              </div>
+            )}
+
+            <div className={styles.group}>
+              <label htmlFor="requestView">Request view</label>
+              <SimpleSelect
+                value={settings.requestView}
+                onChange={(e) =>
+                  changeSettings({ ...settings, requestView: getRequestView(e.target.value) })
+                }
+                options={requestViewOptions}
+              />
+            </div>
+            {!window.api.os.isMac && settings.windowMode === 'native' && (
+              <div className={styles.switchRow}>
+                <Switch
+                  text="Show menu"
+                  active={settings.menu}
+                  onChange={(active) => changeSettings({ ...settings, menu: active })}
+                />
+              </div>
+            )}
           </div>
-          <div className={styles.group}>
-            <label htmlFor="maxHistory">Max History</label>
-            <input
-              id="maxHistory"
-              type="number"
-              value={settings.maxHistory}
-              min={3}
-              max={100}
-              placeholder="100"
-              onChange={(e) => changeSettings({ ...settings, maxHistory: Number(e.target.value) })}
-            />
-          </div>
-          <div className={styles.group}>
-            <label htmlFor="timeout">Timeout</label>
-            <input
-              id="timeout"
-              type="number"
-              min={1}
-              max={10000}
-              value={settings.timeout}
-              placeholder="1000"
-              onChange={(e) => changeSettings({ ...settings, timeout: Number(e.target.value) })}
-            />
-          </div>
-          <div className={styles.switchRow}>
-            <Switch
-              text="Manage cookies"
-              active={settings.manageCookies}
-              onChange={(active) => changeSettings({ ...settings, manageCookies: active })}
-            />
-          </div>
-          <div className={styles.switchRow}>
-            <Switch
-              text="Save last response"
-              active={settings.saveLastResponse}
-              onChange={(active) => {
-                changeSettings({ ...settings, saveLastResponse: active })
-              }}
-            />
-          </div>
-          {!window.api.os.isMac && settings.windowMode === 'native' && (
+
+          <div className={styles.section}>
+            <div className={styles.subTitle}>Behavior</div>
             <div className={styles.switchRow}>
               <Switch
-                text="Show menu"
-                active={settings.menu}
-                onChange={(active) => changeSettings({ ...settings, menu: active })}
+                text="Scroll to active request"
+                active={settings.scrollToActiveRequest}
+                onChange={(active) => {
+                  changeSettings({ ...settings, scrollToActiveRequest: active })
+                }}
               />
             </div>
-          )}
-          <div className={styles.switchRow}>
-            <Switch
-              text="Scroll to active request"
-              active={settings.scrollToActiveRequest}
-              onChange={(active) => {
-                changeSettings({ ...settings, scrollToActiveRequest: active })
-              }}
-            />
+            <div className={styles.switchRow}>
+              <Switch
+                text="Confirm close unsaved tabs"
+                active={settings.confirmCloseUnsavedTab ?? true}
+                onChange={(active) => {
+                  changeSettings({ ...settings, confirmCloseUnsavedTab: active })
+                }}
+              />
+            </div>
+            <div className={styles.switchRow}>
+              <Switch
+                text="Show notifications"
+                active={settings.showNotification ?? true}
+                onChange={(active) => {
+                  changeSettings({ ...settings, showNotification: active })
+                }}
+              />
+            </div>
+            <div className={styles.switchRow}>
+              <Switch
+                text="Manage cookies"
+                active={settings.manageCookies}
+                onChange={(active) => changeSettings({ ...settings, manageCookies: active })}
+              />
+            </div>
+            <div className={styles.switchRow}>
+              <Switch
+                text="Save last response"
+                active={settings.saveLastResponse}
+                onChange={(active) => {
+                  changeSettings({ ...settings, saveLastResponse: active })
+                }}
+              />
+            </div>
+            <div className={styles.group}>
+              <label htmlFor="maxHistory">Max History</label>
+              <input
+                id="maxHistory"
+                type="number"
+                value={settings.maxHistory}
+                min={3}
+                max={100}
+                placeholder="100"
+                onChange={(e) =>
+                  changeSettings({ ...settings, maxHistory: Number(e.target.value) })
+                }
+              />
+            </div>
           </div>
-          <div className={styles.switchRow}>
-            <Switch
-              text="Confirm close unsaved tabs"
-              active={settings.confirmCloseUnsavedTab ?? true}
-              onChange={(active) => {
-                changeSettings({ ...settings, confirmCloseUnsavedTab: active })
-              }}
-            />
-          </div>
-          <div className={styles.switchRow}>
-            <Switch
-              text="Show notifications"
-              active={settings.showNotification ?? true}
-              onChange={(active) => {
-                changeSettings({ ...settings, showNotification: active })
-              }}
-            />
-          </div>
-          <div className={styles.group}>
-            <label>Default headers</label>
-            <Params
-              items={settings.defaultHeaders || []}
-              onSave={(headers) => {
-                changeSettings({ ...settings, defaultHeaders: headers })
-              }}
-              onAdd={addHeader}
-              maxNameSize={240}
-              minNameSize={60}
-              defaultNameSize={90}
-              helperValues={defaultHttpHeaders}
-              bulkMode={true}
-              draggable={true}
-              dragFormat="settings"
-              addCaption="Add header"
-              removeCaption="Remove header"
-              className={styles.defaultHeaders}
-              scrollContainerRef={scrollContainerRef}
-            />
+
+          <div className={styles.section}>
+            <div className={styles.subTitle}>Network</div>
+            <div className={styles.group}>
+              <label htmlFor="timeout">Timeout</label>
+              <input
+                id="timeout"
+                type="number"
+                min={1}
+                max={10000}
+                value={settings.timeout}
+                placeholder="1000"
+                onChange={(e) => changeSettings({ ...settings, timeout: Number(e.target.value) })}
+              />
+            </div>
+            <div className={styles.switchRow}>
+              <Switch
+                text="Reject unauthorized SSL"
+                active={settings.rejectUnauthorized ?? true}
+                onChange={(active) => {
+                  changeSettings({ ...settings, rejectUnauthorized: active })
+                }}
+              />
+            </div>
+            <div className={styles.group}>
+              <label>Default headers</label>
+              <Params
+                items={settings.defaultHeaders || []}
+                onSave={(headers) => {
+                  changeSettings({ ...settings, defaultHeaders: headers })
+                }}
+                onAdd={addHeader}
+                maxNameSize={240}
+                minNameSize={60}
+                defaultNameSize={90}
+                helperValues={defaultHttpHeaders}
+                bulkMode={true}
+                draggable={true}
+                dragFormat="settings"
+                addCaption="Add header"
+                removeCaption="Remove header"
+                className={styles.defaultHeaders}
+                scrollContainerRef={scrollContainerRef}
+              />
+            </div>
           </div>
         </div>
       </div>
