@@ -119,7 +119,10 @@ export default function Response() {
         <div className={styles.error}>
           <div className={styles.content}>
             <div className={styles.title}>Error</div>
-            <div className={styles.message}>{fetchError}</div>
+            <div className={styles.message}>
+              <span className={styles.errorMessageTitle}>Message:</span>
+              <span className={styles.errorMessageDetails}>{fetchError}</span>
+            </div>
           </div>
         </div>
       )}

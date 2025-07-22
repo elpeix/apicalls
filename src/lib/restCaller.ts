@@ -1,3 +1,4 @@
+import { fetch, Agent, RequestInit, setGlobalDispatcher } from 'undici'
 import { RestCallerError } from './RestCallerError'
 import { getSettings } from './settings'
 
@@ -17,12 +18,6 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
     const abortController = new AbortController()
     abortControllers.set(id, abortController)
     const settings = getSettings()
-    if (settings.timeout > 0) {
-      setTimeout(() => {
-        abortController.abort()
-        abortControllers.delete(id)
-      }, settings.timeout)
-    }
 
     let path = request.url
     const queryParams = new URLSearchParams()
@@ -44,6 +39,18 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
     if (request.body && request.method.body) {
       requestInit.body = request.body
     }
+
+    const agent = new Agent({
+      keepAliveMaxTimeout: settings.timeout + 1000,
+      bodyTimeout: settings.timeout,
+      connectTimeout: settings.timeout,
+      connect: {
+        rejectUnauthorized: settings.rejectUnauthorized ?? true
+      }
+    })
+
+    setGlobalDispatcher(agent)
+
     const response = await fetch(path, requestInit)
     const requestTime = Date.now() - initTime
     const dataTime = Date.now()
@@ -75,7 +82,28 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       responseHeaders: headers
     } as CallResponse
   } catch (error) {
-    const err = new RestCallerError('Rest call error', request, null)
+    const message = error instanceof Error ? error.message : 'Rest call error'
+    const response = {
+      id,
+      result: String(error),
+      status: {
+        code: 999,
+        text: 'Internal Server Error'
+      },
+      contentLength: 0,
+      responseTime: {
+        all: 0,
+        data: 0,
+        response: 0
+      },
+      responseHeaders: []
+    } as CallResponse
+    const err = new RestCallerError(
+      message,
+      request,
+      response,
+      error instanceof Error ? error : null
+    )
     if (error instanceof Error) {
       err.stack = error.stack
     }

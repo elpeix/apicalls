@@ -62,10 +62,14 @@ const requestHandler = async (id: Identifier, callRequest: CallRequest, event: I
     event.reply(getChannel(REQUEST.response, id), response)
   } catch (error: unknown) {
     const restCallerError = error as RestCallerError
+    const cause = restCallerError.error?.cause
+
     event.reply(getChannel(REQUEST.failure, id), {
       message: restCallerError.message,
       request: restCallerError.request,
-      response: restCallerError.response
+      response: restCallerError.response,
+      error: restCallerError.error,
+      cause: cause instanceof Error ? cause.message : String(cause)
     } as CallResponseFailure)
   }
 }

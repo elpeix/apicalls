@@ -177,7 +177,9 @@ export default function RequestContextProvider({
       body: requestBody === 'none' || requestBody === '' ? undefined : getBody(requestBody)
     }
     tab.response = undefined
+
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
+
     window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       setFetched(true)
@@ -222,6 +224,7 @@ export default function RequestContextProvider({
         setFetching(false)
         setFetched(true)
         setFetchError(response.message)
+        console.error(response.cause)
         requestConsole?.addAll([
           ...requestLogs,
           {
@@ -307,7 +310,9 @@ export default function RequestContextProvider({
       queryParams: prepareQueryParams(request.queryParams || []),
       body: getBody(request.body || '')
     }
+
     window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
+
     window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
       if (callResponse.id !== tabId) return
       try {
@@ -331,6 +336,7 @@ export default function RequestContextProvider({
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
       sendMainRequest([requestLog])
     })
+
     window.electron?.ipcRenderer.on(
       CHANNEL_FAILURE,
       (_: unknown, response: CallResponseFailure) => {
@@ -350,6 +356,7 @@ export default function RequestContextProvider({
         window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
       }
     )
+
     window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: number) => {
       if (requestId !== tabId) return
       setFetching(false)
@@ -366,6 +373,7 @@ export default function RequestContextProvider({
           message: 'Request was cancelled'
         } as CallResponseFailure
       })
+
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
       window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)

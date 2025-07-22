@@ -358,6 +358,7 @@ type AppSettingsType = {
   showNotification?: boolean
   defaultHeaders?: KeyValue[]
   saveLastResponse?: boolean
+  rejectUnauthorized?: boolean
 }
 
 type CallRequest = {
@@ -390,6 +391,8 @@ type CallResponseFailure = {
   message: string
   request: CallRequest
   response: CallResponse | null
+  error?: Error | null
+  cause?: string
 }
 
 type SaveRequest = {
