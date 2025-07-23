@@ -102,7 +102,6 @@
   justify-content: center;
   color: var(--response-no-content-color);
   font-size: 1rem;
-  user-select: none;
 
   & > .content {
     display: flex;
@@ -117,6 +116,7 @@
       font-weight: 500;
       font-size: 1.2rem;
       margin-bottom: 1rem;
+      user-select: none;
     }
 
     & > .message {
@@ -143,6 +143,7 @@
   padding: 3px 5px 3px 3px;
   background-color: var(--statusbar-background-color);
   color: var(--statusbar-color);
+  user-select: none;
 
   &.opened {
     border-bottom: 1px solid var(--border-color);
