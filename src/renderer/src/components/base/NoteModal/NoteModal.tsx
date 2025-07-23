@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import LinkedModal from '../linkedModal/LinkedModal'
-import styles from './NoteMoal.module.css'
+import styles from './NoteModal.module.css'
 import { useDebounce } from '../../../hooks/useDebounce'
+import Icon from '../Icon/Icon'
 
 export default function NoteModal({
   value = '',
@@ -18,7 +19,11 @@ export default function NoteModal({
   const [showModal, setShowModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const [note, setNote] = useState(value)
-  const debouncedShowModal = useDebounce(showModal, 500, 200)
+  const debouncedShowModal = useDebounce(showModal, 500, 100)
+
+  useEffect(() => {
+    setNote(value)
+  }, [value])
 
   const handleMouseOver = () => setShowModal(true)
   const handleMouseOut = () => setShowModal(false)
@@ -30,10 +35,10 @@ export default function NoteModal({
     setEditMode(true)
   }
 
-  const HandleKeyDown = (e: React.KeyboardEvent) => {
-    setNote('the note')
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value
+    onEdit(newValue)
   }
-  const handleOnChange = () => onEdit(note)
 
   if (!editable && !value) {
     return
@@ -47,25 +52,20 @@ export default function NoteModal({
       onMouseLeave={handleMouseOut}
       onClick={handleOnClick}
     >
-      <div className={styles.infoIcon}>i</div>
+      <Icon icon="file" className={styles.infoIcon} />
       {debouncedShowModal && (
         <LinkedModal
           parentRef={ref}
           className={`${styles.noteModal} fadeIn`}
-          topOffset={20}
-          leftOffset={-100}
+          topOffset={24}
+          leftOffset={10}
         >
           {editable && editMode && (
-            <textarea
-              onChange={handleOnChange}
-              onKeyDown={HandleKeyDown}
-              autoFocus
-              placeholder="Request note"
-            >
+            <textarea onChange={handleChange} autoFocus>
               {note}
             </textarea>
           )}
-          {!editMode && <div>{value}</div>}
+          {!editMode && <div className={styles.noteContent}>{value}</div>}
         </LinkedModal>
       )}
     </div>

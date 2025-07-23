@@ -6,6 +6,7 @@ import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
 import Droppable from '../../../base/Droppable/Droppable'
 import NoteModal from '../../../base/NoteModal/NoteModal'
+import PromptTextArea from '../../../base/PopupBoxes/PromptTextArea'
 
 export default function CollectionRequest({
   collectionRequest,
@@ -94,6 +95,20 @@ export default function CollectionRequest({
     addRequest({ ...request, id: Date.now().toString(), name: `${request.name} copy` })
   }
 
+  const editDescription = () => {
+    application.showDialog({
+      children: (
+        <PromptTextArea
+          value={collectionRequest.description}
+          onChange={(description: string) => {
+            collectionRequest.description = description
+            update()
+          }}
+        />
+      )
+    })
+  }
+
   return (
     <Droppable
       className={`${styles.request} ${active ? styles.requestActive : ''}`}
@@ -124,6 +139,8 @@ export default function CollectionRequest({
       >
         <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
+        <MenuSeparator />
+        <MenuElement icon="file" title="Edit description" onClick={editDescription} />
         <MenuSeparator />
         <MenuElement
           icon="delete"

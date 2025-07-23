@@ -98,4 +98,27 @@
   .collection {
     font-weight: bold;
   }
+
+  .description {
+    color: var(--base-color-semitransparent);
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.4rem;
+
+    .icon {
+      color: var(--base-color-semitransparent);
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+
+    .text {
+      font-style: italic;
+      width: auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 }

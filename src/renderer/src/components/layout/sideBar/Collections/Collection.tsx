@@ -247,18 +247,10 @@ export default function Collection({
     application.showDialog({
       children: (
         <PromptTextArea
-          initialValue={coll.description}
-          message="Edit notes for the collection"
-          placeholder=""
-          onConfirm={(description: string) => {
-            update({ ...coll, description })
-            application.hideDialog()
-          }}
-          onCancel={() => application.hideDialog()}
+          value={coll.description}
+          onChange={(description: string) => update({ ...coll, description })}
         />
-      ),
-      preventKeyClose: true,
-      fullWidth: true
+      )
     })
   }
 
@@ -345,7 +337,7 @@ export default function Collection({
                 <MenuElement showIcon={false} title="Postman (Beta)" onClick={exportToPostman} />
               </SubMenu>
               <MenuSeparator />
-              <MenuElement icon="file" title="Notes" onClick={editDescription} />
+              <MenuElement icon="file" title="Edit description" onClick={editDescription} />
               <MenuSeparator />
               <MenuElement
                 icon="delete"
