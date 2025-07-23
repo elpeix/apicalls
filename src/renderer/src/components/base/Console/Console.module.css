@@ -55,6 +55,10 @@
       flex-direction: column;
       align-items: center;
 
+      &.error {
+        background-color: var(--error-background-color);
+      }
+
       .header {
         width: 100%;
         height: 20px;
@@ -71,10 +75,13 @@
         transition: background-color 0.2s;
 
         &:hover {
-          background-color: var(--hover-background-color);
+          background-color: color-mix(in srgb, var(--hover-background-color), transparent 50%);
         }
         &.expanded {
-          background-color: var(--background-content);
+          background-color: color-mix(in srgb, var(--background-content), transparent 40%);
+        }
+        & > .status {
+          width: 1.3rem;
         }
         & > .status.ok {
           color: var(--status-200-color);
@@ -119,7 +126,7 @@
         flex-direction: column;
         gap: 0.5rem;
         padding: 0.5rem;
-        background-color: var(--background-content);
+        background-color: color-mix(in srgb, var(--background-content), transparent 40%);
         width: 100%;
 
         .title {

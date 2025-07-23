@@ -26,6 +26,7 @@
   --background-content: var(--background-0);
   --base-color: var(--foreground-0);
   --icon-color: var(--foreground-1);
+  --base-secondary-color: var(--icon-color);
   --icon-danger-color: var(--magenta);
 
   --selected-color: var(--foreground-0);

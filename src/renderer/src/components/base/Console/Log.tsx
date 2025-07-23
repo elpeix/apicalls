@@ -20,13 +20,20 @@ export default function Log({ log }: { log: RequestLog }) {
   }, [log])
 
   const stringSize = stringifySize(log.response?.contentLength || 0)
+  let className = styles.log
+  if (log.status === 999) {
+    className += ` ${styles.error}`
+  }
+
   return (
-    <div className={styles.log}>
+    <div className={className}>
       <div
         className={`${styles.header} ${expanded ? styles.expanded : ''}`}
         onClick={() => setExpanded(!expanded)}
       >
-        <div className={`${styles.status} ${styles[getStatusName(log.status)]}`}>{log.status}</div>
+        <div className={`${styles.status} ${styles[getStatusName(log.status)]}`}>
+          {log.status === 999 ? '' : log.status}
+        </div>
         <div className={`${styles.method} ${log.method}`}>{log.method}</div>
         <div className={styles.url}>{log.url}</div>
         <div className={styles.time}>{log.time} ms</div>
@@ -70,37 +77,65 @@ export default function Log({ log }: { log: RequestLog }) {
               </div>
             )}
           </div>
-          <div className={styles.title}>Response</div>
-          <div className={styles.content}>
-            <div className={styles.row}>
-              <div className={styles.label}>Status</div>
-              <div className={styles.value}>
-                {log.response?.status.code} {log.response?.status.text}
-              </div>
-            </div>
-            <div className={styles.row}>
-              <div className={styles.label}>Content length</div>
-              <div className={styles.value}>{stringSize}</div>
-            </div>
-            <div className={styles.row}>
-              <div className={styles.label}>Time</div>
-              <div className={styles.value}>{log.time} ms</div>
-            </div>
-            <div className={styles.row}>
-              <div className={styles.label}>Headers</div>
-              <div className={styles.value}>
-                {responseHeaders.map((header: KeyValue, i: number) => (
-                  <div key={`responseHeader_${i}`} className={styles.valueItem}>
-                    {header.name}: {header.value}
+          {!log.failure && (
+            <>
+              <div className={styles.title}>Response</div>
+              <div className={styles.content}>
+                <div className={styles.row}>
+                  <div className={styles.label}>Status</div>
+                  <div className={styles.value}>
+                    {log.response?.status.code} {log.response?.status.text}
                   </div>
-                ))}
+                </div>
+                <div className={styles.row}>
+                  <div className={styles.label}>Content length</div>
+                  <div className={styles.value}>{stringSize}</div>
+                </div>
+                <div className={styles.row}>
+                  <div className={styles.label}>Time</div>
+                  <div className={styles.value}>{log.time} ms</div>
+                </div>
+                <div className={styles.row}>
+                  <div className={styles.label}>Headers</div>
+                  <div className={styles.value}>
+                    {responseHeaders.map((header: KeyValue, i: number) => (
+                      <div key={`responseHeader_${i}`} className={styles.valueItem}>
+                        {header.name}: {header.value}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className={styles.row}>
+                  <div className={styles.label}>Response</div>
+                  <div className={styles.value}>{log.response?.result}</div>
+                </div>
               </div>
-            </div>
-            <div className={styles.row}>
-              <div className={styles.label}>Response</div>
-              <div className={styles.value}>{log.response?.result}</div>
-            </div>
-          </div>
+            </>
+          )}
+
+          {log.failure && (
+            <>
+              <div className={styles.title}>Error</div>
+              <div className={styles.content}>
+                <div className={styles.row}>
+                  <div className={styles.label}>Error</div>
+                  <div className={styles.value}>{log.failure.message}</div>
+                </div>
+                {log.failure.error && (
+                  <div className={styles.row}>
+                    <div className={styles.label}>Error details</div>
+                    <div className={styles.value}>{log.failure.error.stack}</div>
+                  </div>
+                )}
+                {log.failure.cause && (
+                  <div className={styles.row}>
+                    <div className={styles.label}>Cause</div>
+                    <div className={styles.value}>{log.failure.cause}</div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

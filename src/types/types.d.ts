@@ -318,6 +318,7 @@ type RequestContextType = {
   fetching: boolean
   fetched: FetchedType
   fetchError: string
+  fetchErrorCause: string
   response: RequestResponseType
   save: () => void
   requestConsole?: ConsoleHookType | null
@@ -358,6 +359,7 @@ type AppSettingsType = {
   showNotification?: boolean
   defaultHeaders?: KeyValue[]
   saveLastResponse?: boolean
+  rejectUnauthorized?: boolean
 }
 
 type CallRequest = {
@@ -390,6 +392,8 @@ type CallResponseFailure = {
   message: string
   request: CallRequest
   response: CallResponse | null
+  error?: Error | null
+  cause?: string
 }
 
 type SaveRequest = {

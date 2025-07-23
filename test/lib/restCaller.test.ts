@@ -1,3 +1,4 @@
+import { fetch, Response } from 'undici'
 import { describe, it, expect, vi, assert, afterEach } from 'vitest'
 import { restCall } from '../../src/lib/restCaller'
 
@@ -7,6 +8,14 @@ vi.mock('../../src/lib/settings.ts', () => {
     getSettings: () => {
       return { timeout: 1000 }
     }
+  }
+})
+
+vi.mock('undici', () => {
+  return {
+    fetch: vi.fn(),
+    Agent: vi.fn(),
+    setGlobalDispatcher: vi.fn()
   }
 })
 
@@ -21,13 +30,12 @@ describe('restCaller', () => {
   const CONTENT_LENGTH = 1234
 
   it('should return a CallResponse object', async () => {
-    const stubFetch = vi.fn()
-    global.fetch = stubFetch
+    const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>
 
     const headers: Headers = new Headers()
     headers.set('Content-Type', 'application/json')
     headers.set('Content-Length', CONTENT_LENGTH.toString())
-    stubFetch.mockResolvedValue({
+    mockFetch.mockResolvedValue({
       ok: true,
       status: STATUS_CODE,
       statusText: STATUS_TEXT,
@@ -77,10 +85,8 @@ describe('restCaller', () => {
   }
 
   it('has a fetch error', async () => {
-    const stubFetch = vi.fn()
-    global.fetch = stubFetch
-
-    stubFetch.mockRejectedValue(new Error('Network error'))
+    const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>
+    mockFetch.mockRejectedValue(new Error('Network error'))
     try {
       await restCall(1, { url: 'https://apicalls.dev/get' })
       assert.fail('should throw an error')
@@ -95,8 +101,7 @@ describe('restCaller', () => {
   })
 
   it('should be success on POST request ', async () => {
-    const mockFetch = vi.fn(fetch)
-    global.fetch = mockFetch
+    const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>
 
     mockFetch.mockReturnValue(
       new Promise((resolve, _) => {
@@ -131,6 +136,9 @@ describe('restCaller', () => {
     } catch (_error) {
       assert.fail('should not throw an error')
     }
+
+    expect(mockFetch).toHaveBeenCalled()
+
     const url = mockFetch.mock.calls[0][0]
     const requestInit = mockFetch.mock.calls[0][1]
 
