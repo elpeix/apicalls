@@ -21,7 +21,7 @@
       flex-direction: column;
       justify-content: center;
       width: 100%;
-      gap: 1rem;
+      gap: 1.8rem;
       padding: 0 0.2rem;
 
       .section {
@@ -30,18 +30,13 @@
         justify-content: center;
         width: 100%;
         gap: 1.1rem;
-        padding: 0 0.2rem 1rem;
-        border-bottom: 1px solid var(--border-color);
+        padding: 0 0.2rem;
 
         .subTitle {
           font-size: 0.7rem;
           text-transform: uppercase;
           align-self: self-start;
           color: var(--base-secondary-color);
-        }
-
-        &.section:last-child {
-          border-bottom: none;
         }
       }
 

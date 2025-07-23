@@ -15,7 +15,7 @@ export default function ResponseStatus({
   const { fetched, response } = useContext(RequestContext)
 
   const [textSize, setTextSize] = useState('0 bytes')
-  const [requestFetched, setRequestFetched] = useState(false)
+  const [requestFetched, setRequestFetched] = useState<FetchedType>(false)
   const [status, setStatus] = useState(0)
   const [time, setTime] = useState(0)
   const [size, setSize] = useState(0)
@@ -31,6 +31,8 @@ export default function ResponseStatus({
     setTextSize(stringifySize(size))
   }, [size])
 
+  const showRequestFetched = requestFetched && status > 0 && status < 999
+
   return (
     <div className={`${styles.statusBar} ${!consoleIsHidden ? styles.opened : ''}`}>
       <div className={styles.showConsole} onClick={toggleConsole}>
@@ -42,7 +44,7 @@ export default function ResponseStatus({
           tooltipOffsetX={-4}
         />
       </div>
-      {requestFetched && (
+      {showRequestFetched && (
         <div className={styles.status}>
           <div className={styles.item}>
             <div className={styles.name}>Status:</div>
