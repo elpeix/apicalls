@@ -122,12 +122,10 @@ export default function Response() {
           <div className={styles.content}>
             <div className={styles.title}>Error</div>
             <div className={styles.message}>
-              <span className={styles.errorMessageTitle}>Message:</span>
               <span className={styles.errorMessageDetails}>{fetchError}</span>
             </div>
             {fetchErrorCause && (
-              <div className={styles.message}>
-                <span className={styles.errorMessageTitle}>Cause:</span>
+              <div className={styles.errorCause}>
                 <span className={styles.errorMessageDetails}>{fetchErrorCause}</span>
               </div>
             )}

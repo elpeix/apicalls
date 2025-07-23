@@ -31,7 +31,9 @@ export default function Log({ log }: { log: RequestLog }) {
         className={`${styles.header} ${expanded ? styles.expanded : ''}`}
         onClick={() => setExpanded(!expanded)}
       >
-        <div className={`${styles.status} ${styles[getStatusName(log.status)]}`}>{log.status}</div>
+        <div className={`${styles.status} ${styles[getStatusName(log.status)]}`}>
+          {log.status === 999 ? '' : log.status}
+        </div>
         <div className={`${styles.method} ${log.method}`}>{log.method}</div>
         <div className={styles.url}>{log.url}</div>
         <div className={styles.time}>{log.time} ms</div>

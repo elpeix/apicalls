@@ -80,6 +80,9 @@
         &.expanded {
           background-color: color-mix(in srgb, var(--background-content), transparent 40%);
         }
+        & > .status {
+          width: 1.3rem;
+        }
         & > .status.ok {
           color: var(--status-200-color);
         }
