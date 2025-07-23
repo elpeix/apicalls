@@ -5,6 +5,7 @@ import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
 import Droppable from '../../../base/Droppable/Droppable'
+import NoteModal from '../../../base/NoteModal/NoteModal'
 
 export default function CollectionRequest({
   collectionRequest,
@@ -112,6 +113,7 @@ export default function CollectionRequest({
         onBlur={() => setEditingName(false)}
         editOnDoubleClick={true}
       />
+      <NoteModal value="Some information" className={styles.noteInfo} />
       <Menu
         className={styles.menu}
         iconClassName={styles.menuIcon}

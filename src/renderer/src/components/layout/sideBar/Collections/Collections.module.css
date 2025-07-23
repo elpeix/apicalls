@@ -243,6 +243,10 @@
     visibility: hidden;
   }
 
+  .noteInfo {
+    display: none;
+  }
+
   .menu {
     .menuIcon {
       display: none;
@@ -256,6 +260,7 @@
     background-color: var(--sidePanel-color-hover);
 
     .itemEdit,
+    .noteInfo,
     .menuIcon {
       display: flex;
     }
