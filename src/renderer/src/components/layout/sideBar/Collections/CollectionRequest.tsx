@@ -113,7 +113,7 @@ export default function CollectionRequest({
         onBlur={() => setEditingName(false)}
         editOnDoubleClick={true}
       />
-      <NoteModal value="Some information" className={styles.noteInfo} />
+      <NoteModal value={collectionRequest.description} className={styles.noteInfo} />
       <Menu
         className={styles.menu}
         iconClassName={styles.menuIcon}

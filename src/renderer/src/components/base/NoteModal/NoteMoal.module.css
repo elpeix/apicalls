@@ -21,4 +21,12 @@
 .noteModal {
   background-color: var(--background-base);
   border: 1px solid var(--border-color);
+
+  div {
+    padding: 0.5rem;
+    max-width: 10rem;
+    max-height: 10rem;
+    overflow-y: auto;
+    white-space: wrap;
+  }
 }

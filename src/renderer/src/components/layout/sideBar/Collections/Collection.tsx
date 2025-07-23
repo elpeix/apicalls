@@ -323,7 +323,7 @@ export default function Collection({
                 )}
               </>
               <MenuSeparator />
-              <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
+              <MenuElement icon="more" title="Add request" onClick={handleAddRequest} />
               <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
               <MenuElement icon="edit" title="Rename" onClick={editName} />
               <MenuSeparator />
@@ -345,7 +345,7 @@ export default function Collection({
                 <MenuElement showIcon={false} title="Postman (Beta)" onClick={exportToPostman} />
               </SubMenu>
               <MenuSeparator />
-              <MenuElement icon="notes" title="Notes" onClick={editDescription} />
+              <MenuElement icon="file" title="Notes" onClick={editDescription} />
               <MenuSeparator />
               <MenuElement
                 icon="delete"
