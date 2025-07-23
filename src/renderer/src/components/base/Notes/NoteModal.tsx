@@ -8,11 +8,13 @@ export default function NoteModal({
   value = '',
   editable = false,
   className = '',
+  iconSize = 20,
   onEdit = () => {}
 }: {
   value?: string
   editable?: boolean
   className?: string
+  iconSize?: number
   onEdit?: (value: string) => void
 }) {
   const ref = useRef(null)
@@ -52,7 +54,7 @@ export default function NoteModal({
       onMouseLeave={handleMouseOut}
       onClick={handleOnClick}
     >
-      <Icon icon="file" className={styles.infoIcon} />
+      <Icon icon="file" size={iconSize} className={styles.infoIcon} />
       {debouncedShowModal && (
         <LinkedModal
           parentRef={ref}

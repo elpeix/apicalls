@@ -5,8 +5,6 @@
     display: flex;
     justify-content: center;
     color: var(--base-color-semitransparent);
-    width: 1rem;
-    height: 1rem;
     align-items: center;
     opacity: 0.8;
     transition:

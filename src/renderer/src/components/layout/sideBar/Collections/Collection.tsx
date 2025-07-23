@@ -275,7 +275,7 @@ export default function Collection({
           />
         </div>
         <div className={styles.headerRight}>
-          <NoteModal value={coll.description} className={styles.noteInfo} />
+          <NoteModal value={coll.description} iconSize={18} className={styles.noteInfo} />
           {coll.environmentId !== undefined && (
             <div className={styles.collectionEnvironment}>
               <Icon className={styles.environmentIcon} icon="environment" size={16} />
