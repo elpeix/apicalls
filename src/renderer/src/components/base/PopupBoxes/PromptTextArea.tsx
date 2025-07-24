@@ -5,15 +5,17 @@ import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function PromptTextArea({
   value = '',
+  message = '',
   placeholder,
   confirmName = 'Ok',
   maxLength = 1000,
-  simpleMode = true,
+  simpleMode = false,
   onChange,
   onConfirm,
   onCancel
 }: {
   value?: string
+  message?: string
   maxLength?: number
   confirmName?: string
   placeholder?: string
@@ -30,11 +32,11 @@ export default function PromptTextArea({
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.sendRequest, () => onConfirm?.(value.trim()))
+    ipcRenderer?.on(ACTIONS.sendRequest, () => onConfirm?.(internalValue.trim()))
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.sendRequest)
     }
-  }, [value, onConfirm])
+  }, [internalValue])
 
   const handleCancel = () => {
     setInternalValue(value)
@@ -60,8 +62,9 @@ export default function PromptTextArea({
   }
 
   return (
-    <div className={styles.popupBoxTextarea}>
+    <div className={`${styles.popupBoxTextarea} ${simpleMode ? styles.simpleMode : ''}`}>
       <div className={styles.textareaContainer}>
+        {!simpleMode && message && <label htmlFor="textarea">{message}</label>}
         <textarea
           id="textarea"
           className={styles.textarea}

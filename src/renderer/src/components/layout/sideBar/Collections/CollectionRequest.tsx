@@ -5,8 +5,8 @@ import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
 import Droppable from '../../../base/Droppable/Droppable'
-import NoteModal from '../../../base/NoteModal/NoteModal'
-import PromptTextArea from '../../../base/PopupBoxes/PromptTextArea'
+import NoteModal from '../../../base/Notes/NoteModal'
+import Note from '../../../base/Notes/Note'
 
 export default function CollectionRequest({
   collectionRequest,
@@ -98,12 +98,14 @@ export default function CollectionRequest({
   const editDescription = () => {
     application.showDialog({
       children: (
-        <PromptTextArea
+        <Note
           value={collectionRequest.description}
-          onChange={(description: string) => {
+          onSave={(description: string) => {
             collectionRequest.description = description
             update()
+            application.hideDialog()
           }}
+          onCancel={() => application.hideDialog()}
         />
       )
     })

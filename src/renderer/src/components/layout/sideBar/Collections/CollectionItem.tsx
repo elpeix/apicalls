@@ -34,7 +34,16 @@ export default function CollectionItem({
       allowedDropTypes={['collectionId']}
       dragDecorator="left"
     >
-      <Name className={styles.title} name={collection.name} />
+      <div className={styles.collectionItem}>
+        <Name className={styles.title} name={collection.name} />
+        {collection.description && (
+          <div className={styles.collectionItemDescription}>
+            {collection.description.length > 100
+              ? `${collection.description.slice(0, 100)}...`
+              : collection.description}
+          </div>
+        )}
+      </div>
     </Droppable>
   )
 }

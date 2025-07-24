@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import LinkedModal from '../../base/linkedModal/LinkedModal'
 import { AppContext } from '../../../context/AppContext'
 import styles from './TabTitle.module.css'
-import Icon from '../../base/Icon/Icon'
 
 export default function TabTooltip({
   tabRef,
@@ -32,12 +31,6 @@ export default function TabTooltip({
         <span className={tab.request.method.value}>{tab.request.method.label}</span> -{' '}
         {tab.request.url}
       </div>
-      {tab.description && (
-        <div className={styles.description}>
-          <Icon icon="file" className={styles.icon} />
-          <div className={styles.text}>{tab.description}</div>
-        </div>
-      )}
     </LinkedModal>
   )
 }

@@ -18,7 +18,8 @@ import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
-import PromptTextArea from '../../../base/PopupBoxes/PromptTextArea'
+import Note from '../../../base/Notes/Note'
+import NoteModal from '../../../base/Notes/NoteModal'
 
 export default function Collection({
   collection,
@@ -246,9 +247,13 @@ export default function Collection({
     setShowMenu(false)
     application.showDialog({
       children: (
-        <PromptTextArea
+        <Note
           value={coll.description}
-          onChange={(description: string) => update({ ...coll, description })}
+          onSave={(description: string) => {
+            update({ ...coll, description })
+            application.hideDialog()
+          }}
+          onCancel={() => application.hideDialog()}
         />
       )
     })
@@ -270,6 +275,7 @@ export default function Collection({
           />
         </div>
         <div className={styles.headerRight}>
+          <NoteModal value={coll.description} className={styles.noteInfo} />
           {coll.environmentId !== undefined && (
             <div className={styles.collectionEnvironment}>
               <Icon className={styles.environmentIcon} icon="environment" size={16} />

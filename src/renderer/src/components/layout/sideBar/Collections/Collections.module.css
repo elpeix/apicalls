@@ -1,3 +1,18 @@
+.collectionItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+
+  .collectionItemDescription {
+    color: var(--base-color-semitransparent);
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 .collection {
   overflow: hidden;
 
