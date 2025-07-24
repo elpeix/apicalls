@@ -74,6 +74,7 @@ describe('CollectionImporter', () => {
     expect(collection).toBeDefined()
     expect(collection).not.toBeNull()
     expect(collection.name).toBe('Openapi fixture')
+    expect(collection.description).toBe('This is a fixture for testing the openapi generator')
     expect(collection.elements).toHaveLength(2)
     for (const element of collection.elements) {
       expect(element).toHaveProperty('name')

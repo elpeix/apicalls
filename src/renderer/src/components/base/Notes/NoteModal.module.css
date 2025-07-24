@@ -1,0 +1,37 @@
+.note {
+  position: relative;
+
+  .infoIcon {
+    display: flex;
+    justify-content: center;
+    color: var(--base-color-semitransparent);
+    align-items: center;
+    opacity: 0.8;
+    transition:
+      opacity ease-in-out 0.1s,
+      color ease-in-out 0.1s;
+  }
+  &:hover .infoIcon {
+    opacity: 1;
+    color: var(--base-color);
+  }
+
+  .noteModal {
+    background-color: var(--background-base);
+    border: 1px solid var(--border-color);
+    min-width: 9rem;
+
+    div {
+      padding: 0.5rem;
+      max-width: 10rem;
+      max-height: 10rem;
+      overflow-y: auto;
+      white-space: wrap;
+    }
+
+    .noteContent {
+      font-style: italic;
+      color: var(--base-color-semitransparent);
+    }
+  }
+}

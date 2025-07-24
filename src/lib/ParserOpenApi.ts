@@ -11,6 +11,7 @@ export class ParserOpenApi extends ParserCollection {
     const collection: Collection = {
       id,
       name: data.info.title,
+      description: data.info.description || '',
       elements: []
     }
     const baseUrl = '{{baseUrl}}'

@@ -5,6 +5,8 @@ import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
 import Droppable from '../../../base/Droppable/Droppable'
+import NoteModal from '../../../base/Notes/NoteModal'
+import Note from '../../../base/Notes/Note'
 
 export default function CollectionRequest({
   collectionRequest,
@@ -93,6 +95,22 @@ export default function CollectionRequest({
     addRequest({ ...request, id: Date.now().toString(), name: `${request.name} copy` })
   }
 
+  const editDescription = () => {
+    application.showDialog({
+      children: (
+        <Note
+          value={collectionRequest.description}
+          onSave={(description: string) => {
+            collectionRequest.description = description
+            update()
+            application.hideDialog()
+          }}
+          onCancel={() => application.hideDialog()}
+        />
+      )
+    })
+  }
+
   return (
     <Droppable
       className={`${styles.request} ${active ? styles.requestActive : ''}`}
@@ -112,6 +130,7 @@ export default function CollectionRequest({
         onBlur={() => setEditingName(false)}
         editOnDoubleClick={true}
       />
+      <NoteModal value={collectionRequest.description} iconSize={16} className={styles.noteInfo} />
       <Menu
         className={styles.menu}
         iconClassName={styles.menuIcon}
@@ -122,6 +141,8 @@ export default function CollectionRequest({
       >
         <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
+        <MenuSeparator />
+        <MenuElement icon="file" title="Edit description" onClick={editDescription} />
         <MenuSeparator />
         <MenuElement
           icon="delete"

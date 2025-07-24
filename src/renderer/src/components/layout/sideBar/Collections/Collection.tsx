@@ -18,6 +18,8 @@ import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
+import Note from '../../../base/Notes/Note'
+import NoteModal from '../../../base/Notes/NoteModal'
 
 export default function Collection({
   collection,
@@ -241,6 +243,22 @@ export default function Collection({
     window.electron?.ipcRenderer.send(COLLECTIONS.export, coll.id, 'Postman')
   }
 
+  const editDescription = () => {
+    setShowMenu(false)
+    application.showDialog({
+      children: (
+        <Note
+          value={coll.description}
+          onSave={(description: string) => {
+            update({ ...coll, description })
+            application.hideDialog()
+          }}
+          onCancel={() => application.hideDialog()}
+        />
+      )
+    })
+  }
+
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -257,6 +275,7 @@ export default function Collection({
           />
         </div>
         <div className={styles.headerRight}>
+          <NoteModal value={coll.description} iconSize={18} className={styles.noteInfo} />
           {coll.environmentId !== undefined && (
             <div className={styles.collectionEnvironment}>
               <Icon className={styles.environmentIcon} icon="environment" size={16} />
@@ -302,7 +321,7 @@ export default function Collection({
                 )}
               </>
               <MenuSeparator />
-              <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
+              <MenuElement icon="more" title="Add request" onClick={handleAddRequest} />
               <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
               <MenuElement icon="edit" title="Rename" onClick={editName} />
               <MenuSeparator />
@@ -323,6 +342,8 @@ export default function Collection({
                 <MenuElement showIcon={false} title="OpenAPI (Beta)" onClick={exportToOpenAPI} />
                 <MenuElement showIcon={false} title="Postman (Beta)" onClick={exportToPostman} />
               </SubMenu>
+              <MenuSeparator />
+              <MenuElement icon="file" title="Edit description" onClick={editDescription} />
               <MenuSeparator />
               <MenuElement
                 icon="delete"

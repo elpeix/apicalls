@@ -4,66 +4,88 @@ import { Button } from '../Buttons/Buttons'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function PromptTextArea({
-  initialValue = '',
-  message,
+  value = '',
+  message = '',
   placeholder,
   confirmName = 'Ok',
   maxLength = 1000,
+  simpleMode = false,
+  onChange,
   onConfirm,
   onCancel
 }: {
-  initialValue?: string
-  message: string
+  value?: string
+  message?: string
   maxLength?: number
   confirmName?: string
   placeholder?: string
-  onConfirm: (value: string) => void
-  onCancel: () => void
+  simpleMode?: boolean
+  onChange?: (value: string) => void
+  onConfirm?: (value: string) => void
+  onCancel?: () => void
 }) {
-  const [value, setValue] = useState(initialValue)
+  const [internalValue, setInternalValue] = useState(value)
 
   useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
+    setInternalValue(value)
+  }, [value])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.sendRequest, () => onConfirm(value.trim()))
+    ipcRenderer?.on(ACTIONS.sendRequest, () => onConfirm?.(internalValue.trim()))
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.sendRequest)
     }
-  }, [value, onConfirm])
+  }, [internalValue])
 
   const handleCancel = () => {
-    setValue(initialValue)
-    onCancel()
+    setInternalValue(value)
+    onCancel?.()
   }
 
   const handleOk = () => {
-    onConfirm(value.trim())
+    onConfirm?.(value.trim())
   }
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value
+    setInternalValue(newValue)
+    if (onChange) {
+      onChange(newValue)
+    }
+  }
+
+  const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value
+    e.target.value = ''
+    e.target.value = value
+  }
+
   return (
-    <div className={styles.popupBoxTextarea}>
+    <div className={`${styles.popupBoxTextarea} ${simpleMode ? styles.simpleMode : ''}`}>
       <div className={styles.textareaContainer}>
-        <label htmlFor="textarea">{message}</label>
+        {!simpleMode && message && <label htmlFor="textarea">{message}</label>}
         <textarea
           id="textarea"
           className={styles.textarea}
-          value={value}
+          value={internalValue}
           placeholder={placeholder}
           maxLength={maxLength}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={handleChange}
           autoFocus
+          onFocus={handleFocus}
         />
       </div>
-      <div className={styles.buttons}>
-        <Button.Cancel className={styles.cancel} onClick={handleCancel}>
-          Cancel
-        </Button.Cancel>
-        <Button.Ok className={styles.ok} onClick={handleOk}>
-          {confirmName}
-        </Button.Ok>
-      </div>
+      {!simpleMode && (
+        <div className={styles.buttons}>
+          <Button.Cancel className={styles.cancel} onClick={handleCancel}>
+            Cancel
+          </Button.Cancel>
+          <Button.Ok className={styles.ok} onClick={handleOk}>
+            {confirmName}
+          </Button.Ok>
+        </div>
+      )}
     </div>
   )
 }

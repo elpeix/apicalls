@@ -46,7 +46,7 @@ export default function BulkEntry({
 
   return (
     <PromptTextArea
-      initialValue={value}
+      value={value}
       message="Enter the bulk data"
       placeholder="Name: Value"
       onConfirm={handleOk}

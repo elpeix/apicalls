@@ -145,8 +145,8 @@ export default function Folder({
             topOffset={25}
           >
             <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
+            <MenuElement icon="more" title="Add request" onClick={handleAddRequest} />
             <MenuElement icon="folder" title="Add folder" onClick={handleAddFolder} />
-            <MenuElement icon="file" title="Add request" onClick={handleAddRequest} />
             <MenuSeparator />
             <MenuElement
               icon="delete"
