@@ -266,6 +266,15 @@ export default function Settings() {
                 }}
               />
             </div>
+            <div className={styles.switchRow}>
+              <Switch
+                text="Follow redirect"
+                active={settings.followRequestRedirect ?? false}
+                onChange={(active) => {
+                  changeSettings({ ...settings, followRequestRedirect: active })
+                }}
+              />
+            </div>
             <div className={styles.group}>
               <label>Default headers</label>
               <Params

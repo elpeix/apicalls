@@ -273,7 +273,6 @@ export default function RequestContextProvider({
   const setRequestResponse = (response: RequestResponseType) => {
     setResponse(response)
     tab.response = settings?.settings?.saveLastResponse ? response : undefined
-    console.log(settings?.settings?.saveLastResponse, tab.response)
     tabs?.updateTab(tab.id, tab)
   }
 
