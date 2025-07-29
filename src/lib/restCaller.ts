@@ -34,7 +34,8 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       method: request.method.value,
       headers: request.headers,
       cache: 'no-cache',
-      signal: abortController.signal
+      signal: abortController.signal,
+      redirect: (settings.followRequestRedirect ?? false) ? 'follow' : 'manual'
     }
     if (request.body && request.method.body) {
       requestInit.body = request.body

@@ -116,7 +116,6 @@ ipcMain.on(COLLECTIONS.export, (event, collectionId: Identifier, format: ImportE
     }
 
     const filePath = dialog.showSaveDialogSync(dialogOptions)
-    console.log(`Exporting ${format} to:`, filePath)
     if (!filePath) {
       return
     }

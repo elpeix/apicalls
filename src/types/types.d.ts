@@ -360,6 +360,7 @@ type AppSettingsType = {
   defaultHeaders?: KeyValue[]
   saveLastResponse?: boolean
   rejectUnauthorized?: boolean
+  followRequestRedirect?: boolean
 }
 
 type CallRequest = {

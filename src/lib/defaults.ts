@@ -12,7 +12,8 @@ export const defaultSettings: AppSettingsType = {
   showNotification: true,
   defaultHeaders: [],
   saveLastResponse: false,
-  rejectUnauthorized: true
+  rejectUnauthorized: true,
+  followRequestRedirect: false
 }
 
 export const getGeneralDefaultUserAgent = (version: string) => {
