@@ -22,6 +22,7 @@ export default function Response() {
   const [showRaw, setShowRaw] = useState(true)
   const [raw, setRaw] = useState(false)
   const [rawValue, setRawValue] = useState('')
+  const [wordWrap, setWordWrap] = useState(false)
   const [parsedValue, setParsedValue] = useState('')
   const [tabIndex, setTabIndex] = useState(0)
   const [allowScripts, setAllowScripts] = useState(false)
@@ -83,6 +84,14 @@ export default function Response() {
                       onChange={setAllowScripts}
                     />
                   )}
+                  {language !== 'html' && showRaw && (
+                    <Switch
+                      text="Word wrap"
+                      active={wordWrap}
+                      reverse={true}
+                      onChange={setWordWrap}
+                    />
+                  )}
                   {showRaw && <Switch text="Raw" active={raw} reverse={true} onChange={setRaw} />}
                   <div className={styles.copy} onClick={handleCopy}>
                     <div>
@@ -97,6 +106,7 @@ export default function Response() {
                   <ResponseBody
                     value={raw ? rawValue : parsedValue}
                     raw={raw}
+                    wordWrap={wordWrap}
                     language={language}
                     allowScripts={allowScripts}
                   />
