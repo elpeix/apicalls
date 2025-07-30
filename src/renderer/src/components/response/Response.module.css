@@ -20,9 +20,9 @@
         flex-direction: row;
         align-items: center;
         justify-content: end;
-        gap: 20px;
-        font-size: 13px;
-        padding: 0 10px;
+        gap: 0.5rem;
+        font-size: 0.72rem;
+        padding: 0 0.8rem;
         text-transform: uppercase;
         user-select: none;
 
