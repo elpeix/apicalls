@@ -8,6 +8,7 @@ import {
   COLLECTIONS,
   COOKIES,
   ENVIRONMENTS,
+  AUTO_UPDATE,
   TABS,
   VERSION,
   WORKSPACES
@@ -187,6 +188,65 @@ export default function AppContextProvider({ children }: { children: React.React
       window.focus()
     }
   }
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    if (!ipcRenderer) {
+      return
+    }
+
+    const handleAutoUpdateStatus = (_: unknown, payload: AutoUpdateStatusPayload) => {
+      switch (payload.type) {
+        case 'available': {
+          const message = payload.initiatedByUser
+            ? `Version ${payload.version} is available. Downloading now...`
+            : `A new version (${payload.version}) is downloading in the background.`
+          notify({ message })
+          break
+        }
+        case 'downloaded': {
+          showYesNo({
+            message: `Version ${payload.version} is ready to install. Restart now?`,
+            yesName: 'Restart now',
+            noName: 'Later',
+            onYes: () => {
+              ipcRenderer.send(AUTO_UPDATE.install)
+              hideDialog()
+            },
+            onNo: hideDialog,
+            onCancel: hideDialog
+          })
+          break
+        }
+        case 'not-available': {
+          if (payload.initiatedByUser) {
+            notify({ message: 'You are already using the latest version.' })
+          }
+          break
+        }
+        case 'error': {
+          if (payload.initiatedByUser) {
+            notify({ message: `Update failed: ${payload.message}` })
+          } else {
+            console.error('Auto update error:', payload.message)
+          }
+          break
+        }
+        case 'not-supported': {
+          notify({ message: 'Auto update is not available on this platform.' })
+          break
+        }
+        default:
+          break
+      }
+    }
+
+    ipcRenderer.on(AUTO_UPDATE.status, handleAutoUpdateStatus)
+
+    return () => {
+      ipcRenderer.removeListener(AUTO_UPDATE.status, handleAutoUpdateStatus)
+    }
+  }, [])
 
   const revealRequest = (tab: RequestTab) => {
     if (tab.collectionId) {

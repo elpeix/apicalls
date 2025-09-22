@@ -452,6 +452,33 @@ type ApplicationType = {
   version: string
 }
 
+type AutoUpdateStatusPayload =
+  | {
+      type: 'available'
+      version: string
+      initiatedByUser: boolean
+    }
+  | {
+      type: 'downloading'
+      percent: number
+    }
+  | {
+      type: 'downloaded'
+      version: string
+    }
+  | {
+      type: 'not-available'
+      initiatedByUser: boolean
+    }
+  | {
+      type: 'error'
+      message: string
+      initiatedByUser: boolean
+    }
+  | {
+      type: 'not-supported'
+    }
+
 type DialogType = {
   children: React.ReactNode
   className?: string

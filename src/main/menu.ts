@@ -1,6 +1,7 @@
 import { Menu, MenuItemConstructorOptions, BrowserWindow, shell } from 'electron'
 import { ACTIONS, SETTINGS, VERSION } from '../lib/ipcChannels'
 import { getSettings, setSettings, toggleRequestView } from '../lib/settings'
+import { checkForUpdates } from './autoUpdate'
 
 export const getMenu = (mainWindow: BrowserWindow) => {
   const isMac = process.platform === 'darwin'
@@ -142,6 +143,12 @@ export const getMenu = (mainWindow: BrowserWindow) => {
           label: 'Submit a bug or idea',
           click: () => {
             shell.openExternal('https://github.com/elpeix/apicalls/issues/new/choose')
+          }
+        },
+        {
+          label: 'Check for Updates...',
+          click: () => {
+            checkForUpdates(true)
           }
         },
         {
