@@ -235,8 +235,8 @@
 
   .authorizationInput {
     flex-grow: 1;
-    border: 1px solid var(--border-color);
-    padding: 0.5rem;
+    border: 1px solid var(--input-border-color);
+    padding: 0.4rem;
     width: calc(100% - 7rem);
   }
 }
