@@ -247,6 +247,7 @@ type Cookie = {
   httpOnly: boolean
   path: string
   sameSite: string
+  secure?: boolean
 }
 
 type CookiesHookType = {
