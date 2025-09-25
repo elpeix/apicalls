@@ -117,6 +117,12 @@ export const SYSTEM_ACTIONS = {
   systemThemeChanged: 'system-theme-changed'
 }
 
+export const AUTO_UPDATE = {
+  check: 'auto-update:check',
+  install: 'auto-update:install',
+  status: 'auto-update:status'
+}
+
 export const MENU_ACTIONS = {
   newTab: 'menu:new-tab',
   closeTab: 'menu:close-tab',
