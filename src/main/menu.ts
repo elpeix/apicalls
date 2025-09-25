@@ -149,7 +149,8 @@ export const getMenu = (mainWindow: BrowserWindow) => {
           label: 'Check for Updates...',
           click: () => {
             checkForUpdates(true)
-          }
+          },
+          visible: process.platform !== 'linux'
         },
         {
           type: 'separator'
