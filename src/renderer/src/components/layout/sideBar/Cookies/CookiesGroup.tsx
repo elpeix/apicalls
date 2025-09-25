@@ -52,6 +52,24 @@ export default function CookiesGroup({
     update(group, newCookies)
   }
 
+  const addCookie = () => {
+    const newCookies = [
+      ...cookieList,
+      {
+        name: '',
+        value: '',
+        domain: group,
+        expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        httpOnly: false,
+        path: '/',
+        sameSite: 'Lax',
+        secure: false
+      } as Cookie
+    ]
+    setCookieList(newCookies)
+    update(group, newCookies)
+  }
+
   return (
     <div className={`sidePanel-content ${styles.group}`}>
       <div className={styles.header}>
@@ -92,6 +110,13 @@ export default function CookiesGroup({
             ))}
           </SimpleTable.Body>
         </SimpleTable>
+        <div className={styles.footer}>
+          <div className={styles.add}>
+            <div>
+              <ButtonIcon icon="more" onClick={addCookie} title="Add cookie" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
