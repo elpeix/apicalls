@@ -35,7 +35,6 @@ export function initAutoUpdate(mainWindow: BrowserWindow) {
       version: info.version,
       initiatedByUser: manualCheckInProgress
     })
-    manualCheckInProgress = false
   })
 
   autoUpdater.on('download-progress', (progress) => {
@@ -50,6 +49,7 @@ export function initAutoUpdate(mainWindow: BrowserWindow) {
       type: 'downloaded',
       version: info.version
     })
+    manualCheckInProgress = false
   })
 
   autoUpdater.on('update-not-available', () => {
