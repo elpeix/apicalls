@@ -25,7 +25,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "@monaco-editor/react": "^4.7.0",
     "dompurify": "^3.2.7",
-    "electron-store": "^10.1.0",
+    "electron-store": "^11.0.0",
     "electron-updater": "^6.6.2",
     "react-resizable-panels": "^3.0.6",
     "react-tabs": "^6.1.0",
