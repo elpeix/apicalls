@@ -5,6 +5,7 @@ import { registerShortcuts } from './shortcutActions'
 import { getMenu } from './menu'
 import { defaultSettings } from '../lib/defaults'
 import { checkAndUpdateThemes } from './themes'
+import { initAutoUpdate } from './autoUpdate'
 
 // Prevent GTK error on Gnome 47+
 app.commandLine.appendSwitch('gtk-version', '3')
@@ -79,6 +80,8 @@ function createWindow(settingsStore: IStore) {
   mainWindow?.on('leave-full-screen', () => {
     mainWindow?.webContents.send(WINDOW_ACTIONS.fullScreen, false)
   })
+
+  initAutoUpdate(mainWindow)
 }
 
 // This method will be called when Electron has finished
