@@ -62,3 +62,8 @@ npm run build:mac
 # For Windows
 npm run build:win
 ```
+
+## Documentation
+
+- [Usage documentation](./doc/usage-documentation.md)
+- [Technical documentation](./doc/technical-documentation.md)
