@@ -78,21 +78,21 @@ API Calls helps you exercise REST services without relying on a browser or exter
 ## Settings
 
 - **Appearance**:
-  - Theme (Auto, Light, Dark, High Contrast, and more).
-  - Window mode (Custom vs Native) (Linux/Windows).
-  - Request orientation (horizontal/vertical).
+  - Theme (Auto, Light, Dark, High Contrast, and more)
+  - Window mode (Custom vs Native) (Linux/Windows)
+  - Request orientation (horizontal/vertical)
 - **Behavior**:
-  - Menu visibility (`Ctrl/Cmd+M`) (Linux/Windows).
-  - Auto-scroll to the active tab.
-  - Show/hide notifications.
-  - Confirmation prompts.
-  - Save last response.
+  - Menu visibility (`Ctrl/Cmd+M`) (Linux/Windows)
+  - Auto-scroll to the active tab
+  - Show/hide notifications
+  - Confirmation prompts
+  - Save last response
 - **Network**:
-  - Request timeout,
-  - Redirect handling,
-  - SSL rejection.
+  - Request timeout
+  - Redirect handling
+  - SSL rejection
 - **Default headers**:
-  - define headers that should be applied automatically to every new tab.
+  - define headers that should be applied automatically to every new tab
 
 ## Auto Updates (Beta)
 
@@ -102,28 +102,28 @@ API Calls helps you exercise REST services without relying on a browser or exter
 ## Essential Shortcuts
 
 - Tabs:
-  - `Ctrl/Cmd+T` - New tab,
-  - `Ctrl/Cmd+W` - Close tab,
-  - `Ctrl+Tab` and `Ctrl+Shift+Tab` - Navigate tabs,
-  - `Ctrl/Cmd+Shift+T` - Restore tab,
-  - `Ctrl/Cmd+O` - Find tab.
+  - `Ctrl/Cmd+T` - New tab
+  - `Ctrl/Cmd+W` - Close tab
+  - `Ctrl+Tab` and `Ctrl+Shift+Tab` - Navigate tabs
+  - `Ctrl/Cmd+Shift+T` - Restore tab
+  - `Ctrl/Cmd+O` - Find tab
 - Requests:
-  - `Ctrl/Cmd+Enter` - Send request,
-  - `Ctrl/Cmd+S` - Save request,
-  - `Ctrl/Cmd+Shift+S` - Save request as,
-  - `Esc` - Cancel request,
-  - `Ctrl/Cmd+Shift+C` - Toggle console,
-  - `Ctrl/Cmd+Shift+P` - Toggle request panel.
+  - `Ctrl/Cmd+Enter` - Send request
+  - `Ctrl/Cmd+S` - Save request
+  - `Ctrl/Cmd+Shift+S` - Save request as
+  - `Esc` - Cancel request
+  - `Ctrl/Cmd+Shift+C` - Toggle console
+  - `Ctrl/Cmd+Shift+P` - Toggle request panel
 - Navigation:
-  - `Ctrl/Cmd+B` - Sidebar,
-  - `Ctrl/Cmd+P` - Find request,
-  - `Ctrl/Cmd+G` - Cookies,
-  - `Ctrl/Cmd+H` - History,
-  - `Ctrl/Cmd+L` - Collections,
-  - `Ctrl/Cmd+E` - Environments,
-  - `Ctrl/Cmd+,` - Settings.
+  - `Ctrl/Cmd+B` - Sidebar
+  - `Ctrl/Cmd+P` - Find request
+  - `Ctrl/Cmd+G` - Cookies
+  - `Ctrl/Cmd+H` - History
+  - `Ctrl/Cmd+L` - Collections
+  - `Ctrl/Cmd+E` - Environments
+  - `Ctrl/Cmd+,` - Settings
 - Developer:
-  - `F12` or `Ctrl/Cmd+Shift+I` - Open DevTools.
+  - `F12` or `Ctrl/Cmd+Shift+I` - Open DevTools
 
 ## Tips and Troubleshooting
 
