@@ -26,7 +26,7 @@ export default function Folder({
   remove: (folder: CollectionFolder) => void
   scrolling: boolean
 }) {
-  const { application, tabs } = useContext(AppContext)
+  const { application, tabs, collections } = useContext(AppContext)
   const [expanded, setExpanded] = useState(folder.expanded || false)
   const [editingName, setEditingName] = useState(false)
 
@@ -111,6 +111,18 @@ export default function Folder({
     expandFolder(true)
   }
 
+  const handleDuplicateFolder = () => {
+    application.showConfirm({
+      message: `Are you sure you want to duplicate folder ${folder.name}?`,
+      confirmName: 'Duplicate',
+      onConfirm: () => {
+        application.hideConfirm()
+        collections?.duplicateFolder(collectionId, folder.id, path)
+      },
+      onCancel: () => application.hideConfirm()
+    })
+  }
+
   return (
     <>
       <Droppable
@@ -147,6 +159,7 @@ export default function Folder({
             <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
             <MenuElement icon="more" title="Add request" onClick={handleAddRequest} />
             <MenuElement icon="folder" title="Add folder" onClick={handleAddFolder} />
+            <MenuElement icon="copy" title="Duplicate" onClick={handleDuplicateFolder} />
             <MenuSeparator />
             <MenuElement
               icon="delete"

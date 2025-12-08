@@ -101,4 +101,3 @@ API Calls is an Electron-based desktop application designed to build, execute, a
 - Register migrations in `src/main/migrations/migrationsImporter.ts` and pick a `getMinVersion()` that matches the change.
 - Add new shortcuts through `registerShortcuts` to retain macOS/Windows/Linux compatibility.
 - For platform-dependent functionality, rely on `window.api.os` in the renderer or `process.platform` in the main process.
-

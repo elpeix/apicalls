@@ -77,3 +77,40 @@ export const defaultHttpHeaders = {
   Referer: [],
   'User-Agent': []
 }
+
+const generateNewId = (): Identifier => new Date().getTime()
+
+const duplicateElementRecursive = (
+  element: CollectionFolder | RequestType,
+  delay: number = 0
+): CollectionFolder | RequestType => {
+  const newId = Number(generateNewId()) + delay
+
+  if (element.type === 'folder') {
+    const duplicatedFolder: CollectionFolder = {
+      ...element,
+      id: newId,
+      name: element.name,
+      elements: element.elements.map((child, index) =>
+        duplicateElementRecursive(child, delay + index)
+      ) as (CollectionFolder | RequestType)[]
+    }
+    return duplicatedFolder
+  }
+
+  const duplicatedRequest: RequestType = {
+    ...element,
+    id: newId,
+    name: element.name,
+    request: { ...element.request }
+  }
+  return duplicatedRequest
+}
+
+export const duplicateFolder = (folder: CollectionFolder): CollectionFolder => {
+  const duplicated = duplicateElementRecursive(folder) as CollectionFolder
+  return {
+    ...duplicated,
+    name: `${folder.name} Copy`
+  }
+}
