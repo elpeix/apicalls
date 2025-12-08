@@ -26,7 +26,8 @@ export default function Params({
   className = '',
   scrollContainerRef,
   draggable = false,
-  dragFormat = 'param'
+  dragFormat = 'param',
+  environmentId
 }: {
   items: KeyValue[]
   onAdd?: () => void
@@ -48,6 +49,7 @@ export default function Params({
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>
   draggable?: boolean
   dragFormat?: string
+  environmentId?: Identifier
 }) {
   const { application } = useContext(AppContext)
   const paramsRef = useRef(null)
@@ -158,6 +160,7 @@ export default function Params({
                 onDelete={() => deleteHandler(index)}
                 onDrag={dragHandler}
                 scrollContainerRef={scrollContainerRef ? scrollContainerRef : paramsRef}
+                environmentId={environmentId}
               />
             ))}
           </SimpleTable.Body>

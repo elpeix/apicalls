@@ -4,7 +4,7 @@ import { RequestContext } from '../../context/RequestContext'
 import Autocompleter from '../base/Autocompleter/Autocompleter'
 
 export default function RequestUrl() {
-  const { request, pasteCurl } = useContext(RequestContext)
+  const { request, pasteCurl, getRequestEnvironment } = useContext(RequestContext)
   const urlRef = useRef<HTMLInputElement>(null)
   const [url, setUrl] = useState('')
   const [urlError, setUrlError] = useState(request?.urlIsValid({}))
@@ -63,6 +63,7 @@ export default function RequestUrl() {
       placeholder="Enter URL..."
       offsetX={-11}
       offsetY={11}
+      environmentId={getRequestEnvironment()?.id}
     />
   )
 }

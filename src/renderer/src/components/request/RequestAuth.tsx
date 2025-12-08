@@ -5,7 +5,7 @@ import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 import Autocompleter from '../base/Autocompleter/Autocompleter'
 
 export default function RequestAuth() {
-  const { request } = useContext(RequestContext)
+  const { request, getRequestEnvironment } = useContext(RequestContext)
 
   const authOptions: { value: RequestAuthType; label: string }[] = [
     { value: 'none', label: 'None' },
@@ -15,6 +15,8 @@ export default function RequestAuth() {
   const inputRef = useRef<HTMLInputElement>(null)
   const [authType, setAuthType] = useState<RequestAuthType>(authOptions[0].value)
   const [authValue, setAuthValue] = useState<RequestAuthValue>(null)
+
+  const environmentId = getRequestEnvironment()?.id
 
   useEffect(() => {
     if (request) {
@@ -66,6 +68,7 @@ export default function RequestAuth() {
             value={typeof authValue === 'string' ? authValue : ''}
             offsetX={-9}
             offsetY={8}
+            environmentId={environmentId}
           />
         )}
         {authType === authOptions[2].value && (
@@ -80,6 +83,7 @@ export default function RequestAuth() {
                 value={(authValue as RequestAuthBasic)?.username || ''}
                 offsetX={-9}
                 offsetY={8}
+                environmentId={environmentId}
               />
             </label>
             <label>
@@ -92,6 +96,7 @@ export default function RequestAuth() {
                 value={(authValue as RequestAuthBasic)?.password || ''}
                 offsetX={-9}
                 offsetY={8}
+                environmentId={environmentId}
               />
             </label>
           </div>

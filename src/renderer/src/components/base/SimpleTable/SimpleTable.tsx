@@ -120,7 +120,8 @@ function SimpleTableCell({
   options,
   children,
   showTip = false,
-  scrollContainerRef
+  scrollContainerRef,
+  environmentId
 }: {
   editable?: boolean
   autoFocus?: boolean
@@ -132,6 +133,7 @@ function SimpleTableCell({
   children?: React.ReactNode
   showTip?: boolean
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>
+  environmentId?: Identifier
 }) {
   const [editableValue, setEditableValue] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -197,6 +199,7 @@ function SimpleTableCell({
             autoFocus={autoFocus}
             offsetY={9}
             offsetX={-5}
+            environmentId={environmentId}
           />
         )}
         {!editable && <>{value || children}</>}
