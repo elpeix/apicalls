@@ -77,3 +77,65 @@ export const defaultHttpHeaders = {
   Referer: [],
   'User-Agent': []
 }
+
+let lastId = 0
+
+const generateNewId = (): Identifier => {
+  let newId = new Date().getTime()
+  if (newId <= lastId) {
+    newId = lastId + 1
+  }
+  lastId = newId
+  return newId
+}
+
+const duplicateElementRecursive = (
+  element: CollectionFolder | RequestType
+): CollectionFolder | RequestType => {
+  const newId = generateNewId()
+
+  if (element.type === 'folder') {
+    const duplicatedFolder: CollectionFolder = {
+      ...element,
+      id: newId,
+      name: element.name,
+      elements: element.elements.map((child) => duplicateElementRecursive(child)) as (
+        | CollectionFolder
+        | RequestType
+      )[]
+    }
+    return duplicatedFolder
+  }
+
+  const duplicatedRequest: RequestType = {
+    ...element,
+    id: newId,
+    name: element.name,
+    request: duplicateRequestBase(element.request)
+  }
+  return duplicatedRequest
+}
+
+export const duplicateFolder = (folder: CollectionFolder): CollectionFolder => {
+  const duplicated = duplicateElementRecursive(folder) as CollectionFolder
+  return {
+    ...duplicated,
+    name: `${folder.name} Copy`
+  }
+}
+
+const duplicateRequestBase = (request: RequestBase): RequestBase => {
+  return {
+    url: request.url,
+    method: request.method,
+    auth: request.auth,
+    headers: request.headers ? duplicateKeyValues(request.headers) : [],
+    pathParams: request.pathParams ? duplicateKeyValues(request.pathParams) : [],
+    queryParams: request.queryParams ? duplicateKeyValues(request.queryParams) : [],
+    body: request.body
+  }
+}
+
+const duplicateKeyValues = (keyValues: KeyValue[]): KeyValue[] => {
+  return keyValues.map((keyValue) => ({ ...keyValue }))
+}

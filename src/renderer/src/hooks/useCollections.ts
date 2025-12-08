@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { COLLECTIONS } from '../../../lib/ipcChannels'
+import * as factory from '../lib/factory'
+import { addFolderToCollection, findContainer } from '../lib/collectionUtils'
 
 export function useCollections(): CollectionsHookType {
   const [collections, setCollections] = useState<Collection[]>([])
@@ -151,6 +153,34 @@ export function useCollections(): CollectionsHookType {
     setSelectedCollection(collection || null)
   }
 
+  const duplicateFolder = (collectionId: Identifier, folderId: Identifier, path: PathItem[]) => {
+    const collections = getAll()
+    const collectionIndex = collections.findIndex((c) => c.id === collectionId)
+    if (collectionIndex === -1) {
+      return
+    }
+
+    const collection = collections[collectionIndex]
+    const parentFolder = findContainer(collection, path) as CollectionFolder
+
+    if (!parentFolder) {
+      return
+    }
+
+    const folderToDuplicate = parentFolder.elements.find(
+      (e) => e.id === folderId && e.type === 'folder'
+    ) as CollectionFolder | undefined
+
+    if (!folderToDuplicate) {
+      return
+    }
+
+    const duplicatedFolder = factory.duplicateFolder(folderToDuplicate)
+
+    const newCollection = addFolderToCollection(collection, path, duplicatedFolder, folderId)
+    update(newCollection)
+  }
+
   return {
     setCollections,
     create,
@@ -167,6 +197,7 @@ export function useCollections(): CollectionsHookType {
     updateTime,
     getEnvironmentId,
     setEnvironmentId,
+    duplicateFolder,
     select,
     selectedCollection
   }

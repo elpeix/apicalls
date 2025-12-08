@@ -199,6 +199,7 @@ type CollectionsHookType = {
   updateTime: number
   getEnvironmentId: (collectionId: Identifier) => Identifier | undefined
   setEnvironmentId: (collectionId: Identifier, environmentId?: Identifier) => void
+  duplicateFolder: (collectionId: Identifier, folderId: Identifier, path: PathItem[]) => void
   selectedCollection: Collection | null
   select: (collectionId: Identifier | null) => void
 }
