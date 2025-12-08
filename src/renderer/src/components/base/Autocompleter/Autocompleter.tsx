@@ -22,7 +22,8 @@ export default function Autocompleter({
   fontSize = 14,
   autoFocus = false,
   offsetX = 0,
-  offsetY = 0
+  offsetY = 0,
+  environmentId = 0
 }: {
   inputRef: React.RefObject<HTMLInputElement | null>
   scrollContainerRef?: React.RefObject<HTMLDivElement | null> | null
@@ -41,6 +42,7 @@ export default function Autocompleter({
   autoFocus?: boolean
   offsetX?: number
   offsetY?: number
+  environmentId?: Identifier
 }) {
   const Z_INDEX = 10
 
@@ -154,7 +156,7 @@ export default function Autocompleter({
   // Set Environment Variables
   useEffect(() => {
     if (showEnvironmentVariables) {
-      const variables = environments?.getVariables()
+      const variables = environments?.getVariables(environmentId)
       if (variables) {
         const tmpVariables = variables.map((variable) => `${variable.name}`)
         if (tmpVariables.length !== envVariables.length) {

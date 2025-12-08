@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import styles from './SimpleTable.module.css'
 import Input from '../Input/Input'
 import Autocompleter from '../Autocompleter/Autocompleter'
+import { useDebounce } from '../../../hooks/useDebounce'
 
 const SimpleTableContext = createContext<{
   templateColumns: string
@@ -120,7 +121,8 @@ function SimpleTableCell({
   options,
   children,
   showTip = false,
-  scrollContainerRef
+  scrollContainerRef,
+  environmentId
 }: {
   editable?: boolean
   autoFocus?: boolean
@@ -132,9 +134,12 @@ function SimpleTableCell({
   children?: React.ReactNode
   showTip?: boolean
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>
+  environmentId?: Identifier
 }) {
   const [editableValue, setEditableValue] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [changedValue, setChangedValue] = useState(value)
+  const debouncedValue = useDebounce(changedValue, 500)
 
   useEffect(() => {
     if (editable) {
@@ -145,21 +150,29 @@ function SimpleTableCell({
     }
   }, [editable, autoFocus, value])
 
+  useEffect(() => {
+    if (onChange && changeOnKeyUp && debouncedValue !== value) {
+      onChange(debouncedValue as string)
+    }
+  }, [debouncedValue, onChange, value, changeOnKeyUp])
+
   const handleCellClick = () => {
     if (editable && inputRef.current) {
       inputRef.current.focus()
     }
   }
-  const handleChange = (value: string) => setEditableValue(value)
+  const handleChange = (value: string) => {
+    setEditableValue(value)
+    setChangedValue(value)
+  }
+
   const handleBlur = (value: string) => {
     if (onChange) {
       onChange(value)
     }
   }
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (changeOnKeyUp && onChange) {
-      onChange(editableValue as string)
-    } else if (e.key === 'Enter' && onChange) {
+    if (e.key === 'Enter' && onChange) {
       onChange(editableValue as string)
       if (e.ctrlKey) {
         inputRef.current?.blur()
@@ -197,6 +210,7 @@ function SimpleTableCell({
             autoFocus={autoFocus}
             offsetY={9}
             offsetX={-5}
+            environmentId={environmentId}
           />
         )}
         {!editable && <>{value || children}</>}

@@ -25,7 +25,7 @@ const getTabIndexes = (showPathParams: boolean, showBody: boolean) => {
 }
 
 export default function RequestTabs() {
-  const { request } = useContext(RequestContext)
+  const { request, getRequestEnvironment } = useContext(RequestContext)
   const [tabIndex, setTabIndex] = useState(0)
 
   if (!request) return null
@@ -68,6 +68,7 @@ export default function RequestTabs() {
                 onSave={request.pathParams.set}
                 editableName={false}
                 showDelete={false}
+                environmentId={getRequestEnvironment()?.id}
               />
             </TabPanel>
           )}
@@ -77,6 +78,7 @@ export default function RequestTabs() {
               onSave={request.queryParams.set}
               onAdd={request.queryParams.add}
               draggable={true}
+              environmentId={getRequestEnvironment()?.id}
             />
           </TabPanel>
           <TabPanel forceRender={true}>
@@ -89,6 +91,7 @@ export default function RequestTabs() {
               draggable={true}
               addCaption="Add header"
               removeCaption="Remove header"
+              environmentId={getRequestEnvironment()?.id}
             />
           </TabPanel>
           <TabPanel forceRender={true}>
