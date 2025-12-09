@@ -32,7 +32,7 @@ export class ParserOpenApi extends ParserCollection {
       let currentTree = collectionTree
       for (let i = 0; i < splitPath.length - 1; i++) {
         const pathPart = splitPath[i]
-        if (!pathPart) {
+        if (!pathPart || (pathPart === '{{baseUrl}}' && i === 0)) {
           continue
         }
         const element = currentTree.find(
@@ -68,7 +68,7 @@ export class ParserOpenApi extends ParserCollection {
           id: `${id}_${++count}`,
           name: sortedPaths[path].summary || path,
           request: {
-            url: baseUrl + path,
+            url: path.startsWith('{{baseUrl}}') ? path : baseUrl + path,
             method: this.getMethod(method),
             headers: params.headers,
             pathParams: this.getPathParams(path),

@@ -70,4 +70,55 @@ describe('CollectionExporter', () => {
     expect(postmanCollection.item[1].name).toBe('User Folder')
     expect(postmanCollection.item[1].item[0].name).toBe('Get User By Id')
   })
+
+  it('correctly handles full URLs in Postman export', () => {
+    const fullUrlCollection: Collection = {
+      id: 'full-url-col',
+      name: 'Full URL',
+      elements: [
+        {
+          id: '1',
+          type: 'collection',
+          name: 'Request',
+          request: {
+            url: 'http://api.example.org/v1/users',
+            method: { value: 'GET', label: 'GET', body: false },
+            queryParams: []
+          }
+        }
+      ]
+    }
+    const exporter = new CollectionExporter(fullUrlCollection)
+    const postmanJson = exporter.exportToPostman()
+    const item = JSON.parse(postmanJson).item[0]
+
+    expect(item.request.url.host).toEqual(['api', 'example', 'org'])
+    expect(item.request.url.path).toEqual(['v1', 'users'])
+    expect(item.request.url.protocol).toBe('http')
+  })
+
+  it('correctly uses pathname for OpenAPI path keys when full URL is used', () => {
+    const fullUrlCollection: Collection = {
+      id: 'full-url-col',
+      name: 'Full URL',
+      elements: [
+        {
+          id: '1',
+          type: 'collection',
+          name: 'Request',
+          request: {
+            url: 'http://api.example.org/v1/users',
+            method: { value: 'GET', label: 'GET', body: false },
+            queryParams: []
+          }
+        }
+      ]
+    }
+    const exporter = new CollectionExporter(fullUrlCollection)
+    const openApiJson = exporter.exportToOpenAPI()
+    const openApi = JSON.parse(openApiJson)
+
+    expect(openApi.paths).toHaveProperty('/v1/users')
+    expect(openApi.paths).not.toHaveProperty('http://api.example.org/v1/users')
+  })
 })
