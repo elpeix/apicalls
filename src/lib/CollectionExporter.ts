@@ -1,4 +1,4 @@
-import { OpenApiType, PostmanCollection, PostmanItem, PostmanQuery } from './ImportExportTypes'
+import { OpenApiType, PostmanCollection, PostmanItem, PostmanUrl } from './ImportExportTypes'
 
 class CollectionExporter {
   private collection: Collection
@@ -61,7 +61,17 @@ class CollectionExporter {
     } else if (element.type === 'collection') {
       const requestType = element as RequestType
       const request = requestType.request || {}
-      const path = request.url.replace(/\/$/, '')
+
+      let path = request.url.replace(/\/$/, '')
+      try {
+        if (request.url.startsWith('http')) {
+          const urlObj = new URL(request.url)
+          path = urlObj.pathname.replace(/\/$/, '')
+        }
+      } catch {
+        // Fallback to original url if parsing fails
+      }
+
       if (!openApiCollection.paths[path]) {
         openApiCollection.paths[path] = {}
       }
@@ -99,21 +109,40 @@ class CollectionExporter {
     } else if (element.type === 'collection') {
       const requestType = element as RequestType
       const request = requestType.request || {}
+
+      const urlDefinition: PostmanUrl = {
+        raw: request.url,
+        query: request.queryParams?.map((param) => ({
+          key: param.name,
+          value: param.value,
+          disabled: !param.enabled
+        }))
+      }
+
+      try {
+        if (request.url.startsWith('http')) {
+          const urlObj = new URL(request.url)
+          urlDefinition.protocol = urlObj.protocol.replace(':', '')
+          urlDefinition.host = urlObj.hostname.split('.')
+          urlDefinition.path = urlObj.pathname.split('/').filter((p) => p)
+        } else {
+          // Fallback for relative URLs or other formats
+          const parts = request.url.split('/')
+          urlDefinition.host = parts.filter(
+            (part) => part && !part.includes('{') && !part.includes('http')
+          )
+          urlDefinition.path = parts.filter((p) => p)
+        }
+      } catch {
+        urlDefinition.host = request.url.split('/').filter((part) => part && !part.includes('{'))
+      }
+
       const postmanItem: PostmanItem = {
         name: requestType.name || '',
         description: requestType.description || '',
         request: {
           method: request.method.value,
-          url: {
-            raw: request.url,
-            protocol: request.url.startsWith('http') ? request.url.split('://')[0] : undefined,
-            host: request.url.split('/').filter((part) => part && !part.includes('{')),
-            query: request.queryParams?.map((param) => ({
-              key: param.name,
-              value: param.value,
-              disabled: !param.enabled
-            })) as PostmanQuery[]
-          }
+          url: urlDefinition
         }
       }
       items.push(postmanItem)
