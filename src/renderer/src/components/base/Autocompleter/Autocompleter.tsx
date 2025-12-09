@@ -15,6 +15,7 @@ export default function Autocompleter({
   placeholder = '',
   className = '',
   onChange,
+  onFocus,
   onBlur,
   onKeyUp,
   onKeyDown,
@@ -34,6 +35,7 @@ export default function Autocompleter({
   placeholder?: string
   className?: string
   onChange?: (value: string) => void
+  onFocus?: () => void
   onBlur?: (value: string) => void
   onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
@@ -209,6 +211,7 @@ export default function Autocompleter({
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.removeListener(ACTIONS.escape, clearSuggestions)
     ipcRenderer?.on(ACTIONS.escape, clearSuggestions)
+    onFocus?.()
   }
 
   const handleBlur = (value: string) => {

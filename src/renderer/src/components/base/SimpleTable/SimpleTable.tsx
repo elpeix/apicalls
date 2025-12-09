@@ -138,8 +138,9 @@ function SimpleTableCell({
 }) {
   const [editableValue, setEditableValue] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [inputFocused, setInputFocused] = useState(false)
   const [changedValue, setChangedValue] = useState(value)
-  const debouncedValue = useDebounce(changedValue, 500)
+  const debouncedValue = useDebounce(changedValue, 150)
 
   useEffect(() => {
     if (editable) {
@@ -151,10 +152,10 @@ function SimpleTableCell({
   }, [editable, autoFocus, value])
 
   useEffect(() => {
-    if (onChange && changeOnKeyUp && debouncedValue !== value) {
+    if (onChange && changeOnKeyUp && debouncedValue !== value && inputFocused) {
       onChange(debouncedValue as string)
     }
-  }, [debouncedValue, onChange, value, changeOnKeyUp])
+  }, [debouncedValue, onChange, value, changeOnKeyUp, inputFocused])
 
   const handleCellClick = () => {
     if (editable && inputRef.current) {
@@ -166,11 +167,17 @@ function SimpleTableCell({
     setChangedValue(value)
   }
 
+  const handleFocus = () => {
+    setInputFocused(true)
+  }
+
   const handleBlur = (value: string) => {
+    setInputFocused(false)
     if (onChange) {
       onChange(value)
     }
   }
+
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && onChange) {
       onChange(editableValue as string)
@@ -188,6 +195,7 @@ function SimpleTableCell({
             inputRef={inputRef as React.RefObject<HTMLInputElement>}
             value={editableValue as string}
             onChange={handleChange}
+            onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyUp={handleKeyUp}
             placeholder={placeholder}
@@ -203,6 +211,7 @@ function SimpleTableCell({
             value={editableValue as string}
             options={options}
             onChange={handleChange}
+            onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyUp={handleKeyUp}
             placeholder={placeholder}
