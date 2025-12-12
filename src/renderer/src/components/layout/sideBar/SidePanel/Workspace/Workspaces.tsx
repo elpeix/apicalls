@@ -78,9 +78,11 @@ export default function Workspaces() {
     })
   }
 
+  const isMac = window.api.os.isMac
+
   return (
     <div className={styles.workspaces}>
-      <div className={styles.content}>
+      <div className={`${styles.content} ${isMac ? styles.mac : ''}`}>
         <Menu
           menuIsOpen={showMenu}
           icon=""

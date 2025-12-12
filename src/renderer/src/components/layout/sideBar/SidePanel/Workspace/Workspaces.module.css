@@ -8,6 +8,10 @@
     display: flex;
     overflow: hidden;
 
+    &.mac {
+      margin-left: 0.5rem;
+    }
+
     .name {
       flex-shrink: 0;
       width: 100%;
