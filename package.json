@@ -1,6 +1,6 @@
 {
   "name": "api-calls",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "An API calls app",
   "type": "module",
   "main": "./out/main/index.js",
@@ -24,35 +24,35 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@monaco-editor/react": "^4.7.0",
-    "dompurify": "^3.3.0",
+    "dompurify": "^3.3.1",
     "electron-store": "^11.0.2",
     "electron-updater": "^6.6.2",
     "react-resizable-panels": "^3.0.6",
     "react-tabs": "^6.1.0",
     "undici": "^7.16.0",
-    "yaml": "^2.8.1"
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^2.1.0",
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@eslint/compat": "^2.0.0",
-    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.1",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/eslint-plugin": "^8.48.0",
-    "@vitejs/plugin-react": "^5.1.1",
-    "electron": "^39.2.4",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "electron": "^39.2.6",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^16.5.0",
-    "prettier": "^3.7.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "prettier": "^3.7.4",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
     "typescript": "^5.9.3",
-    "vite": "^7.2.4",
-    "vitest": "^4.0.14"
+    "vite": "^7.2.7",
+    "vitest": "^4.0.15"
   },
-  "packageManager": "pnpm@10.24.0"
+  "packageManager": "pnpm@10.25.0"
 }
