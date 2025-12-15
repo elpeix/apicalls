@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { is } from '@electron-toolkit/utils'
 import { AUTO_UPDATE } from '../lib/ipcChannels'
@@ -28,6 +28,7 @@ export function initAutoUpdate(mainWindow: BrowserWindow) {
 
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
+  autoUpdater.logger = console
 
   autoUpdater.on('update-available', (info) => {
     sendStatus({
@@ -97,7 +98,13 @@ export function installUpdate() {
     return
   }
 
-  autoUpdater.quitAndInstall(false, true)
+  app.removeAllListeners('window-all-closed')
+
+  autoUpdater.autoInstallOnAppQuit = false
+
+  setImmediate(() => {
+    autoUpdater.quitAndInstall(false, true)
+  })
 }
 
 function registerIpcHandlers() {
