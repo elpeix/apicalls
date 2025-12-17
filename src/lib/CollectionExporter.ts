@@ -61,35 +61,48 @@ class CollectionExporter {
     } else if (element.type === 'collection') {
       const requestType = element as RequestType
       const request = requestType.request || {}
-
-      let path = request.url.replace(/\/$/, '')
-      try {
-        if (request.url.startsWith('http')) {
-          const urlObj = new URL(request.url)
-          path = urlObj.pathname.replace(/\/$/, '')
-        }
-      } catch {
-        // Fallback to original url if parsing fails
-      }
+      const path = this.getPath(request)
 
       if (!openApiCollection.paths[path]) {
         openApiCollection.paths[path] = {}
       }
-      openApiCollection.paths[path][request.method.value.toLowerCase()] = {
-        summary: requestType.name,
-        description: requestType.description || '',
-        parameters: request.queryParams
-          ?.filter((param) => param.enabled)
-          .map((param) => ({
-            name: param.name,
-            in: 'path',
-            required: true,
-            schema: { type: 'string' }
-          })),
-        responses: {
-          '200': {
-            description: 'Successful response'
-          }
+      openApiCollection.paths[path][request.method.value.toLowerCase()] =
+        this.generateOpenApiRequest(requestType, request)
+    }
+  }
+
+  private getPath(request: RequestBase): string {
+    let path = request.url.replace(/\/$/, '')
+    try {
+      if (request.url.startsWith('http')) {
+        const urlObj = new URL(request.url)
+        path = urlObj.pathname.replace(/\/$/, '')
+      } else {
+        path = path.replace(/^{{.*?}}/, '')
+      }
+    } catch {
+      // Fallback to original url if parsing fails
+    }
+    return path
+  }
+
+  private generateOpenApiRequest(requestType: RequestType, request: RequestBase) {
+    const parameters = request.queryParams
+      ?.filter((param) => param.enabled)
+      .map((param) => ({
+        name: param.name,
+        in: 'path',
+        required: true,
+        schema: { type: 'string' }
+      }))
+
+    return {
+      summary: requestType.name,
+      description: requestType.description || '',
+      ...(parameters && parameters.length > 0 ? { parameters } : {}),
+      responses: {
+        '200': {
+          description: 'Successful response'
         }
       }
     }
