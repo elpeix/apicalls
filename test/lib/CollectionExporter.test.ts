@@ -121,4 +121,104 @@ describe('CollectionExporter', () => {
     expect(openApi.paths).toHaveProperty('/v1/users')
     expect(openApi.paths).not.toHaveProperty('http://api.example.org/v1/users')
   })
+
+  it('remove {{baseUrl}} or other {{variable}} added at the begining of the path', () => {
+    const collection: Collection = {
+      id: 'test-collection',
+      name: 'Test Collection',
+      description: 'A collection for testing purposes',
+      elements: [
+        {
+          id: '123',
+          type: 'collection',
+          name: 'Get Users',
+          description: 'Get all users',
+          request: {
+            url: '{{baseUrl}}/users',
+            method: { value: 'GET', label: 'GET', body: false },
+            queryParams: []
+          }
+        },
+        {
+          id: '456',
+          type: 'collection',
+          name: 'Get User By Id',
+          description: 'Get user by id',
+          request: {
+            url: '{{other}}/users/{id}',
+            method: { value: 'GET', label: 'GET', body: false },
+            queryParams: [{ name: 'id', enabled: true, value: '456' }]
+          }
+        },
+        {
+          id: '789',
+          type: 'collection',
+          name: 'Get User By Id',
+          description: 'Get user by id',
+          request: {
+            url: '{{other}}/other/{{id}}',
+            method: { value: 'GET', label: 'GET', body: false },
+            queryParams: [{ name: 'id', enabled: true, value: '456' }]
+          }
+        }
+      ]
+    }
+    const exporter = new CollectionExporter(collection)
+    const openApiJson = exporter.exportToOpenAPI()
+    const openApi = JSON.parse(openApiJson)
+
+    expect(openApi.paths).toHaveProperty('/users')
+    expect(openApi.paths).not.toHaveProperty('{{baseUrl}}/users')
+
+    expect(openApi.paths).toHaveProperty('/users/{id}')
+    expect(openApi.paths).not.toHaveProperty('{{other}}/users/{id}')
+
+    expect(openApi.paths).toHaveProperty('/other/{{id}}')
+    expect(openApi.paths).not.toHaveProperty('{{other}}/other/{{id}}')
+  })
+
+  it('omits parameters field when no query params are present', () => {
+    const collection: Collection = {
+      id: 'test',
+      name: 'Test',
+      elements: [
+        {
+          id: 123,
+          type: 'collection',
+          name: 'Req',
+          request: {
+            url: '/test',
+            method: { value: 'GET', label: 'GET', body: false },
+            queryParams: []
+          }
+        }
+      ]
+    }
+    const exporter = new CollectionExporter(collection)
+    const openApi = JSON.parse(exporter.exportToOpenAPI())
+    expect(openApi.paths['/test'].get.parameters).toBeUndefined()
+  })
+
+  it('includes parameters field when query params are present', () => {
+    const collection: Collection = {
+      id: 'test',
+      name: 'Test',
+      elements: [
+        {
+          id: 123,
+          type: 'collection',
+          name: 'Req',
+          request: {
+            url: '/test',
+            method: { value: 'GET', label: 'GET', body: false },
+            queryParams: [{ name: 'id', value: '', enabled: true }]
+          }
+        }
+      ]
+    }
+    const exporter = new CollectionExporter(collection)
+    const openApi = JSON.parse(exporter.exportToOpenAPI())
+    expect(openApi.paths['/test'].get.parameters).toBeDefined()
+    expect(openApi.paths['/test'].get.parameters).toHaveLength(1)
+  })
 })

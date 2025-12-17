@@ -67,6 +67,7 @@ export class ParserOpenApi extends ParserCollection {
           type: 'collection',
           id: `${id}_${++count}`,
           name: sortedPaths[path].summary || path,
+          description: sortedPaths[path][method].description || '',
           request: {
             url: path.startsWith('{{baseUrl}}') ? path : baseUrl + path,
             method: this.getMethod(method),
