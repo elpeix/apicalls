@@ -72,8 +72,8 @@ export function useWorkspaces(): WorkspacesHookType {
     ipcRenderer?.send(WORKSPACES.create, { name })
   }
 
-  const update = (id: Identifier, name: string) => {
-    ipcRenderer?.send(WORKSPACES.update, { id, name })
+  const update = (workspace: WorkspaceType) => {
+    ipcRenderer?.send(WORKSPACES.update, workspace)
   }
 
   const select = (id: Identifier) => {

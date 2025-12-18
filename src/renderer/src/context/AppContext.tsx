@@ -361,6 +361,7 @@ export default function AppContextProvider({ children }: { children: React.React
           className={dialogProps.className}
           onClose={hideDialog}
           preventKeyClose={dialogProps.preventKeyClose}
+          preventOverlayClickClose={dialogProps.preventOverlayClickClose}
           position={dialogProps.position}
           fullWidth={dialogProps.fullWidth}
         >

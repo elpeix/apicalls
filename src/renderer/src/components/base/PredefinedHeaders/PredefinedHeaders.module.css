@@ -1,0 +1,25 @@
+.content {
+  width: 28rem;
+  display: flex;
+  min-height: 18rem;
+  flex-direction: column;
+}
+.header {
+  padding: 0.5rem;
+  text-transform: capitalize;
+}
+
+.params {
+  flex: 1;
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+.footer {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border-color);
+}

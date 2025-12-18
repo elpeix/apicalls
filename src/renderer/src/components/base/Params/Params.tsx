@@ -74,7 +74,7 @@ export default function Params({
           initialValue={items}
           onSave={(items) => {
             application.hideDialog()
-            onSave(items)
+            saveItems(items)
           }}
           onCancel={application.hideDialog}
         />
@@ -86,23 +86,23 @@ export default function Params({
   const changeEnabledHandler = (index: number, enabled: boolean) => {
     const newItems = [...items]
     newItems[index] = { ...newItems[index], enabled }
-    onSave(newItems)
+    saveItems(newItems)
   }
 
   const changeNameHandler = (index: number, name: string) => {
     const newItems = [...items]
     newItems[index] = { ...newItems[index], name }
-    onSave(newItems)
+    saveItems(newItems)
   }
   const changeValueHandler = (index: number, value: string) => {
     const newItems = [...items]
     newItems[index] = { ...newItems[index], value }
-    onSave(newItems)
+    saveItems(newItems)
   }
   const deleteHandler = (index: number) => {
     const newItems = [...items]
     newItems.splice(index, 1)
-    onSave(newItems)
+    saveItems(newItems)
   }
 
   const dragHandler = (from: number, to: number) => {
@@ -112,7 +112,11 @@ export default function Params({
     const newItems = [...items]
     const [fromItem] = newItems.splice(from, 1)
     newItems.splice(to, 0, fromItem)
-    onSave(newItems)
+    saveItems(newItems)
+  }
+
+  const saveItems = (itemsToSave: KeyValue[]) => {
+    onSave(itemsToSave)
   }
 
   return (

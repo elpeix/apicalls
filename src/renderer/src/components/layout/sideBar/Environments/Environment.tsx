@@ -89,6 +89,22 @@ export default function Environment({
     })
   }
 
+  const saveHeaders = (requestHeaders: KeyValue[]) => {
+    setEnv({ ...env, requestHeaders })
+    update({ ...env, requestHeaders })
+  }
+
+  const addHeaderHandler = () => {
+    const headers = env.requestHeaders || []
+    headers.push({
+      name: '',
+      value: '',
+      enabled: true
+    })
+
+    saveHeaders(headers)
+  }
+
   return (
     <div className={`sidePanel-content ${styles.environment}`}>
       <div className={styles.header}>
@@ -129,21 +145,44 @@ export default function Environment({
         </div>
       </div>
       <div className={styles.content}>
-        <Params
-          items={env.variables}
-          onSave={updateVariables}
-          onAdd={addVariable}
-          maxNameSize={240}
-          minNameSize={60}
-          defaultNameSize={90}
-          bulkMode={true}
-          showEnable={false}
-          draggable={true}
-          showTip={false}
-          dragFormat="EnvironmentVariables"
-          addCaption="Add variable"
-          removeCaption="Remove variable"
-        />
+        {' '}
+        <div className={styles.group}>
+          <label>Variables</label>
+          <Params
+            items={env.variables}
+            onSave={updateVariables}
+            onAdd={addVariable}
+            maxNameSize={240}
+            minNameSize={60}
+            defaultNameSize={90}
+            bulkMode={true}
+            showEnable={false}
+            draggable={true}
+            showTip={false}
+            dragFormat="EnvironmentVariables"
+            addCaption="Add variable"
+            removeCaption="Remove variable"
+            className={styles.params}
+          />
+        </div>
+        <div className={styles.group}>
+          <label>Environment headers</label>
+          <Params
+            environmentId={env.id}
+            items={env.requestHeaders || []}
+            onSave={saveHeaders}
+            onAdd={addHeaderHandler}
+            maxNameSize={240}
+            minNameSize={60}
+            defaultNameSize={90}
+            bulkMode={true}
+            draggable={true}
+            dragFormat="environment-headers"
+            addCaption="Add header"
+            removeCaption="Remove header"
+            className={styles.params}
+          />
+        </div>
       </div>
     </div>
   )

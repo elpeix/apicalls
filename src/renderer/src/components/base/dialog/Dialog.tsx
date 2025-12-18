@@ -7,6 +7,7 @@ export default function Dialog({
   className = '',
   onClose,
   preventKeyClose = false,
+  preventOverlayClickClose = false,
   position = 'center',
   fullWidth = false
 }: DialogType) {
@@ -28,12 +29,18 @@ export default function Dialog({
     e.stopPropagation()
   }
 
+  const overlayClickHandle = () => {
+    if (!preventOverlayClickClose) {
+      closeDialog()
+    }
+  }
+
   return (
     <>
       {show && (
         <div
           className={`${styles.overlay} ${position === 'top' ? styles.dialogOnTop : ''}`}
-          onClick={closeDialog}
+          onClick={overlayClickHandle}
         >
           <dialog
             className={`${styles.dialog} ${className} ${fullWidth ? styles.fullWidth : ''}`}
