@@ -22,7 +22,7 @@ type RequestAuth = {
   value?: RequestAuthValue
 }
 
-type ContentTypes = 'json' | 'xml' | 'text' | 'none'
+type ContentTypes = 'json' | 'xml' | 'form-data' | 'text' | 'none'
 type BodyType =
   | {
       contentType: Exclude<ContentTypes, 'none'>
@@ -390,6 +390,7 @@ type CallResponse = {
     response: number
   }
   responseHeaders: KeyValue[]
+  sentBody?: string
 }
 
 type CallResponseFailure = {

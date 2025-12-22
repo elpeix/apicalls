@@ -15,7 +15,22 @@ vi.mock('undici', () => {
   return {
     fetch: vi.fn(),
     Agent: vi.fn(),
-    setGlobalDispatcher: vi.fn()
+    setGlobalDispatcher: vi.fn(),
+    FormData: class {
+      append = vi.fn()
+    },
+    Headers: Headers,
+    Response: class {
+      body: ReadableStream
+      constructor(body: ReadableStream) {
+        this.body = body
+      }
+      text = vi
+        .fn()
+        .mockResolvedValue(
+          '--boundary\r\nContent-Disposition: form-data; name="key1"\r\n\r\nvalue1\r\n--boundary--'
+        )
+    }
   }
 })
 
@@ -168,5 +183,63 @@ describe('restCaller', () => {
 
     expect(requestInit).toHaveProperty('body')
     expect(requestInit?.body).toBe('{"name":"John"}')
+  })
+
+  it('should be success on multipart/form-data request', async () => {
+    const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>
+
+    mockFetch.mockReturnValue(
+      new Promise((resolve, _) => {
+        resolve({
+          ok: true,
+          status: STATUS_CODE,
+          statusText: STATUS_TEXT,
+          headers: new Headers(),
+          text: async () => RESULT
+        } as Response)
+      })
+    )
+
+    let response: CallResponse | null = null
+    try {
+      response = await restCall(1, {
+        url: 'https://apicalls.dev/post',
+        method: {
+          value: 'POST',
+          label: 'POST',
+          body: true
+        },
+        queryParams: [],
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        body: JSON.stringify([
+          { name: 'key1', value: 'value1', enabled: true },
+          { name: 'key2', value: 'value2', enabled: false }
+        ])
+      })
+    } catch (_error) {
+      assert.fail('should not throw an error')
+    }
+
+    expect(mockFetch).toHaveBeenCalled()
+
+    const requestInit = mockFetch.mock.calls[0][1]
+
+    expect(requestInit).toHaveProperty('body')
+    const body = requestInit?.body
+    // Body should be the string returned by Response.text()
+    expect(body).toBe(
+      '--boundary\r\nContent-Disposition: form-data; name="key1"\r\n\r\nvalue1\r\n--boundary--'
+    )
+
+    const headers = requestInit?.headers as Headers
+    expect(headers.has('Content-Type')).toBe(true)
+    expect(headers.get('Content-Type')).toContain('multipart/form-data; boundary=boundary')
+
+    expect(response).toBeDefined()
+    expect(response?.sentBody).toBe(
+      '--boundary\r\nContent-Disposition: form-data; name="key1"\r\n\r\nvalue1\r\n--boundary--'
+    )
   })
 })

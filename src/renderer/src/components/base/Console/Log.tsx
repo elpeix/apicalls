@@ -73,7 +73,43 @@ export default function Log({ log }: { log: RequestLog }) {
             {log.request?.method?.body && (
               <div className={styles.row}>
                 <div className={styles.label}>Body</div>
-                <div className={styles.value}>{log.request?.body}</div>
+                <div className={styles.value}>
+                  {(() => {
+                    const contentType = Object.keys(requestHeaders || {}).find(
+                      (requestHeader) => requestHeader.toLowerCase() === 'content-type'
+                    )
+                    const isFormData =
+                      contentType &&
+                      (requestHeaders as { [key: string]: string })[contentType] ===
+                        'multipart/form-data'
+
+                    if (log.response?.sentBody) {
+                      return <pre>{log.response.sentBody}</pre>
+                    }
+
+                    if (isFormData && log.request?.body) {
+                      try {
+                        const bodyParts = JSON.parse(log.request.body)
+                        if (Array.isArray(bodyParts)) {
+                          return (
+                            <div className={styles.valueItem}>
+                              {bodyParts
+                                .filter((bodyPart: KeyValue) => bodyPart.enabled)
+                                .map((bodyPart: KeyValue, i: number) => (
+                                  <div key={`body_${i}`}>
+                                    {bodyPart.name}: {bodyPart.value}
+                                  </div>
+                                ))}
+                            </div>
+                          )
+                        }
+                      } catch (_e) {
+                        return log.request.body
+                      }
+                    }
+                    return log.request?.body
+                  })()}
+                </div>
               </div>
             )}
           </div>

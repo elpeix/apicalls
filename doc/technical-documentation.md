@@ -121,7 +121,9 @@ environments, cookies, and history.
    URL, headers, body).
 2. The main process creates an `AbortController`, configures an Undici `Agent`
    according to settings (`followRequestRedirect`, `timeout`,
-   `rejectUnauthorized`), and performs the call.
+   `rejectUnauthorized`), and performs the call. For `multipart/form-data`, the
+   body is serialized to handle boundaries correctly, and the raw sent body is
+   captured for logging.
 3. Responses return to the renderer via `REQUEST.response-<id>` including
    timing metrics (`responseTime`) and normalised headers. Errors throw a
    `RestCallerError` with detailed diagnostics (`src/lib/RestCallerError.ts`).

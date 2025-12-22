@@ -11,7 +11,6 @@ import { useConsole } from '../hooks/useConsole'
 import { getBody, getContentType, getValueFromPath } from '../lib/utils'
 import { getGeneralDefaultUserAgent } from '../../../lib/defaults'
 import { parseCurl } from '../lib/curl'
-import { getResizeHandleElementIndex } from 'react-resizable-panels'
 
 const responseInitialValue: RequestResponseType = {
   body: '',
