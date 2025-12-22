@@ -64,6 +64,8 @@
   --input-disabled-color: var(--content-0);
   --input-undefined-color: var(--content-0);
   --input-select-background-color: var(--input-hover-background-color);
+  --input-focus-border-color: var(--input-hover-border-color);
+  --input-focus-background-color: var(--input-hover-background-color);
 
   --button-background-color: transparent;
   --button-color: var(--foreground-0);

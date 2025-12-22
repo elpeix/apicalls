@@ -13,9 +13,9 @@ ipcMain.on(WORKSPACES.create, (event, { name }) => {
   }
 })
 
-ipcMain.on(WORKSPACES.update, (event, { id, name }) => {
+ipcMain.on(WORKSPACES.update, (event, workspace: WorkspaceType) => {
   try {
-    event.reply(WORKSPACES.updated, workspaces.update(id, name))
+    event.reply(WORKSPACES.updated, workspaces.update(workspace))
   } catch (error) {
     event.reply(WORKSPACES.error, {
       message: (error as Error).message

@@ -11,6 +11,7 @@ import { useConsole } from '../hooks/useConsole'
 import { getBody, getContentType, getValueFromPath } from '../lib/utils'
 import { getGeneralDefaultUserAgent } from '../../../lib/defaults'
 import { parseCurl } from '../lib/curl'
+import { getResizeHandleElementIndex } from 'react-resizable-panels'
 
 const responseInitialValue: RequestResponseType = {
   body: '',
@@ -54,6 +55,7 @@ export default function RequestContextProvider({
     collections,
     cookies,
     application,
+    workspaces,
     appSettings: settings
   } = useContext(AppContext)
 
@@ -393,10 +395,10 @@ export default function RequestContextProvider({
   }
 
   const setDefaultHeaders = (headers: Record<string, string>) => {
-    if (settings?.settings?.defaultHeaders) {
-      const headerNamesLower = Object.keys(headers).map((h) => h.toLowerCase())
+    const headerNamesLower = Object.keys(headers).map((h) => h.toLowerCase())
 
-      settings.settings.defaultHeaders.forEach((header) => {
+    const setHeaders = (definedHeaders: KeyValue[] | undefined) => {
+      definedHeaders?.forEach((header) => {
         if (
           header.enabled &&
           header.name &&
@@ -407,6 +409,11 @@ export default function RequestContextProvider({
         }
       })
     }
+
+    setHeaders(collection?.requestHeaders)
+    setHeaders(getRequestEnvironment()?.requestHeaders)
+    setHeaders(workspaces?.selectedWorkspace?.requestHeaders)
+    setHeaders(settings?.settings?.defaultHeaders)
   }
 
   const prepareQueryParams = (queryParams: KeyValue[]) => {

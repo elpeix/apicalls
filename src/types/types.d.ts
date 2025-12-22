@@ -75,6 +75,7 @@ type Environment = {
   name: string
   active: boolean
   variables: KeyValue[]
+  requestHeaders?: KeyValue[]
 }
 
 type PreRequestDataToCaptureType = 'header' | 'body'
@@ -106,6 +107,7 @@ type Collection = {
   name: string
   description?: string
   preRequest?: PreRequest
+  requestHeaders?: KeyValue[]
   elements: (CollectionFolder | RequestType)[]
   environmentId?: Identifier
 }
@@ -421,6 +423,7 @@ type WorkspaceType = {
   id: Identifier
   name: string
   selected?: boolean
+  requestHeaders?: KeyValue[]
 }
 
 type WorkspacesHookType = {
@@ -428,7 +431,7 @@ type WorkspacesHookType = {
   selectedWorkspace: WorkspaceType | null
   create: (name: string) => void
   duplicate: (id: Identifier) => void
-  update: (id: Identifier, name: string) => void
+  update: (workspace: WorkspaceType) => void
   remove: (id: Identifier) => void
   select: (id: Identifier) => void
   reload: () => void
@@ -486,6 +489,7 @@ type DialogType = {
   className?: string
   onClose?: () => void
   preventKeyClose?: boolean
+  preventOverlayClickClose?: boolean
   position?: 'top' | 'center'
   fullWidth?: boolean
 }

@@ -63,8 +63,10 @@ export class Workspaces {
     return this.selectedWorkspace
   }
 
-  update(id: Identifier, name: string): WorkspaceType {
-    name = name.trim()
+  update(argWorkspace: WorkspaceType): WorkspaceType {
+    const id = argWorkspace.id
+    const name = argWorkspace.name.trim()
+
     if (!name) {
       throw new Error('Workspace name is required')
     }
@@ -73,6 +75,8 @@ export class Workspaces {
     }
     const workspace = this.#getWorkspace(id)
     workspace.name = name
+    workspace.requestHeaders = argWorkspace.requestHeaders
+
     this.workspaces = this.workspaces.map((w) => (w.id === id ? workspace : w))
     this.#saveWorkspaces()
     return workspace
@@ -107,6 +111,7 @@ export class Workspaces {
     this.selectedWorkspace = {
       id: newId,
       name: `${workspace.name} (copy)`,
+      requestHeaders: workspace.requestHeaders || [],
       selected: true
     }
 

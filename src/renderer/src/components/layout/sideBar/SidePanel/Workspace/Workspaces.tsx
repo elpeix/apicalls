@@ -4,6 +4,7 @@ import Menu from '../../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../../base/Menu/MenuElement'
 import { AppContext } from '../../../../../context/AppContext'
 import Icon from '../../../../base/Icon/Icon'
+import PredefinedHeaders from '../../../../base/PredefinedHeaders/PredefinedHeaders'
 
 export default function Workspaces() {
   const { application, workspaces } = useContext(AppContext)
@@ -53,7 +54,7 @@ export default function Workspaces() {
       valueSelected: true,
       onConfirm: (newName) => {
         if (newName && workspaces.selectedWorkspace) {
-          workspaces.update(workspaces.selectedWorkspace.id, newName)
+          workspaces.update({ ...workspaces.selectedWorkspace, name: newName })
           workspaces.select(workspaces.selectedWorkspace.id)
         }
         application.hidePrompt()
@@ -78,6 +79,28 @@ export default function Workspaces() {
     })
   }
 
+  const editRequestHeaders = () => {
+    setShowMenu(false)
+    application.showDialog({
+      children: (
+        <PredefinedHeaders
+          title="Workspace headers"
+          headers={workspaces.selectedWorkspace?.requestHeaders || []}
+          onSave={(requestHeaders: KeyValue[]) => {
+            if (workspaces.selectedWorkspace) {
+              workspaces.update({ ...workspaces.selectedWorkspace, requestHeaders })
+              workspaces.select(workspaces.selectedWorkspace.id)
+            }
+            application.hideDialog()
+          }}
+          onClose={() => application.hideDialog()}
+        />
+      ),
+      preventKeyClose: false,
+      preventOverlayClickClose: true
+    })
+  }
+
   const isMac = window.api.os.isMac
 
   return (
@@ -93,6 +116,7 @@ export default function Workspaces() {
         >
           <MenuElement icon="edit" title="Rename" onClick={handleRenameWorkspace} />
           <MenuElement icon="copy" title="Duplicate" onClick={handleDuplicateWorkspace} />
+          <MenuElement icon="header" title="Headers" onClick={editRequestHeaders} />
           {workspaces.selectedWorkspace.id !== 'workspace' && (
             <MenuElement
               icon="delete"

@@ -20,6 +20,7 @@ import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
 import Note from '../../../base/Notes/Note'
 import NoteModal from '../../../base/Notes/NoteModal'
+import PredefinedHeaders from '../../../base/PredefinedHeaders/PredefinedHeaders'
 
 export default function Collection({
   collection,
@@ -211,7 +212,8 @@ export default function Collection({
           environmentId={coll.environmentId}
         />
       ),
-      preventKeyClose: true
+      preventKeyClose: false,
+      preventOverlayClickClose: true
     })
   }
 
@@ -255,7 +257,27 @@ export default function Collection({
           }}
           onCancel={() => application.hideDialog()}
         />
-      )
+      ),
+      preventOverlayClickClose: true
+    })
+  }
+
+  const editRequestHeaders = () => {
+    setShowMenu(false)
+    application.showDialog({
+      children: (
+        <PredefinedHeaders
+          title="Collection headers"
+          headers={coll.requestHeaders || []}
+          onSave={(requestHeaders: KeyValue[]) => {
+            update({ ...coll, requestHeaders })
+            application.hideDialog()
+          }}
+          onClose={() => application.hideDialog()}
+        />
+      ),
+      preventKeyClose: false,
+      preventOverlayClickClose: true
     })
   }
 
@@ -320,6 +342,7 @@ export default function Collection({
                   </SubMenu>
                 )}
               </>
+              <MenuElement icon="header" title="Headers" onClick={editRequestHeaders} />
               <MenuSeparator />
               <MenuElement icon="more" title="Add request" onClick={handleAddRequest} />
               <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />
