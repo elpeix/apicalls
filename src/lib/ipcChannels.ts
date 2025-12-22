@@ -153,3 +153,7 @@ export const MENU_ACTIONS = {
   zoomOut: 'menu:zoom-out',
   about: 'menu:about'
 }
+
+export const DIALOG = {
+  open: 'dialog:open'
+}

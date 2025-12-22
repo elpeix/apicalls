@@ -1,6 +1,7 @@
 import { fetch, Agent, RequestInit, setGlobalDispatcher, FormData, Headers, Response } from 'undici'
 import { RestCallerError } from './RestCallerError'
 import { getSettings } from './settings'
+import { openAsBlob } from 'node:fs'
 
 const defaultMethod: Method = {
   value: 'GET',
@@ -49,11 +50,20 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
           const formData = new FormData()
           const bodyParts = JSON.parse(request.body)
           if (Array.isArray(bodyParts)) {
-            bodyParts.forEach((part: KeyValue) => {
+            for (const part of bodyParts) {
               if (part.enabled) {
-                formData.append(part.name, part.value)
+                if (part.type === 'file' && part.value) {
+                  try {
+                    const fileBlob = await openAsBlob(part.value)
+                    formData.append(part.name, fileBlob, part.value.split(/[\\/]/).pop())
+                  } catch (err) {
+                    console.error(`Failed to read file: ${part.value}`, err)
+                  }
+                } else {
+                  formData.append(part.name, part.value)
+                }
               }
-            })
+            }
           }
           // Serialize the form data to a string to ensure we use the same content type boundary for both the request and the log
           let bodyString = ''

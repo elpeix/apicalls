@@ -1,14 +1,19 @@
-import { app, ipcMain, IpcMainEvent } from 'electron'
+import { app, ipcMain, IpcMainEvent, dialog } from 'electron'
 import { restCall, restCancel } from '../../src/lib/restCaller'
 import { RestCallerError } from '../lib/RestCallerError'
 import { clearSettings, getSettings, setSettings } from '../lib/settings'
-import { ACTIONS, REQUEST, SETTINGS, VERSION, WINDOW_ACTIONS } from '../lib/ipcChannels'
+import { ACTIONS, DIALOG, REQUEST, SETTINGS, VERSION, WINDOW_ACTIONS } from '../lib/ipcChannels'
 import { mainWindow } from '.'
 
 import fs from 'fs'
 import * as path from 'path'
 
 let themes: Map<string, AppTheme> = new Map()
+
+ipcMain.handle(DIALOG.open, async () => {
+  if (!mainWindow) return { canceled: true, filePaths: [] }
+  return await dialog.showOpenDialog(mainWindow, { properties: ['openFile'] })
+})
 
 ipcMain.on(SETTINGS.get, (event) => {
   if (!themes.size) {

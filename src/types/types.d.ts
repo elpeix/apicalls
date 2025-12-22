@@ -11,6 +11,7 @@ type KeyValue = {
   value: string
   enabled?: boolean
   toBeRemoved?: boolean
+  type?: 'text' | 'file'
 }
 
 type RequestAuthType = 'none' | 'bearer' | 'basic'

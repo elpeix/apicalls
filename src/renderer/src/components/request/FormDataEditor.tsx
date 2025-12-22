@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styles from './Request.module.css'
-import Params from '../base/Params/Params'
+import FormDataTable from '../base/Params/FormDataTable'
 
 export default function FormDataEditor({
   value,
@@ -33,7 +32,8 @@ export default function FormDataEditor({
       return {
         name: parsed.name,
         value: parsed.value,
-        enabled: !!parsed.enabled
+        enabled: !!parsed.enabled,
+        type: parsed.type || 'text'
       }
     }
     return null
@@ -45,11 +45,11 @@ export default function FormDataEditor({
   }
 
   const handleAdd = () => {
-    updateItems([...items, { name: '', value: '', enabled: true }])
+    updateItems([...items, { name: '', value: '', enabled: true, type: 'text' }])
   }
 
   return (
-    <Params
+    <FormDataTable
       items={items}
       onSave={updateItems}
       onAdd={handleAdd}
@@ -62,7 +62,6 @@ export default function FormDataEditor({
       dragFormat="environment-headers"
       addCaption="Add field"
       removeCaption="Remove field"
-      className={styles.params}
     />
   )
 }
