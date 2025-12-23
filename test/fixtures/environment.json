@@ -1,0 +1,17 @@
+{
+  "name": "Test Environment",
+  "variables": [
+    {
+      "name": "baseUrl",
+      "value": "https://api.example.com",
+      "enabled": true
+    }
+  ],
+  "requestHeaders": [
+    {
+      "name": "Authorization",
+      "value": "Bearer token123",
+      "enabled": true
+    }
+  ]
+}

@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styles from './Environment.module.css'
 import Name from '../../../base/Name'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import Droppable from '../../../base/Droppable/Droppable'
 import { AppContext } from '../../../../context/AppContext'
+import { ENVIRONMENTS } from '../../../../../../lib/ipcChannels'
 
 export default function EnvironmentItem({
   environment,
@@ -26,6 +27,14 @@ export default function EnvironmentItem({
   isScrolling: boolean
 }) {
   const { application } = useContext(AppContext)
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ENVIRONMENTS.exportFailure, (_: unknown, { message }: { message: string }) => {
+      application.showAlert({ message })
+    })
+    return () => ipcRenderer?.removeAllListeners(ENVIRONMENTS.exportFailure)
+  }, [])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -68,6 +77,10 @@ export default function EnvironmentItem({
     })
   }
 
+  const exportEnvironment = (id: Identifier) => {
+    window.electron?.ipcRenderer.send(ENVIRONMENTS.export, id)
+  }
+
   return (
     <Droppable
       className={`sidePanel-content-item ${styles.item}`}
@@ -101,6 +114,12 @@ export default function EnvironmentItem({
       >
         <MenuElement icon="edit" title="Edit" onClick={() => selectEnvironment(environment)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(environment.id)} />
+        <MenuElement
+          icon="save"
+          iconDirection="north"
+          title="Export"
+          onClick={() => exportEnvironment(environment.id)}
+        />
         <MenuSeparator />
         <MenuElement
           icon="delete"

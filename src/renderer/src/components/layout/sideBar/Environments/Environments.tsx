@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { WORKSPACES } from '../../../../../../lib/ipcChannels'
+import { ENVIRONMENTS, WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Environment from './Environment'
@@ -9,7 +9,7 @@ import { FilterInput } from '../../../base/FilterInput/FilterInput'
 import Scrollable from '../../../base/Scrollable'
 
 export default function Environments() {
-  const { environments } = useContext(AppContext)
+  const { application, environments } = useContext(AppContext)
 
   const [envs, setEnvs] = useState<Environment[]>([])
   const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
@@ -19,10 +19,16 @@ export default function Environments() {
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ENVIRONMENTS.importFailure, (_: unknown, message: string) => {
+      application.showAlert({ message })
+    })
     ipcRenderer?.on(WORKSPACES.changed, () => {
       setSelectedEnvironment(null)
     })
-    return () => ipcRenderer?.removeAllListeners(WORKSPACES.changed)
+    return () => {
+      ipcRenderer?.removeAllListeners(ENVIRONMENTS.importFailure)
+      ipcRenderer?.removeAllListeners(WORKSPACES.changed)
+    }
   }, [environments, setSelectedEnvironment])
 
   useEffect(() => {
@@ -75,6 +81,10 @@ export default function Environments() {
     environments?.move(id, toBeforeId)
   }
 
+  const importEnvironment = () => {
+    window.electron?.ipcRenderer.send(ENVIRONMENTS.import)
+  }
+
   return (
     <>
       <div className="sidePanel-header">
@@ -88,6 +98,9 @@ export default function Environments() {
           <>
             <div>
               <ButtonIcon icon="filter" onClick={() => setShowFilter(!showFilter)} title="Filter" />
+            </div>
+            <div>
+              <ButtonIcon icon="save" onClick={importEnvironment} title="Import environment" />
             </div>
             <div>
               <ButtonIcon icon="more" onClick={add} title="New environment" />

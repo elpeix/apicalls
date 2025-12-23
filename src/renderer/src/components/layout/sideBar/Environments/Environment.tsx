@@ -7,6 +7,7 @@ import BulkEntry from '../../../base/BulkEntry/BulkEntry'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import Params from '../../../base/Params/Params'
+import { ENVIRONMENTS } from '../../../../../../lib/ipcChannels'
 
 export default function Environment({
   environment,
@@ -35,6 +36,14 @@ export default function Environment({
       }, 0)
     }
   }, [environment])
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    ipcRenderer?.on(ENVIRONMENTS.exportFailure, (_: unknown, { message }: { message: string }) => {
+      application.showAlert({ message })
+    })
+    return () => ipcRenderer?.removeAllListeners(ENVIRONMENTS.exportFailure)
+  }, [])
 
   const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const active = e.target.checked
@@ -105,6 +114,10 @@ export default function Environment({
     saveHeaders(headers)
   }
 
+  const exportEnvironment = () => {
+    window.electron?.ipcRenderer.send(ENVIRONMENTS.export, env.id)
+  }
+
   return (
     <div className={`sidePanel-content ${styles.environment}`}>
       <div className={styles.header}>
@@ -134,6 +147,12 @@ export default function Environment({
             <MenuSeparator />
             <MenuElement icon="more" onClick={addVariable} title="Add variable" />
             <MenuElement icon="clipboard" onClick={openBulk} title="Bulk edit" />
+            <MenuElement
+              icon="save"
+              iconDirection="north"
+              onClick={exportEnvironment}
+              title="Export"
+            />
             <MenuSeparator />
             <MenuElement
               icon="delete"
