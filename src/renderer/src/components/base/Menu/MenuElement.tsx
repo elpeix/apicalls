@@ -12,6 +12,7 @@ export type ReactMenuElement =
 export function MenuElement({
   icon = '',
   showIcon = true,
+  iconDirection = 'south',
   title,
   accelerator = '',
   color = '',
@@ -21,6 +22,7 @@ export function MenuElement({
 }: {
   icon?: string
   showIcon?: boolean
+  iconDirection?: 'north' | 'south' | 'east' | 'west'
   title: string
   accelerator?: string
   color?: string
@@ -33,7 +35,7 @@ export function MenuElement({
 
   return (
     <div className={menuElementClassName} onClick={onClick} style={style}>
-      {showIcon && <Icon icon={icon} className={className} />}
+      {showIcon && <Icon icon={icon} direction={iconDirection} className={className} />}
       <div className={styles.title}>{title}</div>
       <Accelerator value={accelerator} />
     </div>

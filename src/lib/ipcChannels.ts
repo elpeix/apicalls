@@ -59,7 +59,15 @@ export const ENVIRONMENTS = {
   updateAll: 'environments:update-all',
   remove: 'environments:remove',
   updated: 'environments:updated',
-  getFailure: 'environments:get-failure'
+  getFailure: 'environments:get-failure',
+  import: 'environments:import',
+  importFailure: 'environments:import-failure',
+  importCanceled: 'environments:import-canceled',
+  importProgress: 'environments:import-progress',
+  importResult: 'environments:import-result',
+  export: 'environments:export',
+  exportFailure: 'environments:export-failure',
+  exportResult: 'environments:export-result'
 }
 
 export const COOKIES = {
