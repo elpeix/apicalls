@@ -4,6 +4,7 @@ import styles from './Request.module.css'
 import { RequestContext } from '../../context/RequestContext'
 import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 import { getBody } from '../../lib/utils'
+import FormDataEditor from './FormDataEditor'
 
 export default function RequestBody() {
   const { request } = useContext(RequestContext)
@@ -23,6 +24,7 @@ export default function RequestBody() {
     none: 'None',
     json: 'Json',
     xml: 'Xml',
+    'form-data': 'Form-Data',
     text: 'Text'
   }
 
@@ -67,16 +69,20 @@ export default function RequestBody() {
           onChange={handleSelectChange}
         />
       </label>
-      {contentType !== 'none' && (
-        <div className={styles.contentBody}>
-          <Editor
-            language={contentType}
-            onChange={handleBodyChange}
-            value={value}
-            readOnly={false}
-            type="request"
-          />
-        </div>
+      {contentType === 'form-data' ? (
+        <FormDataEditor value={value} onChange={handleBodyChange} />
+      ) : (
+        contentType !== 'none' && (
+          <div className={styles.contentBody}>
+            <Editor
+              language={contentType}
+              onChange={handleBodyChange}
+              value={value}
+              readOnly={false}
+              type="request"
+            />
+          </div>
+        )
       )}
     </div>
   )

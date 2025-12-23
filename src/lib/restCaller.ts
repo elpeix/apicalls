@@ -1,6 +1,7 @@
-import { fetch, Agent, RequestInit, setGlobalDispatcher } from 'undici'
+import { fetch, Agent, RequestInit, setGlobalDispatcher, FormData, Headers, Response } from 'undici'
 import { RestCallerError } from './RestCallerError'
 import { getSettings } from './settings'
+import { openAsBlob } from 'node:fs'
 
 const defaultMethod: Method = {
   value: 'GET',
@@ -37,8 +38,60 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       signal: abortController.signal,
       redirect: (settings.followRequestRedirect ?? false) ? 'follow' : 'manual'
     }
+    let sentBody: string | undefined
     if (request.body && request.method.body) {
-      requestInit.body = request.body
+      // Normalize headers to handle case-insensitivity and various formats (array, object, Headers)
+      const headers = new Headers(request.headers)
+      const contentType = headers.get('content-type') || ''
+      requestInit.headers = headers
+
+      if (contentType.toLowerCase().includes('multipart/form-data')) {
+        try {
+          const formData = new FormData()
+          const bodyParts = JSON.parse(request.body)
+          if (Array.isArray(bodyParts)) {
+            for (const part of bodyParts) {
+              if (part.enabled) {
+                if (part.type === 'file' && part.value) {
+                  try {
+                    const fileBlob = await openAsBlob(part.value)
+                    formData.append(part.name, fileBlob, part.value.split(/[\\/]/).pop())
+                  } catch (err) {
+                    console.error(`Failed to read file: ${part.value}`, err)
+                  }
+                } else {
+                  formData.append(part.name, part.value)
+                }
+              }
+            }
+          }
+          // Serialize the form data to a string to ensure we use the same content type boundary for both the request and the log
+          let bodyString = ''
+          try {
+            bodyString = await new Response(formData).text()
+            sentBody = bodyString
+
+            // Extract boundary from the body string (first line is usually "--boundary")
+            const boundaryLine = bodyString.split('\r\n')[0] || bodyString.split('\n')[0]
+            if (boundaryLine.startsWith('--')) {
+              const boundary = boundaryLine.substring(2)
+              headers.set('content-type', `multipart/form-data; boundary=${boundary}`)
+            }
+
+            requestInit.body = bodyString
+          } catch (e) {
+            console.error('Failed to read form-data body', e)
+            requestInit.body = formData
+            // Fallback: remove content-type and let fetch handle it (but boundary might mismatch in log)
+            headers.delete('content-type')
+          }
+        } catch (e) {
+          console.error('Failed to parse form-data body', e)
+          requestInit.body = request.body
+        }
+      } else {
+        requestInit.body = request.body
+      }
     }
 
     const agent = new Agent({
@@ -80,7 +133,8 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       },
       contentLength,
       responseTime,
-      responseHeaders: headers
+      responseHeaders: headers,
+      sentBody
     } as CallResponse
   } catch (error) {
     const message = 'Rest call error'

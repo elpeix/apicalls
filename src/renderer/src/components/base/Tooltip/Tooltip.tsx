@@ -37,7 +37,7 @@ export default function Tooltip() {
   }
 
   const getLeft = () => {
-    if (x + dimensions.width + leftOffset > window.innerWidth) {
+    if (x + dimensions.width > window.innerWidth) {
       return x - dimensions.width + leftOffset
     }
     if (x + leftOffset < 0) {

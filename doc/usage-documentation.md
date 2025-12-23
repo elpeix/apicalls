@@ -48,7 +48,7 @@ and organise them into tabs, collections, and workspaces.
    - I will overwrite collection headers.
 4. **Body**: choose the mode (JSON, YAML, text, form-data,
    x-www-form-urlencoded, file). The Monaco-based editor offers syntax
-   highlighting and validation.
+   highlighting and validation. For `form-data`, a key-value editor allows sending text and files.
 5. **Authentication**: configure Bearer, Basic, or custom tokens from the
    _Auth_ tab.
 6. **Environment**: assign variables via _Environment_ (collections can specify

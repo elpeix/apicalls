@@ -86,7 +86,8 @@ export const getContentType = (body: BodyType): string | undefined => {
   const contentTypes: Record<Exclude<ContentTypes, 'none'>, string> = {
     json: 'application/json',
     xml: 'application/xml',
-    text: 'text/plain'
+    text: 'text/plain',
+    'form-data': 'multipart/form-data'
   }
   if (body === 'none' || body === '') return undefined
   if (typeof body === 'string') {
