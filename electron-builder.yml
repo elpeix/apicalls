@@ -24,8 +24,6 @@ mac:
   target:
     - dmg
     - zip
-  arch:
-    - universal
   artifactName: ${name}-${version}.${ext}
   entitlementsInherit: build/entitlements.mac.plist
   notarize: false

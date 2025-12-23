@@ -153,8 +153,8 @@ export default function Folder({
             iconClassName={styles.menuIcon}
             showMenuClassName={styles.menuActive}
             isMoving={scrolling}
-            leftOffset={-91}
-            topOffset={25}
+            leftOffset={-90}
+            topOffset={24}
           >
             <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
             <MenuElement icon="more" title="Add request" onClick={handleAddRequest} />
