@@ -1,13 +1,14 @@
 import { fetch, Response } from 'undici'
 import { describe, it, expect, vi, assert, afterEach } from 'vitest'
 import { restCall } from '../../src/lib/restCaller'
+import { getSettings } from '../../src/lib/settings'
 
 vi.mock('../../src/lib/settings.ts', () => {
   return {
     namedExport: 'getSettings',
-    getSettings: () => {
+    getSettings: vi.fn(() => {
       return { timeout: 1000 }
-    }
+    })
   }
 })
 
@@ -15,6 +16,7 @@ vi.mock('undici', () => {
   return {
     fetch: vi.fn(),
     Agent: vi.fn(),
+    ProxyAgent: vi.fn(),
     setGlobalDispatcher: vi.fn(),
     FormData: class {
       append = vi.fn()
@@ -240,6 +242,35 @@ describe('restCaller', () => {
     expect(response).toBeDefined()
     expect(response?.sentBody).toBe(
       '--boundary\r\nContent-Disposition: form-data; name="key1"\r\n\r\nvalue1\r\n--boundary--'
+    )
+  })
+
+  it('should use ProxyAgent when proxy setting is provided', async () => {
+    const { ProxyAgent } = await import('undici')
+
+    // Mock settings with proxy
+    vi.mocked(getSettings).mockReturnValue({
+      timeout: 1000,
+      proxy: 'http://localhost:8888',
+      rejectUnauthorized: true
+    } as unknown as AppSettingsType)
+
+    const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>
+    mockFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      headers: new Headers(),
+      text: async () => 'success'
+    })
+
+    await restCall(1, { url: 'https://apicalls.dev/get' })
+
+    expect(ProxyAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        uri: 'http://localhost:8888',
+        connect: { rejectUnauthorized: true }
+      })
     )
   })
 })

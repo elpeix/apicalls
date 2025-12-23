@@ -257,6 +257,16 @@ export default function Settings() {
                 onChange={(e) => changeSettings({ ...settings, timeout: Number(e.target.value) })}
               />
             </div>
+            <div className={styles.group}>
+              <label htmlFor="proxy">Proxy</label>
+              <input
+                id="proxy"
+                type="text"
+                value={settings.proxy || ''}
+                placeholder="http://127.0.0.1:8080"
+                onChange={(e) => changeSettings({ ...settings, proxy: e.target.value })}
+              />
+            </div>
             <div className={styles.switchRow}>
               <Switch
                 text="Reject unauthorized SSL"

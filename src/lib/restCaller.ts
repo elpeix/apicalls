@@ -1,4 +1,14 @@
-import { fetch, Agent, RequestInit, setGlobalDispatcher, FormData, Headers, Response } from 'undici'
+import {
+  fetch,
+  Agent,
+  RequestInit,
+  setGlobalDispatcher,
+  FormData,
+  Headers,
+  Response,
+  ProxyAgent,
+  Dispatcher
+} from 'undici'
 import { RestCallerError } from './RestCallerError'
 import { getSettings } from './settings'
 import { openAsBlob } from 'node:fs'
@@ -94,14 +104,27 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       }
     }
 
-    const agent = new Agent({
-      keepAliveMaxTimeout: settings.timeout + 1000,
-      bodyTimeout: settings.timeout,
-      connectTimeout: settings.timeout,
-      connect: {
-        rejectUnauthorized: settings.rejectUnauthorized ?? true
-      }
-    })
+    let agent: Dispatcher
+    if (settings.proxy) {
+      agent = new ProxyAgent({
+        uri: settings.proxy,
+        keepAliveMaxTimeout: settings.timeout + 1000,
+        bodyTimeout: settings.timeout,
+        connectTimeout: settings.timeout,
+        connect: {
+          rejectUnauthorized: settings.rejectUnauthorized ?? true
+        }
+      })
+    } else {
+      agent = new Agent({
+        keepAliveMaxTimeout: settings.timeout + 1000,
+        bodyTimeout: settings.timeout,
+        connectTimeout: settings.timeout,
+        connect: {
+          rejectUnauthorized: settings.rejectUnauthorized ?? true
+        }
+      })
+    }
 
     setGlobalDispatcher(agent)
 
