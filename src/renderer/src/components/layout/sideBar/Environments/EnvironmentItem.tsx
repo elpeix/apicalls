@@ -109,21 +109,22 @@ export default function EnvironmentItem({
         iconClassName={styles.menuIcon}
         showMenuClassName={styles.menuActive}
         isMoving={isScrolling}
-        leftOffset={-75}
-        topOffset={27}
+        leftOffset={-143}
+        topOffset={23}
       >
         <MenuElement icon="edit" title="Edit" onClick={() => selectEnvironment(environment)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(environment.id)} />
+        <MenuSeparator />
         <MenuElement
           icon="save"
           iconDirection="north"
-          title="Export"
+          title="Export environment"
           onClick={() => exportEnvironment(environment.id)}
         />
         <MenuSeparator />
         <MenuElement
           icon="delete"
-          title="Remove"
+          title="Remove environment"
           className={styles.remove}
           onClick={handleRemove}
         />

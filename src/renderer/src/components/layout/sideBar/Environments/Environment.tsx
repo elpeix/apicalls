@@ -142,23 +142,24 @@ export default function Environment({
           editOnDoubleClick={true}
         />
         <div className={styles.actions}>
-          <Menu leftOffset={-93} topOffset={26}>
+          <Menu leftOffset={-143} topOffset={25}>
             <MenuElement icon="edit" onClick={() => setEditingName(true)} title="Rename" />
             <MenuSeparator />
             <MenuElement icon="more" onClick={addVariable} title="Add variable" />
             <MenuElement icon="clipboard" onClick={openBulk} title="Bulk edit" />
+            <MenuSeparator />
             <MenuElement
               icon="save"
               iconDirection="north"
               onClick={exportEnvironment}
-              title="Export"
+              title="Export environment"
             />
             <MenuSeparator />
             <MenuElement
               icon="delete"
               onClick={handleRemove}
               className={styles.remove}
-              title="Remove"
+              title="Remove environment"
             />
           </Menu>
         </div>
