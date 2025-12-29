@@ -48,6 +48,7 @@
   --sidePanel-menu-color: var(--background-base);
 
   --success-background-color: var(--transparent-cyan);
+  --success-color: var(--green);
   --error-background-color: var(--transparent-red);
   --error-color: var(--red);
   --danger-color: var(--red);

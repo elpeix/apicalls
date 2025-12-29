@@ -890,6 +890,11 @@ export default function RequestContextProvider({
         const username = requestAuthRecord.username || ''
         const password = requestAuthRecord.password || ''
         headers['Authorization'] = `Basic ${btoa(`${getValue(username)}:${getValue(password)}`)}`
+      } else if (requestAuth.type === 'oauth2') {
+        const authValue = requestAuth.value as RequestAuthOAuth2
+        if (authValue?.accessToken) {
+          headers['Authorization'] = `Bearer ${getValue(authValue.accessToken)}`
+        }
       }
     }
     if (settings?.settings?.manageCookies) {
