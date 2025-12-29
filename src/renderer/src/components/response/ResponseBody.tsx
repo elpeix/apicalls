@@ -1,5 +1,5 @@
 import React from 'react'
-import Editor from '../base/Editor'
+import Editor from '../base/Editor/Editor'
 import ExternalContent from './ExternalContent'
 import styles from './Response.module.css'
 

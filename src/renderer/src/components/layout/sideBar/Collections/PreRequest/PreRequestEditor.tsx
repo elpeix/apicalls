@@ -5,19 +5,17 @@ import Input from '../../../../base/Input/Input'
 import MethodSelect from '../../../../base/MethodSelect/MethodSelect'
 import styles from './PreRequest.module.css'
 import Params from '../../../../base/Params/Params'
-import Editor from '../../../../base/Editor'
+import Editor from '../../../../base/Editor/Editor'
 import DataToCapture from './DataToCapture'
-import { Button } from '../../../../base/Buttons/Buttons'
+import Switch from '../../../../base/Switch/Switch'
 
 export default function PreRequestEditor({
   preRequest,
   onSave,
-  onClose,
   environmentId
 }: {
   preRequest: PreRequest | undefined
   onSave: (data: PreRequest) => void
-  onClose: () => void
   environmentId?: Identifier
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -32,7 +30,11 @@ export default function PreRequestEditor({
     preRequest && preRequest.active !== undefined ? preRequest.active : true
   )
 
+  const lastSavedRef = useRef<PreRequest | undefined>(undefined)
+
   useEffect(() => {
+    if (preRequest && preRequest === lastSavedRef.current) return
+
     setUrl(preRequest?.request.url || '')
     setMethod(preRequest?.request.method || createMethod('GET'))
     setHeaders(preRequest?.request.headers || [])
@@ -43,7 +45,7 @@ export default function PreRequestEditor({
     setActive(preRequest && preRequest.active !== undefined ? preRequest.active : true)
   }, [preRequest])
 
-  const handleSave = () => {
+  useEffect(() => {
     const savedPreRequest = {
       request: {
         method,
@@ -56,13 +58,13 @@ export default function PreRequestEditor({
       dataToCapture,
       active
     }
+    lastSavedRef.current = savedPreRequest
     onSave(savedPreRequest)
-    onClose()
-  }
+  }, [method, url, headers, queryParams, body, type, dataToCapture, active])
 
   const handleBodyChange = (value: string | undefined) => {
     if (value === undefined) return
-    setBody(value)
+    setBody(value as BodyType)
   }
 
   return (
@@ -85,11 +87,16 @@ export default function PreRequestEditor({
       </div>
       <div className={styles.tabs}>
         <Tabs className="tabs">
-          <TabList>
-            <Tab>Headers</Tab>
-            {method.body && <Tab>Body</Tab>}
-            <Tab>Data to capture</Tab>
-          </TabList>
+          <div className={styles.tabsList}>
+            <TabList>
+              <Tab>Headers</Tab>
+              {method.body && <Tab>Body</Tab>}
+              <Tab>Data to capture</Tab>
+            </TabList>
+            <div className={styles.actions}>
+              <Switch text="Active" active={active} reverse={true} onChange={setActive} />
+            </div>
+          </div>
           <div className={`tab-panel-wrapper ${styles.tabsPanels}`}>
             <TabPanel forceRender={true}>
               <Params
@@ -120,18 +127,6 @@ export default function PreRequestEditor({
             </TabPanel>
           </div>
         </Tabs>
-      </div>
-      <div className={styles.footer}>
-        <div className={styles.left}>
-          <label>
-            <input type="checkbox" checked={active} onChange={() => setActive(!active)} />
-            <span className={active ? styles.active : ''}>Active</span>
-          </label>
-        </div>
-        <div className={styles.right}>
-          <Button.Cancel onClick={onClose}>Cancel</Button.Cancel>
-          <Button.Ok onClick={handleSave}>Save</Button.Ok>
-        </div>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState, useRef } from 'react'
 import { AppContext } from './AppContext'
 import { REQUEST } from '../../../lib/ipcChannels'
 import { createAuth, getMethods } from '../lib/factory'
@@ -66,6 +66,7 @@ export default function RequestContextProvider({
   const methods = useMemo(() => getMethods(), [])
 
   const [collection, setCollection] = useState<Collection | null>(null)
+  const activeScriptIds = useRef<Set<string>>(new Set())
 
   // Pre-request scripts will be executed before the request is sent
   const [preRequestData, setPreRequestData] = useState<PreRequest | null>(null)
@@ -80,6 +81,8 @@ export default function RequestContextProvider({
   const [requestPathParams, setRequestPathParams] = useState(definedRequest.pathParams || [])
   const [requestQueryParams, setRequestQueryParams] = useState(definedRequest.queryParams || [])
   const [requestFullUrl, setRequestFullUrl] = useState(definedRequest.url || '')
+  const [requestPreScript, setRequestPreScript] = useState(definedRequest.preScript || '')
+  const [requestPostScript, setRequestPostScript] = useState(definedRequest.postScript || '')
   const [openSaveAs, setOpenSaveAs] = useState(false)
 
   const [launchRequest, setLaunchRequest] = useState(false)
@@ -106,7 +109,9 @@ export default function RequestContextProvider({
         headers: requestHeaders,
         pathParams: requestPathParams,
         queryParams: requestQueryParams,
-        body: requestBody
+        body: requestBody,
+        preScript: requestPreScript,
+        postScript: requestPostScript
       })
       return
     }
@@ -125,6 +130,8 @@ export default function RequestContextProvider({
     requestBody,
     requestHeaders,
     requestQueryParams,
+    requestPreScript,
+    requestPostScript,
     launchRequest
   ])
 
@@ -150,6 +157,11 @@ export default function RequestContextProvider({
 
   const cancel = () => {
     window.electron?.ipcRenderer.send(CHANNEL_CANCEL, tabId)
+    // Cancel any active script requests
+    activeScriptIds.current.forEach((id) => {
+      window.electron?.ipcRenderer.send(REQUEST.cancel, id)
+    })
+    activeScriptIds.current.clear()
   }
 
   const sendRequest = () => {
@@ -159,26 +171,74 @@ export default function RequestContextProvider({
     setFetchError('')
     setFetchErrorCause('')
 
-    if (preRequestData && preRequestData.active) {
+    if (preRequestData && preRequestData.active && preRequestData.request.url.trim().length > 0) {
       sendPreRequest()
     } else {
       sendMainRequest()
     }
   }
 
-  const sendMainRequest = (requestLogs: RequestLog[] = []) => {
+  const sendMainRequest = async (requestLogs: RequestLog[] = []) => {
+    const environment = getRequestEnvironment()
     const url = getValue(requestUrl)
+
+    // Calculate initial effective headers (Global + Collection + Env + Request + Auth)
+    // Cast to Record<string, string> for checking/modification in script
+    const effectiveHeaders = getHeaders(url) as Record<string, string>
+
+    // Create a mutable request object to pass through scripts
+    const contextRequest = {
+      method: requestMethod.value,
+      url: requestUrl,
+      headers: effectiveHeaders,
+      body: requestBody
+    }
+
+    // Execute Collection Pre-Script
+    if (collection && collection.preScript && collection.preScript.trim().length > 0) {
+      const success = await executeScript(collection.preScript, {
+        request: contextRequest,
+        environment: getScriptEnvironment(environment),
+        console: getScriptConsole()
+      })
+      if (!success) {
+        console.error('Collection pre-script failed')
+        setFetching(false)
+        return
+      }
+    }
+
+    // Execute Pre-Script
+    if (requestPreScript) {
+      const success = await executeScript(requestPreScript, {
+        request: contextRequest,
+        environment: getScriptEnvironment(environment),
+        console: getScriptConsole()
+      })
+      if (!success) {
+        setFetching(false)
+        return
+      }
+    }
 
     saveHistory()
 
     const queryParams = prepareQueryParams(requestQueryParams)
+    // Use the potentially modified values from contextRequest
     const callApiRequest: CallRequest = {
       id: tabId,
-      url,
-      method: requestMethod,
-      headers: getHeaders(url),
+      url: contextRequest.url,
+      method: {
+        value: contextRequest.method,
+        label: contextRequest.method,
+        body: contextRequest.method !== 'GET' && contextRequest.method !== 'HEAD'
+      },
+      headers: contextRequest.headers,
       queryParams,
-      body: requestBody === 'none' || requestBody === '' ? undefined : getBody(requestBody)
+      body:
+        contextRequest.body === 'none' || contextRequest.body === ''
+          ? undefined
+          : getBody(contextRequest.body)
     }
     tab.response = undefined
 
@@ -197,6 +257,51 @@ export default function RequestContextProvider({
       })
       setFetchedHeaders(callResponse.responseHeaders)
       setCookies(callResponse.responseHeaders, requestUrl)
+
+      // Execute Post-Script
+      // We need to use an async IIFE because the listener callback itself can't be awaited by sendMainRequest
+      const runPostScripts = async () => {
+        if (requestPostScript) {
+          await executeScript(requestPostScript, {
+            request: {
+              method: contextRequest.method,
+              url: contextRequest.url,
+              headers: contextRequest.headers,
+              body: contextRequest.body
+            },
+            response: {
+              status: callResponse.status.code,
+              headers: callResponse.responseHeaders,
+              body: tryParseBody(callResponse.result || '{}'),
+              rawBody: callResponse.result || ''
+            },
+            environment: getScriptEnvironment(getRequestEnvironment()),
+            console: getScriptConsole()
+          })
+        }
+
+        // Execute Collection Post-Script
+        if (collection && collection.postScript) {
+          await executeScript(collection.postScript, {
+            request: {
+              method: contextRequest.method,
+              url: contextRequest.url,
+              headers: contextRequest.headers,
+              body: contextRequest.body
+            },
+            response: {
+              status: callResponse.status.code,
+              headers: callResponse.responseHeaders,
+              body: tryParseBody(callResponse.result || '{}'),
+              rawBody: callResponse.result || ''
+            },
+            environment: getScriptEnvironment(getRequestEnvironment()),
+            console: getScriptConsole()
+          })
+        }
+      }
+      runPostScripts()
+
       requestConsole?.addAll([
         ...requestLogs,
         {
@@ -275,6 +380,227 @@ export default function RequestContextProvider({
     setResponse(response)
     tab.response = settings?.settings?.saveLastResponse ? response : undefined
     tabs?.updateTab(tab.id, tab)
+  }
+
+  type ScriptContext = {
+    request: {
+      method: string
+      url: string
+      headers: Record<string, string>
+      body: BodyType
+    }
+    response?: {
+      status: number
+      headers: KeyValue[]
+      body: unknown
+      rawBody: string
+    }
+    environment: {
+      get: (key: string) => string | undefined
+      set: (key: string, value: string) => void
+    }
+    console: {
+      log: (message: unknown) => void
+      error: (message: unknown) => void
+    }
+    http?: {
+      get: (url: string, headers?: Record<string, string>) => Promise<unknown>
+      post: (url: string, body: unknown, headers?: Record<string, string>) => Promise<unknown>
+      put: (url: string, body: unknown, headers?: Record<string, string>) => Promise<unknown>
+      delete: (url: string, headers?: Record<string, string>) => Promise<unknown>
+      request: (
+        method: string,
+        url: string,
+        body?: unknown,
+        headers?: Record<string, string>
+      ) => Promise<unknown>
+    }
+  }
+
+  const tryParseBody = (body: string) => {
+    try {
+      return JSON.parse(body)
+    } catch {
+      return body
+    }
+  }
+
+  const executeScript = async (script: string, context: ScriptContext): Promise<boolean> => {
+    // Add http client to context
+    const http = {
+      get: (url: string, headers?: Record<string, string>) =>
+        performScriptRequest('GET', url, undefined, headers),
+      post: (url: string, body: unknown, headers?: Record<string, string>) =>
+        performScriptRequest('POST', url, body, headers),
+      put: (url: string, body: unknown, headers?: Record<string, string>) =>
+        performScriptRequest('PUT', url, body, headers),
+      delete: (url: string, headers?: Record<string, string>) =>
+        performScriptRequest('DELETE', url, undefined, headers),
+      request: (method: string, url: string, body?: unknown, headers?: Record<string, string>) =>
+        performScriptRequest(method, url, body, headers)
+    }
+
+    try {
+      const func = new Function(
+        'request',
+        'response',
+        'environment',
+        'console',
+        'http',
+        'window',
+        'document',
+        'alert',
+        'confirm',
+        'prompt',
+        'fetch',
+        'XMLHttpRequest',
+        'globalThis',
+        'self',
+        `return (async () => { ${script + '\n\n'} })()`
+      )
+      await func(
+        context.request,
+        context.response,
+        context.environment,
+        context.console,
+        http,
+        undefined, // window
+        undefined, // document
+        undefined, // alert
+        undefined, // confirm
+        undefined, // prompt
+        undefined, // fetch
+        undefined, // XMLHttpRequest
+        undefined, // globalThis
+        undefined // self
+      )
+      return true
+    } catch (err) {
+      application.showAlert({
+        message: 'Script error: ' + err,
+        buttonColor: 'danger'
+      })
+      getScriptConsole().error('Script error: ' + err)
+      return false
+    }
+  }
+
+  const performScriptRequest = (
+    method: string,
+    url: string,
+    body: unknown,
+    headers: Record<string, string> = {}
+  ): Promise<unknown> => {
+    return new Promise((resolve, reject) => {
+      // Generate a unique ID for this script request to distinguish it from main requests
+      // We use a negative ID or a specific range if possible, or just a very large random number
+      // Since tabId is string (UUID) usually? Wait, Identifier is string in types.d.ts?
+      // In RequestContext tabId seems to be string.
+      // Let's use a composite ID
+      const scriptRequestId = `script-${Date.now()}-${Math.random()}`
+
+      const callApiRequest: CallRequest = {
+        id: scriptRequestId,
+        url,
+        method: { value: method, label: method, body: method !== 'GET' && method !== 'HEAD' },
+        headers,
+        body: typeof body === 'string' ? body : JSON.stringify(body || '')
+      }
+
+      activeScriptIds.current.add(scriptRequestId)
+
+      const cleanUp = () => {
+        window.electron?.ipcRenderer.removeListener(
+          `${REQUEST.response}-${scriptRequestId}`,
+          onResponse
+        )
+        window.electron?.ipcRenderer.removeListener(
+          `${REQUEST.failure}-${scriptRequestId}`,
+          onFailure
+        )
+        activeScriptIds.current.delete(scriptRequestId)
+      }
+
+      const onResponse = (_: unknown, callResponse: CallResponse) => {
+        if (callResponse.id !== scriptRequestId) return
+        cleanUp()
+        resolve({
+          status: callResponse.status.code,
+          statusText: callResponse.status.text,
+          headers: callResponse.responseHeaders,
+          body: tryParseBody(callResponse.result || '{}'),
+          rawBody: callResponse.result || ''
+        })
+      }
+
+      const onFailure = (_: unknown, response: CallResponseFailure) => {
+        // ID check if failure has ID? CallResponseFailure usually has request attached
+        // But for simplicity if we can't match ID on failure easily, we might need a timeout
+        // Assuming response.request.id exists
+        if (response.request?.id !== scriptRequestId) return
+        cleanUp()
+        reject(new Error(response.message))
+      }
+
+      window.electron?.ipcRenderer.on(`${REQUEST.response}-${scriptRequestId}`, onResponse)
+      window.electron?.ipcRenderer.on(`${REQUEST.failure}-${scriptRequestId}`, onFailure)
+
+      window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
+    })
+  }
+
+  const getScriptEnvironment = (env: Environment | null) => {
+    return {
+      get: (key: string) => {
+        return env?.variables.find((v) => v.name === key)?.value
+      },
+      set: (key: string, value: string) => {
+        if (!env) return
+        const variable = env.variables.find((v) => v.name === key)
+        if (variable) {
+          variable.value = value
+        } else {
+          env.variables.push({ name: key, value: value.toString(), enabled: true })
+        }
+        environments?.update(env)
+      },
+      unset: (key: string) => {
+        if (!env) return
+        env.variables = env.variables.filter((v) => v.name !== key)
+        environments?.update(env)
+      }
+    }
+  }
+
+  const getScriptConsole = () => {
+    const safeStringify = (message: unknown): string => {
+      try {
+        if (typeof message === 'string') return message
+        if (typeof message === 'object') return JSON.stringify(message, null, 2)
+        return String(message)
+      } catch (_e) {
+        return '[Circular or Non-Serializable Object]'
+      }
+    }
+
+    return {
+      log: (message: unknown) => {
+        console.log('Script Log:', message)
+        requestConsole?.add({
+          type: 'log',
+          message: safeStringify(message),
+          time: new Date().getTime()
+        })
+      },
+      error: (message: unknown) => {
+        console.error('Script Error:', message)
+        requestConsole?.add({
+          type: 'error',
+          message: safeStringify(message),
+          time: new Date().getTime()
+        })
+      }
+    }
   }
 
   const sendPreRequest = () => {
@@ -727,6 +1053,18 @@ export default function RequestContextProvider({
     setSaved(false)
   }
 
+  const setPreScript = (script: string) => {
+    setRequestPreScript(script)
+    setChanged(true)
+    setSaved(false)
+  }
+
+  const setPostScript = (script: string) => {
+    setRequestPostScript(script)
+    setChanged(true)
+    setSaved(false)
+  }
+
   const setEditorState = (type: 'request' | 'response', state: string) => {
     if (type === 'request') {
       setRequestEditorState(state)
@@ -792,6 +1130,8 @@ export default function RequestContextProvider({
       url: requestUrl,
       body: requestBody,
       auth: requestAuth,
+      preScript: requestPreScript,
+      postScript: requestPostScript,
       headers: {
         items: requestHeaders,
         set: setHeaders,
@@ -818,6 +1158,8 @@ export default function RequestContextProvider({
       getFullUrl,
       setBody,
       setAuth,
+      setPreScript,
+      setPostScript,
       fetch,
       cancel,
       urlIsValid

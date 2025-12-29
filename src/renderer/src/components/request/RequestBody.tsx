@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react'
-import Editor from '../base/Editor'
+import Editor from '../base/Editor/Editor'
 import styles from './Request.module.css'
 import { RequestContext } from '../../context/RequestContext'
 import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 import { getBody } from '../../lib/utils'
 import FormDataEditor from './FormDataEditor'
 
-export default function RequestBody() {
+export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }) {
   const { request } = useContext(RequestContext)
 
   if (!request) return null
@@ -80,6 +80,7 @@ export default function RequestBody() {
               value={value}
               readOnly={false}
               type="request"
+              wordWrap={wordWrap}
             />
           </div>
         )

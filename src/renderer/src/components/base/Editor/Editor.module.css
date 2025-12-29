@@ -1,0 +1,6 @@
+.scriptEditor {
+  border-top: 1px solid var(--border-color);
+  height: 100%;
+  width: 100%;
+  background-color: var(--background-content);
+}
