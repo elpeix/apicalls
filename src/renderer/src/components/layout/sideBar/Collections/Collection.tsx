@@ -13,7 +13,6 @@ import {
   filterCollectionElements,
   toggleCollectionElements
 } from '../../../../lib/collectionFilter'
-import PreRequestEditor from './PreRequest/PreRequestEditor'
 import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
@@ -21,6 +20,7 @@ import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
 import Note from '../../../base/Notes/Note'
 import NoteModal from '../../../base/Notes/NoteModal'
 import PredefinedHeaders from '../../../base/PredefinedHeaders/PredefinedHeaders'
+import CollectionSettings from './CollectionSettings/CollectionSettings'
 
 export default function Collection({
   collection,
@@ -201,15 +201,14 @@ export default function Collection({
     setFilteredElements(filtered)
   }
 
-  const handlePreRequest = () => {
+  const handleSettings = () => {
     setShowMenu(false)
     application.showDialog({
       children: (
-        <PreRequestEditor
-          preRequest={coll.preRequest}
-          onSave={preRequestSave}
+        <CollectionSettings
+          collection={coll}
+          onSave={settingsSave}
           onClose={() => application.hideDialog()}
-          environmentId={coll.environmentId}
         />
       ),
       preventKeyClose: false,
@@ -217,8 +216,9 @@ export default function Collection({
     })
   }
 
-  const preRequestSave = (data: PreRequest) => {
-    update({ ...coll, preRequest: data })
+  const settingsSave = (collection: Collection) => {
+    update(collection)
+    application.hideDialog()
   }
 
   const toggleCollection = (expand: boolean) => {
@@ -314,7 +314,7 @@ export default function Collection({
               leftOffset={-123}
               topOffset={31}
             >
-              <MenuElement icon="pre" title="Pre request" onClick={handlePreRequest} />
+              <MenuElement icon="settings" title="Settings" onClick={handleSettings} />
               <>
                 {environments && environments.hasItems() && (
                   <SubMenu icon="environment" title="Environment" leftOffset={147}>

@@ -1,0 +1,21 @@
+.settings {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  width: 80vw;
+  background-color: var(--background-color);
+  overflow: hidden;
+}
+
+.tabs {
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px solid var(--border-color);
+}

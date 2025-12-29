@@ -80,6 +80,36 @@ and organise them into tabs, collections, and workspaces.
 - Define collection headers that will be sent on requests. Thery will overwrite
   environment headers.
 
+## Scripting
+
+You can write JavaScript code to execute before a request is sent (Pre-request
+Script) or after a response is received (Post-request Script). Scripts can be
+defined at the collection level or for individual requests.
+
+### Available Resources
+
+The following objects are available in the script execution context:
+
+- **console**: Use `console.log(message)` or `console.error(message)` to print
+  messages to the bottom console.
+- **environment**: access and modify environment variables.
+  - `environment.get(key)`: Returns the value of a variable.
+  - `environment.set(key, value)`: Sets or updates a variable.
+  - `environment.unset(key)`: Removes a variable.
+- **http**: Make asynchronous HTTP requests directly from your script.
+  - `await http.get(url, headers)`
+  - `await http.post(url, body, headers)`
+  - `await http.put(url, body, headers)`
+  - `await http.delete(url, headers)`
+  - `await http.request(method, url, body, headers)`
+- **request**: Access the current request details.
+  - `request.method`, `request.url`, `request.headers`, `request.body`
+- **response** (Post-script only): Access the received response.
+  - `response.status`, `response.headers`, `response.body`, `response.rawBody`
+
+Note: Standard browser objects like `window`, `document`, and `fetch` are not
+available.
+
 ## Environments and Variables
 
 - Define environments (dev, staging, prod) with key/value pairs.

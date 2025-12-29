@@ -1,8 +1,8 @@
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import * as monaco from 'monaco-editor'
 import React, { memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { AppContext } from '../../context/AppContext'
-import { RequestContext } from '../../context/RequestContext'
+import { AppContext } from '../../../context/AppContext'
+import { RequestContext } from '../../../context/RequestContext'
 
 const base = window || global
 const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')

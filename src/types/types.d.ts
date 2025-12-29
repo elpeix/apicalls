@@ -50,6 +50,8 @@ type RequestBase = {
   pathParams?: KeyValue[]
   queryParams?: KeyValue[]
   body?: BodyType
+  preScript?: string
+  postScript?: string
 }
 
 type RequestType = {
@@ -119,6 +121,8 @@ type Collection = {
   description?: string
   preRequest?: PreRequest
   requestHeaders?: KeyValue[]
+  preScript?: string
+  postScript?: string
   elements: (CollectionFolder | RequestType)[]
   environmentId?: Identifier
 }
@@ -180,10 +184,12 @@ type TabsHookType = {
 }
 
 type RequestLog = {
-  method: string
-  url: string
-  status: number
-  time: number
+  type?: 'request' | 'log' | 'error'
+  message?: string
+  method?: string
+  url?: string
+  status?: number
+  time?: number
   request?: CallRequest
   response?: CallResponse
   failure?: CallResponseFailure
@@ -306,12 +312,16 @@ type RequestContextRequestType = {
   headers: RequestItem
   queryParams: RequestItem
   pathParams: RequestItem
+  preScript: string
+  postScript: string
   setMethod: (method: Method) => void
   setUrl: (url: string) => void
   setFullUrl: (url: string) => void
   getFullUrl: () => string
   setBody: (body: BodyType) => void
   setAuth: (auth: RequestAuth) => void
+  setPreScript: (script: string) => void
+  setPostScript: (script: string) => void
   fetch: () => void
   cancel: () => void
   urlIsValid: ({ url }: { url?: string }) => boolean

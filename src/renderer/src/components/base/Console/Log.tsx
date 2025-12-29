@@ -25,13 +25,40 @@ export default function Log({ log }: { log: RequestLog }) {
     className += ` ${styles.error}`
   }
 
+  if (log.type === 'log' || log.type === 'error') {
+    return (
+      <div className={`${styles.log} ${styles['type_' + log.type]}`}>
+        <div
+          className={`${styles.header} ${expanded ? styles.expanded : ''}`}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <div className={`${styles.status} ${styles.info}`}>
+            {log.type === 'error' ? 'ERR' : 'Log'}
+          </div>
+          <div className={styles.url}>{log.message}</div>
+          <div className={styles.time}>
+            {log.time ? new Date(log.time).toLocaleTimeString() : ''}
+          </div>
+        </div>
+        {expanded && (
+          <div className={styles.details}>
+            <div className={styles.title}>Message</div>
+            <div className={styles.content}>
+              <pre className={styles.pre}>{log.message}</pre>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className={className}>
       <div
         className={`${styles.header} ${expanded ? styles.expanded : ''}`}
         onClick={() => setExpanded(!expanded)}
       >
-        <div className={`${styles.status} ${styles[getStatusName(log.status)]}`}>
+        <div className={`${styles.status} ${styles[getStatusName(log.status || 0)]}`}>
           {log.status === 999 ? '' : log.status}
         </div>
         <div className={`${styles.method} ${log.method}`}>{log.method}</div>

@@ -164,8 +164,28 @@
   width: 100%;
   overflow: hidden;
 
-  .requestTabs {
-    min-height: 2rem;
+  .tabsList {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .requestTabs {
+      flex: 1;
+      min-height: 2rem;
+      border-bottom: none;
+    }
+
+    .requestActions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: end;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      padding: 0 0 0 1rem;
+      text-transform: uppercase;
+      user-select: none;
+    }
   }
 
   li {
