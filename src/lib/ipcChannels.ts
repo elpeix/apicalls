@@ -165,3 +165,7 @@ export const MENU_ACTIONS = {
 export const DIALOG = {
   open: 'dialog:open'
 }
+
+export const OAUTH = {
+  getToken: 'oauth:get-token'
+}
