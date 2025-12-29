@@ -177,12 +177,13 @@ const workspaces = new Workspaces(StorerFactory)
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 import './ipcActions'
-import './ipcWorkspaceActions'
-import './ipcCollectionActions'
 import './ipcEnvironmentActions'
-import './ipcTabsActions'
-import './ipcCookiesActions'
+import './ipcCollectionActions'
+import './ipcWorkspaceActions'
 import './ipcMenuActions'
+import './ipcCookiesActions'
+import './ipcTabsActions'
+import './ipcAuthActions'
 import { SETTINGS, SYSTEM_ACTIONS, WINDOW_ACTIONS } from '../lib/ipcChannels'
 import { onChangeVersion } from './versionDetector'
 import { handleMigrations } from './migrations'

@@ -14,10 +14,20 @@ type KeyValue = {
   type?: 'text' | 'file'
 }
 
-type RequestAuthType = 'none' | 'bearer' | 'basic'
+type RequestAuthType = 'none' | 'bearer' | 'basic' | 'oauth2'
 type RequestAuthBearer = string
 type RequestAuthBasic = { username: string; password: string }
-type RequestAuthValue = RequestAuthBearer | RequestAuthBasic | null | undefined
+type RequestAuthOAuth2 = {
+  grantType: 'authorization_code'
+  clientId: string
+  clientSecret?: string
+  authorizationUrl: string
+  accessTokenUrl: string
+  callbackUrl: string
+  scope: string
+  accessToken?: string
+}
+type RequestAuthValue = RequestAuthBearer | RequestAuthBasic | RequestAuthOAuth2 | null | undefined
 type RequestAuth = {
   type: RequestAuthType
   value?: RequestAuthValue

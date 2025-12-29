@@ -204,43 +204,6 @@
   }
 }
 
-.authorization {
-  border-top: 1px solid var(--border-color);
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-
-  &.basic {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .select {
-    width: 6rem;
-  }
-
-  .basicAuth {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    label {
-      font-size: 0.8rem;
-      color: var(--base-color);
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-  }
-
-  .authorizationInput {
-    flex-grow: 1;
-    border: 1px solid var(--input-border-color);
-    padding: 0.4rem;
-    width: calc(100% - 7rem);
-  }
-}
-
 .requestBody {
   --type-height: 3.1rem;
 
