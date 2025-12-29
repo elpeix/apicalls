@@ -27,13 +27,13 @@ export default function Log({ log }: { log: RequestLog }) {
 
   if (log.type === 'log' || log.type === 'error') {
     return (
-      <div className={`${styles.log} ${styles[log.type]}`}>
+      <div className={`${styles.log} ${styles['type_' + log.type]}`}>
         <div
           className={`${styles.header} ${expanded ? styles.expanded : ''}`}
           onClick={() => setExpanded(!expanded)}
         >
           <div className={`${styles.status} ${styles.info}`}>
-            {log.type === 'error' ? 'ERR' : 'LOG'}
+            {log.type === 'error' ? 'ERR' : 'Log'}
           </div>
           <div className={styles.url}>{log.message}</div>
           <div className={styles.time}>
