@@ -310,6 +310,10 @@ select {
   }
 }
 
+.monaco-editor {
+  outline: 0 !important;
+}
+
 .monaco-quick-open-widget {
   display: none;
 }

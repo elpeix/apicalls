@@ -29,8 +29,15 @@ const getTabIndexes = (showPathParams: boolean, showBody: boolean) => {
 }
 
 export default function RequestTabs() {
-  const { request, getRequestEnvironment } = useContext(RequestContext)
-  const [tabIndex, setTabIndex] = useState(0)
+  const { request, getRequestEnvironment, tabId } = useContext(RequestContext)
+
+  const getInitialTabIndex = () => {
+    if (!tabId) return 0
+    const stored = localStorage.getItem(`request_tab_index_${tabId}`)
+    return stored ? parseInt(stored) : 0
+  }
+
+  const [tabIndex, setTabIndex] = useState(getInitialTabIndex())
   const [wordWrap, setWordWrap] = useState(false)
 
   if (!request) return null
@@ -43,11 +50,19 @@ export default function RequestTabs() {
 
   const handleTabSelect = (index: number) => {
     setTabIndex(index)
+    if (tabId) {
+      localStorage.setItem(`request_tab_index_${tabId}`, index.toString())
+    }
   }
 
   return (
     <div className={styles.tabs}>
-      <Tabs className="tabs" onSelect={handleTabSelect} selectedIndex={tabIndex}>
+      <Tabs
+        className="tabs"
+        onSelect={handleTabSelect}
+        selectedIndex={tabIndex}
+        forceRenderTabPanel={false}
+      >
         <div className={styles.tabsList}>
           <HorizontalScroll className={`${styles.requestTabs} panel-tabs-header-list`}>
             <TabList>
@@ -78,7 +93,7 @@ export default function RequestTabs() {
         </div>
         <div className="tab-panel-wrapper">
           {request.pathParams.items.length > 0 && (
-            <TabPanel forceRender={true}>
+            <TabPanel>
               <Params
                 items={request.pathParams.items}
                 onSave={request.pathParams.set}
@@ -88,7 +103,7 @@ export default function RequestTabs() {
               />
             </TabPanel>
           )}
-          <TabPanel forceRender={true}>
+          <TabPanel>
             <Params
               items={request.queryParams.items}
               onSave={request.queryParams.set}
@@ -97,7 +112,7 @@ export default function RequestTabs() {
               environmentId={getRequestEnvironment()?.id}
             />
           </TabPanel>
-          <TabPanel forceRender={true}>
+          <TabPanel>
             <Params
               items={request.headers.items}
               onSave={request.headers.set}
@@ -110,7 +125,7 @@ export default function RequestTabs() {
               environmentId={getRequestEnvironment()?.id}
             />
           </TabPanel>
-          <TabPanel forceRender={true}>
+          <TabPanel>
             <RequestAuth />
           </TabPanel>
           {showBody && (

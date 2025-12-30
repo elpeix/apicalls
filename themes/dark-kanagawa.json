@@ -94,6 +94,7 @@
     "overlay-color": "rgba(0, 0, 0, 0.45)",
     "response-no-content-background-color": "var(--color-0)",
     "response-no-content-color": "var(--color-5)",
+    "response-content-background-color": "var(--background-content)",
     "scrollbar-background-color": "var(--background-base)",
     "scrollbar-border-color": "var(--border-color)",
     "scrollbar-corner-color": "var(--color-1)",
@@ -200,7 +201,8 @@
       "editorWhitespace.foreground": "#363646",
       "editorIndentGuide.activeBackground": "#dca561",
       "editor.selectionHighlightBorder": "#504C6A",
-      "editor.bracketHighlighting.foreground": "#dca561"
+      "editor.bracketHighlighting.foreground": "#dca561",
+      "editor.focusBorder": "#dca561"
     }
   }
 }

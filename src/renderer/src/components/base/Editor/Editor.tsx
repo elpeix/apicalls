@@ -173,11 +173,11 @@ const EditorWrapped = memo(
       />
     )
   },
-  (prepProps, nextPops) => {
+  (prepProps, nextProps) => {
     return (
-      prepProps.value !== nextPops.value &&
-      prepProps.theme !== nextPops.theme &&
-      prepProps.language !== nextPops.language
+      prepProps.value !== nextProps.value &&
+      prepProps.theme !== nextProps.theme &&
+      prepProps.language !== nextProps.language
     )
   }
 )

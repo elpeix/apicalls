@@ -65,6 +65,7 @@
   border-top: 1px solid var(--border-color);
 
   .bodyContent {
+    background-color: var(--response-content-background-color);
     height: 100%;
     overflow: hidden;
   }
