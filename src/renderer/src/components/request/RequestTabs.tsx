@@ -9,23 +9,23 @@ import Switch from '../base/Switch/Switch'
 import HorizontalScroll from '../base/HorizontalScroll/HorizontalScroll'
 import { defaultHttpHeaders } from '../../lib/factory'
 import RequestBody from './RequestBody'
-import ScriptEditor from '../base/Editor/ScriptEditor'
+import RequestScript from './RequestScript'
 
 const getTabIndexes = (showPathParams: boolean, showBody: boolean) => {
-  let [pathParams, queryParams, headers, auth, preScript, postScript, body] = [0, 1, 2, 3, 4, 5, 6]
+  let [pathParams, queryParams, headers, auth, body, scripts] = [0, 1, 2, 3, 4, 5]
   if (!showPathParams) {
     pathParams = -1
     queryParams--
     headers--
     auth--
-    preScript--
-    postScript--
     body--
+    scripts--
   }
   if (!showBody) {
     body = -1
+    scripts--
   }
-  return { pathParams, queryParams, headers, auth, preScript, postScript, body }
+  return { pathParams, queryParams, headers, auth, body, scripts }
 }
 
 export default function RequestTabs() {
@@ -79,14 +79,11 @@ export default function RequestTabs() {
               </Tab>
               <Tab onMouseDown={() => handleTabSelect(tabIndexes.auth)}>Authorization</Tab>
               {showBody && <Tab onMouseDown={() => handleTabSelect(tabIndexes.body)}>Body</Tab>}
-              <Tab onMouseDown={() => handleTabSelect(tabIndexes.preScript)}>Pre-Script</Tab>
-              <Tab onMouseDown={() => handleTabSelect(tabIndexes.postScript)}>Post-Script</Tab>
+              <Tab onMouseDown={() => handleTabSelect(tabIndexes.scripts)}>Scripts</Tab>
             </TabList>
           </HorizontalScroll>
           <div className={styles.requestActions}>
-            {(tabIndex === tabIndexes.body ||
-              tabIndex === tabIndexes.preScript ||
-              tabIndex === tabIndexes.postScript) && (
+            {(tabIndex === tabIndexes.body || tabIndex === tabIndexes.scripts) && (
               <Switch text="Word wrap" active={wordWrap} reverse={true} onChange={setWordWrap} />
             )}
           </div>
@@ -134,18 +131,7 @@ export default function RequestTabs() {
             </TabPanel>
           )}
           <TabPanel>
-            <ScriptEditor
-              script={request.preScript}
-              onChange={(val) => request.setPreScript(val)}
-              wordWrap={wordWrap}
-            />
-          </TabPanel>
-          <TabPanel>
-            <ScriptEditor
-              script={request.postScript}
-              onChange={(val) => request.setPostScript(val)}
-              wordWrap={wordWrap}
-            />
+            <RequestScript wordWrap={wordWrap} />
           </TabPanel>
         </div>
       </Tabs>
