@@ -92,8 +92,9 @@ export default function ContentTabs() {
               {appSettings?.isCustomWindowMode() && <WindowIcons />}
             </div>
             <div className="panel-tabs-content">
-              {tabList.map((tab) => (
-                <TabPanel key={tab.id}>
+              {tabList.map((tab, index) => (
+                // Force render tab panel (fix editor not saving view state)
+                <TabPanel key={`${tab.id}-${index}`}>
                   <RequestPanel tab={tab} />
                 </TabPanel>
               ))}
