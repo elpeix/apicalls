@@ -127,7 +127,7 @@ export function useRequestSender({
 
     const callApiRequest: CallRequest = {
       id: tabId,
-      url: contextRequest.url,
+      url: getValue(contextRequest.url),
       method: {
         value: contextRequest.method,
         label: contextRequest.method,

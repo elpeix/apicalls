@@ -386,6 +386,7 @@ type AppSettingsType = {
   saveLastResponse?: boolean
   rejectUnauthorized?: boolean
   followRequestRedirect?: boolean
+  skippedVersions?: string[]
 }
 
 type CallRequest = {
