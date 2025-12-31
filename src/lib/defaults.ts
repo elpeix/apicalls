@@ -13,7 +13,8 @@ export const defaultSettings: AppSettingsType = {
   defaultHeaders: [],
   saveLastResponse: false,
   rejectUnauthorized: true,
-  followRequestRedirect: false
+  followRequestRedirect: false,
+  skippedVersions: []
 }
 
 export const getGeneralDefaultUserAgent = (version: string) => {

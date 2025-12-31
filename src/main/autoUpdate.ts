@@ -1,7 +1,9 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { BrowserWindow, ipcMain, dialog, shell } from 'electron'
 import { createRequire } from 'node:module'
 import { is } from '@electron-toolkit/utils'
 import { AUTO_UPDATE } from '../lib/ipcChannels'
+import { StorerFactory } from '../lib/appStore'
+import { defaultSettings } from '../lib/defaults'
 
 const supportedPlatforms = new Set<NodeJS.Platform>(['darwin', 'win32'])
 const canUseAutoUpdate = supportedPlatforms.has(process.platform)
@@ -26,32 +28,61 @@ export function initAutoUpdate(mainWindow: BrowserWindow) {
 
   isInitialized = true
 
-  autoUpdater.autoDownload = true
-  autoUpdater.autoInstallOnAppQuit = true
+  // Disable auto download
+  autoUpdater.autoDownload = false
+  autoUpdater.autoInstallOnAppQuit = false
   autoUpdater.logger = console
 
   autoUpdater.on('update-available', (info) => {
+    const settingsStore = StorerFactory.getSettingsStore()
+    const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType
+    const skippedVersions = settings.skippedVersions || []
+
+    if (skippedVersions.includes(info.version) && !manualCheckInProgress) {
+      return
+    }
+
+    dialog
+      .showMessageBox({
+        type: 'info',
+        title: 'Update Available',
+        message: `A new version ${info.version} is available. Do you want to download it now?`,
+        buttons: ['Download', 'Skip this version', 'Later'],
+        defaultId: 0,
+        cancelId: 2
+      })
+      .then((result) => {
+        if (result.response === 0) {
+          shell.openExternal('https://github.com/elpeix/apicalls/releases/latest')
+        } else if (result.response === 1) {
+          const newSkippedVersions = [...skippedVersions, info.version]
+          settings.skippedVersions = newSkippedVersions
+          settingsStore.set('settings', settings)
+        }
+      })
+
     sendStatus({
       type: 'available',
       version: info.version,
       initiatedByUser: manualCheckInProgress
     })
-  })
-
-  autoUpdater.on('download-progress', (progress) => {
-    sendStatus({
-      type: 'downloading',
-      percent: Math.round(progress.percent)
-    })
-  })
-
-  autoUpdater.on('update-downloaded', (info) => {
-    sendStatus({
-      type: 'downloaded',
-      version: info.version
-    })
     manualCheckInProgress = false
   })
+
+  // autoUpdater.on('download-progress', (progress) => {
+  //   sendStatus({
+  //     type: 'downloading',
+  //     percent: Math.round(progress.percent)
+  //   })
+  // })
+
+  // autoUpdater.on('update-downloaded', (info) => {
+  //   sendStatus({
+  //     type: 'downloaded',
+  //     version: info.version
+  //   })
+  //   manualCheckInProgress = false
+  // })
 
   autoUpdater.on('update-not-available', () => {
     sendStatus({
@@ -93,19 +124,19 @@ export function checkForUpdates(manual: boolean) {
   })
 }
 
-export function installUpdate() {
-  if (!canUseAutoUpdate || is.dev) {
-    return
-  }
+// export function installUpdate() {
+//   if (!canUseAutoUpdate || is.dev) {
+//     return
+//   }
 
-  app.removeAllListeners('window-all-closed')
+//   app.removeAllListeners('window-all-closed')
 
-  autoUpdater.autoInstallOnAppQuit = false
+//   autoUpdater.autoInstallOnAppQuit = false
 
-  setImmediate(() => {
-    autoUpdater.quitAndInstall(false, true)
-  })
-}
+//   setImmediate(() => {
+//     autoUpdater.quitAndInstall(false, true)
+//   })
+// }
 
 function registerIpcHandlers() {
   if (listenersRegistered) {
@@ -116,9 +147,9 @@ function registerIpcHandlers() {
     checkForUpdates(true)
   })
 
-  ipcMain.on(AUTO_UPDATE.install, () => {
-    installUpdate()
-  })
+  // ipcMain.on(AUTO_UPDATE.install, () => {
+  //   installUpdate()
+  // })
 
   listenersRegistered = true
 }
