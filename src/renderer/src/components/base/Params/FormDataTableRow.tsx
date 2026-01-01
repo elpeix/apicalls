@@ -26,7 +26,8 @@ export default function FormDataTableRow({
   onDelete = () => {},
   onDrag = () => {},
   scrollContainerRef,
-  environmentId
+  environmentId,
+  showType = true
 }: {
   item: KeyValue
   editableName?: boolean
@@ -47,6 +48,7 @@ export default function FormDataTableRow({
   onDelete?: () => void
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>
   environmentId?: Identifier
+  showType?: boolean
 }) {
   const getAvailableNames = () => {
     return Object.keys(helperValues)
@@ -64,6 +66,7 @@ export default function FormDataTableRow({
   }
 
   const showHelperColumn = showEnable || draggable
+  const allowFiles = showType
 
   const handleFileChoice = async () => {
     try {
@@ -126,35 +129,26 @@ export default function FormDataTableRow({
       />
 
       {/* Type Selector */}
-      <SimpleTable.Cell className={styles.selectCell}>
-        <SimpleSelect
-          className={styles.select}
-          value={item.type || 'text'}
-          onChange={(e) => onChangeType(e.target.value as 'text' | 'file')}
-          options={[
-            { value: 'text', label: 'Text' },
-            { value: 'file', label: 'File' }
-          ]}
-        />
-      </SimpleTable.Cell>
+      {showType && (
+        <SimpleTable.Cell className={styles.selectCell}>
+          <SimpleSelect
+            className={styles.select}
+            value={item.type || 'text'}
+            onChange={(e) => onChangeType(e.target.value as 'text' | 'file')}
+            options={[
+              { value: 'text', label: 'Text' },
+              { value: 'file', label: 'File' }
+            ]}
+          />
+        </SimpleTable.Cell>
+      )}
 
       {/* Value Input */}
-      {item.type === 'file' ? (
+      {item.type === 'file' && allowFiles ? (
         <SimpleTable.Cell className={styles.fileCell}>
           <div className={styles.fileCellContent} onClick={handleFileChoice}>
-            <input
-              type="text"
-              value={item.value}
-              readOnly
-              placeholder="Select a file"
-              onClick={handleFileChoice}
-            />
-            <ButtonIcon
-              className={styles.fileButton}
-              icon="file"
-              onClick={handleFileChoice}
-              title="Select file"
-            />
+            <input type="text" value={item.value} readOnly placeholder="Select a file" />
+            <ButtonIcon className={styles.fileButton} icon="file" title="Select file" />
             <div
               className={`${styles.fileValue} ${item.value === '' ? styles.empty : ''}`}
               title={item.value}

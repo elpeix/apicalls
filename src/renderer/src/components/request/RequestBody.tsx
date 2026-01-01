@@ -24,7 +24,8 @@ export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }
     none: 'None',
     json: 'Json',
     xml: 'Xml',
-    'form-data': 'Form-Data',
+    'form-data': 'Multipart Form',
+    'form-urlencoded': 'Form URL Encoded',
     text: 'Text'
   }
 
@@ -70,7 +71,9 @@ export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }
         />
       </label>
       {contentType === 'form-data' ? (
-        <FormDataEditor value={value} onChange={handleBodyChange} />
+        <FormDataEditor value={value} onChange={handleBodyChange} allowFiles={true} />
+      ) : contentType === 'form-urlencoded' ? (
+        <FormDataEditor value={value} onChange={handleBodyChange} allowFiles={false} />
       ) : (
         contentType !== 'none' && (
           <div className={styles.contentBody}>

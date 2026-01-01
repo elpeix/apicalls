@@ -3,10 +3,12 @@ import FormDataTable from '../base/Params/FormDataTable'
 
 export default function FormDataEditor({
   value,
-  onChange
+  onChange,
+  allowFiles = true
 }: {
   value: string
   onChange: (value: string) => void
+  allowFiles?: boolean
 }) {
   const [items, setItems] = useState<KeyValue[]>([])
 
@@ -62,6 +64,7 @@ export default function FormDataEditor({
       dragFormat="environment-headers"
       addCaption="Add field"
       removeCaption="Remove field"
+      showType={allowFiles}
     />
   )
 }

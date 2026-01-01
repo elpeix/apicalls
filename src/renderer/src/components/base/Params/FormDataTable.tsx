@@ -27,7 +27,8 @@ export default function FormDataTable({
   scrollContainerRef,
   draggable = false,
   dragFormat = 'param',
-  environmentId
+  environmentId,
+  showType = true
 }: {
   items: KeyValue[]
   onAdd?: () => void
@@ -50,6 +51,7 @@ export default function FormDataTable({
   draggable?: boolean
   dragFormat?: string
   environmentId?: Identifier
+  showType?: boolean
 }) {
   const { application } = useContext(AppContext)
   const paramsRef = useRef(null)
@@ -65,9 +67,7 @@ export default function FormDataTable({
   const showHelperColumn = showEnable || draggable
   const helperColumn = showEnable && draggable ? '2.8rem' : showHelperColumn ? '1.9rem' : ''
   const deleteColumn = showDelete ? '2rem' : ''
-  // Added regex for type column support: Helper | Name | Type | Value | Delete
-  // Assuming Type column is fixed width, say 80px
-  const templateColumns = `${helperColumn} ${nameSize}px 80px 1fr ${deleteColumn}`
+  const templateColumns = `${helperColumn} ${nameSize}px ${showType ? '80px ' : ''}1fr ${deleteColumn}`
 
   const openBulk = () => {
     application.showDialog({
@@ -98,7 +98,8 @@ export default function FormDataTable({
   }
   const changeValueHandler = (index: number, value: string) => {
     const newItems = [...items]
-    newItems[index] = { ...newItems[index], value }
+    const type = showType ? newItems[index].type : 'text'
+    newItems[index] = { ...newItems[index], value, type }
     saveItems(newItems)
   }
   const changeTypeHandler = (index: number, type: 'text' | 'file') => {
@@ -144,7 +145,7 @@ export default function FormDataTable({
             <SimpleTable.HeaderCell draggable={true} onDrag={changeNameSize}>
               Name
             </SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell>Type</SimpleTable.HeaderCell>
+            {showType && <SimpleTable.HeaderCell>Type</SimpleTable.HeaderCell>}
             <SimpleTable.HeaderCell>Value</SimpleTable.HeaderCell>
             {showDelete && (
               <SimpleTable.HeaderCell>
@@ -175,6 +176,7 @@ export default function FormDataTable({
                 onDrag={dragHandler}
                 scrollContainerRef={scrollContainerRef ? scrollContainerRef : paramsRef}
                 environmentId={environmentId}
+                showType={showType}
               />
             ))}
           </SimpleTable.Body>
