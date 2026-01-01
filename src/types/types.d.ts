@@ -33,7 +33,7 @@ type RequestAuth = {
   value?: RequestAuthValue
 }
 
-type ContentTypes = 'json' | 'xml' | 'form-data' | 'text' | 'none'
+type ContentTypes = 'json' | 'xml' | 'form-data' | 'form-urlencoded' | 'text' | 'none'
 type BodyType =
   | {
       contentType: Exclude<ContentTypes, 'none'>

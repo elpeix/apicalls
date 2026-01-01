@@ -87,7 +87,8 @@ export const getContentType = (body: BodyType): string | undefined => {
     json: 'application/json',
     xml: 'application/xml',
     text: 'text/plain',
-    'form-data': 'multipart/form-data'
+    'form-data': 'multipart/form-data',
+    'form-urlencoded': 'application/x-www-form-urlencoded'
   }
   if (body === 'none' || body === '') return undefined
   if (typeof body === 'string') {

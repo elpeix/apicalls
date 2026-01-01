@@ -99,6 +99,26 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
           console.error('Failed to parse form-data body', e)
           requestInit.body = request.body
         }
+      } else if (contentType.toLowerCase().includes('application/x-www-form-urlencoded')) {
+        try {
+          const bodyParts = JSON.parse(request.body)
+          if (Array.isArray(bodyParts)) {
+            const formData = new URLSearchParams()
+            for (const part of bodyParts) {
+              if (part.enabled) {
+                formData.append(part.name, part.value)
+              }
+            }
+            requestInit.body = formData.toString()
+            sentBody = requestInit.body as string
+          } else {
+            requestInit.body = request.body
+            sentBody = request.body
+          }
+        } catch (_e) {
+          requestInit.body = request.body
+          sentBody = request.body
+        }
       } else {
         requestInit.body = request.body
       }
