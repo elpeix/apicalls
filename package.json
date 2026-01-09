@@ -1,6 +1,6 @@
 {
   "name": "api-calls",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "description": "An API calls app",
   "type": "module",
   "main": "./out/main/index.js",
@@ -27,7 +27,6 @@
     "dompurify": "^3.3.1",
     "electron-store": "^11.0.2",
     "electron-updater": "^6.6.2",
-    "react-resizable-panels": "file:./vendor/react-resizable-panels-3.0.6.tgz",
     "react-tabs": "^6.1.0",
     "undici": "^7.16.0",
     "yaml": "^2.8.2"

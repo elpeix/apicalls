@@ -1,0 +1,4 @@
+export const DEFAULT_MIN_SIZE = 5
+export const DEFAULT_MAX_SIZE = 100
+export const DEFAULT_COLLAPSE_THRESHOLD = 1
+export const DEFAULT_PROXIMITY_THRESHOLD = 5

@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { ImperativePanelHandle, Panel, PanelGroup } from 'react-resizable-panels'
 import { AppContext } from '../../context/AppContext'
 import SideMenu from './sideBar/SideMenu/SideMenu'
 import SidePanel from './sideBar/SidePanel/SidePanel'
 import ContentTabs from './ContentTabs'
-import Gutter from './Gutter'
 import { ACTIONS } from '../../../../lib/ipcChannels'
 import FindRequests from './FindRequests/FindRequests'
+import { Group, Panel, PanelHandle, Separator } from '../base/SimplePanel'
 
 export default function Layout() {
   const { application, menu, appSettings } = useContext(AppContext)
-  const sidePanel = useRef<ImperativePanelHandle | null>(null)
+  const sidePanel = useRef<PanelHandle | null>(null)
   const [showSelected, setShowSelected] = useState(false)
 
   useEffect(() => {
@@ -46,7 +45,7 @@ export default function Layout() {
     <div
       className={`app ${appSettings?.isCustomWindowMode() ? ' custom-window' : 'native-window'}`}
     >
-      <PanelGroup direction="horizontal" autoSaveId="panelLayout">
+      <Group orientation="vertical" storageId="panelLayout">
         <SideMenu
           showSelected={showSelected}
           onSelect={expandSidePanel}
@@ -65,11 +64,11 @@ export default function Layout() {
         >
           <SidePanel />
         </Panel>
-        <Gutter mode="vertical" onDoubleClick={expandSidePanel} />
+        <Separator onDoubleClick={expandSidePanel} />
         <Panel>
           <ContentTabs />
         </Panel>
-      </PanelGroup>
+      </Group>
     </div>
   )
 }
