@@ -68,6 +68,7 @@ export function useRequestState(tab: RequestTab) {
 
   useEffect(() => {
     if (changed) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setChanged(false)
       tabs?.updateTabRequest(tabId, saved, {
         ...definedRequest,
@@ -84,6 +85,7 @@ export function useRequestState(tab: RequestTab) {
       return
     }
   }, [
+    tabs,
     tabId,
     changed,
     saved,
@@ -94,6 +96,7 @@ export function useRequestState(tab: RequestTab) {
     requestBody,
     requestHeaders,
     requestQueryParams,
+    requestPathParams,
     requestPreScript,
     requestPostScript
   ])
@@ -102,6 +105,7 @@ export function useRequestState(tab: RequestTab) {
     if (!collectionId || !collections) return
     const collection = collections.get(collectionId)
     if (!collection) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCollection(collection)
     if (collection.preRequest) {
       setPreRequestData(collection.preRequest)
@@ -137,8 +141,9 @@ export function useRequestState(tab: RequestTab) {
 
   const setRequestResponse = (response: RequestResponseType) => {
     setResponse(response)
-    tab.response = settings?.settings?.saveLastResponse ? response : undefined
-    tabs?.updateTab(tab.id, tab)
+    const newTab = { ...tab }
+    newTab.response = settings?.settings?.saveLastResponse ? response : undefined
+    tabs?.updateTab(tab.id, newTab)
   }
 
   const setMethod = (method: Method) => {

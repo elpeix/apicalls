@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { COLLECTIONS, COOKIES, ENVIRONMENTS, TABS, WORKSPACES } from '../../../lib/ipcChannels'
 
 export function useWorkspaces(): WorkspacesHookType {
@@ -6,12 +6,17 @@ export function useWorkspaces(): WorkspacesHookType {
   const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceType | null>(null)
   const ipcRenderer = window.electron?.ipcRenderer
 
-  const reload = () => {
+  const reload = useCallback(() => {
     ipcRenderer?.send(WORKSPACES.getList)
     ipcRenderer?.send(WORKSPACES.getSelected)
-  }
+  }, [ipcRenderer])
 
   useEffect(() => {
+    const reload = () => {
+      ipcRenderer?.send(WORKSPACES.getList)
+      ipcRenderer?.send(WORKSPACES.getSelected)
+    }
+
     reload()
 
     ipcRenderer?.on(WORKSPACES.list, (_: unknown, ws: WorkspaceType[]) => {
@@ -66,7 +71,7 @@ export function useWorkspaces(): WorkspacesHookType {
       ipcRenderer?.removeAllListeners(WORKSPACES.duplicated)
       ipcRenderer?.removeAllListeners(WORKSPACES.error)
     }
-  }, [])
+  }, [ipcRenderer, selectedWorkspace])
 
   const create = (name: string) => {
     ipcRenderer?.send(WORKSPACES.create, { name })

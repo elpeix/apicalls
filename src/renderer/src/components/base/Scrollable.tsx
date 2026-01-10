@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 
 export default function Scrollable({
   className,
@@ -13,32 +13,25 @@ export default function Scrollable({
 }) {
   const [isScrolling, setIsScrolling] = useState(false)
 
-  const handleEndScroll = useMemo(() => {
-    let timeout: NodeJS.Timeout
-    return () => {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        setIsScrolling(false)
-        if (onEndScroll) {
-          onEndScroll()
-        }
-      }, 100)
-    }
-  }, [onEndScroll])
+  const timeoutRef = React.useRef<NodeJS.Timeout>(null)
 
   const handleScroll = () => {
     setIsScrolling(true)
-    handleEndScroll()
-  }
-
-  useEffect(() => {
-    if (!isScrolling) {
-      return
-    }
-    if (onStartScroll) {
+    if (onStartScroll && !isScrolling) {
       onStartScroll()
     }
-  }, [isScrolling, onStartScroll])
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setIsScrolling(false)
+      if (onEndScroll) {
+        onEndScroll()
+      }
+    }, 100)
+  }
 
   return (
     <div className={className} onScroll={handleScroll}>

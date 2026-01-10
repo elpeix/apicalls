@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import ButtonIcon from '../../base/ButtonIcon'
 import styles from './SearchTabs.module.css'
 import { AppContext } from '../../../context/AppContext'
@@ -9,19 +9,19 @@ import { ACTIONS } from '../../../../../lib/ipcChannels'
 export default function SearchTabs() {
   const { application } = useContext(AppContext)
 
-  const openDialog = () => {
+  const openDialog = useCallback(() => {
     application.showDialog({
       children: <SearchTabsChildren onClose={application.hideDialog} />,
       className: styles.tabsDialog,
       position: 'top'
     })
-  }
+  }, [application])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.on(ACTIONS.searchTab, openDialog)
     return () => ipcRenderer?.removeAllListeners(ACTIONS.searchTab)
-  }, [])
+  }, [openDialog])
 
   return (
     <div className={styles.button}>
@@ -34,15 +34,17 @@ function SearchTabsChildren({ onClose }: { onClose: () => void }) {
   const { tabs } = useContext(AppContext)
   const inputRef = useRef(null)
   const listRef = useRef<HTMLUListElement>(null)
+  const [prevTabs, setPrevTabs] = useState(tabs)
   const [filter, setFilter] = useState('')
   const [filteredTabs, setFilteredTabs] = useState(tabs?.tabs || [])
   const [selectedFilteredTab, setSelectedFilteredTab] = useState(-1)
 
-  useEffect(() => {
+  if (tabs !== prevTabs) {
+    setPrevTabs(tabs)
     setFilter('')
     setFilteredTabs(tabs?.tabs || [])
     setSelectedFilteredTab(0)
-  }, [tabs])
+  }
 
   const changeHandler = (value: string) => {
     setFilter(value)

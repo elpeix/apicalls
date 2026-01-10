@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 import { REQUEST } from '../../../../lib/ipcChannels'
 import { usePreRequest } from './usePreRequest'
@@ -26,6 +26,7 @@ export function useRequestSender({
     requestUrl,
     requestBody,
     requestHeaders,
+    requestPathParams,
     requestQueryParams,
     requestPreScript,
     requestPostScript,
@@ -50,7 +51,6 @@ export function useRequestSender({
   const { executeScript, getScriptEnvironment, getScriptConsole, tryParseBody, cancelScripts } =
     scriptExecutor
 
-  const [launchRequest, setLaunchRequest] = useState(false)
   const [fetching, setFetching] = useState(false)
   const [fetched, setFetched] = useState<FetchedType>(tab.response ? 'old' : false)
   const [fetchError, setFetchError] = useState('')
@@ -58,7 +58,7 @@ export function useRequestSender({
 
   const { history } = useContext(AppContext)
 
-  const saveHistory = () => {
+  const saveHistory = useCallback(() => {
     if (!history) return
     history.add({
       type: 'history',
@@ -70,223 +70,266 @@ export function useRequestSender({
         url: requestUrl,
         auth: requestAuth,
         headers: requestHeaders,
-        pathParams: requestState.requestPathParams,
+        pathParams: requestPathParams,
         queryParams: requestQueryParams,
         body: requestBody
       }
     })
-  }
+  }, [
+    history,
+    requestMethod,
+    requestUrl,
+    requestAuth,
+    requestHeaders,
+    requestPathParams,
+    requestQueryParams,
+    requestBody
+  ])
 
-  const setCookies = (headers: KeyValue[], url: string) => {
-    if (settings?.settings?.manageCookies) {
-      cookies?.upsert(headers, getValue(url))
-    }
-  }
-
-  const sendMainRequest = async (requestLogs: RequestLog[] = []) => {
-    const environment = getRequestEnvironment()
-    const url = getValue(requestUrl)
-
-    const effectiveHeaders = getHeaders(url) as Record<string, string>
-
-    const contextRequest = {
-      method: requestMethod.value,
-      url: requestUrl,
-      headers: effectiveHeaders,
-      body: requestBody
-    }
-
-    if (collection && collection.preScript && collection.preScript.trim().length > 0) {
-      const success = await executeScript(collection.preScript, {
-        request: contextRequest,
-        environment: getScriptEnvironment(environment),
-        console: getScriptConsole()
-      })
-      if (!success) {
-        console.error('Collection pre-script failed')
-        setFetching(false)
-        return
+  const setCookies = useCallback(
+    (headers: KeyValue[], url: string) => {
+      if (settings?.settings?.manageCookies) {
+        cookies?.upsert(headers, getValue(url))
       }
-    }
+    },
+    [settings, cookies, getValue]
+  )
 
-    if (requestPreScript) {
-      const success = await executeScript(requestPreScript, {
-        request: contextRequest,
-        environment: getScriptEnvironment(environment),
-        console: getScriptConsole()
-      })
-      if (!success) {
-        setFetching(false)
-        return
-      }
-    }
+  const sendMainRequest = useCallback(
+    async (requestLogs: RequestLog[] = []) => {
+      const environment = getRequestEnvironment()
+      const url = getValue(requestUrl)
 
-    saveHistory()
+      const effectiveHeaders = getHeaders(url) as Record<string, string>
 
-    const queryParams = prepareQueryParams(requestQueryParams)
-
-    const callApiRequest: CallRequest = {
-      id: tabId,
-      url: getValue(contextRequest.url),
-      method: {
-        value: contextRequest.method,
-        label: contextRequest.method,
-        body: contextRequest.method !== 'GET' && contextRequest.method !== 'HEAD'
-      },
-      headers: contextRequest.headers,
-      queryParams,
-      body:
-        contextRequest.body === 'none' || contextRequest.body === ''
-          ? undefined
-          : getBody(contextRequest.body)
-    }
-    tab.response = undefined
-
-    const CHANNEL_CALL = REQUEST.call
-    const CHANNEL_RESPONSE = `${REQUEST.response}-${tabId}`
-    const CHANNEL_FAILURE = `${REQUEST.failure}-${tabId}`
-    const CHANNEL_CANCELLED = `${REQUEST.cancelled}-${tabId}`
-
-    window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
-
-    window.electron?.ipcRenderer.on(CHANNEL_RESPONSE, (_: unknown, callResponse: CallResponse) => {
-      if (callResponse.id !== tabId) return
-      setFetched(true)
-      const responseData = {
-        body: callResponse.result || '',
-        headers: callResponse.responseHeaders,
-        cookies: [],
-        time: callResponse.responseTime.all,
-        status: callResponse.status.code,
-        size: callResponse.contentLength
-      }
-      setRequestResponse(responseData)
-
-      const setFetchedHeaders = (headers: KeyValue[]) => {
-        const cookies = headers
-          .filter((header: KeyValue) => header.name === 'set-cookie')
-          .map((cookie) => cookie.value.split(';'))
-          .map((cookie) => cookie[0].split('='))
-        setResponseState((prev: RequestResponseType) => ({ ...prev, headers, cookies }))
+      const contextRequest = {
+        method: requestMethod.value,
+        url: requestUrl,
+        headers: effectiveHeaders,
+        body: requestBody
       }
 
-      setFetchedHeaders(callResponse.responseHeaders)
-      setCookies(callResponse.responseHeaders, requestUrl)
+      if (collection && collection.preScript && collection.preScript.trim().length > 0) {
+        const success = await executeScript(collection.preScript, {
+          request: contextRequest,
+          environment: getScriptEnvironment(environment),
+          console: getScriptConsole()
+        })
+        if (!success) {
+          console.error('Collection pre-script failed')
+          setFetching(false)
+          return
+        }
+      }
 
-      const runPostScripts = async () => {
-        if (requestPostScript) {
-          await executeScript(requestPostScript, {
-            request: {
-              method: contextRequest.method,
-              url: contextRequest.url,
-              headers: contextRequest.headers,
-              body: contextRequest.body
-            },
-            response: {
+      if (requestPreScript) {
+        const success = await executeScript(requestPreScript, {
+          request: contextRequest,
+          environment: getScriptEnvironment(environment),
+          console: getScriptConsole()
+        })
+        if (!success) {
+          setFetching(false)
+          return
+        }
+      }
+
+      saveHistory()
+
+      const queryParams = prepareQueryParams(requestQueryParams)
+
+      const callApiRequest: CallRequest = {
+        id: tabId,
+        url: getValue(contextRequest.url),
+        method: {
+          value: contextRequest.method,
+          label: contextRequest.method,
+          body: contextRequest.method !== 'GET' && contextRequest.method !== 'HEAD'
+        },
+        headers: contextRequest.headers,
+        queryParams,
+        body:
+          contextRequest.body === 'none' || contextRequest.body === ''
+            ? undefined
+            : getBody(contextRequest.body)
+      }
+
+      const CHANNEL_CALL = REQUEST.call
+      const CHANNEL_RESPONSE = `${REQUEST.response}-${tabId}`
+      const CHANNEL_FAILURE = `${REQUEST.failure}-${tabId}`
+      const CHANNEL_CANCELLED = `${REQUEST.cancelled}-${tabId}`
+
+      window.electron?.ipcRenderer.send(CHANNEL_CALL, callApiRequest)
+
+      window.electron?.ipcRenderer.on(
+        CHANNEL_RESPONSE,
+        (_: unknown, callResponse: CallResponse) => {
+          if (callResponse.id !== tabId) return
+          setFetched(true)
+          const responseData = {
+            body: callResponse.result || '',
+            headers: callResponse.responseHeaders,
+            cookies: [],
+            time: callResponse.responseTime.all,
+            status: callResponse.status.code,
+            size: callResponse.contentLength
+          }
+          setRequestResponse(responseData)
+
+          const setFetchedHeaders = (headers: KeyValue[]) => {
+            const cookies = headers
+              .filter((header: KeyValue) => header.name === 'set-cookie')
+              .map((cookie) => cookie.value.split(';'))
+              .map((cookie) => cookie[0].split('='))
+            setResponseState((prev: RequestResponseType) => ({ ...prev, headers, cookies }))
+          }
+
+          setFetchedHeaders(callResponse.responseHeaders)
+          setCookies(callResponse.responseHeaders, requestUrl)
+
+          const runPostScripts = async () => {
+            if (requestPostScript) {
+              await executeScript(requestPostScript, {
+                request: {
+                  method: contextRequest.method,
+                  url: contextRequest.url,
+                  headers: contextRequest.headers,
+                  body: contextRequest.body
+                },
+                response: {
+                  status: callResponse.status.code,
+                  headers: callResponse.responseHeaders,
+                  body: tryParseBody(callResponse.result || '{}'),
+                  rawBody: callResponse.result || ''
+                },
+                environment: getScriptEnvironment(getRequestEnvironment()),
+                console: getScriptConsole()
+              })
+            }
+
+            if (collection && collection.postScript) {
+              await executeScript(collection.postScript, {
+                request: {
+                  method: contextRequest.method,
+                  url: contextRequest.url,
+                  headers: contextRequest.headers,
+                  body: contextRequest.body
+                },
+                response: {
+                  status: callResponse.status.code,
+                  headers: callResponse.responseHeaders,
+                  body: tryParseBody(callResponse.result || '{}'),
+                  rawBody: callResponse.result || ''
+                },
+                environment: getScriptEnvironment(getRequestEnvironment()),
+                console: getScriptConsole()
+              })
+            }
+          }
+          runPostScripts()
+
+          requestConsole?.addAll([
+            ...requestLogs,
+            {
+              method: requestMethod.value,
+              url: getFullUrlForConsole(url, queryParams),
               status: callResponse.status.code,
-              headers: callResponse.responseHeaders,
-              body: tryParseBody(callResponse.result || '{}'),
-              rawBody: callResponse.result || ''
-            },
-            environment: getScriptEnvironment(getRequestEnvironment()),
-            console: getScriptConsole()
-          })
+              time: callResponse.responseTime.all,
+              request: callApiRequest,
+              response: callResponse
+            }
+          ])
+          setFetching(false)
+          window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+          window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+          window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
         }
+      )
 
-        if (collection && collection.postScript) {
-          await executeScript(collection.postScript, {
-            request: {
-              method: contextRequest.method,
-              url: contextRequest.url,
-              headers: contextRequest.headers,
-              body: contextRequest.body
-            },
-            response: {
-              status: callResponse.status.code,
-              headers: callResponse.responseHeaders,
-              body: tryParseBody(callResponse.result || '{}'),
-              rawBody: callResponse.result || ''
-            },
-            environment: getScriptEnvironment(getRequestEnvironment()),
-            console: getScriptConsole()
-          })
-        }
+      const getFullUrlForConsole = (url: string, params: KeyValue[]) => {
+        const paramStr = params
+          .filter((param) => param.enabled)
+          .map((param) => `${param.name}=${param.value}`)
+          .join('&')
+        return `${url}${paramStr ? '?' + paramStr : ''}`
       }
-      runPostScripts()
 
-      requestConsole?.addAll([
-        ...requestLogs,
-        {
-          method: requestMethod.value,
-          url: getFullUrlForConsole(url, queryParams),
-          status: callResponse.status.code,
-          time: callResponse.responseTime.all,
-          request: callApiRequest,
-          response: callResponse
+      window.electron?.ipcRenderer.on(
+        CHANNEL_FAILURE,
+        (_: unknown, response: CallResponseFailure) => {
+          setFetching(false)
+          setFetched(true)
+          setFetchError(response.message)
+          setFetchErrorCause(response.cause ? response.cause.toString() : '')
+          requestConsole?.addAll([
+            ...requestLogs,
+            {
+              method: requestMethod.value,
+              url: getFullUrlForConsole(url, queryParams),
+              status: 999,
+              time: 0,
+              request: callApiRequest,
+              failure: response
+            }
+          ])
+          window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
+          window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
+          window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
         }
-      ])
-      setFetching(false)
-      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
-      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
-      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
-    })
+      )
 
-    const getFullUrlForConsole = (url: string, params: KeyValue[]) => {
-      const paramStr = params
-        .filter((param) => param.enabled)
-        .map((param) => `${param.name}=${param.value}`)
-        .join('&')
-      return `${url}${paramStr ? '?' + paramStr : ''}`
-    }
-
-    window.electron?.ipcRenderer.on(
-      CHANNEL_FAILURE,
-      (_: unknown, response: CallResponseFailure) => {
+      window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: number) => {
+        if (requestId !== tabId) return
         setFetching(false)
         setFetched(true)
-        setFetchError(response.message)
-        setFetchErrorCause(response.cause ? response.cause.toString() : '')
+        setFetchError('Request was cancelled')
         requestConsole?.addAll([
           ...requestLogs,
           {
             method: requestMethod.value,
             url: getFullUrlForConsole(url, queryParams),
-            status: 999,
+            status: 499,
             time: 0,
             request: callApiRequest,
-            failure: response
+            failure: {
+              request: callApiRequest,
+              message: 'Request was cancelled'
+            } as CallResponseFailure
           }
         ])
         window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
         window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
         window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
-      }
-    )
-
-    window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: number) => {
-      if (requestId !== tabId) return
-      setFetching(false)
-      setFetched(true)
-      setFetchError('Request was cancelled')
-      requestConsole?.addAll([
-        ...requestLogs,
-        {
-          method: requestMethod.value,
-          url: getFullUrlForConsole(url, queryParams),
-          status: 499,
-          time: 0,
-          request: callApiRequest,
-          failure: {
-            request: callApiRequest,
-            message: 'Request was cancelled'
-          } as CallResponseFailure
-        }
-      ])
-      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_FAILURE)
-      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_RESPONSE)
-      window.electron?.ipcRenderer.removeAllListeners(CHANNEL_CANCELLED)
-    })
-  }
+      })
+    },
+    [
+      getRequestEnvironment,
+      requestUrl,
+      requestMethod,
+      requestBody,
+      collection,
+      requestPreScript,
+      saveHistory,
+      requestQueryParams,
+      tabId,
+      setRequestResponse,
+      setResponseState,
+      setCookies,
+      requestPostScript,
+      tryParseBody,
+      getScriptEnvironment,
+      getScriptConsole,
+      requestConsole,
+      executeScript,
+      getValue,
+      getHeaders,
+      prepareQueryParams,
+      setFetched,
+      setFetching,
+      setFetchError,
+      setFetchErrorCause
+    ]
+  )
 
   const { sendPreRequest } = usePreRequest({
     tabId,
@@ -319,7 +362,7 @@ export function useRequestSender({
     cancelScripts()
   }
 
-  const sendRequest = () => {
+  const sendRequest = useCallback(() => {
     if (!requestUrl || !urlIsValid({})) return
     setFetching(true)
     setFetched(false)
@@ -331,18 +374,22 @@ export function useRequestSender({
     } else {
       sendMainRequest()
     }
-  }
+  }, [
+    requestUrl,
+    urlIsValid,
+    setFetching,
+    setFetched,
+    setFetchError,
+    setFetchErrorCause,
+    preRequestData,
+    sendPreRequest,
+    getRequestEnvironment,
+    sendMainRequest
+  ])
 
   const fetch = () => {
-    setLaunchRequest(true)
+    sendRequest()
   }
-
-  useEffect(() => {
-    if (launchRequest) {
-      setLaunchRequest(false)
-      sendRequest()
-    }
-  }, [launchRequest])
 
   return {
     fetching,

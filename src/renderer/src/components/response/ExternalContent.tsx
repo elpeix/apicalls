@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState, useEffect } from 'react'
+import React, { CSSProperties, useMemo } from 'react'
 import DOMpurify from 'dompurify'
 
 const style: CSSProperties = {
@@ -15,20 +15,17 @@ export default function ExternalContent({
   content: string
   allowScripts?: boolean
 }) {
-  const [srcDoc, setSrcDoc] = useState('')
-  useEffect(() => {
+  const srcDoc = useMemo(() => {
     if (allowScripts) {
-      setSrcDoc(content)
-      return
+      return content
     }
-    setSrcDoc(
-      DOMpurify.sanitize(content, {
-        USE_PROFILES: { html: true },
-        WHOLE_DOCUMENT: true,
-        ADD_TAGS: ['style', 'link', 'head', 'script']
-      })
-    )
+    return DOMpurify.sanitize(content, {
+      USE_PROFILES: { html: true },
+      WHOLE_DOCUMENT: true,
+      ADD_TAGS: ['style', 'link', 'head', 'script']
+    })
   }, [content, allowScripts])
+
   const sandbox = allowScripts ? 'allow-scripts allow-same-origin' : 'allow-same-origin'
   return <iframe srcDoc={srcDoc} style={style} sandbox={sandbox} />
 }

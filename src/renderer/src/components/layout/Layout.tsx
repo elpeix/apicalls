@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { AppContext } from '../../context/AppContext'
 import SideMenu from './sideBar/SideMenu/SideMenu'
 import SidePanel from './sideBar/SidePanel/SidePanel'
@@ -10,11 +10,8 @@ import { Group, Panel, PanelHandle, Separator } from '../base/SimplePanel'
 export default function Layout() {
   const { application, menu, appSettings } = useContext(AppContext)
   const sidePanel = useRef<PanelHandle | null>(null)
-  const [showSelected, setShowSelected] = useState(false)
 
-  useEffect(() => {
-    setShowSelected(menu != null && !!menu.expanded && !!menu.selected)
-  }, [menu])
+  const showSelected = menu != null && !!menu.expanded && !!menu.selected
 
   useEffect(() => {
     if (menu?.expanded) {
@@ -33,7 +30,7 @@ export default function Layout() {
       })
     })
     return () => ipcRenderer?.removeAllListeners(ACTIONS.findRequest)
-  }, [])
+  }, [application])
 
   const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
 

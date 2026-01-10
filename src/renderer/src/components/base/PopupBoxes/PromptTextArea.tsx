@@ -36,7 +36,7 @@ export default function PromptTextArea({
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.sendRequest)
     }
-  }, [internalValue])
+  }, [internalValue, onConfirm])
 
   const handleCancel = () => {
     setInternalValue(value)

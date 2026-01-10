@@ -60,7 +60,6 @@ export const Group = forwardRef<GroupHandle, GroupProps>(
     const numPanels = panelPropsList.length
 
     useEffect(() => {
-      // @ts-expect-error process is not defined in all environments
       if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
         const kids = React.Children.toArray(children)
         for (let i = 0; i < kids.length - 1; i++) {
@@ -227,3 +226,5 @@ export const Group = forwardRef<GroupHandle, GroupProps>(
     )
   }
 )
+
+Group.displayName = 'Group'

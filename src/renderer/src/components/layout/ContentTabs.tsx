@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { AppContext } from '../../context/AppContext'
 import RequestPanel from '../request/RequestPanel'
@@ -12,53 +12,55 @@ import WindowIcons from '../base/WindowIcons/WindowIcons'
 export default function ContentTabs() {
   const { tabs, application, appSettings } = useContext(AppContext)
 
-  const [hasTabs, setHasTabs] = useState(false)
-  const [tabList, setTabList] = useState<RequestTab[]>([])
-  const [selectedTabIndex, setSelectedTabIndex] = useState(-1)
+  const tabList = tabs?.tabs || []
+  const hasTabs = tabList.length > 0
+  const selectedTabIndex = tabs?.getSelectedTabIndex() ?? -1
 
   useEffect(() => {
     if (!tabs) return
-    setHasTabs(tabs.tabs.length > 0)
-    setTabList(tabs.tabs)
-    setSelectedTabIndex(tabs.getSelectedTabIndex())
 
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.closeTab, () => {
+
+    const handleCloseTab = () => {
       const tab = tabs.tabs[tabs.getSelectedTabIndex()]
       if (tab) {
         application.tabActions.closeTab(tab)
       }
-    })
+    }
 
-    ipcRenderer?.on(ACTIONS.nextTab, () => {
+    const handleNextTab = () => {
       const nextTabIndex = (tabs.getSelectedTabIndex() + 1) % tabs.tabs.length
       tabs.setActiveTab(nextTabIndex)
-    })
+    }
 
-    ipcRenderer?.on(ACTIONS.prevTab, () => {
+    const handlePrevTab = () => {
       const prevTabIndex = (tabs.getSelectedTabIndex() - 1 + tabs.tabs.length) % tabs.tabs.length
       tabs.setActiveTab(prevTabIndex)
-    })
+    }
 
-    ipcRenderer?.on(ACTIONS.restoreTab, () => {
+    const handleRestoreTab = () => {
       tabs.restoreTab()
-    })
+    }
+
+    ipcRenderer?.on(ACTIONS.closeTab, handleCloseTab)
+    ipcRenderer?.on(ACTIONS.nextTab, handleNextTab)
+    ipcRenderer?.on(ACTIONS.prevTab, handlePrevTab)
+    ipcRenderer?.on(ACTIONS.restoreTab, handleRestoreTab)
 
     return () => {
-      ipcRenderer?.removeAllListeners(ACTIONS.closeTab)
-      ipcRenderer?.removeAllListeners(ACTIONS.nextTab)
-      ipcRenderer?.removeAllListeners(ACTIONS.prevTab)
-      ipcRenderer?.removeAllListeners(ACTIONS.restoreTab)
+      ipcRenderer?.removeListener(ACTIONS.closeTab, handleCloseTab)
+      ipcRenderer?.removeListener(ACTIONS.nextTab, handleNextTab)
+      ipcRenderer?.removeListener(ACTIONS.prevTab, handlePrevTab)
+      ipcRenderer?.removeListener(ACTIONS.restoreTab, handleRestoreTab)
     }
-  }, [tabs])
+  }, [tabs, application])
 
   const onSelect = (index: number, _: number, __: Event) => {
-    setSelectedTabIndex(index)
+    tabs?.setActiveTab(index)
   }
 
   const handleMouseDown = (index: number) => {
     tabs?.setActiveTab(index)
-    setSelectedTabIndex(index)
   }
 
   return (

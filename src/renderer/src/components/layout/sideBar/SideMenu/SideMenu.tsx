@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import styles from './SideMenu.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import { AppContext } from '../../../../context/AppContext'
@@ -17,8 +17,6 @@ export default function SideMenu({
   toggleCollapse?: () => void
 }) {
   const { menu, appSettings } = useContext(AppContext)
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
-  const [selected, setSelected] = useState<MenuItem>({ id: '', title: '' })
   const [isFullScreen, setIsFullScreen] = useState(false)
   const ipcRenderer = window.electron?.ipcRenderer
 
@@ -27,19 +25,19 @@ export default function SideMenu({
       setIsFullScreen(fullScreen)
     })
     return () => ipcRenderer?.removeAllListeners(WINDOW_ACTIONS.fullScreen)
-  }, [])
+  }, [ipcRenderer])
 
-  useEffect(() => {
-    if (!menu) return
-    const items = menu.items.filter((item) => {
+  const menuItems = useMemo(() => {
+    if (!menu) return []
+    return menu.items.filter((item) => {
       if (item.id === 'cookies') {
         return appSettings?.settings?.manageCookies || false
       }
       return true
     })
-    setMenuItems(items)
-    setSelected(menu.selected)
   }, [menu, appSettings?.settings?.manageCookies])
+
+  const selected = menu?.selected
 
   const isSelected = (id: Identifier) => showSelected && selected && selected.id === id
   const handleClick = (id: Identifier) => {

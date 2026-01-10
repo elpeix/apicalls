@@ -34,7 +34,7 @@ export default function EnvironmentItem({
       application.showAlert({ message })
     })
     return () => ipcRenderer?.removeAllListeners(ENVIRONMENTS.exportFailure)
-  }, [])
+  }, [application])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {

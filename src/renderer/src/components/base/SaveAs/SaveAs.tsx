@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './SaveAs.module.css'
 import { AppContext } from '../../../context/AppContext'
 import Icon from '../../base/Icon/Icon'
@@ -27,43 +27,58 @@ export default function SaveAs({
 
   const [collectionSelected, setCollectionSelected] = useState<Collection | null>(null)
   const [folderPath, setFolderPath] = useState<CollectionFolder[]>([])
-  const [folderList, setFolderList] = useState<CollectionFolder[]>([])
   const [folderSelected, setFolderSelected] = useState<CollectionFolder | null>(null)
   const [requestName, setRequestName] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [requestNameError, setRequestNameError] = useState(false)
+  const initializedRef = useRef(false)
+
+  const folderList = useMemo(() => {
+    if (folderPath.length > 0) {
+      const currentFolder = folderPath[folderPath.length - 1]
+      return getFolders(currentFolder.elements)
+    }
+    if (collectionSelected) {
+      return getFolders(collectionSelected.elements)
+    }
+    return []
+  }, [folderPath, collectionSelected])
 
   useEffect(() => {
-    if (!tabs || !tabId) {
+    if (initializedRef.current || !tabs || !tabId || !collections) {
       return
     }
     const tab = tabs.getTab(tabId)
     if (!tab) {
       return
     }
+
     let name = tab.name
     if (!name || tab.type === 'draft') {
       name = ''
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setRequestName(name)
     if (!tab.collectionId) {
+      initializedRef.current = true
       return
     }
-    const collection = collections?.get(tab.collectionId)
+    const collection = collections.get(tab.collectionId)
     if (!collection) {
       return
     }
+    initializedRef.current = true
     setCollectionSelected(collection)
     const path = tab.path?.filter((pathItem) => pathItem.type === 'folder')
     if (!path) {
       return
     }
     let folders = getFolders(collection.elements)
-    const folderPath: CollectionFolder[] = []
+    const newFolderPath: CollectionFolder[] = []
     for (let i = 0; i < path.length - 1; i++) {
       const folder = getFolder(folders, path[i].id)
       if (folder) {
-        folderPath.push(folder as CollectionFolder)
+        newFolderPath.push(folder as CollectionFolder)
         folders = getFolders(folder.elements)
       }
     }
@@ -73,24 +88,22 @@ export default function SaveAs({
       setFolderSelected(folder || null)
     }
 
-    setFolderPath(folderPath)
-    setFolderList(folders)
+    setFolderPath(newFolderPath)
   }, [collections, tabId, tabs])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setErrorMessage('')
     setRequestNameError(false)
   }, [requestName, collectionSelected, folderPath, folderSelected])
 
   const selectCollection = (collection: Collection) => {
     setCollectionSelected(collection)
-    setFolderList(getFolders(collection.elements))
     setFolderPath([])
   }
 
   const openFolder = (folder: CollectionFolder) => {
     setFolderPath([...folderPath, folder])
-    setFolderList(getFolders(folder.elements))
   }
 
   const selectFolder = (folder: CollectionFolder) => {
@@ -105,8 +118,6 @@ export default function SaveAs({
       return
     }
     setFolderPath(folderPath.slice(0, index + 1))
-    const folder = folderPath[index]
-    setFolderList(getFolders(folder.elements))
   }
 
   const saveHandler = () => {
@@ -208,7 +219,7 @@ export default function SaveAs({
                     <div className={styles.name}>..</div>
                   </div>
                 )}
-                {folderList.map((folder) => (
+                {folderList.map((folder: CollectionFolder) => (
                   <div
                     key={folder.id}
                     className={`${styles.folder} ${folderSelected?.id === folder.id ? styles.selected : ''}`}

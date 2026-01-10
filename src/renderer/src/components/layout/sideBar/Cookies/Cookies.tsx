@@ -1,21 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import CookiesGroup from './CookiesGroup'
 
 export default function Cookies() {
   const { cookies } = useContext(AppContext)
-  const [groups, setGroups] = useState<string[]>([])
-  const [groupedCookies, setGroupedCookies] = useState<Map<string, Cookie[]>>(new Map())
   const [selectedGroup, setSelectedGroup] = useState<string>('')
 
-  useEffect(() => {
-    if (!cookies) return
-    setGroups(cookies.getGroups())
-    setGroupedCookies(cookies.getGrouped())
-  }, [cookies])
+  if (!cookies) {
+    return null
+  }
 
-  if (!cookies) return null
+  const groups = cookies.getGroups()
+  const groupedCookies = cookies.getGrouped()
 
   const handleUpdateGroup = (group: string, groupCookies: Cookie[]) => {
     cookies.updateGroup(group, groupCookies)
@@ -24,8 +21,6 @@ export default function Cookies() {
   const handleRemoveGroup = (group: string) => {
     cookies.remove(group)
     setSelectedGroup('')
-    setGroups(cookies.getGroups())
-    setGroupedCookies(cookies.getGrouped())
   }
 
   return (

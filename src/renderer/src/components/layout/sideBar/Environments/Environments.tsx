@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { ENVIRONMENTS, WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
@@ -11,11 +11,15 @@ import Scrollable from '../../../base/Scrollable'
 export default function Environments() {
   const { application, environments } = useContext(AppContext)
 
-  const [envs, setEnvs] = useState<Environment[]>([])
-  const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
+  const envs = environments?.getAll() || []
+  const [selectedEnvId, setSelectedEnvId] = useState<Identifier | null>(null)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
   const [isScrolling, setIsScrolling] = useState(false)
+
+  const selectedEnvironment = useMemo(() => {
+    return selectedEnvId && environments ? environments.get(selectedEnvId) : null
+  }, [environments, selectedEnvId])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -23,27 +27,22 @@ export default function Environments() {
       application.showAlert({ message })
     })
     ipcRenderer?.on(WORKSPACES.changed, () => {
-      setSelectedEnvironment(null)
+      setSelectedEnvId(null)
     })
     return () => {
       ipcRenderer?.removeAllListeners(ENVIRONMENTS.importFailure)
       ipcRenderer?.removeAllListeners(WORKSPACES.changed)
     }
-  }, [environments, setSelectedEnvironment])
+  }, [environments, application])
 
-  useEffect(() => {
-    if (!environments) return
-    setEnvs(environments.getAll())
-    if (selectedEnvironment) {
-      const env = environments.get(selectedEnvironment.id)
-      if (env) setSelectedEnvironment(env)
-    }
-  }, [environments, selectedEnvironment])
+  const setSelectedEnvironment = (env: Environment | null) => {
+    setSelectedEnvId(env ? env.id : null)
+  }
 
   const add = () => {
     if (!environments) return
     const environment = environments.create()
-    setSelectedEnvironment(environment)
+    setSelectedEnvId(environment.id)
   }
 
   const update = (environment: Environment) => {
@@ -55,8 +54,8 @@ export default function Environments() {
     if (!environments) return
     if (id) {
       environments.remove(id)
-      if (selectedEnvironment && selectedEnvironment.id === id) {
-        setSelectedEnvironment(null)
+      if (selectedEnvId && selectedEnvId === id) {
+        setSelectedEnvId(null)
       }
     }
   }
