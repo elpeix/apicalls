@@ -1,5 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import FormDataTable from '../base/Params/FormDataTable'
+
+const parseItem = (item: unknown): KeyValue | null => {
+  if (typeof item === 'object' && item !== null) {
+    const parsed = item as KeyValue
+    if (parsed.name === undefined) {
+      return null
+    }
+    return {
+      name: parsed.name,
+      value: parsed.value,
+      enabled: !!parsed.enabled,
+      type: parsed.type || 'text'
+    }
+  }
+  return null
+}
 
 export default function FormDataEditor({
   value,
@@ -10,39 +26,19 @@ export default function FormDataEditor({
   onChange: (value: string) => void
   allowFiles?: boolean
 }) {
-  const [items, setItems] = useState<KeyValue[]>([])
-
-  useEffect(() => {
+  const items = useMemo(() => {
     try {
       const parsed = JSON.parse(value || '[]')
       if (Array.isArray(parsed)) {
-        setItems(parsed.map(parseItem).filter((item): item is KeyValue => item !== null))
-      } else {
-        setItems([])
+        return parsed.map(parseItem).filter((item): item is KeyValue => item !== null)
       }
+      return []
     } catch {
-      setItems([])
+      return []
     }
   }, [value])
 
-  const parseItem = (item: unknown): KeyValue | null => {
-    if (typeof item === 'object' && item !== null) {
-      const parsed = item as KeyValue
-      if (parsed.name === undefined) {
-        return null
-      }
-      return {
-        name: parsed.name,
-        value: parsed.value,
-        enabled: !!parsed.enabled,
-        type: parsed.type || 'text'
-      }
-    }
-    return null
-  }
-
   const updateItems = (newItems: KeyValue[]) => {
-    setItems(newItems)
     onChange(JSON.stringify(newItems))
   }
 

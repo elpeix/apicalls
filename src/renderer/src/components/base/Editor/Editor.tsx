@@ -1,11 +1,9 @@
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import * as monaco from 'monaco-editor'
-import React, { memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useContext, useEffect, useMemo, useRef } from 'react'
 import { AppContext } from '../../../context/AppContext'
 import { RequestContext } from '../../../context/RequestContext'
-
-const base = window || global
-const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
+import { useEditorTheme } from './useEditorTheme'
 
 type EditorRefType = {
   editor: monaco.editor.IStandaloneCodeEditor
@@ -27,75 +25,44 @@ export default function Editor({
   wordWrap?: boolean
   onChange?: OnChange
 }) {
-  const getThemeName = (name: string | undefined, mode: string | undefined) => {
-    if (!name) {
-      return matchMedia.matches ? 'vs-dark' : 'vs'
-    }
-    if (mode === 'hc-light' || mode === 'hc-black') {
-      return mode
-    }
-    return name
-  }
-
   const { appSettings } = useContext(AppContext)
   const { isActive, setEditorState, getEditorState } = useContext(RequestContext)
-  const [mustRender, setMustRender] = useState(false)
-  const [viewState, setViewState] = useState<monaco.editor.ICodeEditorViewState | null>(null)
-  const [theme, setTheme] = useState(
-    getThemeName(appSettings?.getEditorTheme()?.name, appSettings?.getEditorTheme()?.mode)
-  )
-  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(
-    appSettings?.getEditorTheme()?.data || null
-  )
+
+  const { theme, themeData } = useEditorTheme(appSettings)
   const editorRef = useRef<EditorRefType | null>(null)
 
-  useEffect(() => {
-    const editorTheme = appSettings?.getEditorTheme()
-    if (!editorTheme) {
-      return
-    }
-    const editorThemeMode = editorTheme.mode
-    if (editorThemeMode === 'hc-light' || editorThemeMode === 'hc-black') {
-      setThemeData(null)
-      setTheme(editorThemeMode)
-      return
-    }
-    setThemeData(editorTheme.data)
-    if (editorTheme.data && editorTheme.data.colors) {
-      if (theme === editorTheme.name) {
-        return
-      }
-      const editorRefData = editorRef.current
-      const monacoEditor = editorRefData?.monaco || monaco
-      monacoEditor.editor.defineTheme(editorTheme.name, editorTheme.data)
-      monacoEditor.editor.setTheme(editorTheme.name)
-      setTheme(editorTheme.name)
-    } else {
-      setTheme(editorTheme.mode === 'vs-dark' ? 'vs-dark' : 'vs')
-    }
-  }, [appSettings])
+  // Derived state to determine if we should render (optimization for large files in background)
+  const mustRender = type === 'none' || value.length < 1024 * 1024 || isActive
 
-  useEffect(() => {
+  // Load initial view state when type changes
+  const initialViewState = useMemo(() => {
     if (type === 'none') {
-      return
+      return null
     }
     const rawViewState = getEditorState(type)
-    if (rawViewState) {
-      setViewState(JSON.parse(rawViewState))
+    return rawViewState ? JSON.parse(rawViewState) : null
+  }, [type, getEditorState])
+
+  useEffect(() => {
+    const editorInstance = editorRef.current
+    const monacoInstance = editorInstance?.monaco || monaco
+
+    if (themeData && themeData.colors) {
+      monacoInstance.editor.defineTheme(theme, themeData)
     }
+    monacoInstance.editor.setTheme(theme)
+  }, [theme, themeData])
+
+  useEffect(() => {
     return () => {
-      if (editorRef.current && editorRef.current.editor) {
+      if (type !== 'none' && editorRef.current && editorRef.current.editor) {
         const viewState = editorRef.current.editor.saveViewState()
         if (viewState) {
           setEditorState(type, JSON.stringify(viewState))
         }
       }
     }
-  }, [isActive])
-
-  useEffect(() => {
-    setMustRender(type === 'none' || value.length < 1024 * 1024 || isActive)
-  }, [value, isActive])
+  }, [isActive, type, setEditorState])
 
   const options = useMemo(() => {
     return {
@@ -124,6 +91,7 @@ export default function Editor({
   }
   return (
     <EditorWrapped
+      key={type}
       language={language}
       onChange={onChange}
       value={value}
@@ -131,8 +99,8 @@ export default function Editor({
       options={options}
       onMount={(editor, monaco) => {
         editorRef.current = { editor, monaco }
-        if (viewState) {
-          editor.restoreViewState(viewState)
+        if (initialViewState) {
+          editor.restoreViewState(initialViewState)
         }
         if (themeData && themeData.colors) {
           monaco.editor.defineTheme(theme, themeData)
@@ -174,11 +142,11 @@ const EditorWrapped = memo(
       />
     )
   },
-  (prepProps, nextProps) => {
+  (prevProps, nextProps) => {
     return (
-      prepProps.value !== nextProps.value &&
-      prepProps.theme !== nextProps.theme &&
-      prepProps.language !== nextProps.language
+      prevProps.value === nextProps.value &&
+      prevProps.theme === nextProps.theme &&
+      prevProps.language === nextProps.language
     )
   }
 )

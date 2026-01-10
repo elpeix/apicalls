@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { createRequest } from '../lib/factory'
 import { ACTIONS, TABS } from '../../../lib/ipcChannels'
 import { toggleCollectionElements } from '../lib/collectionFilter'
@@ -221,21 +221,21 @@ export default function useTabs(
     return index
   }
 
-  let updateTabsTimeout: NodeJS.Timeout | null = null
+  const updateTabsTimeout = useRef<NodeJS.Timeout | null>(null)
   const updateTabs = (newTabs: RequestTab[]) => {
-    if (updateTabsTimeout) {
-      clearTimeout(updateTabsTimeout)
+    if (updateTabsTimeout.current) {
+      clearTimeout(updateTabsTimeout.current)
     }
-    updateTabsTimeout = setTimeout(() => {
+    updateTabsTimeout.current = setTimeout(() => {
       updateTabsImmediate(newTabs)
     }, 200)
   }
 
   const updateTabsImmediate = (newTabs: RequestTab[]) => {
-    if (updateTabsTimeout) {
-      clearTimeout(updateTabsTimeout)
+    if (updateTabsTimeout.current) {
+      clearTimeout(updateTabsTimeout.current)
     }
-    updateTabsTimeout = null
+    updateTabsTimeout.current = null
     setTabs(newTabs)
     ipcRenderer?.send(TABS.update, newTabs)
   }

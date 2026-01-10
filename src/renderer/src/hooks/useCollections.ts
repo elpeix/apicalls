@@ -9,10 +9,10 @@ export function useCollections(): CollectionsHookType {
   const [updateTime, setUpdateTime] = useState(0)
   const ipcRenderer = window.electron?.ipcRenderer
 
-  const create = () => {
+  const create = (name?: string) => {
     const newCollection: Collection = {
       id: new Date().getTime(),
-      name: '',
+      name: name || '',
       elements: []
     }
     add(newCollection)

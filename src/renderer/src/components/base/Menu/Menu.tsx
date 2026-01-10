@@ -12,9 +12,9 @@ export default function Menu({
   iconDirection = 'west',
   iconClassName = '',
   isMoving = false,
-  menuIsOpen = false,
-  onOpen = () => {},
-  onClose = () => {},
+  menuIsOpen,
+  onOpen,
+  onClose,
   preventCloseOnClick = false,
   topOffset = 23,
   leftOffset = -134,
@@ -36,35 +36,53 @@ export default function Menu({
   children: ReactMenuElement | ReactMenuElement[] | React.ReactNode
 }) {
   const menuRef = useRef<HTMLDivElement>(null)
-  const [showMenu, setShowMenu] = useState(false)
+  const [internalShowMenu, setInternalShowMenu] = useState(false)
+
+  const isControlled = menuIsOpen !== undefined
+  const showMenu = isControlled ? menuIsOpen : internalShowMenu
 
   useEffect(() => {
     if (showMenu && isMoving) {
-      setShowMenu(false)
+      const timer = setTimeout(() => {
+        if (!isControlled) {
+          setInternalShowMenu(false)
+        }
+        onClose?.()
+      }, 0)
+      return () => clearTimeout(timer)
     }
-  }, [showMenu, isMoving])
+  }, [showMenu, isMoving, isControlled, onClose])
 
-  useEffect(() => {
-    setShowMenu(menuIsOpen)
-  }, [menuIsOpen])
+  const handleOnClick = (e: React.MouseEvent<Element>) => {
+    e.stopPropagation()
+    const nextState = !showMenu
 
-  useEffect(() => {
-    if (showMenu) {
+    if (!isControlled) {
+      setInternalShowMenu(nextState)
+    }
+
+    if (nextState) {
       onOpen?.()
     } else {
       onClose?.()
     }
-  }, [showMenu])
-
-  const handleOnClick = (e: React.MouseEvent<Element>) => {
-    e.stopPropagation()
-    setShowMenu(!showMenu)
   }
+
   const handleOnClickModal = (e: React.MouseEvent<Element>) => {
     e.stopPropagation()
     if (!preventCloseOnClick) {
-      setShowMenu(false)
+      if (!isControlled) {
+        setInternalShowMenu(false)
+      }
+      onClose?.()
     }
+  }
+
+  const handleCloseModal = () => {
+    if (!isControlled) {
+      setInternalShowMenu(false)
+    }
+    onClose?.()
   }
 
   const menuClassName = `${styles.menu} ${className} ${showMenu ? `${styles.active} ${showMenuClassName}` : ''}`
@@ -97,7 +115,7 @@ export default function Menu({
           leftOffset={leftOffset}
           className={modalClassName}
           useOverlay={true}
-          closeModal={() => setShowMenu(false)}
+          closeModal={handleCloseModal}
           onClick={handleOnClickModal}
         >
           {children}

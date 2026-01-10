@@ -1,6 +1,7 @@
 @import './css/base.css';
 @import './css/tabs.css';
 @import './css/sidePanel.css';
+@import './css/simple-panels.css';
 
 a {
   color: var(--base-color);

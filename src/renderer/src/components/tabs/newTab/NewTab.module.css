@@ -17,14 +17,35 @@
     opacity: 1;
   }
 
+  .button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+
+    border: 1px solid transparent;
+
+    &:active,
+    &:hover,
+    &:focus {
+      border: 1px solid transparent !important;
+    }
+
+    &:focus-visible {
+      border: 1px solid var(--border-color) !important;
+    }
+  }
+
   .label {
     font-size: 1.24rem;
-    color: var(--text-color);
+    color: var(--base-color);
+    text-transform: none;
     flex: 1;
     white-space: nowrap;
   }
 
-  &:hover {
+  &:hover,
+  &:has(:focus) {
     opacity: 1;
   }
 }

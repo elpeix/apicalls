@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
@@ -57,39 +57,32 @@ export default function Input({
   const [onOver, setOnOver] = useState(false)
   const debouncedOnOver = useDebounce(onOver, 500)
   const debouncedValue = useDebounce(internalValue, 700)
-  const [variableList, setVariableList] = useState<Variable[]>([])
-  const [envId, setEnvId] = useState<Identifier | null | undefined>(null)
 
-  useEffect(() => {
+  const [prevValue, setPrevValue] = useState(value)
+  if (value !== prevValue) {
+    setPrevValue(value)
     setInternalValue(value)
-  }, [value])
+  }
 
-  useEffect(() => {
-    if (environmentId) {
-      setEnvId(environmentId)
-      return
-    }
+  const envId = useMemo(() => {
+    if (environmentId) return environmentId
     if (collectionId) {
-      const environmentId = collections?.getEnvironmentId(collectionId)
-      if (environmentId) {
-        setEnvId(environmentId)
-        return
-      }
+      const colEnvId = collections?.getEnvironmentId(collectionId)
+      if (colEnvId) return colEnvId
     }
-    setEnvId(environments?.getActive()?.id)
-  }, [environmentId, environments, collectionId])
+    return environments?.getActive()?.id
+  }, [environmentId, collectionId, environments, collections])
 
-  useEffect(() => {
-    if (debouncedValue) {
-      const variables: Variable[] = []
-      internalValue.split(REGEX).forEach((part) => {
-        if (envId && environments?.variableIsDefined(envId, part)) {
-          variables.push({ part, value: environments.getVariableValue(envId, part) })
-        }
-      })
-      setVariableList(variables)
-    }
-  }, [debouncedOnOver, internalValue, REGEX, environments, debouncedValue])
+  const variableList = useMemo(() => {
+    if (!debouncedValue) return []
+    const variables: Variable[] = []
+    internalValue.split(REGEX).forEach((part) => {
+      if (envId && environments?.variableIsDefined(envId, part)) {
+        variables.push({ part, value: environments.getVariableValue(envId, part) })
+      }
+    })
+    return variables
+  }, [debouncedValue, internalValue, REGEX, environments, envId])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement

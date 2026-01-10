@@ -1,9 +1,21 @@
-import React, { useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import styles from './Autocompleter.module.css'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 import Input from '../Input/Input'
 import { AppContext } from '../../../context/AppContext'
-import { stringArrayEqual } from '../../../lib/utils'
+
+const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
 
 export default function Autocompleter({
   inputRef,
@@ -55,19 +67,36 @@ export default function Autocompleter({
 
   const inputId = useId()
 
-  const [envVariables, setEnvVariables] = useState<string[]>([])
   const [inputValue, setInputValue] = useState(value)
   const [searchValue, setSearchValue] = useState('')
   const [searchIndex, setSearchIndex] = useState(-1)
   const [cursorPosition, setCursorPosition] = useState(-1)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selected, setSelected] = useState(0)
-  const [baseOptions, setBaseOptions] = useState<string[]>(options || [])
-  const [immutableOptions, setImmutableOptions] = useState<string[]>([])
-  const [suggestions, setSuggestions] = useState<string[]>([])
   const [maxSuggestionsHeight, setMaxSuggestionsHeight] = useState<number | undefined>(undefined)
+  const [width, setWidth] = useState(0)
 
-  useEffect(() => {
+  // Derived Environment Variables
+  const envVariables = useMemo(() => {
+    if (!showEnvironmentVariables) return []
+    return environments?.getVariables(environmentId)?.map((v) => v.name) || []
+  }, [environments, showEnvironmentVariables, environmentId])
+
+  // Derived All Options
+  const allOptions = useMemo(() => {
+    return [...(options || []), ...envVariables]
+  }, [options, envVariables])
+
+  // Derived Suggestions
+  const suggestions = useMemo(() => {
+    const query = searchValue || inputValue
+    if (!query) {
+      return allOptions
+    }
+    return allOptions.filter((option) => option.toLowerCase().includes(query.toLowerCase()))
+  }, [allOptions, searchValue, inputValue])
+
+  useLayoutEffect(() => {
     if (!showSuggestions || !inputRef.current) return
 
     const rect = inputRef.current.getBoundingClientRect()
@@ -79,133 +108,121 @@ export default function Autocompleter({
       setShowSuggestions(false)
     }
     setMaxSuggestionsHeight(maxHeight)
-  }, [showSuggestions, inputRef.current])
+  }, [showSuggestions, inputRef])
+
+  useLayoutEffect(() => {
+    if (showSuggestions && ref.current) {
+      setWidth(ref.current.clientWidth)
+    }
+  }, [showSuggestions])
 
   // Close suggestions on resize or scroll
   useEffect(() => {
     if (!showSuggestions) return
     const handle = () => setShowSuggestions(false)
     window.addEventListener('resize', handle)
-    scrollContainerRef?.current?.addEventListener('scroll', handle)
+
+    const scrollContainer = scrollContainerRef?.current
+    scrollContainer?.addEventListener('scroll', handle)
+
     return () => {
       window.removeEventListener('resize', handle)
-      scrollContainerRef?.current?.removeEventListener('scroll', handle)
+      scrollContainer?.removeEventListener('scroll', handle)
     }
   }, [showSuggestions, scrollContainerRef])
 
   const clearSuggestions = useCallback(() => {
-    setSuggestions(immutableOptions)
     setShowSuggestions(false)
     setSelected(-1)
     setSearchValue('')
     setSearchIndex(-1)
-  }, [immutableOptions])
+  }, [])
 
   const assignValue = useCallback(
-    (value: string, position: number = -1) => {
-      setInputValue(value)
-      onChange?.(value)
+    (newValue: string, position: number = -1) => {
+      setInputValue(newValue)
+      onChange?.(newValue)
       if (position > -1) {
         setCursorPosition(position)
       }
     },
-    [onChange, setInputValue]
+    [onChange]
   )
 
   const setSuggestion = useCallback(
     (suggestion: string) => {
-      let valueToAssing = `{{${suggestion}}}`
-      let position = valueToAssing.length
-      if (options && options.indexOf(suggestion) > -1) {
-        valueToAssing = suggestion
-        position = valueToAssing.length
+      let valueToAssign = `{{${suggestion}}}`
+      let position = valueToAssign.length
+
+      const isPlainOption = options && options.indexOf(suggestion) > -1
+
+      if (isPlainOption) {
+        valueToAssign = suggestion
+        position = valueToAssign.length
       } else if (searchValue.length > 0) {
         // Replace value from searchIndex and searchValues
         if (searchIndex > -1) {
-          valueToAssing =
+          valueToAssign =
             inputValue.slice(0, searchIndex) +
             `{{${suggestion}}}` +
             inputValue.slice(searchIndex + searchValue.length)
           position = searchIndex + suggestion.length + 4
         } else {
           // Escape searchValue non \w characters
-          const escapedSearchValue = searchValue.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+          const escapedSearchValue = escapeRegExp(searchValue)
           const regex = new RegExp(`${escapedSearchValue}$`)
           if (regex.test(inputValue)) {
-            valueToAssing = inputValue.replace(regex, `{{${suggestion}}}`)
+            valueToAssign = inputValue.replace(regex, `{{${suggestion}}}`)
           } else {
             const wordRegex = new RegExp(`\\b${escapedSearchValue}\\b`)
             if (wordRegex.test(inputValue)) {
-              valueToAssing = inputValue.replace(wordRegex, `{{${suggestion}}}`)
+              valueToAssign = inputValue.replace(wordRegex, `{{${suggestion}}}`)
             } else {
-              valueToAssing = `${inputValue}{{${suggestion}}}`
+              valueToAssign = `${inputValue}{{${suggestion}}}`
             }
           }
         }
       } else if (multiple) {
-        valueToAssing = `${inputValue}{{${suggestion}}}`
-        position = valueToAssing.length
+        valueToAssign = `${inputValue}{{${suggestion}}}`
+        position = valueToAssign.length
       }
-      assignValue(valueToAssing, position)
+
+      assignValue(valueToAssign, position)
       clearSuggestions()
     },
-    [assignValue, inputValue, multiple, searchValue, clearSuggestions]
+    [options, searchValue, multiple, assignValue, clearSuggestions, searchIndex, inputValue]
   )
 
-  // Set value from props
-  useEffect(() => setInputValue(value), [value])
-
-  // Set Environment Variables
+  // Sync props to state
   useEffect(() => {
-    if (showEnvironmentVariables) {
-      const variables = environments?.getVariables(environmentId)
-      if (variables) {
-        const tmpVariables = variables.map((variable) => `${variable.name}`)
-        if (tmpVariables.length !== envVariables.length) {
-          setEnvVariables(tmpVariables)
-          return
-        }
-        for (let i = 0; i < tmpVariables.length; i++) {
-          if (tmpVariables[i] !== envVariables[i]) {
-            setEnvVariables(tmpVariables)
-            return
-          }
-        }
+    setInputValue(value)
+  }, [value])
+
+  const handleOutsideClick = useCallback(
+    (e: MouseEvent) => {
+      if (showSuggestions && ref.current && !ref.current.contains(e.target as Node)) {
+        clearSuggestions()
       }
-    }
-  }, [environments, showEnvironmentVariables, envVariables])
-
-  // Set Suggestions
-  useEffect(() => {
-    const tmpOptions = [...(options || []), ...envVariables]
-    setImmutableOptions(tmpOptions)
-    setSuggestions(tmpOptions)
-  }, [envVariables])
-
-  useEffect(() => {
-    if (options !== undefined && !stringArrayEqual(baseOptions, options)) {
-      setBaseOptions(options || [])
-      const tmpOptions = [...(options || []), ...envVariables]
-      setImmutableOptions(tmpOptions)
-      setSuggestions(tmpOptions)
-    }
-  }, [envVariables, options])
+    },
+    [showSuggestions, clearSuggestions]
+  )
 
   // Handle Outside Click
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
-  })
+  }, [handleOutsideClick])
 
   // Set cursor
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (cursorPosition > -1) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         inputRef.current?.setSelectionRange(cursorPosition, cursorPosition)
         setCursorPosition(-1)
-      }, 0) // Wait for the cursor to be set. mmm...
+      }, 0)
+      return () => clearTimeout(timer)
     }
-  }, [cursorPosition])
+  }, [cursorPosition, inputRef])
 
   const handleFocus = () => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -214,29 +231,24 @@ export default function Autocompleter({
     onFocus?.()
   }
 
-  const handleBlur = (value: string) => {
+  const handleBlur = (val: string) => {
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.removeListener(ACTIONS.escape, clearSuggestions)
-    onBlur?.(value)
+    onBlur?.(val)
   }
 
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (showSuggestions && ref.current && !ref.current.contains(e.target as Node)) {
-      clearSuggestions()
-    }
-  }
+  const handleOnChange = (val: string) => {
+    assignValue(val)
 
-  const handleOnChange = (value: string) => {
-    assignValue(value)
-    if (!value.trim()) {
+    if (!val.trim()) {
       clearSuggestions()
       return
     }
-    const newSuggestions = immutableOptions.filter((option) =>
-      option.toLowerCase().includes((searchValue || value).toLowerCase())
-    )
-    setSuggestions(newSuggestions)
-    if (newSuggestions.length > 0) {
+
+    const query = searchValue || val
+    const hasMatches = allOptions.some((opt) => opt.toLowerCase().includes(query.toLowerCase()))
+
+    if (hasMatches) {
       setSelected(0)
       setShowSuggestions(true)
     } else {
@@ -247,9 +259,8 @@ export default function Autocompleter({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault()
-      if (suggestions.length === 0) {
-        return
-      }
+      if (suggestions.length === 0) return
+
       setShowSuggestions(true)
       let newSelected = selected
       if (e.key === 'ArrowUp') {
@@ -258,7 +269,7 @@ export default function Autocompleter({
         newSelected = selected < suggestions.length - 1 ? selected + 1 : 0
       }
       setSelected(newSelected)
-      refSuggestions.current?.children[newSelected].scrollIntoView({
+      refSuggestions.current?.children[newSelected]?.scrollIntoView({
         block: 'nearest'
       })
       return
@@ -267,13 +278,11 @@ export default function Autocompleter({
     // Ctrl + Space
     if (e.key === ' ' && e.ctrlKey) {
       e.preventDefault()
-      if (suggestions.length === 0) {
-        return
-      }
+      if (suggestions.length === 0 && allOptions.length === 0) return
+
       if (!showSuggestions) {
-        setSuggestions(immutableOptions)
-        setSelected(-1)
         setSearchValue('')
+        setSelected(0)
       }
       setShowSuggestions(true)
       return
@@ -291,9 +300,8 @@ export default function Autocompleter({
       return
     }
 
-    // If the character is imprimeable, save to searchValue
     if (e.key === 'Backspace' && searchValue.length > 0) {
-      setSearchValue(searchValue.slice(0, -1))
+      setSearchValue((prev) => prev.slice(0, -1))
     } else if (/\s/.test(e.key)) {
       setSearchValue('')
       clearSuggestions()
@@ -301,22 +309,18 @@ export default function Autocompleter({
       if (searchValue.length === 0) {
         setSearchIndex(e.currentTarget.selectionStart || -1)
       }
-      setSearchValue(searchValue + e.key)
+      setSearchValue((prev) => prev + e.key)
     }
 
-    assignValue(e.currentTarget.value)
-    onChange?.(e.currentTarget.value)
     onKeyDown?.(e)
   }
 
-  // Handle Click on Suggestions
   const handleSuggestionsClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault()
     setSuggestion(e.currentTarget.innerText)
     inputRef.current?.focus()
   }
 
-  // Handle Mouse Over on Suggestions
   const handleSuggestionMouseDown = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault()
     const children = e.currentTarget.parentElement?.children
@@ -348,7 +352,7 @@ export default function Autocompleter({
         zIndexTip={Z_INDEX}
         inputId={inputId}
       />
-      {showSuggestions && (
+      {showSuggestions && suggestions.length > 0 && (
         <ul
           className={styles.suggestions}
           ref={refSuggestions}
@@ -356,7 +360,7 @@ export default function Autocompleter({
             transform: `translate(${offsetX}px, ${offsetY}px)`,
             // @ts-expect-error - property not yet supported by React types
             positionAnchor: `--${inputId}`,
-            width: `${ref.current?.clientWidth ?? 0 - offsetX}px`,
+            width: `${width - offsetX}px`,
             zIndex: Z_INDEX,
             maxHeight: maxSuggestionsHeight ? `${maxSuggestionsHeight}px` : '160px',
             overflowY: 'auto'

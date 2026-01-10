@@ -11,18 +11,23 @@ import { ACTIONS } from '../../../../../lib/ipcChannels'
 
 export default function TabTitle({ tab }: { tab: RequestTab }) {
   const { tabs, application } = useContext(AppContext)
-  const [tabName, setTabName] = useState<string>()
-  const [method, setMethod] = useState<string>()
+  const [prevTab, setPrevTab] = useState(tab)
+  const [tabName, setTabName] = useState<string>(tab.name || '')
+  const [method, setMethod] = useState<string>(tab.request?.method?.value || 'GET')
   const [saved, setSaved] = useState(tab.saved)
   const [onOver, setOnOver] = useState(false)
   const debouncedOnOver = useDebounce(onOver, 600)
   const ref = useRef<HTMLDivElement | null>(null)
   const [showMenu, setShowMenu] = useState(false)
 
-  useEffect(() => {
-    setTabName(tab.name)
+  if (tab !== prevTab) {
+    setPrevTab(tab)
+    setTabName(tab.name || '')
     setSaved(tab.saved || false)
-    setMethod(tab.request?.method.value || 'GET')
+    setMethod(tab.request?.method?.value || 'GET')
+  }
+
+  useEffect(() => {
     if (tab.active) {
       const ipcRenderer = window.electron?.ipcRenderer
       ipcRenderer?.send(ACTIONS.setTitle, `${tab.request.method.label || 'GET'} - ${tab.name}`)

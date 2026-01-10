@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Editor from './Editor'
 import styles from './Editor.module.css'
 
@@ -9,22 +9,14 @@ type RequestScriptProps = {
 }
 
 export default function ScriptEditor({ script, wordWrap, onChange }: RequestScriptProps) {
-  const [localScript, setLocalScript] = useState(script || '')
-
-  useEffect(() => {
-    setLocalScript(script || '')
-  }, [script])
-
   const handleScriptChange = (value: string | undefined) => {
-    const newScript = value || ''
-    setLocalScript(newScript)
-    onChange(newScript)
+    onChange(value || '')
   }
 
   return (
     <div className={styles.scriptEditor}>
       <Editor
-        value={localScript}
+        value={script || ''}
         language="javascript"
         onChange={handleScriptChange}
         type="none"

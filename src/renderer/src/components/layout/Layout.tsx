@@ -1,21 +1,17 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { ImperativePanelHandle, Panel, PanelGroup } from 'react-resizable-panels'
+import React, { useContext, useEffect, useRef } from 'react'
 import { AppContext } from '../../context/AppContext'
 import SideMenu from './sideBar/SideMenu/SideMenu'
 import SidePanel from './sideBar/SidePanel/SidePanel'
 import ContentTabs from './ContentTabs'
-import Gutter from './Gutter'
 import { ACTIONS } from '../../../../lib/ipcChannels'
 import FindRequests from './FindRequests/FindRequests'
+import { Group, Panel, PanelHandle, Separator } from 'simple-panels'
 
 export default function Layout() {
   const { application, menu, appSettings } = useContext(AppContext)
-  const sidePanel = useRef<ImperativePanelHandle | null>(null)
-  const [showSelected, setShowSelected] = useState(false)
+  const sidePanel = useRef<PanelHandle | null>(null)
 
-  useEffect(() => {
-    setShowSelected(menu != null && !!menu.expanded && !!menu.selected)
-  }, [menu])
+  const showSelected = menu != null && !!menu.expanded && !!menu.selected
 
   useEffect(() => {
     if (menu?.expanded) {
@@ -34,7 +30,7 @@ export default function Layout() {
       })
     })
     return () => ipcRenderer?.removeAllListeners(ACTIONS.findRequest)
-  }, [])
+  }, [application])
 
   const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
 
@@ -46,7 +42,7 @@ export default function Layout() {
     <div
       className={`app ${appSettings?.isCustomWindowMode() ? ' custom-window' : 'native-window'}`}
     >
-      <PanelGroup direction="horizontal" autoSaveId="panelLayout">
+      <Group orientation="vertical" storageId="panelLayout">
         <SideMenu
           showSelected={showSelected}
           onSelect={expandSidePanel}
@@ -65,11 +61,11 @@ export default function Layout() {
         >
           <SidePanel />
         </Panel>
-        <Gutter mode="vertical" onDoubleClick={expandSidePanel} />
+        <Separator onDoubleClick={expandSidePanel} />
         <Panel>
           <ContentTabs />
         </Panel>
-      </PanelGroup>
+      </Group>
     </div>
   )
 }

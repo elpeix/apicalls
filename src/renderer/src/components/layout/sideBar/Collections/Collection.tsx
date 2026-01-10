@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import { createFolder, createRequest } from '../../../../lib/factory'
@@ -33,66 +33,93 @@ export default function Collection({
 }) {
   const { application, tabs, environments, collections } = useContext(AppContext)
   const nameRef = useRef<HTMLInputElement>(null)
-  const [coll, setColl] = useState(collection)
-  const [envs, setEnvs] = useState<Environment[]>([])
-  const [environmentName, setEnvironmentName] = useState('')
+
   const [editingName, setEditingName] = useState(false)
   const [isScrolling, setIsScrolling] = useState(false)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
-  const [filteredElements, setFilteredElements] = useState<(CollectionFolder | RequestType)[]>([])
-  const [updateTime, setUpdateTime] = useState(0)
   const [showMenu, setShowMenu] = useState(false)
 
-  useEffect(() => {
-    let internalCollection: Collection | undefined
-    if (updateTime !== collections?.updateTime) {
-      setUpdateTime(collections?.updateTime || 0)
-      internalCollection = collections?.get(collection.id)
-    } else {
-      internalCollection = collection
-    }
-    if (!internalCollection) return
+  const prevFilterRef = useRef(filter)
+  const prevFilteredRef = useRef<(CollectionFolder | RequestType)[]>([])
 
-    setColl(internalCollection)
-    filterElements(filter, internalCollection.elements)
+  const coll = useMemo(() => {
+    // We depend on updateTime to force re-render when collection updates in global store
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    collections?.updateTime
+    return collections?.get(collection.id) || collection
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collections, collection, collections?.updateTime])
 
-    if (!internalCollection.name) {
-      setEditingName(true)
-      setTimeout(() => {
-        if (!nameRef.current) return
-        nameRef.current.focus()
-      }, 0)
+  const filteredElements = useMemo(() => {
+    if (filter === '') {
+      return coll.elements
     }
-  }, [collection, filter, collections?.updateTime])
 
-  useEffect(() => {
-    if (!environments) {
-      return
-    }
-    setEnvs(environments.getAll())
-  }, [environments])
+    const newFiltered = filterCollectionElements(coll.elements, filter)
 
-  useEffect(() => {
-    if (!coll.environmentId || !environments) {
-      setEnvironmentName('')
-      return
+    if (filter === prevFilterRef.current && prevFilteredRef.current.length > 0) {
+      syncExpansionState(prevFilteredRef.current, newFiltered)
     }
+
+    return newFiltered
+  }, [coll.elements, filter])
+
+  const envs = useMemo(() => environments?.getAll() || [], [environments])
+
+  const environmentName = useMemo(() => {
+    if (!coll.environmentId || !environments) return ''
     const environment = environments.get(coll.environmentId)
-    if (!environment) {
-      setEnvironmentName('')
-      return
-    }
-    setEnvironmentName(environment.name || 'unnamed')
+    return environment?.name || 'unnamed'
   }, [coll.environmentId, environments])
 
   useEffect(() => {
+    prevFilterRef.current = filter
+    prevFilteredRef.current = filteredElements
+  }, [filter, filteredElements])
+
+  useEffect(() => {
+    if (!coll.name && !editingName) {
+      setEditingName(true)
+      setTimeout(() => {
+        nameRef.current?.focus()
+      }, 0)
+    }
+  }, [coll.name, editingName])
+
+  useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(COLLECTIONS.exportFailure, (_: unknown, { message }: { message: string }) => {
+    if (!ipcRenderer) return
+
+    const handleFailure = (_: unknown, { message }: { message: string }) => {
       application.showAlert({ message })
-    })
-    return () => ipcRenderer?.removeAllListeners(COLLECTIONS.exportFailure)
-  }, [])
+    }
+
+    ipcRenderer.on(COLLECTIONS.exportFailure, handleFailure)
+    return () => {
+      ipcRenderer.removeListener(COLLECTIONS.exportFailure, handleFailure)
+    }
+  }, [application])
+
+  const update = React.useCallback(
+    (newCollection: Collection) => {
+      collections?.update(newCollection)
+    },
+    [collections]
+  )
+
+  const handleUpdate = () => {
+    update({ ...coll })
+  }
+
+  const handleShowFilter = () => {
+    setFilter('')
+    setShowFilter(!showFilter)
+  }
+
+  const handleFilter = (newFilter: string) => {
+    setFilter(newFilter)
+  }
 
   const handleCreateFolder = () => {
     setShowMenu(false)
@@ -109,10 +136,6 @@ export default function Collection({
     })
   }
 
-  const handleUpdate = () => {
-    update({ ...coll })
-  }
-
   const editName = () => {
     setShowMenu(false)
     setEditingName(true)
@@ -122,15 +145,10 @@ export default function Collection({
       nameRef.current.focus()
     }, 0)
   }
+
   const changeName = (name: string) => {
     setEditingName(false)
     update({ ...coll, name })
-  }
-
-  const update = (collection: Collection) => {
-    setColl(collection)
-    collections?.update(collection)
-    filterElements(filter, collection.elements)
   }
 
   const handleAddRequest = () => {
@@ -171,6 +189,7 @@ export default function Collection({
       onCancel: () => application.hideConfirm()
     })
   }
+
   const handleMove = ({ from, to, after }: MoveAction) => {
     // Force remove className
     document.querySelector('body')?.classList.remove(styles.movingElements)
@@ -182,23 +201,9 @@ export default function Collection({
     }
   }
 
-  const handleShowFilter = () => {
-    setFilter('')
-    setShowFilter(!showFilter)
-  }
-
-  const handleFilter = (filter: string) => {
-    filterElements(filter, coll.elements)
-  }
-
-  const filterElements = (filter: string, elements: (CollectionFolder | RequestType)[]) => {
-    setFilter(filter)
-    if (filter === '') {
-      setFilteredElements(elements)
-      return
-    }
-    const filtered = filterCollectionElements(elements, filter)
-    setFilteredElements(filtered)
+  const settingsSave = (collection: Collection) => {
+    update(collection)
+    application.hideDialog()
   }
 
   const handleSettings = () => {
@@ -214,11 +219,6 @@ export default function Collection({
       preventKeyClose: false,
       preventOverlayClickClose: true
     })
-  }
-
-  const settingsSave = (collection: Collection) => {
-    update(collection)
-    application.hideDialog()
   }
 
   const toggleCollection = (expand: boolean) => {
@@ -319,7 +319,7 @@ export default function Collection({
                 {environments && environments.hasItems() && (
                   <SubMenu icon="environment" title="Environment" leftOffset={147}>
                     <>
-                      {envs.map((environment) => (
+                      {envs.map((environment: Environment) => (
                         <MenuElement
                           key={`menuEnv_${environment.id}`}
                           title={environment.name}
@@ -331,7 +331,7 @@ export default function Collection({
                         <>
                           <MenuSeparator />
                           <MenuElement
-                            title="Unlink enviroment"
+                            title="Unlink environment"
                             icon="unlink"
                             onClick={() => selectEnvironment()}
                             className={styles.remove}
@@ -399,4 +399,40 @@ export default function Collection({
       </Scrollable>
     </div>
   )
+}
+
+const syncExpansionState = (
+  prevItems: (CollectionFolder | RequestType)[],
+  newItems: (CollectionFolder | RequestType)[]
+) => {
+  const stateMap = new Map<string, boolean>()
+
+  const collect = (items: (CollectionFolder | RequestType)[]) => {
+    items.forEach((i) => {
+      if (i.type === 'folder') {
+        const folder = i as CollectionFolder
+        if (folder.expanded !== undefined) {
+          stateMap.set(String(folder.id), folder.expanded)
+        }
+        collect(folder.elements)
+      }
+    })
+  }
+
+  collect(prevItems)
+
+  const apply = (items: (CollectionFolder | RequestType)[]) => {
+    items.forEach((i) => {
+      if (i.type === 'folder') {
+        const folder = i as CollectionFolder
+        const id = String(folder.id)
+        if (stateMap.has(id)) {
+          folder.expanded = stateMap.get(id)
+        }
+        apply(folder.elements)
+      }
+    })
+  }
+
+  apply(newItems)
 }

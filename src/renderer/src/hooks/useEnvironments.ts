@@ -5,10 +5,10 @@ export function useEnvironments(): EnvironmentsHookType {
   const [environments, setEnvironments] = useState<Environment[]>([])
   const ipcRenderer = window.electron?.ipcRenderer
 
-  const create = () => {
+  const create = (name?: string) => {
     const newEnvironment = {
       id: new Date().getTime(),
-      name: '',
+      name: name || '',
       active: false,
       variables: []
     }

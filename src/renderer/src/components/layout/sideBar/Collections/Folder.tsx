@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import { createFolder, createRequest } from '../../../../lib/factory'
 import ButtonIcon from '../../../base/ButtonIcon'
+import Droppable from '../../../base/Droppable/Droppable'
 import EditableName from '../../../base/EditableName/EditableName'
 import Menu from '../../../base/Menu/Menu'
 import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import CollectionElements from './CollectionElements'
 import styles from './Collections.module.css'
-import Droppable from '../../../base/Droppable/Droppable'
 
 export default function Folder({
   folder,
@@ -34,17 +34,24 @@ export default function Folder({
     setExpanded(folder.expanded || false)
   }, [folder.expanded])
 
-  const folderPath = [...path, { id: folder.id, type: 'folder' }] as PathItem[]
+  const folderPath = useMemo(
+    () => [...path, { id: folder.id, type: 'folder' }] as PathItem[],
+    [path, folder.id]
+  )
 
-  const toggleExpand = () => expandFolder(!expanded)
+  const expandFolder = useCallback(
+    (newExpandedState: boolean) => {
+      // eslint-disable-next-line
+      folder.expanded = newExpandedState
+      update()
+      setExpanded(newExpandedState)
+    },
+    [folder, update]
+  )
 
-  const expandFolder = (expanded: boolean) => {
-    folder.expanded = expanded
-    update()
-    setExpanded(expanded)
-  }
+  const toggleExpand = useCallback(() => expandFolder(!expanded), [expandFolder, expanded])
 
-  const handleAddFolder = () => {
+  const handleAddFolder = useCallback(() => {
     expandFolder(true)
     application.showPrompt({
       message: 'Folder name:',
@@ -57,9 +64,9 @@ export default function Folder({
       },
       onCancel: () => application.hidePrompt()
     })
-  }
+  }, [expandFolder, application, folder, update])
 
-  const handleRemoveFolder = () => {
+  const handleRemoveFolder = useCallback(() => {
     application.showConfirm({
       message: `Are you sure you want to remove folder ${folder.name}?`,
       confirmName: 'Remove',
@@ -70,14 +77,19 @@ export default function Folder({
       },
       onCancel: () => application.hideConfirm()
     })
-  }
+  }, [application, folder, remove])
 
-  const changeName = (name: string) => {
-    folder.name = name
-    update()
-  }
+  const changeName = useCallback(
+    (name: string) => {
+      // eslint-disable-next-line
+      folder.name = name
+      update()
+      setEditingName(false)
+    },
+    [folder, update]
+  )
 
-  const handleAddRequest = () => {
+  const handleAddRequest = useCallback(() => {
     expandFolder(true)
     application.showPrompt({
       message: 'Request name:',
@@ -105,13 +117,13 @@ export default function Folder({
       },
       onCancel: () => application.hidePrompt()
     })
-  }
+  }, [expandFolder, application, folder, tabs, collectionId, folderPath, update])
 
-  const handleDragOverDebounced = () => {
+  const handleDragOverDebounced = useCallback(() => {
     expandFolder(true)
-  }
+  }, [expandFolder])
 
-  const handleDuplicateFolder = () => {
+  const handleDuplicateFolder = useCallback(() => {
     application.showConfirm({
       message: `Are you sure you want to duplicate folder ${folder.name}?`,
       confirmName: 'Duplicate',
@@ -121,7 +133,7 @@ export default function Folder({
       },
       onCancel: () => application.hideConfirm()
     })
-  }
+  }, [application, folder.name, folder.id, collections, collectionId, path])
 
   return (
     <>

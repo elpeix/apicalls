@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef } from 'react'
 import styles from './Settings.module.css'
 import SimpleSelect from '../../../base/SimpleSelect/SimpleSelect'
 import { AppContext } from '../../../../context/AppContext'
@@ -19,29 +19,25 @@ const initOpThemes = [
 export default function Settings() {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const { application, appSettings } = useContext(AppContext)
-  const [settings, setSettings] = useState<AppSettingsType | null>(null)
-  const [opThemes, setOpThemes] =
-    useState<{ label: string; value: string; mode: string }[]>(initOpThemes)
 
-  useEffect(() => {
-    setSettings(appSettings?.settings || null)
+  const settings = appSettings?.settings
+
+  const opThemes = useMemo(() => {
     const themes = appSettings?.themes || new Map()
-    const opThemes = [...initOpThemes]
+    const computedThemes = [...initOpThemes]
     themes.forEach((theme, key) => {
-      const opTheme = {
+      computedThemes.push({
         label: theme.name,
         value: key,
         mode: theme.mode
-      }
-      opThemes.push(opTheme)
+      })
     })
-    setOpThemes([...opThemes])
-  }, [appSettings?.settings])
+    return computedThemes
+  }, [appSettings?.themes])
 
   if (!settings) return null
 
   const changeSettings = (newSettings: AppSettingsType) => {
-    setSettings(newSettings)
     appSettings?.save(newSettings)
   }
 

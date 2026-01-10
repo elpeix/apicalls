@@ -19,13 +19,14 @@ export default function PreRequestEditor({
   environmentId?: Identifier
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [url, setUrl] = useState('')
-  const [type, setType] = useState<'authorization' | 'data'>('authorization')
-  const [method, setMethod] = useState<Method>(createMethod('GET'))
-  const [headers, setHeaders] = useState<KeyValue[]>([])
-  const [queryParams, setQueryParams] = useState<KeyValue[]>([])
-  const [body, setBody] = useState<BodyType>('')
-  const [dataToCapture, setDataToCapture] = useState<PreRequestDataToCapture[]>([])
+  const [url, setUrl] = useState(preRequest?.request.url || '')
+  const type = 'authorization' as const
+  const [method, setMethod] = useState<Method>(preRequest?.request.method || createMethod('GET'))
+  const [headers, setHeaders] = useState<KeyValue[]>(preRequest?.request.headers || [])
+  const [body, setBody] = useState<BodyType>(preRequest?.request.body || '')
+  const [dataToCapture, setDataToCapture] = useState<PreRequestDataToCapture[]>(
+    preRequest?.dataToCapture || []
+  )
   const [active, setActive] = useState(
     preRequest && preRequest.active !== undefined ? preRequest.active : true
   )
@@ -34,18 +35,10 @@ export default function PreRequestEditor({
 
   useEffect(() => {
     if (preRequest && preRequest === lastSavedRef.current) return
-
-    setUrl(preRequest?.request.url || '')
-    setMethod(preRequest?.request.method || createMethod('GET'))
-    setHeaders(preRequest?.request.headers || [])
-    setQueryParams(preRequest?.request.queryParams || [])
-    setBody(preRequest?.request.body || '')
-    setType(preRequest?.type || 'authorization')
-    setDataToCapture(preRequest?.dataToCapture || [])
-    setActive(preRequest && preRequest.active !== undefined ? preRequest.active : true)
   }, [preRequest])
 
   useEffect(() => {
+    const queryParams = preRequest?.request.queryParams || []
     const savedPreRequest = {
       request: {
         method,
@@ -60,7 +53,17 @@ export default function PreRequestEditor({
     }
     lastSavedRef.current = savedPreRequest
     onSave(savedPreRequest)
-  }, [method, url, headers, queryParams, body, type, dataToCapture, active])
+  }, [
+    method,
+    url,
+    headers,
+    preRequest?.request.queryParams,
+    body,
+    type,
+    dataToCapture,
+    active,
+    onSave
+  ])
 
   const handleBodyChange = (value: string | undefined) => {
     if (value === undefined) return

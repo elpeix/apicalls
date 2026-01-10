@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PromptTextArea from '../PopupBoxes/PromptTextArea'
 
 export default function BulkEntry({
@@ -10,11 +10,7 @@ export default function BulkEntry({
   onSave: (items: KeyValue[]) => void
   onCancel?: () => void
 }) {
-  const [value, setValue] = useState('')
-
-  useEffect(() => {
-    setValue(initialValue.map((item) => `${item.name.trim()}: ${item.value.trim()}`).join('\n'))
-  }, [initialValue])
+  const value = initialValue.map((item) => `${item.name.trim()}: ${item.value.trim()}`).join('\n')
 
   const handleOk = (value: string) => {
     const lines = value.split('\n')

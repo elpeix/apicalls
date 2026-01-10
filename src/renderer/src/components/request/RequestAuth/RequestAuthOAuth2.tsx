@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useRef } from 'react'
 import styles from './RequestAuth.module.css'
 import Autocompleter from '../../base/Autocompleter/Autocompleter'
 import { OAUTH } from '../../../../../lib/ipcChannels'
@@ -12,55 +12,29 @@ export default function RequestAuthOAuth2() {
   const { request, getRequestEnvironment } = useContext(RequestContext)
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const [authValue, setAuthValue] = useState<RequestAuthOAuth2 | null>(null)
 
   const environmentId = getRequestEnvironment()?.id
 
-  useEffect(() => {
-    if (request) {
-      const authVal = (request.auth?.value as RequestAuthOAuth2) || {
-        grantType: 'authorization_code',
-        clientId: '',
-        authorizationUrl: '',
-        accessTokenUrl: '',
-        callbackUrl: '',
-        scope: '',
-        accessToken: ''
-      }
-      const authOAuthValue: RequestAuthOAuth2 = {
-        grantType: 'authorization_code',
-        clientId: authVal.clientId,
-        authorizationUrl: authVal.authorizationUrl,
-        accessTokenUrl: authVal.accessTokenUrl,
-        callbackUrl: authVal.callbackUrl,
-        scope: authVal.scope,
-        accessToken: authVal.accessToken
-      }
-      setAuthValue(authOAuthValue)
-    }
-  }, [request])
+  const authValue: RequestAuthOAuth2 = (request?.auth?.value as RequestAuthOAuth2) || {
+    grantType: 'authorization_code',
+    clientId: '',
+    authorizationUrl: '',
+    accessTokenUrl: '',
+    callbackUrl: '',
+    scope: '',
+    accessToken: ''
+  }
 
   const handleOAuthChange = (key: keyof RequestAuthOAuth2, value: string) => {
-    const currentAuth = (authValue as RequestAuthOAuth2) || {
-      grantType: 'authorization_code',
-      clientId: '',
-      authorizationUrl: '',
-      accessTokenUrl: '',
-      callbackUrl: '',
-      scope: '',
-      accessToken: ''
-    }
-    const newAuth = { ...currentAuth, [key]: value }
-    setAuthValue(newAuth)
+    const newAuth = { ...authValue, [key]: value }
     request?.setAuth({ type: 'oauth2', value: newAuth })
   }
 
   const handleGetToken = async () => {
-    const currentAuth = authValue as RequestAuthOAuth2
-    if (!currentAuth) return
+    if (!authValue) return
 
     try {
-      const token = await window.electron.ipcRenderer.invoke(OAUTH.getToken, currentAuth)
+      const token = await window.electron.ipcRenderer.invoke(OAUTH.getToken, authValue)
       if (token) {
         handleOAuthChange('accessToken', token)
       }
@@ -72,13 +46,12 @@ export default function RequestAuthOAuth2() {
     }
   }
 
-  const currentOAuth = authValue as RequestAuthOAuth2
   const isOAuthValid =
-    currentOAuth?.clientId &&
-    currentOAuth?.authorizationUrl &&
-    currentOAuth?.accessTokenUrl &&
-    currentOAuth?.callbackUrl &&
-    currentOAuth?.scope
+    authValue?.clientId &&
+    authValue?.authorizationUrl &&
+    authValue?.accessTokenUrl &&
+    authValue?.callbackUrl &&
+    authValue?.scope
 
   return (
     <div className={styles.oAuth}>
@@ -90,13 +63,13 @@ export default function RequestAuthOAuth2() {
             placeholder="Client ID"
             className={styles.authorizationInput}
             onChange={(val) => handleOAuthChange('clientId', val)}
-            value={(authValue as RequestAuthOAuth2)?.clientId || ''}
+            value={authValue?.clientId || ''}
             offsetX={-9}
             offsetY={8}
             environmentId={environmentId}
           />
         </label>
-        {(authValue as RequestAuthOAuth2)?.grantType === 'authorization_code' && (
+        {authValue?.grantType === 'authorization_code' && (
           <label>
             <span className={styles.label}>Client Secret</span>
             <Autocompleter
@@ -104,7 +77,7 @@ export default function RequestAuthOAuth2() {
               placeholder="Client Secret"
               className={styles.authorizationInput}
               onChange={(val) => handleOAuthChange('clientSecret', val)}
-              value={(authValue as RequestAuthOAuth2)?.clientSecret || ''}
+              value={authValue?.clientSecret || ''}
               offsetX={-9}
               offsetY={8}
               environmentId={environmentId}
@@ -118,7 +91,7 @@ export default function RequestAuthOAuth2() {
             placeholder="e.g. http://localhost/callback"
             className={styles.authorizationInput}
             onChange={(val) => handleOAuthChange('callbackUrl', val)}
-            value={(authValue as RequestAuthOAuth2)?.callbackUrl || ''}
+            value={authValue?.callbackUrl || ''}
             offsetX={-9}
             offsetY={8}
             environmentId={environmentId}
@@ -131,7 +104,7 @@ export default function RequestAuthOAuth2() {
             placeholder="Authorization URL"
             className={styles.authorizationInput}
             onChange={(val) => handleOAuthChange('authorizationUrl', val)}
-            value={(authValue as RequestAuthOAuth2)?.authorizationUrl || ''}
+            value={authValue?.authorizationUrl || ''}
             offsetX={-9}
             offsetY={8}
             environmentId={environmentId}
@@ -144,7 +117,7 @@ export default function RequestAuthOAuth2() {
             placeholder="Access Token URL"
             className={styles.authorizationInput}
             onChange={(val) => handleOAuthChange('accessTokenUrl', val)}
-            value={(authValue as RequestAuthOAuth2)?.accessTokenUrl || ''}
+            value={authValue?.accessTokenUrl || ''}
             offsetX={-9}
             offsetY={8}
             environmentId={environmentId}
@@ -157,7 +130,7 @@ export default function RequestAuthOAuth2() {
             placeholder="Scope"
             className={styles.authorizationInput}
             onChange={(val) => handleOAuthChange('scope', val)}
-            value={(authValue as RequestAuthOAuth2)?.scope || ''}
+            value={authValue?.scope || ''}
             offsetX={-9}
             offsetY={8}
             environmentId={environmentId}
@@ -169,7 +142,7 @@ export default function RequestAuthOAuth2() {
         <Button.Ok onClick={handleGetToken} className={styles.getTokenBtn} disabled={!isOAuthValid}>
           Get Access Token
         </Button.Ok>
-        {(authValue as RequestAuthOAuth2)?.accessToken && (
+        {authValue?.accessToken && (
           <div className={styles.tokenDisplay}>
             <div className={styles.label}>Current Token:</div>
             <div className={styles.tokenValue}>Present</div>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { ENVIRONMENTS, WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
@@ -7,15 +7,20 @@ import EnvironmentItem from './EnvironmentItem'
 import styles from './Environment.module.css'
 import { FilterInput } from '../../../base/FilterInput/FilterInput'
 import Scrollable from '../../../base/Scrollable'
+import Icon from '../../../base/Icon/Icon'
 
 export default function Environments() {
   const { application, environments } = useContext(AppContext)
 
-  const [envs, setEnvs] = useState<Environment[]>([])
-  const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | null>(null)
+  const envs = environments?.getAll() || []
+  const [selectedEnvId, setSelectedEnvId] = useState<Identifier | null>(null)
   const [showFilter, setShowFilter] = useState(false)
   const [filter, setFilter] = useState('')
   const [isScrolling, setIsScrolling] = useState(false)
+
+  const selectedEnvironment = useMemo(() => {
+    return selectedEnvId && environments ? environments.get(selectedEnvId) : null
+  }, [environments, selectedEnvId])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -23,27 +28,32 @@ export default function Environments() {
       application.showAlert({ message })
     })
     ipcRenderer?.on(WORKSPACES.changed, () => {
-      setSelectedEnvironment(null)
+      setSelectedEnvId(null)
     })
     return () => {
       ipcRenderer?.removeAllListeners(ENVIRONMENTS.importFailure)
       ipcRenderer?.removeAllListeners(WORKSPACES.changed)
     }
-  }, [environments, setSelectedEnvironment])
+  }, [environments, application])
 
-  useEffect(() => {
-    if (!environments) return
-    setEnvs(environments.getAll())
-    if (selectedEnvironment) {
-      const env = environments.get(selectedEnvironment.id)
-      if (env) setSelectedEnvironment(env)
-    }
-  }, [environments, selectedEnvironment])
+  const setSelectedEnvironment = (env: Environment | null) => {
+    setSelectedEnvId(env ? env.id : null)
+  }
 
   const add = () => {
     if (!environments) return
-    const environment = environments.create()
-    setSelectedEnvironment(environment)
+    application.showPrompt({
+      message: 'Enter a name for the new environment:',
+      placeholder: 'Environment name',
+      onConfirm(name: string) {
+        const environment = environments.create(name)
+        setSelectedEnvId(environment.id)
+        application.hidePrompt()
+      },
+      onCancel() {
+        application.hidePrompt()
+      }
+    })
   }
 
   const update = (environment: Environment) => {
@@ -55,8 +65,8 @@ export default function Environments() {
     if (!environments) return
     if (id) {
       environments.remove(id)
-      if (selectedEnvironment && selectedEnvironment.id === id) {
-        setSelectedEnvironment(null)
+      if (selectedEnvId && selectedEnvId === id) {
+        setSelectedEnvId(null)
       }
     }
   }
@@ -85,6 +95,8 @@ export default function Environments() {
     window.electron?.ipcRenderer.send(ENVIRONMENTS.import)
   }
 
+  const emptyEnvironments = environments?.getAll().length === 0
+
   return (
     <>
       <div className="sidePanel-header">
@@ -96,14 +108,20 @@ export default function Environments() {
         </div>
         {!selectedEnvironment && (
           <>
+            {!emptyEnvironments && (
+              <div>
+                <ButtonIcon
+                  icon="filter"
+                  onClick={() => setShowFilter(!showFilter)}
+                  title="Filter"
+                />
+              </div>
+            )}
             <div>
-              <ButtonIcon icon="filter" onClick={() => setShowFilter(!showFilter)} title="Filter" />
+              <ButtonIcon icon="save" onClick={importEnvironment} title="Import an environment" />
             </div>
             <div>
-              <ButtonIcon icon="save" onClick={importEnvironment} title="Import environment" />
-            </div>
-            <div>
-              <ButtonIcon icon="more" onClick={add} title="New environment" />
+              <ButtonIcon icon="more" onClick={add} title="Create new environment" />
             </div>
           </>
         )}
@@ -116,7 +134,7 @@ export default function Environments() {
           remove={remove}
         />
       )}
-      {!selectedEnvironment && (
+      {!selectedEnvironment && !emptyEnvironments && (
         <Scrollable
           className={`sidePanel-content ${styles.content}`}
           onStartScroll={() => setIsScrolling(true)}
@@ -146,6 +164,26 @@ export default function Environments() {
               />
             ))}
         </Scrollable>
+      )}
+
+      {!selectedEnvironment && emptyEnvironments && (
+        <div className="sidePanel-content">
+          <div className="sidePanel-content-empty">
+            <div className="sidePanel-content-empty-text">
+              You don&apos;t have any environments yet.
+            </div>
+            <div className="sidePanel-content-empty-actions">
+              <button onClick={add} className="sidePanel-content-empty-button">
+                <Icon icon="more" />
+                <span className="sidePanel-content-empty-button-label">Create new environment</span>
+              </button>
+              <button onClick={importEnvironment} className="sidePanel-content-empty-button">
+                <Icon icon="save" />
+                <span className="sidePanel-content-empty-button-label">Import an environment</span>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   )

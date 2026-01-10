@@ -1,0 +1,86 @@
+body[data-active-sep-y],
+body[data-active-sep-x] {
+  user-select: none;
+}
+body[data-active-sep-x='true'] {
+  cursor: ew-resize;
+}
+body[data-active-sep-x='west'] {
+  cursor: w-resize;
+}
+body[data-active-sep-x='east'] {
+  cursor: e-resize;
+}
+body[data-active-sep-y='true'] {
+  cursor: ns-resize;
+}
+body[data-active-sep-y='north'] {
+  cursor: n-resize;
+}
+body[data-active-sep-y='south'] {
+  cursor: s-resize;
+}
+
+body[data-active-sep-x='true'][data-active-sep-y='true'],
+body[data-active-sep-x='east'][data-active-sep-y='true'],
+body[data-active-sep-x='west'][data-active-sep-y='true'],
+body[data-active-sep-x='true'][data-active-sep-y='south'],
+body[data-active-sep-x='true'][data-active-sep-y='north'],
+body[data-active-sep-x='west'][data-active-sep-y='south'],
+body[data-active-sep-x='west'][data-active-sep-y='north'],
+body[data-active-sep-x='east'][data-active-sep-y='south'],
+body[data-active-sep-x='east'][data-active-sep-y='north'] {
+  cursor: all-scroll !important;
+}
+
+.sp_separator {
+  position: relative;
+  background-color: var(--gutter-color);
+  transition:
+    background-color var(--gutter-transition),
+    box-shadow var(--gutter-transition);
+
+  .inset {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background-color: var(--gutter-color);
+    transition:
+      background-color var(--gutter-transition),
+      inset var(--gutter-transition);
+  }
+
+  &[data-separator-state='active'],
+  &[data-separator-state='drag'] {
+    transition-delay: var(--gutter-transition-delay);
+    background-color: var(--gutter-color-drag);
+
+    .inset {
+      z-index: 2;
+      transition-delay: var(--gutter-transition-delay);
+      background-color: var(--gutter-color-drag);
+    }
+  }
+
+  &.vertical {
+    width: 1px;
+
+    &[data-separator-state='active'],
+    &[data-separator-state='drag'] {
+      .inset {
+        inset: 0 -1px;
+      }
+    }
+  }
+
+  &.horizontal {
+    height: 1px;
+
+    &[data-separator-state='active'],
+    &[data-separator-state='drag'] {
+      .inset {
+        inset: -1px 0;
+      }
+    }
+  }
+}

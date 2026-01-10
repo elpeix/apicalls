@@ -20,6 +20,26 @@ export function useCookies(): CookiesHookType {
     })
   }
 
+  const createGroup = (domain: string) => {
+    setCookies((cookies) => {
+      const updatedCookies = [
+        ...cookies,
+        {
+          domain: domain,
+          name: '',
+          value: '',
+          path: '/',
+          expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          secure: false,
+          httpOnly: false,
+          sameSite: 'Lax'
+        } as Cookie
+      ]
+      ipcRenderer?.send(COOKIES.set, updatedCookies)
+      return updatedCookies
+    })
+  }
+
   const updateGroup = (group: string, groupCookies: Cookie[]) => {
     const groups = getGroups()
     if (!groups.includes(group)) {
@@ -77,6 +97,7 @@ export function useCookies(): CookiesHookType {
     getAll,
     getGroups,
     getGrouped,
+    createGroup,
     updateGroup,
     get,
     stringify

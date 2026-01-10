@@ -1,12 +1,15 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { COLLECTIONS, WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import Collection from './Collection'
 import CollectionItem from './CollectionItem'
+import Icon from '../../../base/Icon/Icon'
 
 export default function Collections() {
   const { application, collections } = useContext(AppContext)
+
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -22,15 +25,20 @@ export default function Collections() {
     }
   })
 
-  const selectedCollection = collections?.selectedCollection
-  const setSelectedCollection = (collection: Collection | null) => {
-    collections?.select(collection ? collection.id : null)
-  }
-
   const add = () => {
     if (!collections) return
-    const collection = collections.create()
-    setSelectedCollection(collection)
+    application.showPrompt({
+      message: 'Enter a name for the new collection:',
+      placeholder: 'Collection name',
+      onConfirm(name: string) {
+        const collection = collections.create(name)
+        setSelectedCollection(collection)
+        application.hidePrompt()
+      },
+      onCancel() {
+        application.hidePrompt()
+      }
+    })
   }
 
   const importHandler = () => {
@@ -50,10 +58,10 @@ export default function Collections() {
         {!selectedCollection && (
           <>
             <div>
-              <ButtonIcon icon="save" onClick={importHandler} title="Import collection" />
+              <ButtonIcon icon="save" onClick={importHandler} title="Import a collection" />
             </div>
             <div>
-              <ButtonIcon icon="more" onClick={add} title="New collection" />
+              <ButtonIcon icon="more" onClick={add} title="Create new collection" />
             </div>
           </>
         )}
@@ -80,6 +88,25 @@ export default function Collections() {
                   move={collections.move}
                 />
               ))}
+          {collections?.getAll().length === 0 && (
+            <div className="sidePanel-content-empty">
+              <div className="sidePanel-content-empty-text">
+                You don&apos;t have any collections yet.
+              </div>
+              <div className="sidePanel-content-empty-actions">
+                <button onClick={add} className="sidePanel-content-empty-button">
+                  <Icon icon="more" />
+                  <span className="sidePanel-content-empty-button-label">
+                    Create new collection
+                  </span>
+                </button>
+                <button onClick={importHandler} className="sidePanel-content-empty-button">
+                  <Icon icon="save" />
+                  <span className="sidePanel-content-empty-button-label">Import a collection</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

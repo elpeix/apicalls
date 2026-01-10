@@ -204,7 +204,7 @@ type ConsoleHookType = {
 
 type CollectionsHookType = {
   setCollections: (collections: Collection[]) => void
-  create: () => Collection
+  create: (name?: string) => Collection
   add: (collection: Collection) => void
   remove: (id: Identifier) => void
   update: (collection: Collection) => void
@@ -225,7 +225,7 @@ type CollectionsHookType = {
 
 type EnvironmentsHookType = {
   setEnvironments: (environments: Environment[]) => void
-  create: () => Environment
+  create: (name?: string) => Environment
   add: (environment: Environment) => void
   remove: (id: Identifier) => void
   update: (environment: Environment) => void
@@ -276,6 +276,7 @@ type CookiesHookType = {
   remove: (url: string) => void
   clear: () => void
   getAll: () => Cookies[]
+  createGroup: (domain: string) => void
   getGroups: () => string[]
   getGrouped: () => Map<string, Cookie[]>
   updateGroup: (group: string, cookies: Cookie[]) => void

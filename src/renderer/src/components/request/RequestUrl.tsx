@@ -1,33 +1,33 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import styles from './Request.module.css'
 import { RequestContext } from '../../context/RequestContext'
 import Autocompleter from '../base/Autocompleter/Autocompleter'
 
 export default function RequestUrl() {
-  const { request, pasteCurl, getRequestEnvironment } = useContext(RequestContext)
+  const { request, pasteCurl, getRequestEnvironment, tabId } = useContext(RequestContext)
   const urlRef = useRef<HTMLInputElement>(null)
-  const [url, setUrl] = useState('')
-  const [urlError, setUrlError] = useState(request?.urlIsValid({}))
+
+  const [internalUrl, setInternalUrl] = useState<string | null>(null)
+
+  const [lastTabId, setLastTabId] = useState(tabId)
+  if (tabId !== lastTabId) {
+    setLastTabId(tabId)
+    setInternalUrl(null)
+  }
+
   const [paramsAreValid, setParamsAreValid] = useState(true)
-
-  useEffect(() => {
-    setUrl(request?.getFullUrl() || '')
-    setUrlError(!request?.urlIsValid({}))
-  }, [request])
-
-  useEffect(() => {
-    if (!request?.url) {
-      urlRef.current?.focus()
-    }
-  }, [urlRef, request?.url])
 
   if (!request) {
     return null
   }
 
+  const displayUrl = internalUrl ?? request.getFullUrl()
+  const [urlBase] = displayUrl.split('?')
+  const urlError = displayUrl.length > 0 && !request.urlIsValid({ url: urlBase })
+
   const handleUrlChange = (value: string) => {
-    const [url] = value.split('?')
-    setUrlError(url.length > 0 && !request.urlIsValid({ url }))
+    setInternalUrl(value)
+
     try {
       request.setFullUrl(value)
       setParamsAreValid(true)
@@ -36,12 +36,15 @@ export default function RequestUrl() {
     }
   }
 
-  const handleUrlBlur = (value: string) => {
-    request.setFullUrl(value)
+  const handleUrlBlur = () => {
+    if (internalUrl !== null) {
+      request.setFullUrl(internalUrl)
+    }
+    setInternalUrl(null)
   }
 
   const getClassName = () => {
-    return `${styles.url} ${url.length && (urlError || !paramsAreValid) ? styles.error : ''}`
+    return `${styles.url} ${displayUrl.length && (urlError || !paramsAreValid) ? styles.error : ''}`
   }
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -54,9 +57,10 @@ export default function RequestUrl() {
 
   return (
     <Autocompleter
+      key={tabId}
       inputRef={urlRef}
       className={getClassName()}
-      value={url}
+      value={displayUrl}
       onChange={handleUrlChange}
       onBlur={handleUrlBlur}
       onPaste={handlePaste}
