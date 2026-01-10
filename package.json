@@ -29,6 +29,7 @@
     "electron-store": "^11.0.2",
     "electron-updater": "^6.6.2",
     "react-tabs": "^6.1.0",
+    "simple-panels": "github:elpeix/simple-panels#v1.0.0",
     "undici": "^7.16.0",
     "yaml": "^2.8.2"
   },

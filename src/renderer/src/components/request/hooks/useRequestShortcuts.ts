@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { PanelHandle } from '../../base/SimplePanel/types'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 import { RequestContext } from '../../../context/RequestContext'
 import { AppContext } from '../../../context/AppContext'
+import { PanelHandle } from 'simple-panels'
 
 export function useRequestShortcuts() {
   const { isActive, request, fetching, save, setOpenSaveAs } = useContext(RequestContext)

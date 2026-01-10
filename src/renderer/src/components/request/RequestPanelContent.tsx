@@ -7,7 +7,7 @@ import Response from '../response/Response'
 import styles from './Request.module.css'
 import { AppContext } from '../../context/AppContext'
 import ResponseStatus from '../response/ResponseStatus'
-import { Group, Panel, Separator } from '../base/SimplePanel'
+import { Group, Panel, Separator } from 'simple-panels'
 import { useRequestShortcuts } from './hooks/useRequestShortcuts'
 
 export default function RequestPanelContent() {

@@ -113,7 +113,7 @@ export default function ContentTabs() {
           )}
           <div className="panel-empty-tabs">
             <div className="panel-empty-tabs-text">
-              <div>Create a new tab to start a request</div>
+              <div>Create a new tab to start a request:</div>
             </div>
             <NewTab showLabel={true} />
           </div>

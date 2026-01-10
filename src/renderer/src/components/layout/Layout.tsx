@@ -5,7 +5,7 @@ import SidePanel from './sideBar/SidePanel/SidePanel'
 import ContentTabs from './ContentTabs'
 import { ACTIONS } from '../../../../lib/ipcChannels'
 import FindRequests from './FindRequests/FindRequests'
-import { Group, Panel, PanelHandle, Separator } from '../base/SimplePanel'
+import { Group, Panel, PanelHandle, Separator } from 'simple-panels'
 
 export default function Layout() {
   const { application, menu, appSettings } = useContext(AppContext)
