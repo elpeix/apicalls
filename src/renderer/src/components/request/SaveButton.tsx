@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import styles from './Request.module.css'
 import LinkedModal from '../base/linkedModal/LinkedModal'
 import { RequestContext } from '../../context/RequestContext'
@@ -13,32 +13,35 @@ export default function SaveButton() {
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
 
+  const closeDialog = useCallback(() => {
+    application.hideDialog()
+    if (setOpenSaveAs) {
+      setOpenSaveAs(false)
+    }
+  }, [application, setOpenSaveAs])
+
+  const openDialog = useCallback(() => {
+    application.showDialog({
+      children: <SaveAs tabId={tabId} onClose={closeDialog} />,
+      onClose: closeDialog
+    })
+    setShowModal(false)
+  }, [application, tabId, closeDialog])
+
   useEffect(() => {
     if (openSaveAs) {
-      openDialog()
-      setShowModal(false)
+      setTimeout(() => {
+        openDialog()
+        setOpenSaveAs?.(false)
+      }, 0)
     }
-  }, [openSaveAs])
+  }, [openSaveAs, openDialog, setOpenSaveAs])
 
   const handleClick = () => {
     if (!path || path.length === 0) {
       openDialog()
     } else {
       save()
-    }
-  }
-  const openDialog = () => {
-    application.showDialog({
-      children: <SaveAs tabId={tabId} onClose={closeDialog} />,
-      onClose: closeDialog
-    })
-    setShowModal(false)
-  }
-
-  const closeDialog = () => {
-    application.hideDialog()
-    if (setOpenSaveAs) {
-      setOpenSaveAs(false)
     }
   }
 

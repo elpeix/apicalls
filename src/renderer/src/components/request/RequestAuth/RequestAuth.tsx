@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import styles from './RequestAuth.module.css'
 import { RequestContext } from '../../../context/RequestContext'
 import SimpleSelect from '../../base/SimpleSelect/SimpleSelect'
@@ -15,18 +15,11 @@ export default function RequestAuth() {
     { value: 'basic', label: 'Basic' },
     { value: 'oauth2', label: 'OAuth 2.0' }
   ]
-  const [authType, setAuthType] = useState<RequestAuthType>(authOptions[0].value)
-
-  useEffect(() => {
-    if (request) {
-      setAuthType(request.auth?.type)
-    }
-  }, [request])
+  const authType = request?.auth?.type || 'none'
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = authOptions.find((option) => option.value === e.target.value)
     if (option && option.value !== authType) {
-      setAuthType(option.value)
       const authValue =
         option.value === 'basic'
           ? { username: '', password: '' }

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styles from './LinkedModal.module.css'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 
@@ -31,6 +31,24 @@ export default function LinkedModal({
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [x, setX] = useState(0)
   const [y, setY] = useState(0)
+  const [parentWidth, setParentWidth] = useState(0)
+
+  const handleOutsideClick = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation()
+      if (!allowOutsideClick) {
+        e.preventDefault()
+      }
+      if (
+        ref.current &&
+        !ref.current.contains(e.target as Node) &&
+        !parentRef.current?.contains(e.target as Node)
+      ) {
+        closeModal()
+      }
+    },
+    [closeModal, ref, parentRef, allowOutsideClick]
+  )
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
@@ -55,22 +73,9 @@ export default function LinkedModal({
       const rect = parentRef.current.getBoundingClientRect()
       setX(rect.left)
       setY(rect.top)
+      setParentWidth(parentRef.current.offsetWidth)
     }
   }, [ref, parentRef])
-
-  const handleOutsideClick = (e: MouseEvent) => {
-    e.stopPropagation()
-    if (!allowOutsideClick) {
-      e.preventDefault()
-    }
-    if (
-      ref.current &&
-      !ref.current.contains(e.target as Node) &&
-      !parentRef.current?.contains(e.target as Node)
-    ) {
-      closeModal()
-    }
-  }
 
   const getTop = () => {
     if (y + dimensions.height + topOffset > window.innerHeight) {
@@ -84,9 +89,7 @@ export default function LinkedModal({
 
   const getLeft = () => {
     if (x + dimensions.width + leftOffset > window.innerWidth) {
-      return (
-        x - dimensions.width - leftOffset + (parentRef.current ? parentRef.current.offsetWidth : 0)
-      )
+      return x - dimensions.width - leftOffset + parentWidth
     }
     if (x + leftOffset < 0) {
       return 0

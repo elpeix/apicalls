@@ -1,24 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { ACTIONS } from '../../../lib/ipcChannels'
 
 export function useMenu(settings: AppSettingsType): MenuHookType {
-  const items: MenuItem[] = [
-    { id: 'collection', title: 'Collections' },
-    { id: 'environment', title: 'Environments' },
-    { id: 'history', title: 'History' },
-    { id: 'cookies', title: 'Cookies' },
-    { id: '-', spacer: true },
-    { id: 'settings', title: 'Settings' }
-  ]
+  const items: MenuItem[] = useMemo(
+    () => [
+      { id: 'collection', title: 'Collections' },
+      { id: 'environment', title: 'Environments' },
+      { id: 'history', title: 'History' },
+      { id: 'cookies', title: 'Cookies' },
+      { id: '-', spacer: true },
+      { id: 'settings', title: 'Settings' }
+    ],
+    []
+  )
 
   const [selected, setSelected] = useState(items[0])
   const [expanded, setExpanded] = useState(true)
 
-  const selectMenuItem = (menuItem: MenuItem) => {
+  const selectMenuItem = useCallback((menuItem: MenuItem) => {
     if (menuItem.spacer) return
     setSelected(menuItem)
     setExpanded(true)
-  }
+  }, [])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -39,7 +42,7 @@ export function useMenu(settings: AppSettingsType): MenuHookType {
       ipcRenderer?.removeAllListeners(ACTIONS.showCookies)
       ipcRenderer?.removeAllListeners(ACTIONS.showSettings)
     }
-  }, [selectMenuItem, settings])
+  }, [selectMenuItem, settings, items])
 
   const select = (id: Identifier) => {
     const item = items.find((item) => item.id === id)

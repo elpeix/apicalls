@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from 'react'
+import React, { useCallback, useId } from 'react'
 import styles from './SimpleSelect.module.css'
 
 type OptionType = Partial<{
@@ -27,28 +27,27 @@ export default function SimpleSelect({
   groupBy?: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }) {
-  const [groupedOptions, setGroupedOptions] = useState<GroupedOptionsType[]>([])
+  const groupByOptions = useCallback(
+    (options: OptionType[], groupBy: string): GroupedOptionsType[] => {
+      if (!options.length) return []
+      if (!groupBy) return [{ options, group: '' }]
+      return options.reduce((acc: GroupedOptionsType[], option: OptionType) => {
+        let group = (option[groupBy] || '') as string
+        group = group.charAt(0).toUpperCase() + group.slice(1)
+        const existingGroup = acc.find((g) => g.group === group)
+        if (existingGroup) {
+          existingGroup.options.push(option)
+        } else {
+          acc.push({ group, options: [option] })
+        }
+        return acc
+      }, [])
+    },
+    []
+  )
+
+  const groupedOptions = groupByOptions(options, groupBy)
   const id = useId()
-
-  const groupByOptions = (options: OptionType[], groupBy: string): GroupedOptionsType[] => {
-    if (!options.length) return []
-    if (!groupBy) return [{ options, group: '' }]
-    return options.reduce((acc: GroupedOptionsType[], option: OptionType) => {
-      let group = (option[groupBy] || '') as string
-      group = group.charAt(0).toUpperCase() + group.slice(1)
-      const existingGroup = acc.find((g) => g.group === group)
-      if (existingGroup) {
-        existingGroup.options.push(option)
-      } else {
-        acc.push({ group, options: [option] })
-      }
-      return acc
-    }, [])
-  }
-
-  useEffect(() => {
-    setGroupedOptions(groupByOptions(options, groupBy))
-  }, [options, groupBy])
 
   return (
     <div className={`${className} ${styles.simpleSelect}`}>

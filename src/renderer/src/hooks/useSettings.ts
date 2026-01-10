@@ -48,6 +48,7 @@ export function useSettings(): AppSettingsHookType {
       ipcRenderer?.removeAllListeners(SETTINGS.updated)
       ipcRenderer?.removeAllListeners(SETTINGS.listThemes)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

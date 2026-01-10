@@ -29,6 +29,7 @@ export default function CollectionRequest({
   const { request } = collectionRequest
   const [editingName, setEditingName] = useState(false)
   const [active, setActive] = useState(false)
+  const [collectionName, setCollectionName] = useState(collectionRequest.name)
   const requestPath = [
     ...path,
     {
@@ -53,11 +54,12 @@ export default function CollectionRequest({
           block: 'nearest'
         })
       }
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActive(true)
     } else {
       setActive(false)
     }
-  }, [collectionRequest, collectionId, tabs])
+  }, [collectionRequest, collectionId, tabs, appSettings?.settings?.scrollToActiveRequest])
 
   const clickHandler = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -72,14 +74,14 @@ export default function CollectionRequest({
     }
   }
   const changeName = (name: string) => {
-    collectionRequest.name = name
     tabs?.renameTab(collectionRequest.id, name)
     update()
+    setCollectionName(name)
   }
 
   const handleRemove = () => {
     application.showConfirm({
-      message: `Are you sure you want to remove request ${collectionRequest.name}?`,
+      message: `Are you sure you want to remove request ${collectionName}?`,
       confirmName: 'Remove',
       confirmColor: 'danger',
       onConfirm: () => {
@@ -123,7 +125,7 @@ export default function CollectionRequest({
         {request.method.label}
       </div>
       <EditableName
-        name={collectionRequest.name || 'New request'}
+        name={collectionName || 'New request'}
         editMode={editingName}
         update={changeName}
         className={styles.requestName}

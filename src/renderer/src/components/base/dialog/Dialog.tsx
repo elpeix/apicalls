@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styles from './Dialog.module.css'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 
@@ -13,17 +13,17 @@ export default function Dialog({
 }: DialogType) {
   const [show, setShow] = useState(true)
 
-  const closeDialog = () => {
+  const closeDialog = useCallback(() => {
     setShow(false)
     if (onClose) onClose()
-  }
+  }, [onClose])
 
   useEffect(() => {
     if (preventKeyClose) return
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.once(ACTIONS.escape, closeDialog)
     return () => ipcRenderer?.removeListener(ACTIONS.escape, closeDialog)
-  }, [onClose, preventKeyClose])
+  }, [closeDialog, preventKeyClose])
 
   const dialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     e.stopPropagation()

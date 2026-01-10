@@ -22,20 +22,18 @@ export default function Environment({
 }) {
   const { application, environments } = useContext(AppContext)
   const nameRef = useRef<HTMLInputElement>(null)
-  const [env, setEnv] = useState(environment)
   const [editingName, setEditingName] = useState(false)
 
   useEffect(() => {
-    setEnv(environment)
-
     if (!environment.name) {
-      setEditingName(true)
       setTimeout(() => {
-        if (!nameRef.current) return
-        nameRef.current.focus()
+        setEditingName(true)
+        if (nameRef.current) {
+          nameRef.current.focus()
+        }
       }, 0)
     }
-  }, [environment])
+  }, [environment.name])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -43,39 +41,37 @@ export default function Environment({
       application.showAlert({ message })
     })
     return () => ipcRenderer?.removeAllListeners(ENVIRONMENTS.exportFailure)
-  }, [])
+  }, [application])
 
   const handleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const active = e.target.checked
     if (active) {
-      environments?.active(env.id)
+      environments?.active(environment.id)
     } else {
       environments?.deactive()
     }
   }
 
   const changeName = (value: string) => {
-    setEnv({ ...env, name: value })
-    update({ ...env, name: value })
+    update({ ...environment, name: value })
   }
 
   const addVariable = () => {
-    const variables = [...env.variables, { name: '', value: '' }]
+    const variables = [...environment.variables, { name: '', value: '' }]
     updateVariables(variables)
   }
 
   const updateVariables = (variables: KeyValue[]) => {
-    setEnv({ ...env, variables })
-    update({ ...env, variables })
+    update({ ...environment, variables })
   }
 
   const handleRemove = () => {
     application.showConfirm({
-      message: `Are you sure you want to remove environment ${env.name}?`,
+      message: `Are you sure you want to remove environment ${environment.name}?`,
       confirmName: 'Remove',
       confirmColor: 'danger',
       onConfirm: () => {
-        remove(env.id)
+        remove(environment.id)
         application.hidePrompt()
       },
       onCancel: () => application.hidePrompt()
@@ -86,7 +82,7 @@ export default function Environment({
     application.showDialog({
       children: (
         <BulkEntry
-          initialValue={env.variables}
+          initialValue={environment.variables}
           onSave={(variables) => {
             application.hideDialog()
             updateVariables(variables)
@@ -99,12 +95,11 @@ export default function Environment({
   }
 
   const saveHeaders = (requestHeaders: KeyValue[]) => {
-    setEnv({ ...env, requestHeaders })
-    update({ ...env, requestHeaders })
+    update({ ...environment, requestHeaders })
   }
 
   const addHeaderHandler = () => {
-    const headers = env.requestHeaders || []
+    const headers = environment.requestHeaders || []
     headers.push({
       name: '',
       value: '',
@@ -115,7 +110,7 @@ export default function Environment({
   }
 
   const exportEnvironment = () => {
-    window.electron?.ipcRenderer.send(ENVIRONMENTS.export, env.id)
+    window.electron?.ipcRenderer.send(ENVIRONMENTS.export, environment.id)
   }
 
   return (
@@ -127,13 +122,13 @@ export default function Environment({
         <div className={styles.checkbox}>
           <input
             type="checkbox"
-            checked={env.active}
+            checked={environment.active}
             onClick={(e) => e.stopPropagation()}
             onChange={handleCheckbox}
           />
         </div>
         <EditableName
-          name={env.name}
+          name={environment.name}
           editMode={editingName}
           className={styles.title}
           editingClassName={styles.editing}
@@ -169,7 +164,7 @@ export default function Environment({
         <div className={styles.group}>
           <label>Variables</label>
           <Params
-            items={env.variables}
+            items={environment.variables}
             onSave={updateVariables}
             onAdd={addVariable}
             maxNameSize={240}
@@ -188,8 +183,8 @@ export default function Environment({
         <div className={styles.group}>
           <label>Environment headers</label>
           <Params
-            environmentId={env.id}
-            items={env.requestHeaders || []}
+            environmentId={environment.id}
+            items={environment.requestHeaders || []}
             onSave={saveHeaders}
             onAdd={addHeaderHandler}
             maxNameSize={240}

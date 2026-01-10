@@ -12,12 +12,8 @@ export default function CollectionScriptEditor({
   const [localScript, setLocalScript] = useState(script || '')
 
   useEffect(() => {
-    setLocalScript(script || '')
-  }, [script])
-
-  useEffect(() => {
     onSave(localScript)
-  }, [localScript])
+  }, [localScript, onSave])
 
   return (
     <div className={styles.editor}>
