@@ -77,6 +77,7 @@ export default function RequestPanelContent() {
         </div>
         <Panel
           defaultCollapsed={true}
+          defaultSize={30}
           minSize={10}
           maxSize={panelView === 'horizontal' ? 50 : 85.9}
           collapsible={true}

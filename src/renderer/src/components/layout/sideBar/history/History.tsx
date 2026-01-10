@@ -37,6 +37,11 @@ export default function History() {
         )}
       </div>
       <div className={`sidePanel-content ${styles.content}`}>
+        {historyItems.length === 0 && (
+          <div className="sidePanel-content-empty">
+            <div className="sidePanel-content-empty-text">No history items</div>
+          </div>
+        )}
         {historyItems.map((historyItem, index) => (
           <div
             key={index}

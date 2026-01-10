@@ -2,9 +2,10 @@ import React, { useContext, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
 import CookiesGroup from './CookiesGroup'
+import Icon from '../../../base/Icon/Icon'
 
 export default function Cookies() {
-  const { cookies } = useContext(AppContext)
+  const { cookies, application } = useContext(AppContext)
   const [selectedGroup, setSelectedGroup] = useState<string>('')
 
   if (!cookies) {
@@ -23,6 +24,23 @@ export default function Cookies() {
     setSelectedGroup('')
   }
 
+  const handleAddGroup = () => {
+    application.showPrompt({
+      message: 'Enter domain',
+      placeholder: '.domain.com',
+      onConfirm: (domain) => {
+        cookies.createGroup(domain)
+        setSelectedGroup(domain)
+        application.hidePrompt()
+      },
+      onCancel: () => {
+        application.hidePrompt()
+      }
+    })
+  }
+
+  const emptyGroups = groups.length === 0
+
   return (
     <>
       <div className="sidePanel-header">
@@ -33,9 +51,20 @@ export default function Cookies() {
           Cookies
         </div>
         {!selectedGroup && (
-          <div>
-            <ButtonIcon icon="clear" onClick={() => cookies.clear()} title="Clear all cookies" />
-          </div>
+          <>
+            {!emptyGroups && (
+              <div>
+                <ButtonIcon
+                  icon="clear"
+                  onClick={() => cookies.clear()}
+                  title="Clear all cookies"
+                />
+              </div>
+            )}
+            <div>
+              <ButtonIcon icon="more" onClick={handleAddGroup} title="Create new domain" />
+            </div>
+          </>
         )}
       </div>
       {selectedGroup && (
@@ -47,7 +76,7 @@ export default function Cookies() {
           remove={handleRemoveGroup}
         />
       )}
-      {!selectedGroup && (
+      {!selectedGroup && !emptyGroups && (
         <div className="sidePanel-content">
           {groups.map((group, index) => (
             <div
@@ -58,6 +87,25 @@ export default function Cookies() {
               <div>{group}</div>
             </div>
           ))}
+        </div>
+      )}
+      {emptyGroups && (
+        <div className="sidePanel-content">
+          <div className="sidePanel-content-empty">
+            <div className="sidePanel-content-empty-text">
+              <div>There are no cookies. </div>
+              <div className="sidePanel-content-empty-text-sub">
+                They will be added automatically if any request returns them, but you can also
+                create them manually.
+              </div>
+            </div>
+            <div className="sidePanel-content-empty-actions">
+              <button onClick={handleAddGroup} className="sidePanel-content-empty-button">
+                <Icon icon="more" />
+                <span className="sidePanel-content-empty-button-label">Create new domain</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>
