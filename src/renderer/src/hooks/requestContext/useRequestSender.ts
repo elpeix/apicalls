@@ -106,6 +106,7 @@ export function useRequestSender({
         method: requestMethod.value,
         url: requestUrl,
         headers: effectiveHeaders,
+        queryParams: requestQueryParams,
         body: requestBody
       }
 
@@ -136,7 +137,7 @@ export function useRequestSender({
 
       saveHistory()
 
-      const queryParams = prepareQueryParams(requestQueryParams)
+      const queryParams = prepareQueryParams(contextRequest.queryParams)
 
       const callApiRequest: CallRequest = {
         id: tabId,
@@ -193,6 +194,7 @@ export function useRequestSender({
                 request: {
                   method: contextRequest.method,
                   url: contextRequest.url,
+                  queryParams: contextRequest.queryParams,
                   headers: contextRequest.headers,
                   body: contextRequest.body
                 },
@@ -212,6 +214,7 @@ export function useRequestSender({
                 request: {
                   method: contextRequest.method,
                   url: contextRequest.url,
+                  queryParams: contextRequest.queryParams,
                   headers: contextRequest.headers,
                   body: contextRequest.body
                 },
@@ -334,14 +337,9 @@ export function useRequestSender({
   const { sendPreRequest } = usePreRequest({
     tabId,
     preRequestData,
-    requestMethod: requestMethod, // Pass method object? Yes.
+    requestMethod,
     environments,
-    requestConsole: requestConsole, // This is null in requestState? NO, it's not in requestState hook.
-    // I passed requestConsole to useScriptExecutor.
-    // useRequestState doesn't manage console.
-    // RequestContext manages console.
-    // I should look up where useConsole is used.
-    // In props.
+    requestConsole,
     setFetching,
     setFetched,
     setFetchError,
@@ -351,11 +349,6 @@ export function useRequestSender({
     setDefaultHeaders,
     onComplete: sendMainRequest
   })
-
-  // We need requestConsole.
-  // It is obtained via `useConsole` locally in RequestContext.
-  // We can call useConsole here or accept it as prop.
-  // The prop `requestState` does not contain it.
 
   const cancel = () => {
     window.electron?.ipcRenderer.send(REQUEST.cancel, tabId)
