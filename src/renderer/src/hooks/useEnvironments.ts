@@ -7,7 +7,7 @@ export function useEnvironments(): EnvironmentsHookType {
 
   const create = (name?: string) => {
     const newEnvironment = {
-      id: new Date().getTime(),
+      id: crypto.randomUUID(),
       name: name || '',
       active: false,
       variables: []
@@ -40,7 +40,7 @@ export function useEnvironments(): EnvironmentsHookType {
     if (!environment) return
     const newEnvironment = {
       ...environment,
-      id: new Date().getTime(),
+      id: crypto.randomUUID(),
       name: `${environment.name} Copy`
     }
     add(newEnvironment)

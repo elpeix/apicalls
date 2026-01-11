@@ -22,7 +22,7 @@ export default function DataToCapture({
     onSave([
       ...items,
       {
-        id: new Date().getTime(),
+        id: crypto.randomUUID(),
         type: 'body',
         path: '',
         setEnvironmentVariable: ''

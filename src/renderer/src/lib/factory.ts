@@ -1,6 +1,6 @@
 export const createFolder = (name = 'New folder'): CollectionFolder => {
   return {
-    id: new Date().getTime(),
+    id: crypto.randomUUID(),
     type: 'folder',
     name,
     elements: []
@@ -8,7 +8,7 @@ export const createFolder = (name = 'New folder'): CollectionFolder => {
 }
 
 export const createRequest = ({
-  id = new Date().getTime(),
+  id = crypto.randomUUID(),
   type = 'draft',
   name = '',
   method = createMethod('GET')
@@ -78,15 +78,8 @@ export const defaultHttpHeaders = {
   'User-Agent': []
 }
 
-let lastId = 0
-
 const generateNewId = (): Identifier => {
-  let newId = new Date().getTime()
-  if (newId <= lastId) {
-    newId = lastId + 1
-  }
-  lastId = newId
-  return newId
+  return crypto.randomUUID()
 }
 
 const duplicateElementRecursive = (

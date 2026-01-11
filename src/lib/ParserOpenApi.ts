@@ -7,7 +7,7 @@ export class ParserOpenApi extends ParserCollection {
     if (!data || !data.paths) {
       throw Error('Invalid openAPI file')
     }
-    const id = new Date().getTime()
+    const id = crypto.randomUUID()
     const collection: Collection = {
       id,
       name: data.info.title,
@@ -25,7 +25,7 @@ export class ParserOpenApi extends ParserCollection {
     const sortedPaths = this.sortPaths(paths)
 
     let count = 0
-    const id = new Date().getTime()
+    const id = crypto.randomUUID()
     const collectionTree: (CollectionFolder | RequestType)[] = []
     for (const path in sortedPaths) {
       const splitPath = path.split('/')

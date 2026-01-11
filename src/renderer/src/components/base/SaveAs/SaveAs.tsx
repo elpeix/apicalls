@@ -138,7 +138,7 @@ export default function SaveAs({
     if (folderSelected) {
       path.push({ id: folderSelected.id, type: 'folder' })
     }
-    const requestId = new Date().getTime() + '_' + Number(Math.random() * 1000).toFixed(0)
+    const requestId = crypto.randomUUID()
     path.push({ id: requestId, type: 'request' })
     const tab = tabs?.getTab(tabId)
     const request = {
