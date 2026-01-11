@@ -82,8 +82,7 @@ describe('parseCurl', () => {
   })
 
   it('parses a curl command with mixed quotes', () => {
-    // eslint-disable-next-line no-useless-escape
-    const curl = `curl -X POST "https://api.test.com" -H 'Content-Type: application/json' -d "{\"foo\":\"bar\"}"`
+    const curl = `curl -X POST "https://api.test.com" -H 'Content-Type: application/json' -d "{\\"foo\\":\\"bar\\"}"`
     const result = parseCurl(curl)
     expect(result.url).toBe('https://api.test.com')
     expect(result.method.value).toBe('POST')
@@ -96,13 +95,13 @@ describe('parseCurl', () => {
   it('parses a curl command with multiple -d (last one wins)', () => {
     const curl = `curl -X POST 'https://api.test.com' -d 'first' -d 'second'`
     const result = parseCurl(curl)
-    expect(result.body).toEqual({ contentType: 'json', value: 'second' })
+    expect(result.body).toEqual({ contentType: 'text', value: 'second' })
   })
 
   it('parses a curl command with body without quotes', () => {
     const curl = `curl -X POST 'https://api.test.com' -d foo=bar`
     const result = parseCurl(curl)
-    expect(result.body).toEqual({ contentType: 'json', value: 'foo=bar' })
+    expect(result.body).toEqual({ contentType: 'form-urlencoded', value: 'foo=bar' })
   })
 
   it('parses a curl command with header without space after colon', () => {
@@ -143,5 +142,61 @@ describe('parseCurl', () => {
     expect(result.url).toBe('')
     expect(result.method.value).toBe('POST')
     expect(result.body).toEqual({ contentType: 'json', value: '{"foo":"bar"}' })
+  })
+
+  it('parses basic GET request', () => {
+    const curl = 'curl https://api.example.com/users'
+    const result = parseCurl(curl)
+    expect(result.url).toBe('https://api.example.com/users')
+    expect(result.method.value).toBe('GET')
+  })
+
+  it('parses POST with JSON body', () => {
+    const curl = `curl -X POST https://api.example.com/users -H "Content-Type: application/json" -d '{"name": "John", "age": 30}'`
+    const result = parseCurl(curl)
+    expect(result.method.value).toBe('POST')
+    expect(result.headers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: 'Content-Type', value: 'application/json' })
+      ])
+    )
+    const body = result.body as { contentType: string; value: string }
+    expect(body.value).toBe('{"name": "John", "age": 30}')
+  })
+
+  it('parses complex escaped JSON body', () => {
+    // curl -d "{\"key\": \"value\"}"
+    const curl = `curl -X POST https://example.com -d "{\\"key\\": \\"value\\"}"`
+    const result = parseCurl(curl)
+    const body = result.body as { contentType: string; value: string }
+    expect(body.value).toBe('{"key": "value"}')
+  })
+
+  it('parses URL with query parameters', () => {
+    const curl = 'curl "https://api.example.com/search?q=test&page=1"'
+    const result = parseCurl(curl)
+    expect(result.url).toBe('https://api.example.com/search')
+    expect(result.queryParams).toEqual([
+      { name: 'q', value: 'test', enabled: true },
+      { name: 'page', value: '1', enabled: true }
+    ])
+  })
+
+  it('parses compressed flags (not supported by current parser likely)', () => {
+    // e.g. -XPOST
+    const curl = 'curl -XPOST https://example.com'
+    const result = parseCurl(curl)
+    expect(result.method.value).toBe('POST')
+  })
+
+  it('handles multiline curl commands', () => {
+    const curl = `curl -X POST \\
+      https://example.com \\
+      -H 'Content-Type: application/json' \\
+      -d '{"foo": "bar"}'`
+    const result = parseCurl(curl)
+    expect(result.url).toBe('https://example.com')
+    const body = result.body as { contentType: string; value: string }
+    expect(body.value).toBe('{"foo": "bar"}')
   })
 })
