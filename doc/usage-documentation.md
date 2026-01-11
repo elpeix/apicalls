@@ -102,13 +102,18 @@ The following objects are available in the script execution context:
   - `await http.put(url, body, headers)`
   - `await http.delete(url, headers)`
   - `await http.request(method, url, body, headers)`
-- **request**: Access the current request details.
-  - `request.method`, `request.url`, `request.headers`, `request.body`
+- **request**: Access and modify the current request details.
+  - `request.method`, `request.url`, `request.body`
+  - `request.headers`: Object `{'Key': 'Value'}`. Modifications are sent with the request.
+  - `request.queryParams`: Array of `{ name, value, enabled }`. Modifications are reflected in the request.
 - **response** (Post-script only): Access the received response.
   - `response.status`, `response.headers`, `response.body`, `response.rawBody`
 
-Note: Standard browser objects like `window`, `document`, and `fetch` are not
-available.
+### Execution Sandbox
+
+- Scripts run in a secure **sandboxed iframe**.
+- Direct access to `window`, `document`, or DOM is restricted.
+- Execution time is limited to **60 seconds** to prevent infinite loops.
 
 ## Environments and Variables
 
