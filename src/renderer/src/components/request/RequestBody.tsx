@@ -9,16 +9,17 @@ import FormDataEditor from './FormDataEditor'
 export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }) {
   const { request } = useContext(RequestContext)
 
-  if (!request) return null
-
-  const [contentType, setContentType] = useState<ContentTypes>(
-    request.body === 'none' || request.body === ''
+  const [contentType, setContentType] = useState<ContentTypes>(() => {
+    if (!request) return 'none'
+    return request.body === 'none' || request.body === ''
       ? 'none'
       : typeof request.body !== 'string'
         ? request.body.contentType
         : 'json'
-  )
-  const [value, setValue] = useState(getBody(request.body))
+  })
+  const [value, setValue] = useState(getBody(request?.body || ''))
+
+  if (!request) return null
 
   const contentTypes: Record<ContentTypes, string> = {
     none: 'None',

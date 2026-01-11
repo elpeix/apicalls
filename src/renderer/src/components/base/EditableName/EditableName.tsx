@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './EditableName.module.css'
 import Name from '../Name'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
@@ -43,13 +43,12 @@ export default function EditableName({
     setNameValue(name)
   }, [name])
 
-  const cancelEdit = () => {
+  const cancelEdit = useCallback(() => {
     if (!editingName) return
     setEditingName(false)
     setNameValue(name)
     if (onBlur) onBlur()
-    ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
-  }
+  }, [editingName, name, onBlur])
 
   useEffect(() => {
     if (editingName) {
@@ -57,7 +56,7 @@ export default function EditableName({
       ipcRenderer?.once(ACTIONS.escape, cancelEdit)
     }
     return () => ipcRenderer?.removeListener(ACTIONS.escape, cancelEdit)
-  }, [ACTIONS.escape, cancelEdit, editingName])
+  }, [cancelEdit, editingName, ipcRenderer])
 
   const editName = (e: React.MouseEvent) => {
     e.preventDefault()

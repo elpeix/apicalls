@@ -57,6 +57,35 @@ export default function AppContextProvider({ children }: { children: React.React
   const history = useHistory()
   const cookies = useCookies()
 
+  const [dialogProps, setDialogProps] = useState<DialogType | null>(null)
+
+  const showDialog = (dialogProps: DialogType) => {
+    setDialogProps(dialogProps)
+  }
+
+  const hideDialog = () => {
+    dialogProps?.onClose?.()
+    setDialogProps(null)
+  }
+
+  const showAlert = (alertProps: AlertType) => {
+    showDialog({
+      children: (
+        <Alert
+          message={alertProps.message}
+          buttonName={alertProps.buttonName}
+          buttonColor={alertProps.buttonColor}
+          onClose={() => {
+            hideAlert()
+            alertProps.onClose?.()
+          }}
+        />
+      )
+    })
+  }
+
+  const hideAlert = () => hideDialog()
+
   useEffect(() => {
     if (window.api.os.isMac) {
       window.document.body.classList.add('mac')
@@ -111,36 +140,8 @@ export default function AppContextProvider({ children }: { children: React.React
       ipcRenderer?.removeAllListeners(COOKIES.loaded)
       ipcRenderer?.removeAllListeners(VERSION.get)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const [dialogProps, setDialogProps] = useState<DialogType | null>(null)
-
-  const showDialog = (dialogProps: DialogType) => {
-    setDialogProps(dialogProps)
-  }
-
-  const hideDialog = () => {
-    dialogProps?.onClose?.()
-    setDialogProps(null)
-  }
-
-  const showAlert = (alertProps: AlertType) => {
-    showDialog({
-      children: (
-        <Alert
-          message={alertProps.message}
-          buttonName={alertProps.buttonName}
-          buttonColor={alertProps.buttonColor}
-          onClose={() => {
-            hideAlert()
-            alertProps.onClose?.()
-          }}
-        />
-      )
-    })
-  }
-
-  const hideAlert = () => hideDialog()
 
   const showConfirm = (props: ConfirmType) => {
     showDialog({
@@ -246,6 +247,7 @@ export default function AppContextProvider({ children }: { children: React.React
     return () => {
       ipcRenderer.removeListener(AUTO_UPDATE.status, handleAutoUpdateStatus)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const revealRequest = (tab: RequestTab) => {

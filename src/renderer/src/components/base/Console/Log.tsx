@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './Console.module.css'
 import { getStatusName } from '../../../lib/status'
 import { stringifySize } from '../../../lib/utils'
@@ -6,18 +6,9 @@ import { stringifySize } from '../../../lib/utils'
 export default function Log({ log }: { log: RequestLog }) {
   const [expanded, setExpanded] = useState(false)
 
-  const [requestHeaders, setRequestHeaders] = useState(log.request?.headers || {})
-  const [queryParams, setQueryParams] = useState<KeyValue[]>([])
-  const [responseHeaders, setResponseHeaders] = useState<KeyValue[]>(
-    log.response?.responseHeaders || []
-  )
-
-  useEffect(() => {
-    setRequestHeaders(log.request?.headers || {})
-    const queryParams = (log.request?.queryParams || []).filter((param: KeyValue) => param.enabled)
-    setQueryParams(queryParams)
-    setResponseHeaders(log.response?.responseHeaders || [])
-  }, [log])
+  const requestHeaders = log.request?.headers || {}
+  const queryParams = (log.request?.queryParams || []).filter((param: KeyValue) => param.enabled)
+  const responseHeaders = log.response?.responseHeaders || []
 
   const stringSize = stringifySize(log.response?.contentLength || 0)
   let className = styles.log

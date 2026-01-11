@@ -20,10 +20,13 @@ export default function NewTab({ showLabel = false }: { showLabel?: boolean }) {
 
   return (
     <div className={className} onClick={onClick}>
-      <button className="button-icon" title="New tab">
+      <button
+        className={`button-icon ${showLabel ? styles.button : ''}`}
+        title={!showLabel ? 'New tab' : undefined}
+      >
         <Icon icon="more" size={21} />
+        {showLabel && <div className={styles.label}>New tab</div>}
       </button>
-      {showLabel && <div className={styles.label}>New tab</div>}
     </div>
   )
 }
