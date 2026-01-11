@@ -13,7 +13,7 @@ export class ParserPostman extends ParserCollection {
     try {
       data = data as PostmanCollection
       this.count = 0
-      this.id = new Date().getTime().toString()
+      this.id = crypto.randomUUID()
       return {
         id: data.info._postman_id || this.id,
         name: data.info.name,

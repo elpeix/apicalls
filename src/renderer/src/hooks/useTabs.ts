@@ -31,7 +31,7 @@ export default function useTabs(
       setActiveTab(tabs.indexOf(tab))
     } else {
       if (shiftKey) {
-        request.id = request.id + new Date().getTime().toString()
+        request.id = crypto.randomUUID()
       }
       newTab(request, collectionId, path)
     }
@@ -59,7 +59,7 @@ export default function useTabs(
   const duplicateTab = (tabId: Identifier) => {
     const tab = getTab(tabId)
     if (!tab) return
-    const id = (tab.id + new Date().getTime().toString()) as Identifier
+    const id = crypto.randomUUID()
     const pathItem = {
       id,
       type: 'request'

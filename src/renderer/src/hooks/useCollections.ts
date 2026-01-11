@@ -11,7 +11,7 @@ export function useCollections(): CollectionsHookType {
 
   const create = (name?: string) => {
     const newCollection: Collection = {
-      id: new Date().getTime(),
+      id: crypto.randomUUID(),
       name: name || '',
       elements: []
     }
