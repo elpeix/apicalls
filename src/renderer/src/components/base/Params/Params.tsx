@@ -146,7 +146,7 @@ export default function Params({
           <SimpleTable.Body>
             {items.map((item: KeyValue, index: number) => (
               <ParamLine
-                key={index}
+                key={`param-line-${index}`}
                 item={item}
                 helperValues={helperValues}
                 editableName={editableName}

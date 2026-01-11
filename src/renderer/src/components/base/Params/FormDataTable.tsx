@@ -156,7 +156,7 @@ export default function FormDataTable({
           <SimpleTable.Body>
             {items.map((item: KeyValue, index: number) => (
               <FormDataTableRow
-                key={index}
+                key={`form-data-row-${index}`}
                 item={item}
                 helperValues={helperValues}
                 editableName={editableName}

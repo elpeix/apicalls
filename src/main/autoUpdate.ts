@@ -46,8 +46,8 @@ export function initAutoUpdate(mainWindow: BrowserWindow) {
       .showMessageBox({
         type: 'info',
         title: 'Update Available',
-        message: `A new version ${info.version} is available. Do you want to download it now?`,
-        buttons: ['Download', 'Skip this version', 'Later'],
+        message: `A new version ${info.version} is available. Open download page?`,
+        buttons: ['Open download page', 'Skip this version', 'Later'],
         defaultId: 0,
         cancelId: 2
       })

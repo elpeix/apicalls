@@ -66,9 +66,9 @@ export default function SideMenu({
       )}
       {showMacSpacer && <div className={styles.macSpacer}></div>}
       {menu &&
-        menuItems.map((item, index) => (
+        menuItems.map((item) => (
           <div
-            key={index}
+            key={item.id}
             className={`${styles.item} ${isSelected(item.id) ? styles.active : ''}  ${
               item.spacer ? styles.spacer : ''
             }`}

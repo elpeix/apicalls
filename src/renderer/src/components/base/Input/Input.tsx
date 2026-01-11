@@ -102,7 +102,7 @@ export default function Input({
           envId && environments?.variableIsDefined(envId, part)
             ? styles.variable
             : styles.variableUndefined
-        return <mark key={index} className={className}>{`{{${part}}}`}</mark>
+        return <mark key={`${index}-${part}`} className={className}>{`{{${part}}}`}</mark>
       })
     }
     return internalValue
@@ -165,11 +165,11 @@ export default function Input({
                   ? styles.variable
                   : styles.variableUndefined
               return (
-                <div key={index}>
-                  <span key={`${index}_${part}`} className={className}>
+                <div key={`${part}-${index}`}>
+                  <span key={`variable-name-${index}_${part}`} className={className}>
                     {part}
                   </span>
-                  <span key={`${index}_${value}`} className={styles.variableValue}>
+                  <span key={`variable-value-${index}_${value}`} className={styles.variableValue}>
                     {envId && environments?.getVariableValue(envId, part)}
                   </span>
                 </div>
