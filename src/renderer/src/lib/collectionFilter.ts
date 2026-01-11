@@ -7,8 +7,7 @@ export const filterCollectionElements = (
   if (filter === '' || elements.length === 0) {
     return elements
   }
-  const copy = JSON.parse(JSON.stringify({ elements }))
-  return filterElements(copy.elements, filter)
+  return filterElements(structuredClone(elements), filter)
 }
 
 const filterElements = (

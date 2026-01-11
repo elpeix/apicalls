@@ -42,9 +42,9 @@ export default function History() {
             <div className="sidePanel-content-empty-text">No history items.</div>
           </div>
         )}
-        {historyItems.map((historyItem, index) => (
+        {historyItems.map((historyItem) => (
           <div
-            key={index}
+            key={historyItem.id}
             className={`sidePanel-content-item ${styles.item}`}
             onClick={() => tabs?.openTab({ request: historyItem })}
           >

@@ -92,7 +92,7 @@ export default function Console({ collapse }: { collapse: () => void }) {
       {filteredLogs.length === 0 && <div className={styles.noLogs}>No logs</div>}
       <div className={styles.content}>
         {filteredLogs.map((log, index) => (
-          <Log log={log} key={index} />
+          <Log log={log} key={`log-${index}`} />
         ))}
         <div ref={endRef} />
       </div>
