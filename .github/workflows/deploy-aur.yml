@@ -1,0 +1,92 @@
+name: Deploy to AUR
+
+permissions:
+  contents: read
+
+on:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+
+jobs:
+  aur-release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get Release Data
+        id: release_data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG_NAME=$(git tag --points-at "${{ github.event.workflow_run.head_sha }}" | head -n1)
+
+          if [ -z "$TAG_NAME" ]; then
+            echo "No tag found for workflow run!"
+            exit 1
+          fi
+
+          IS_PRERELEASE=$(gh release view "$TAG_NAME" --json isPrerelease --jq '.isPrerelease')
+
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            echo "Release is prerelease; skipping AUR deploy."
+            exit 0
+          fi
+
+          # Get the version from the tag (remove 'v' prefix)
+          VERSION=${TAG_NAME#v}
+
+          # Sanitize version for Arch (replace - with _)
+          ARCH_VERSION=$(echo "$VERSION" | tr '-' '_')
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "arch_version=$ARCH_VERSION" >> $GITHUB_OUTPUT
+
+          # Find the .deb asset name to construct the public URL (avoiding API URL)
+          ASSET_NAME=$(gh release view "$TAG_NAME" --json assets --jq '.assets[] | select(.name | endswith(".deb")) | .name')
+
+          if [ -z "$ASSET_NAME" ]; then
+            echo "No .deb asset found!"
+            exit 1
+          fi
+
+          # Manually construct the standard GitHub release download URL
+          ASSET_URL="https://github.com/${{ github.repository }}/releases/download/$TAG_NAME/$ASSET_NAME"
+
+          echo "asset_url=$ASSET_URL" >> $GITHUB_OUTPUT
+
+          # Download asset to compute checksum
+          curl -L -o api-calls.deb "$ASSET_URL"
+
+          # Validate that the .deb file was downloaded correctly
+          if [ ! -f api-calls.deb ] || [ ! -s api-calls.deb ]; then
+            echo "Failed to download .deb file!"
+            exit 1
+          fi
+
+          SHA256=$(sha256sum api-calls.deb | cut -d ' ' -f 1)
+          echo "sha256=$SHA256" >> $GITHUB_OUTPUT
+
+      - name: Update PKGBUILD
+        run: |
+          sed -i "s/%PKGVER%/${{ steps.release_data.outputs.arch_version }}/g" aur/PKGBUILD
+          sed -i "s|%SOURCE_URL%|${{ steps.release_data.outputs.asset_url }}|g" aur/PKGBUILD
+          sed -i "s/%SHA256%/${{ steps.release_data.outputs.sha256 }}/g" aur/PKGBUILD
+
+          # Generate .SRCINFO
+          # The deploy action usually handles .SRCINFO generation if configured,
+          # but KSXGitHub/github-actions-deploy-aur recommends existing PKGBUILD.
+          # We'll rely on the action to handle the git push.
+
+      - name: Publish to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v3
+        with:
+          pkgname: api-calls-bin
+          pkgbuild: ./aur/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: 'Update to ${{ steps.release_data.outputs.version }} (arch: ${{ steps.release_data.outputs.arch_version }})'
