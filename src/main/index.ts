@@ -87,10 +87,20 @@ function createWindow(settingsStore: IStore) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+import logger from './logger'
+
+// ...
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', error)
+})
+
 app.whenReady().then(() => {
-  // Migrate
+  logger.info('Application started')
+  // ...
   onChangeVersion((previousVersion: string, currentVersion: string) => {
-    console.info(`The version has changed: ${previousVersion} -> ${currentVersion}.`)
+    logger.info(`The version has changed: ${previousVersion} -> ${currentVersion}.`)
     handleMigrations(previousVersion, currentVersion)
   })
 
