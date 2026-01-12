@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--background-color);
+  color: var(--base-color);
+  gap: 2rem;
+  text-align: center;
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--base-color-semitransparent);
+  }
+
+  .errorBox {
+    background-color: var(--input-background-color);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    max-width: 80rem;
+    width: 100%;
+    overflow: auto;
+    max-height: 20rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    text-align: left;
+  }
+
+  .buttonContainer {
+    display: flex;
+    gap: 2rem;
+  }
+}
