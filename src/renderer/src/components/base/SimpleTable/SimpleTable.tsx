@@ -144,16 +144,10 @@ function SimpleTableCell({
   const [changedValue, setChangedValue] = useState(value)
   const debouncedValue = useDebounce(changedValue, 150)
 
-  const [prevValue, setPrevValue] = useState(value)
-  const [prevEditable, setPrevEditable] = useState(editable)
-
-  if (value !== prevValue || editable !== prevEditable) {
-    setPrevValue(value)
-    setPrevEditable(editable)
-    if (editable) {
-      setEditableValue(value)
-    }
-  }
+  useEffect(() => {
+    setEditableValue(value)
+    setChangedValue(value)
+  }, [value])
 
   useEffect(() => {
     if (editable && autoFocus && inputRef.current) {
