@@ -305,7 +305,7 @@ body {
   padding-top: env(safe-area-inset-top);
 }
 body.mac {
-  --top-bar-height: 2.36rem;
+  --top-bar-height: 2rem;
 }
 
 *,

@@ -380,7 +380,7 @@ export function useScriptExecutor({
         iframe.contentWindow?.postMessage(
           {
             type: 'START_EXECUTION',
-            script,
+            script: script + '\n', // Add newline to prevent syntax error
             context: {
               request: context.request,
               response: context.response,
