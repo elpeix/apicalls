@@ -1,6 +1,6 @@
 import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import * as monaco from 'monaco-editor'
-import React, { memo, useContext, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { AppContext } from '../../../context/AppContext'
 import { RequestContext } from '../../../context/RequestContext'
 import { useEditorTheme } from './useEditorTheme'
@@ -30,6 +30,17 @@ export default function Editor({
 
   const { theme, themeData } = useEditorTheme(appSettings)
   const editorRef = useRef<EditorRefType | null>(null)
+
+  // Stable onChange handler to avoid re-rendering EditorWrapped when only the handler changes
+  const onChangeRef = useRef(onChange)
+
+  useEffect(() => {
+    onChangeRef.current = onChange
+  }, [onChange])
+
+  const handleOnChange: OnChange = useCallback((value, ev) => {
+    onChangeRef.current?.(value, ev)
+  }, [])
 
   // Derived state to determine if we should render (optimization for large files in background)
   const mustRender = type === 'none' || value.length < 1024 * 1024 || isActive
@@ -93,7 +104,7 @@ export default function Editor({
     <EditorWrapped
       key={type}
       language={language}
-      onChange={onChange}
+      onChange={handleOnChange}
       value={value}
       theme={theme}
       options={options}
