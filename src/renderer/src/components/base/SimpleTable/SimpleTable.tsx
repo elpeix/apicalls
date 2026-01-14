@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import styles from './SimpleTable.module.css'
 import Input from '../Input/Input'
 import Autocompleter from '../Autocompleter/Autocompleter'
@@ -16,6 +16,8 @@ const SimpleTableContext = createContext<{
   onDragStart: () => {}
 })
 
+const getColumns = (str: string) => str.trim().split(/\s+(?![^(]*\))/g)
+
 export default function SimpleTable({
   templateColumns: initialTemplateColumns,
   children
@@ -23,28 +25,41 @@ export default function SimpleTable({
   templateColumns: string
   children: React.ReactNode
 }) {
-  const [columns, setColumns] = useState<string[]>(initialTemplateColumns.split(' '))
+  const [columns, setColumns] = useState<string[]>(() => getColumns(initialTemplateColumns))
   const startWidthsRef = useRef<number[]>([])
+  const columnsRef = useRef<string[]>(columns)
 
-  const updateColumnWidth = (index: number, width: string) => {
-    const newColumns = [...columns]
-    newColumns[index] = width
-    setColumns(newColumns)
-  }
+  useEffect(() => {
+    columnsRef.current = columns
+  }, [columns])
 
-  const onDragStart = (_index: number) => {
-    startWidthsRef.current = columns.map((c) => parseInt(c) || 0)
-  }
+  useEffect(() => {
+    setColumns(getColumns(initialTemplateColumns))
+  }, [initialTemplateColumns])
 
-  const onDrag = (index: number, offset: number) => {
+  const updateColumnWidth = useCallback((index: number, width: string) => {
+    setColumns((prev) => {
+      const newColumns = [...prev]
+      newColumns[index] = width
+      return newColumns
+    })
+  }, [])
+
+  const onDragStart = useCallback((_index: number) => {
+    startWidthsRef.current = columnsRef.current.map((c) => parseInt(c) || 0)
+  }, [])
+
+  const onDrag = useCallback((index: number, offset: number) => {
     const startWidth = startWidthsRef.current[index]
     if (startWidth !== undefined) {
-      const newWidth = Math.max(startWidth + offset, 20) // Min width 20px
-      const newColumns = [...columns]
-      newColumns[index] = `${newWidth}px`
-      setColumns(newColumns)
+      const newWidth = Math.min(Math.max(startWidth + offset, 30), window.innerWidth)
+      setColumns((prev) => {
+        const newColumns = [...prev]
+        newColumns[index] = `${newWidth}px`
+        return newColumns
+      })
     }
-  }
+  }, [])
 
   const templateColumns = columns.join(' ')
 
@@ -69,8 +84,16 @@ function SimpleTableHeader({ children }: { children?: React.ReactNode }) {
   return (
     <div className={styles.header} role="rowgroup" style={{ gridTemplateColumns: templateColumns }}>
       {React.Children.map(children, (child, index) => {
-        if (React.isValidElement(child) && child.type === SimpleTableHeaderCell) {
-          return React.cloneElement(child as React.ReactElement<{ index: number }>, { index })
+        if (React.isValidElement(child)) {
+          const childType = child.type as { displayName?: string; name?: string }
+          const isHeaderCell =
+            child.type === SimpleTableHeaderCell ||
+            childType.displayName === 'SimpleTableHeaderCell' ||
+            childType.name === 'SimpleTableHeaderCell'
+
+          if (isHeaderCell) {
+            return React.cloneElement(child as React.ReactElement<{ index: number }>, { index })
+          }
         }
         return child
       })}
@@ -78,6 +101,7 @@ function SimpleTableHeader({ children }: { children?: React.ReactNode }) {
   )
 }
 
+SimpleTableHeaderCell.displayName = 'SimpleTableHeaderCell'
 function SimpleTableHeaderCell({
   draggable = false,
   index,
@@ -141,7 +165,9 @@ function SimpleTableHeaderCell({
 
   return (
     <div className={`${styles.cell} ${draggable && styles.draggable}`} role="columnheader">
-      <div className={styles.cellHeaderContent}>{children}</div>
+      <div className={styles.cellHeaderContent}>
+        <span>{children}</span>
+      </div>
       {draggable && (
         <div ref={resizeRef} className={styles.resize} style={{ cursor: 'col-resize' }} />
       )}
