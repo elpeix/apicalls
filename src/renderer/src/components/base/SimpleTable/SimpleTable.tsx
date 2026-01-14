@@ -6,19 +6,53 @@ import { useDebounce } from '../../../hooks/useDebounce'
 
 const SimpleTableContext = createContext<{
   templateColumns: string
+  updateColumnWidth: (index: number, width: string) => void
+  onDrag: (index: number, offset: number) => void
+  onDragStart: (index: number) => void
 }>({
-  templateColumns: ''
+  templateColumns: '',
+  updateColumnWidth: () => {},
+  onDrag: () => {},
+  onDragStart: () => {}
 })
 
 export default function SimpleTable({
-  templateColumns,
+  templateColumns: initialTemplateColumns,
   children
 }: {
   templateColumns: string
   children: React.ReactNode
 }) {
+  const [columns, setColumns] = useState<string[]>(initialTemplateColumns.split(' '))
+  const startWidthsRef = useRef<number[]>([])
+
+  const updateColumnWidth = (index: number, width: string) => {
+    const newColumns = [...columns]
+    newColumns[index] = width
+    setColumns(newColumns)
+  }
+
+  const onDragStart = (_index: number) => {
+    startWidthsRef.current = columns.map((c) => parseInt(c) || 0)
+  }
+
+  const onDrag = (index: number, offset: number) => {
+    const startWidth = startWidthsRef.current[index]
+    if (startWidth !== undefined) {
+      const newWidth = Math.max(startWidth + offset, 20) // Min width 20px
+      const newColumns = [...columns]
+      newColumns[index] = `${newWidth}px`
+      setColumns(newColumns)
+    }
+  }
+
+  const templateColumns = columns.join(' ')
+
   const simpleTableContextValue = {
-    templateColumns
+    templateColumns,
+    updateColumnWidth,
+    onDrag,
+    onDragStart
   }
 
   return (
@@ -34,32 +68,36 @@ function SimpleTableHeader({ children }: { children?: React.ReactNode }) {
   const { templateColumns } = useContext(SimpleTableContext)
   return (
     <div className={styles.header} role="rowgroup" style={{ gridTemplateColumns: templateColumns }}>
-      {children}
+      {React.Children.map(children, (child, index) => {
+        if (React.isValidElement(child) && child.type === SimpleTableHeaderCell) {
+          return React.cloneElement(child as React.ReactElement<{ index: number }>, { index })
+        }
+        return child
+      })}
     </div>
   )
 }
 
 function SimpleTableHeaderCell({
   draggable = false,
-  onDragStart = () => {},
-  onDrag = () => {},
+  index,
   children
 }: {
   draggable?: boolean
-  onDragStart?: () => void
-  onDrag?: (offset: number) => void
+  index?: number
   children: React.ReactNode
 }) {
+  const { onDrag: contextOnDrag, onDragStart: contextOnDragStart } = useContext(SimpleTableContext)
   const resizeRef = useRef<HTMLDivElement>(null)
   const draggingRef = useRef(false)
   const startXRef = useRef(0)
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
-      if (!resizeRef.current || !draggable) {
+      if (!resizeRef.current || !draggable || index === undefined) {
         return
       }
-      onDragStart()
+      contextOnDragStart(index)
       draggingRef.current = true
       resizeRef.current?.classList.add(styles.active)
       startXRef.current = e.clientX
@@ -67,11 +105,11 @@ function SimpleTableHeaderCell({
     }
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!draggingRef.current) {
+      if (!draggingRef.current || index === undefined) {
         return
       }
       const delta = e.clientX - startXRef.current
-      onDrag(delta)
+      contextOnDrag(index, delta)
     }
 
     const handleMouseUp = () => {
@@ -99,7 +137,7 @@ function SimpleTableHeaderCell({
       window.removeEventListener('mouseup', handleMouseUp)
       document.body.style.cursor = ''
     }
-  }, [draggable, onDrag, onDragStart])
+  }, [draggable, index, contextOnDrag, contextOnDragStart])
 
   return (
     <div className={`${styles.cell} ${draggable && styles.draggable}`} role="columnheader">

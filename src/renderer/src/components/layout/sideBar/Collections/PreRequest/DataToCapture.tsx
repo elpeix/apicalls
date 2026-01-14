@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './PreRequest.module.css'
 import ButtonIcon from '../../../../base/ButtonIcon'
 import SimpleTable from '../../../../base/SimpleTable/SimpleTable'
@@ -11,13 +11,6 @@ export default function DataToCapture({
   items: PreRequestDataToCapture[]
   onSave: (captureItems: PreRequestDataToCapture[]) => void
 }) {
-  const [pathSize, setPathSize] = useState(300)
-
-  const changePathSize = (offset: number) => {
-    const newSize = pathSize + offset
-    setPathSize(Math.max(Math.min(newSize, 360), 100))
-  }
-
   const handleAdd = () => {
     onSave([
       ...items,
@@ -40,12 +33,10 @@ export default function DataToCapture({
 
   return (
     <div className={styles.dataToCapture}>
-      <SimpleTable templateColumns={`100px ${pathSize}px minmax(1rem 1fr) 2rem`}>
+      <SimpleTable templateColumns={`100px 300px minmax(1rem, 1fr) 2rem`}>
         <SimpleTable.Header>
           <SimpleTable.HeaderCell>Type</SimpleTable.HeaderCell>
-          <SimpleTable.HeaderCell draggable={true} onDrag={changePathSize}>
-            Path
-          </SimpleTable.HeaderCell>
+          <SimpleTable.HeaderCell draggable={true}>Path</SimpleTable.HeaderCell>
           <SimpleTable.HeaderCell>Environment Variable</SimpleTable.HeaderCell>
           <SimpleTable.HeaderCell>
             <></>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Cookies.module.css'
 import SimpleTable from '../../../base/SimpleTable/SimpleTable'
@@ -17,42 +17,11 @@ export default function CookiesGroup({
   update: (group: string, cookies: Cookie[]) => void
   remove: (group: string) => void
 }) {
-  const [nameSize, setNameSize] = useState(100)
-  const [valueSize, setValueSize] = useState(180)
-  const [pathSize, setPathSize] = useState(50)
   const [cookieList, setCookieList] = useState(cookies)
 
   useEffect(() => {
     setCookieList(cookies)
   }, [cookies])
-
-  const nameSizeRef = useRef(nameSize)
-  const valueSizeRef = useRef(valueSize)
-  const pathSizeRef = useRef(pathSize)
-
-  const changeNameSizeStart = () => {
-    nameSizeRef.current = nameSize
-  }
-
-  const changeNameSize = (offset: number) => {
-    setNameSize(Math.max(Math.min(nameSizeRef.current + offset, 300), 80))
-  }
-
-  const changeValueSizeStart = () => {
-    valueSizeRef.current = valueSize
-  }
-
-  const changeValueSize = (offset: number) => {
-    setValueSize(Math.max(Math.min(valueSizeRef.current + offset, 400), 80))
-  }
-
-  const changePathSizeStart = () => {
-    pathSizeRef.current = pathSize
-  }
-
-  const changePathSize = (offset: number) => {
-    setPathSize(Math.max(Math.min(pathSizeRef.current + offset, 300), 40))
-  }
 
   const updateCookie = (cookie: Cookie, index: number) => {
     const newCookies = [...cookieList]
@@ -98,31 +67,11 @@ export default function CookiesGroup({
         </div>
       </div>
       <div className={styles.content}>
-        <SimpleTable
-          templateColumns={`${nameSize}px ${valueSize}px ${pathSize}px minmax(1rem, 1fr) 2rem`}
-        >
+        <SimpleTable templateColumns={`100px 180px 50px minmax(1rem, 1fr) 2rem`}>
           <SimpleTable.Header>
-            <SimpleTable.HeaderCell
-              draggable={true}
-              onDragStart={changeNameSizeStart}
-              onDrag={changeNameSize}
-            >
-              Name
-            </SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell
-              draggable={true}
-              onDragStart={changeValueSizeStart}
-              onDrag={changeValueSize}
-            >
-              Value
-            </SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell
-              draggable={true}
-              onDragStart={changePathSizeStart}
-              onDrag={changePathSize}
-            >
-              Path
-            </SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true}>Name</SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true}>Value</SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true}>Path</SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>Expires</SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>
               <></>
