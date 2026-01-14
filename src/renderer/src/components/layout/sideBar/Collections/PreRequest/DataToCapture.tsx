@@ -40,7 +40,7 @@ export default function DataToCapture({
 
   return (
     <div className={styles.dataToCapture}>
-      <SimpleTable templateColumns={`100px ${pathSize}px 1fr 2rem`}>
+      <SimpleTable templateColumns={`100px ${pathSize}px minmax(1rem 1fr) 2rem`}>
         <SimpleTable.Header>
           <SimpleTable.HeaderCell>Type</SimpleTable.HeaderCell>
           <SimpleTable.HeaderCell draggable={true} onDrag={changePathSize}>

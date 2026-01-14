@@ -52,20 +52,25 @@ export default function Params({
   environmentId?: Identifier
 }) {
   const { application } = useContext(AppContext)
-  const paramsRef = useRef(null)
+  const paramsRef = useRef<HTMLDivElement | null>(null)
   const [nameSize, setNameSize] = useState(
     Math.max(Math.min(defaultNameSize, maxNameSize), minNameSize)
   )
 
+  const nameSizeRef = useRef(nameSize)
+  const changeNameSizeStart = () => {
+    nameSizeRef.current = nameSize
+  }
+
   const changeNameSize = (offset: number) => {
-    const newSize = nameSize + offset
+    const newSize = nameSizeRef.current + offset
     setNameSize(Math.max(Math.min(newSize, maxNameSize), minNameSize))
   }
 
   const showHelperColumn = showEnable || draggable
   const helperColumn = showEnable && draggable ? '2.8rem' : showHelperColumn ? '1.9rem' : ''
   const deleteColumn = showDelete ? '2rem' : ''
-  const templateColumns = `${helperColumn} ${nameSize}px 1fr ${deleteColumn}`
+  const templateColumns = `${helperColumn} ${nameSize}px minmax(1rem, 1fr) ${deleteColumn}`
 
   const openBulk = () => {
     application.showDialog({
@@ -133,7 +138,11 @@ export default function Params({
                 )}
               </SimpleTable.HeaderCell>
             )}
-            <SimpleTable.HeaderCell draggable={true} onDrag={changeNameSize}>
+            <SimpleTable.HeaderCell
+              draggable={true}
+              onDragStart={changeNameSizeStart}
+              onDrag={changeNameSize}
+            >
               Name
             </SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>Value</SimpleTable.HeaderCell>

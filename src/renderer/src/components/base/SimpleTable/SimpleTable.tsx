@@ -41,39 +41,72 @@ function SimpleTableHeader({ children }: { children?: React.ReactNode }) {
 
 function SimpleTableHeaderCell({
   draggable = false,
+  onDragStart = () => {},
   onDrag = () => {},
   children
 }: {
   draggable?: boolean
+  onDragStart?: () => void
   onDrag?: (offset: number) => void
   children: React.ReactNode
 }) {
-  const [dragging, setDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
+  const resizeRef = useRef<HTMLDivElement>(null)
+  const draggingRef = useRef(false)
+  const startXRef = useRef(0)
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    if (!draggable) return
-    setDragging(true)
-    setStartX(e.clientX)
-  }
-  const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
-    if (!dragging || e.clientX === 0) return
-    setStartX(e.clientX)
-    onDrag(e.clientX - startX)
-  }
-  const handleDragEnd = () => {
-    setDragging(false)
-  }
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (!resizeRef.current || !draggable) {
+        return
+      }
+      onDragStart()
+      draggingRef.current = true
+      resizeRef.current?.classList.add(styles.active)
+      startXRef.current = e.clientX
+      document.body.style.cursor = 'col-resize !important'
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!draggingRef.current) {
+        return
+      }
+      const delta = e.clientX - startXRef.current
+      onDrag(delta)
+    }
+
+    const handleMouseUp = () => {
+      if (!draggingRef.current) {
+        return
+      }
+      draggingRef.current = false
+      resizeRef.current?.classList.remove(styles.active)
+      document.body.style.cursor = ''
+    }
+
+    const resizeElement = resizeRef.current
+    if (resizeElement) {
+      resizeElement.addEventListener('mousedown', handleMouseDown)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+
+    return () => {
+      if (resizeElement) {
+        resizeElement.removeEventListener('mousedown', handleMouseDown)
+      }
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+    }
+  }, [draggable, onDrag, onDragStart])
+
   return (
     <div className={`${styles.cell} ${draggable && styles.draggable}`} role="columnheader">
-      <div>{children}</div>
-      <div
-        draggable={draggable}
-        className={styles.resize}
-        onDragStart={handleDragStart}
-        onDrag={handleDrag}
-        onDragEnd={handleDragEnd}
-      />
+      <div className={styles.cellHeaderContent}>{children}</div>
+      {draggable && (
+        <div ref={resizeRef} className={styles.resize} style={{ cursor: 'col-resize' }} />
+      )}
     </div>
   )
 }

@@ -59,15 +59,20 @@ export default function FormDataTable({
     Math.max(Math.min(defaultNameSize, maxNameSize), minNameSize)
   )
 
+  const nameSizeRef = useRef(nameSize)
+  const changeNameSizeStart = () => {
+    nameSizeRef.current = nameSize
+  }
+
   const changeNameSize = (offset: number) => {
-    const newSize = nameSize + offset
+    const newSize = nameSizeRef.current + offset
     setNameSize(Math.max(Math.min(newSize, maxNameSize), minNameSize))
   }
 
   const showHelperColumn = showEnable || draggable
   const helperColumn = showEnable && draggable ? '2.8rem' : showHelperColumn ? '1.9rem' : ''
   const deleteColumn = showDelete ? '2rem' : ''
-  const templateColumns = `${helperColumn} ${nameSize}px ${showType ? '80px ' : ''}1fr ${deleteColumn}`
+  const templateColumns = `${helperColumn} ${nameSize}px ${showType ? '80px ' : ''}minmax(1rem, 1fr) ${deleteColumn}`
 
   const openBulk = () => {
     application.showDialog({
@@ -142,7 +147,11 @@ export default function FormDataTable({
                 )}
               </SimpleTable.HeaderCell>
             )}
-            <SimpleTable.HeaderCell draggable={true} onDrag={changeNameSize}>
+            <SimpleTable.HeaderCell
+              draggable={true}
+              onDragStart={changeNameSizeStart}
+              onDrag={changeNameSize}
+            >
               Name
             </SimpleTable.HeaderCell>
             {showType && <SimpleTable.HeaderCell>Type</SimpleTable.HeaderCell>}

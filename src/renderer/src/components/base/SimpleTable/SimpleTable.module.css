@@ -2,10 +2,12 @@
   display: flex;
   flex-direction: column;
   font-size: 0.8rem;
+  overflow-x: auto;
 
   .header,
   .row {
     display: grid;
+    min-width: fit-content;
   }
 
   .cell:first-child {
@@ -50,18 +52,30 @@
       font-weight: 600;
       color: var(--base-color);
 
+      .cellHeaderContent {
+        flex: 1;
+      }
+
       &.draggable {
         position: relative;
+        overflow: visible;
+
         .resize {
-          width: 2px;
+          width: 4px;
           height: 100%;
+          background: transparent;
+          padding: 0;
           position: absolute;
-          right: 0;
+          right: -2px;
           top: 0;
-          cursor: col-resize;
           z-index: 10;
-          background: var(--table-border-color);
-          opacity: 0;
+          transition: background-color var(--gutter-transition);
+
+          &:hover,
+          &.active {
+            transition-delay: var(--gutter-transition-delay);
+            background-color: var(--gutter-color-drag);
+          }
         }
       }
     }
