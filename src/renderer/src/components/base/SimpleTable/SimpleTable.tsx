@@ -11,9 +11,9 @@ const SimpleTableContext = createContext<{
   onDragStart: (widths: number[]) => void
 }>({
   templateColumns: '',
-  updateColumnWidth: () => { },
-  onDrag: () => { },
-  onDragStart: () => { }
+  updateColumnWidth: () => {},
+  onDrag: () => {},
+  onDragStart: () => {}
 })
 
 const getColumns = (str: string) => str.trim().split(/\s+(?![^(]*\))/g)

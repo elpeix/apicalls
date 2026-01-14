@@ -19,7 +19,6 @@ import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
 import Note from '../../../base/Notes/Note'
 import NoteModal from '../../../base/Notes/NoteModal'
-import PredefinedHeaders from '../../../base/PredefinedHeaders/PredefinedHeaders'
 import CollectionSettings from './CollectionSettings/CollectionSettings'
 
 export default function Collection({
@@ -262,25 +261,6 @@ export default function Collection({
     })
   }
 
-  const editRequestHeaders = () => {
-    setShowMenu(false)
-    application.showDialog({
-      children: (
-        <PredefinedHeaders
-          title="Collection headers"
-          headers={coll.requestHeaders || []}
-          onSave={(requestHeaders: KeyValue[]) => {
-            update({ ...coll, requestHeaders })
-            application.hideDialog()
-          }}
-          onClose={() => application.hideDialog()}
-        />
-      ),
-      preventKeyClose: false,
-      preventOverlayClickClose: true
-    })
-  }
-
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -342,7 +322,6 @@ export default function Collection({
                   </SubMenu>
                 )}
               </>
-              <MenuElement icon="header" title="Headers" onClick={editRequestHeaders} />
               <MenuSeparator />
               <MenuElement icon="more" title="Add request" onClick={handleAddRequest} />
               <MenuElement icon="folder" title="Add folder" onClick={handleCreateFolder} />

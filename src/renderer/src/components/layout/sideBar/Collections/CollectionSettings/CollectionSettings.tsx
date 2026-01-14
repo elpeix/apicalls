@@ -4,6 +4,7 @@ import styles from './CollectionSettings.module.css'
 import PreRequestEditor from '../PreRequest/PreRequestEditor'
 import { Button } from '../../../../base/Buttons/Buttons'
 import CollectionScriptEditor from '../CollectionScriptEditor/CollectionScriptEditor'
+import Params from '../../../../base/Params/Params'
 
 export default function CollectionSettings({
   collection,
@@ -18,13 +19,15 @@ export default function CollectionSettings({
   const [preRequest, setPreRequest] = useState<PreRequest | undefined>(collection.preRequest)
   const [preScript, setPreScript] = useState(collection.preScript || '')
   const [postScript, setPostScript] = useState(collection.postScript || '')
+  const [requestHeaders, setRequestHeaders] = useState<KeyValue[]>(collection.requestHeaders || [])
 
   const handleSave = () => {
     onSave({
       ...collection,
       preRequest: preRequest,
       preScript: preScript,
-      postScript: postScript
+      postScript: postScript,
+      requestHeaders: requestHeaders
     })
     onClose()
   }
@@ -33,12 +36,30 @@ export default function CollectionSettings({
     <div className={styles.settings}>
       <Tabs className="tabs" selectedIndex={activeTab} onSelect={setActiveTab}>
         <TabList>
+          <Tab>Headers</Tab>
           <Tab>Pre-Request</Tab>
           <Tab>Pre-Script</Tab>
           <Tab>Post-Script</Tab>
         </TabList>
 
         <div className="tab-panel-wrapper">
+          <TabPanel forceRender={true}>
+            <div className={styles.headers}>
+              <Params
+                items={requestHeaders}
+                onSave={setRequestHeaders}
+                onAdd={() =>
+                  setRequestHeaders([...requestHeaders, { name: '', value: '', enabled: true }])
+                }
+                defaultNameSize={200}
+                bulkMode={false}
+                draggable={true}
+                dragFormat="collection-headers"
+                addCaption="Add header"
+                removeCaption="Remove header"
+              />
+            </div>
+          </TabPanel>
           <TabPanel forceRender={true}>
             <PreRequestEditor
               preRequest={preRequest}
