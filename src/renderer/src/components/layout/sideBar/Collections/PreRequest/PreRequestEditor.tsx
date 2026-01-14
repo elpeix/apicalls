@@ -107,6 +107,7 @@ export default function PreRequestEditor({
                 onSave={setHeaders}
                 onAdd={() => setHeaders([...headers, { name: '', value: '', enabled: true }])}
                 showEnable={false}
+                draggable={true}
                 helperValues={defaultHttpHeaders}
                 addCaption="Add header"
                 removeCaption="Remove header"

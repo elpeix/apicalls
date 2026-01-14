@@ -8,12 +8,12 @@ const SimpleTableContext = createContext<{
   templateColumns: string
   updateColumnWidth: (index: number, width: string) => void
   onDrag: (index: number, offset: number) => void
-  onDragStart: (index: number) => void
+  onDragStart: (widths: number[]) => void
 }>({
   templateColumns: '',
-  updateColumnWidth: () => {},
-  onDrag: () => {},
-  onDragStart: () => {}
+  updateColumnWidth: () => { },
+  onDrag: () => { },
+  onDragStart: () => { }
 })
 
 const getColumns = (str: string) => str.trim().split(/\s+(?![^(]*\))/g)
@@ -45,8 +45,8 @@ export default function SimpleTable({
     })
   }, [])
 
-  const onDragStart = useCallback((_index: number) => {
-    startWidthsRef.current = columnsRef.current.map((c) => parseInt(c) || 0)
+  const onDragStart = useCallback((widths: number[]) => {
+    startWidthsRef.current = widths
   }, [])
 
   const onDrag = useCallback((index: number, offset: number) => {
@@ -83,7 +83,7 @@ function SimpleTableHeader({ children }: { children?: React.ReactNode }) {
   const { templateColumns } = useContext(SimpleTableContext)
   return (
     <div className={styles.header} role="rowgroup" style={{ gridTemplateColumns: templateColumns }}>
-      {React.Children.map(children, (child, index) => {
+      {React.Children.toArray(children).map((child, index) => {
         if (React.isValidElement(child)) {
           const childType = child.type as { displayName?: string; name?: string }
           const isHeaderCell =
@@ -118,12 +118,21 @@ function SimpleTableHeaderCell({
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
-      if (!resizeRef.current || !draggable || index === undefined) {
+      const resizeElement = resizeRef.current
+      if (!resizeElement || !draggable || index === undefined) {
         return
       }
-      contextOnDragStart(index)
+
+      // Measure actual DOM widths of all columns from the header container
+      const headerElement = resizeElement.closest(`.${styles.header}`)
+      if (headerElement) {
+        const cells = Array.from(headerElement.children)
+        const widths = cells.map((cell) => cell.getBoundingClientRect().width)
+        contextOnDragStart(widths)
+      }
+
       draggingRef.current = true
-      resizeRef.current?.classList.add(styles.active)
+      resizeElement.classList.add(styles.active)
       startXRef.current = e.clientX
       document.body.style.cursor = 'col-resize !important'
     }
