@@ -24,12 +24,12 @@ mac:
   target:
     - dmg
     - zip
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${name}-${version}-${arch}.${ext}
   entitlementsInherit: build/entitlements.mac.plist
   notarize: false
   icon: ./build/icon.icns
 dmg:
-  artifactName: ${name}-${version}.${ext}
+  artifactName: ${name}-${version}-${arch}.${ext}
   icon: ./build/icon.icns
 linux:
   icon: ./build/icons/
