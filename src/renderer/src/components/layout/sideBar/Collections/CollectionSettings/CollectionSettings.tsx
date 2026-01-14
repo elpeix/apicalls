@@ -20,6 +20,7 @@ export default function CollectionSettings({
   const [preScript, setPreScript] = useState(collection.preScript || '')
   const [postScript, setPostScript] = useState(collection.postScript || '')
   const [requestHeaders, setRequestHeaders] = useState<KeyValue[]>(collection.requestHeaders || [])
+  const [description, setDescription] = useState(collection.description || '')
 
   const handleSave = () => {
     onSave({
@@ -27,7 +28,8 @@ export default function CollectionSettings({
       preRequest: preRequest,
       preScript: preScript,
       postScript: postScript,
-      requestHeaders: requestHeaders
+      requestHeaders: requestHeaders,
+      description: description
     })
     onClose()
   }
@@ -40,6 +42,7 @@ export default function CollectionSettings({
           <Tab>Pre-Request</Tab>
           <Tab>Pre-Script</Tab>
           <Tab>Post-Script</Tab>
+          <Tab>Collection notes</Tab>
         </TabList>
 
         <div className="tab-panel-wrapper">
@@ -72,6 +75,16 @@ export default function CollectionSettings({
           </TabPanel>
           <TabPanel>
             <CollectionScriptEditor script={postScript} onSave={setPostScript} />
+          </TabPanel>
+          <TabPanel forceRender={true}>
+            <div className={styles.description}>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Type your collection notes here..."
+                autoFocus
+              />
+            </div>
           </TabPanel>
         </div>
       </Tabs>
