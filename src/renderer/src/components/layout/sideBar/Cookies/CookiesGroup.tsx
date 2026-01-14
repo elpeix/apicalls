@@ -17,26 +17,11 @@ export default function CookiesGroup({
   update: (group: string, cookies: Cookie[]) => void
   remove: (group: string) => void
 }) {
-  const [nameSize, setNameSize] = useState(100)
-  const [valueSize, setValueSize] = useState(180)
-  const [pathSize, setPathSize] = useState(50)
   const [cookieList, setCookieList] = useState(cookies)
 
   useEffect(() => {
     setCookieList(cookies)
   }, [cookies])
-
-  const changeNameSize = (offset: number) => {
-    setNameSize(Math.max(Math.min(nameSize + offset, 300), 80))
-  }
-
-  const changeValueSize = (offset: number) => {
-    setValueSize(Math.max(Math.min(valueSize + offset, 400), 80))
-  }
-
-  const changePathSize = (offset: number) => {
-    setPathSize(Math.max(Math.min(pathSize + offset, 300), 40))
-  }
 
   const updateCookie = (cookie: Cookie, index: number) => {
     const newCookies = [...cookieList]
@@ -82,17 +67,11 @@ export default function CookiesGroup({
         </div>
       </div>
       <div className={styles.content}>
-        <SimpleTable templateColumns={`${nameSize}px ${valueSize}px ${pathSize}px 1fr 2rem`}>
+        <SimpleTable templateColumns={`100px 180px 50px minmax(1rem, 1fr) 2rem`}>
           <SimpleTable.Header>
-            <SimpleTable.HeaderCell draggable={true} onDrag={changeNameSize}>
-              Name
-            </SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell draggable={true} onDrag={changeValueSize}>
-              Value
-            </SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell draggable={true} onDrag={changePathSize}>
-              Path
-            </SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true}>Name</SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true}>Value</SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true}>Path</SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>Expires</SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>
               <></>

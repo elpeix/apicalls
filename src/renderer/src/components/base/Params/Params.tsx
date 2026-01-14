@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useRef } from 'react'
 import SimpleTable from '../SimpleTable/SimpleTable'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Params.module.css'
@@ -18,8 +18,6 @@ export default function Params({
   addCaption = 'Add param',
   removeCaption = 'Remove param',
   bulkCaption = 'Bulk edit',
-  maxNameSize = 500,
-  minNameSize = 100,
   defaultNameSize = 200,
   bulkMode = false,
   helperValues = {},
@@ -40,8 +38,6 @@ export default function Params({
   addCaption?: string
   bulkCaption?: string
   removeCaption?: string
-  maxNameSize?: number
-  minNameSize?: number
   defaultNameSize?: number
   bulkMode?: boolean
   helperValues?: { [key: string]: string[] }
@@ -52,20 +48,11 @@ export default function Params({
   environmentId?: Identifier
 }) {
   const { application } = useContext(AppContext)
-  const paramsRef = useRef(null)
-  const [nameSize, setNameSize] = useState(
-    Math.max(Math.min(defaultNameSize, maxNameSize), minNameSize)
-  )
-
-  const changeNameSize = (offset: number) => {
-    const newSize = nameSize + offset
-    setNameSize(Math.max(Math.min(newSize, maxNameSize), minNameSize))
-  }
-
+  const paramsRef = useRef<HTMLDivElement | null>(null)
   const showHelperColumn = showEnable || draggable
   const helperColumn = showEnable && draggable ? '2.8rem' : showHelperColumn ? '1.9rem' : ''
   const deleteColumn = showDelete ? '2rem' : ''
-  const templateColumns = `${helperColumn} ${nameSize}px 1fr ${deleteColumn}`
+  const templateColumns = `${helperColumn} ${defaultNameSize}px minmax(1rem, 1fr) ${deleteColumn}`
 
   const openBulk = () => {
     application.showDialog({
@@ -133,9 +120,7 @@ export default function Params({
                 )}
               </SimpleTable.HeaderCell>
             )}
-            <SimpleTable.HeaderCell draggable={true} onDrag={changeNameSize}>
-              Name
-            </SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true}>Name</SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>Value</SimpleTable.HeaderCell>
             {showDelete && (
               <SimpleTable.HeaderCell>
