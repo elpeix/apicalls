@@ -10,6 +10,10 @@
     transition:
       opacity ease-in-out 0.1s,
       color ease-in-out 0.1s;
+
+    .icon {
+      color: var(--base-color-semitransparent);
+    }
   }
   &:hover .infoIcon {
     opacity: 1;

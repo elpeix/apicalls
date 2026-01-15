@@ -56,6 +56,13 @@ export default function LinkedModal({
   })
 
   useEffect(() => {
+    document.body.setAttribute('data-simple-panels-disabled', 'true')
+    return () => {
+      document.body.removeAttribute('data-simple-panels-disabled')
+    }
+  }, [])
+
+  useEffect(() => {
     if (preventKeyClose) return
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.once(ACTIONS.escape, closeModal)

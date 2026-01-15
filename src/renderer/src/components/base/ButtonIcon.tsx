@@ -5,6 +5,8 @@ export default function ButtonIcon({
   icon,
   size = 20,
   onClick = (_: React.MouseEvent) => {},
+  onMouseOver = (_: React.MouseEvent) => {},
+  onMouseLeave = (_: React.MouseEvent) => {},
   className = '',
   iconClassName = '',
   disabled = false,
@@ -16,6 +18,8 @@ export default function ButtonIcon({
   icon: string | number
   size?: number
   onClick?: (e: React.MouseEvent) => void
+  onMouseOver?: (e: React.MouseEvent) => void
+  onMouseLeave?: (e: React.MouseEvent) => void
   className?: string
   iconClassName?: string
   disabled?: boolean
@@ -27,6 +31,8 @@ export default function ButtonIcon({
   return (
     <button
       onClick={onClick}
+      onMouseOver={onMouseOver}
+      onMouseLeave={onMouseLeave}
       className={`button-icon ${className}`}
       disabled={disabled}
       title={title}

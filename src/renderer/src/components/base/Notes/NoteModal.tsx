@@ -1,45 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import LinkedModal from '../linkedModal/LinkedModal'
 import styles from './NoteModal.module.css'
 import { useDebounce } from '../../../hooks/useDebounce'
-import Icon from '../Icon/Icon'
+import ButtonIcon from '../ButtonIcon'
 
 export default function NoteModal({
   value = '',
   editable = false,
   className = '',
   iconSize = 20,
-  onEdit = () => {}
+  onClickIcon = (_: React.MouseEvent) => {}
 }: {
   value?: string
   editable?: boolean
   className?: string
   iconSize?: number
-  onEdit?: (value: string) => void
+  onClickIcon?: (e: React.MouseEvent) => void
 }) {
   const ref = useRef(null)
   const [showModal, setShowModal] = useState(false)
-  const [editMode, setEditMode] = useState(false)
-  const [note, setNote] = useState(value)
   const debouncedShowModal = useDebounce(showModal, 500, 100)
-
-  useEffect(() => {
-    setNote(value)
-  }, [value])
-
   const handleMouseOver = () => setShowModal(true)
-  const handleMouseOut = () => setShowModal(false)
-  const handleOnClick = (e: React.MouseEvent) => {
-    if (!editable) {
-      return
-    }
-    e.stopPropagation()
-    setEditMode(true)
+  const handleMouseLeave = () => {
+    setShowModal(false)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value
-    onEdit(newValue)
+  const handleClose = () => {
+    setShowModal(false)
   }
 
   if (!editable && !value) {
@@ -47,27 +34,24 @@ export default function NoteModal({
   }
 
   return (
-    <div
-      ref={ref}
-      className={`${styles.note} ${className}`}
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseOut}
-      onClick={handleOnClick}
-    >
-      <Icon icon="file" size={iconSize} className={styles.infoIcon} />
+    <div ref={ref} className={`${styles.note} ${className}`} onMouseLeave={handleMouseLeave}>
+      <ButtonIcon
+        icon="file"
+        size={iconSize}
+        className={styles.infoIcon}
+        iconClassName={styles.icon}
+        onClick={onClickIcon}
+        onMouseOver={handleMouseOver}
+      />
       {debouncedShowModal && (
         <LinkedModal
           parentRef={ref}
           className={`${styles.noteModal} fadeIn`}
           topOffset={24}
           leftOffset={10}
+          closeModal={handleClose}
         >
-          {editable && editMode && (
-            <textarea onChange={handleChange} autoFocus>
-              {note}
-            </textarea>
-          )}
-          {!editMode && <div className={styles.noteContent}>{value}</div>}
+          <div className={styles.noteContent}>{value}</div>
         </LinkedModal>
       )}
     </div>

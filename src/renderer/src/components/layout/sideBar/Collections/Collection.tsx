@@ -17,9 +17,8 @@ import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
-import Note from '../../../base/Notes/Note'
+import CollectionSettings, { CollectionSettingsTab } from './CollectionSettings/CollectionSettings'
 import NoteModal from '../../../base/Notes/NoteModal'
-import CollectionSettings from './CollectionSettings/CollectionSettings'
 
 export default function Collection({
   collection,
@@ -205,7 +204,7 @@ export default function Collection({
     application.hideDialog()
   }
 
-  const handleSettings = () => {
+  const handleSettings = (tabId?: CollectionSettingsTab) => {
     setShowMenu(false)
     application.showDialog({
       children: (
@@ -213,6 +212,7 @@ export default function Collection({
           collection={coll}
           onSave={settingsSave}
           onClose={() => application.hideDialog()}
+          activeTabId={tabId}
         />
       ),
       preventKeyClose: false,
@@ -244,23 +244,6 @@ export default function Collection({
     window.electron?.ipcRenderer.send(COLLECTIONS.export, coll.id, 'Postman')
   }
 
-  const editDescription = () => {
-    setShowMenu(false)
-    application.showDialog({
-      children: (
-        <Note
-          value={coll.description}
-          onSave={(description: string) => {
-            update({ ...coll, description })
-            application.hideDialog()
-          }}
-          onCancel={() => application.hideDialog()}
-        />
-      ),
-      preventOverlayClickClose: true
-    })
-  }
-
   return (
     <div className={`sidePanel-content ${styles.collection}`}>
       <div className={styles.header}>
@@ -277,7 +260,12 @@ export default function Collection({
           />
         </div>
         <div className={styles.headerRight}>
-          <NoteModal value={coll.description} iconSize={18} className={styles.noteInfo} />
+          <NoteModal
+            value={coll.description}
+            iconSize={18}
+            className={styles.noteInfo}
+            onClickIcon={() => handleSettings('collection-notes')}
+          />
           {coll.environmentId !== undefined && (
             <div className={styles.collectionEnvironment}>
               <Icon className={styles.environmentIcon} icon="environment" size={16} />
@@ -291,10 +279,14 @@ export default function Collection({
               onOpen={() => setShowMenu(true)}
               onClose={() => setShowMenu(false)}
               preventCloseOnClick={true}
-              leftOffset={-123}
+              leftOffset={-124}
               topOffset={31}
             >
-              <MenuElement icon="settings" title="Settings" onClick={handleSettings} />
+              <MenuElement
+                icon="settings"
+                title="Settings"
+                onClick={() => handleSettings('headers')}
+              />
               <>
                 {environments && environments.hasItems() && (
                   <SubMenu icon="environment" title="Environment" leftOffset={147}>
@@ -344,8 +336,6 @@ export default function Collection({
                 <MenuElement showIcon={false} title="OpenAPI (Beta)" onClick={exportToOpenAPI} />
                 <MenuElement showIcon={false} title="Postman (Beta)" onClick={exportToPostman} />
               </SubMenu>
-              <MenuSeparator />
-              <MenuElement icon="file" title="Edit description" onClick={editDescription} />
               <MenuSeparator />
               <MenuElement
                 icon="delete"

@@ -20,11 +20,6 @@
   border-top: 1px solid var(--border-color);
 }
 
-.headers {
-  padding: 0;
-  height: 100%;
-}
-
 .description {
   border-top: 1px solid var(--border-color);
   padding: 0;
