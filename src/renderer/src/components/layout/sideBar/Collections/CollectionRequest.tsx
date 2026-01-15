@@ -6,7 +6,8 @@ import { MenuElement, MenuSeparator } from '../../../base/Menu/MenuElement'
 import EditableName from '../../../base/EditableName/EditableName'
 import Droppable from '../../../base/Droppable/Droppable'
 import NoteModal from '../../../base/Notes/NoteModal'
-import Note from '../../../base/Notes/Note'
+
+import RequestSettings from './CollectionSettings/RequestSettings'
 
 export default function CollectionRequest({
   collectionRequest,
@@ -97,20 +98,24 @@ export default function CollectionRequest({
     addRequest({ ...request, id: Date.now().toString(), name: `${request.name} copy` })
   }
 
-  const editDescription = () => {
+  const openRequestNotes = () => {
     application.showDialog({
       children: (
-        <Note
-          value={collectionRequest.description}
+        <RequestSettings
+          description={collectionRequest.description || ''}
           onSave={(description: string) => {
             collectionRequest.description = description
             update()
-            application.hideDialog()
           }}
-          onCancel={() => application.hideDialog()}
+          onClose={() => application.hideDialog()}
         />
       )
     })
+  }
+
+  const handleNoteClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    openRequestNotes()
   }
 
   return (
@@ -132,19 +137,24 @@ export default function CollectionRequest({
         onBlur={() => setEditingName(false)}
         editOnDoubleClick={true}
       />
-      <NoteModal value={collectionRequest.description} iconSize={16} className={styles.noteInfo} />
+      <NoteModal
+        value={collectionRequest.description}
+        iconSize={16}
+        className={styles.noteInfo}
+        onClickIcon={handleNoteClick}
+      />
       <Menu
         className={styles.menu}
         iconClassName={styles.menuIcon}
         showMenuClassName={styles.menuActive}
         isMoving={scrolling}
-        leftOffset={-109}
+        leftOffset={-125}
         topOffset={24}
       >
         <MenuElement icon="edit" title="Rename" onClick={() => setEditingName(true)} />
         <MenuElement icon="copy" title="Duplicate" onClick={() => duplicate(collectionRequest)} />
         <MenuSeparator />
-        <MenuElement icon="file" title="Edit description" onClick={editDescription} />
+        <MenuElement icon="file" title="Edit request notes" onClick={openRequestNotes} />
         <MenuSeparator />
         <MenuElement
           icon="delete"

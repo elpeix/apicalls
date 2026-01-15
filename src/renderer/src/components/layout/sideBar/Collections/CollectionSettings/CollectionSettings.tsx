@@ -2,25 +2,106 @@ import React, { useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import styles from './CollectionSettings.module.css'
 import PreRequestEditor from '../PreRequest/PreRequestEditor'
+import Editor from '../../../../base/Editor/Editor'
 import { Button } from '../../../../base/Buttons/Buttons'
 import CollectionScriptEditor from '../CollectionScriptEditor/CollectionScriptEditor'
 import Params from '../../../../base/Params/Params'
 
+export type CollectionSettingsTab =
+  | 'headers'
+  | 'pre-request'
+  | 'pre-script'
+  | 'post-script'
+  | 'collection-notes'
+
 export default function CollectionSettings({
   collection,
   onSave,
-  onClose
+  onClose,
+  activeTabId = 'headers'
 }: {
   collection: Collection
   onSave: (collection: Collection) => void
   onClose: () => void
+  activeTabId?: CollectionSettingsTab
 }) {
-  const [activeTab, setActiveTab] = useState(0)
   const [preRequest, setPreRequest] = useState<PreRequest | undefined>(collection.preRequest)
   const [preScript, setPreScript] = useState(collection.preScript || '')
   const [postScript, setPostScript] = useState(collection.postScript || '')
   const [requestHeaders, setRequestHeaders] = useState<KeyValue[]>(collection.requestHeaders || [])
   const [description, setDescription] = useState(collection.description || '')
+
+  const tabs = [
+    {
+      id: 'headers',
+      label: 'Headers',
+      forceRender: true,
+      children: (
+        <div className={styles.headers}>
+          <Params
+            items={requestHeaders}
+            onSave={setRequestHeaders}
+            onAdd={() =>
+              setRequestHeaders([...requestHeaders, { name: '', value: '', enabled: true }])
+            }
+            defaultNameSize={200}
+            bulkMode={false}
+            draggable={true}
+            dragFormat="collection-headers"
+            addCaption="Add header"
+            removeCaption="Remove header"
+          />
+        </div>
+      )
+    },
+    {
+      id: 'pre-request',
+      label: 'Pre-Request',
+      forceRender: true,
+      children: (
+        <PreRequestEditor
+          preRequest={preRequest}
+          onSave={setPreRequest}
+          environmentId={collection.environmentId}
+        />
+      )
+    },
+    {
+      id: 'pre-script',
+      label: 'Pre-Script',
+      forceRender: false,
+      children: <CollectionScriptEditor script={preScript} onSave={setPreScript} />
+    },
+    {
+      id: 'post-script',
+      label: 'Post-Script',
+      forceRender: false,
+      children: <CollectionScriptEditor script={postScript} onSave={setPostScript} />
+    },
+    {
+      id: 'collection-notes',
+      label: 'Collection notes',
+      forceRender: true,
+      children: (
+        <div className={styles.description}>
+          <Editor
+            value={description}
+            onChange={(value: string | undefined) => setDescription(value || '')}
+            language="markdown"
+            type="none"
+            wordWrap={true}
+            readOnly={false}
+          />
+        </div>
+      )
+    }
+  ]
+
+  const tabIdToIndex = (id: string) => {
+    return tabs.findIndex((tab) => tab.id === id)
+  }
+
+  const [activeTab, setActiveTab] = useState(tabIdToIndex(activeTabId || 'headers'))
 
   const handleSave = () => {
     onSave({
@@ -38,54 +119,17 @@ export default function CollectionSettings({
     <div className={styles.settings}>
       <Tabs className="tabs" selectedIndex={activeTab} onSelect={setActiveTab}>
         <TabList>
-          <Tab>Headers</Tab>
-          <Tab>Pre-Request</Tab>
-          <Tab>Pre-Script</Tab>
-          <Tab>Post-Script</Tab>
-          <Tab>Collection notes</Tab>
+          {tabs.map((tab) => (
+            <Tab key={`${tab.id}-tab`}>{tab.label}</Tab>
+          ))}
         </TabList>
 
         <div className="tab-panel-wrapper">
-          <TabPanel forceRender={true}>
-            <div className={styles.headers}>
-              <Params
-                items={requestHeaders}
-                onSave={setRequestHeaders}
-                onAdd={() =>
-                  setRequestHeaders([...requestHeaders, { name: '', value: '', enabled: true }])
-                }
-                defaultNameSize={200}
-                bulkMode={false}
-                draggable={true}
-                dragFormat="collection-headers"
-                addCaption="Add header"
-                removeCaption="Remove header"
-              />
-            </div>
-          </TabPanel>
-          <TabPanel forceRender={true}>
-            <PreRequestEditor
-              preRequest={preRequest}
-              onSave={setPreRequest}
-              environmentId={collection.environmentId}
-            />
-          </TabPanel>
-          <TabPanel>
-            <CollectionScriptEditor script={preScript} onSave={setPreScript} />
-          </TabPanel>
-          <TabPanel>
-            <CollectionScriptEditor script={postScript} onSave={setPostScript} />
-          </TabPanel>
-          <TabPanel forceRender={true}>
-            <div className={styles.description}>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Type your collection notes here..."
-                autoFocus
-              />
-            </div>
-          </TabPanel>
+          {tabs.map((tab) => (
+            <TabPanel key={`${tab.id}-tab-panel`} forceRender={tab.forceRender}>
+              {tab.children}
+            </TabPanel>
+          ))}
         </div>
       </Tabs>
       <div className={styles.footer}>

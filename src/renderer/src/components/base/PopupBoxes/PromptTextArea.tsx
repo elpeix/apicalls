@@ -44,7 +44,7 @@ export default function PromptTextArea({
   }
 
   const handleOk = () => {
-    onConfirm?.(value.trim())
+    onConfirm?.(internalValue.trim())
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

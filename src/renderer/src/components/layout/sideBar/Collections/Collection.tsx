@@ -17,7 +17,7 @@ import Scrollable from '../../../base/Scrollable'
 import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
-import CollectionSettings from './CollectionSettings/CollectionSettings'
+import CollectionSettings, { CollectionSettingsTab } from './CollectionSettings/CollectionSettings'
 import NoteModal from '../../../base/Notes/NoteModal'
 
 export default function Collection({
@@ -204,7 +204,7 @@ export default function Collection({
     application.hideDialog()
   }
 
-  const handleSettings = () => {
+  const handleSettings = (tabId?: CollectionSettingsTab) => {
     setShowMenu(false)
     application.showDialog({
       children: (
@@ -212,6 +212,7 @@ export default function Collection({
           collection={coll}
           onSave={settingsSave}
           onClose={() => application.hideDialog()}
+          activeTabId={tabId}
         />
       ),
       preventKeyClose: false,
@@ -263,7 +264,7 @@ export default function Collection({
             value={coll.description}
             iconSize={18}
             className={styles.noteInfo}
-            overlay={true}
+            onClickIcon={() => handleSettings('collection-notes')}
           />
           {coll.environmentId !== undefined && (
             <div className={styles.collectionEnvironment}>
@@ -278,10 +279,14 @@ export default function Collection({
               onOpen={() => setShowMenu(true)}
               onClose={() => setShowMenu(false)}
               preventCloseOnClick={true}
-              leftOffset={-123}
+              leftOffset={-124}
               topOffset={31}
             >
-              <MenuElement icon="settings" title="Settings" onClick={handleSettings} />
+              <MenuElement
+                icon="settings"
+                title="Settings"
+                onClick={() => handleSettings('headers')}
+              />
               <>
                 {environments && environments.hasItems() && (
                   <SubMenu icon="environment" title="Environment" leftOffset={147}>
@@ -331,7 +336,6 @@ export default function Collection({
                 <MenuElement showIcon={false} title="OpenAPI (Beta)" onClick={exportToOpenAPI} />
                 <MenuElement showIcon={false} title="Postman (Beta)" onClick={exportToPostman} />
               </SubMenu>
-              <MenuSeparator />
               <MenuSeparator />
               <MenuElement
                 icon="delete"

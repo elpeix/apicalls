@@ -9,46 +9,29 @@ export default function NoteModal({
   editable = false,
   className = '',
   iconSize = 20,
-  overlay = false
+  onClickIcon = (_: React.MouseEvent) => {}
 }: {
   value?: string
   editable?: boolean
   className?: string
   iconSize?: number
-  overlay?: boolean
+  onClickIcon?: (e: React.MouseEvent) => void
 }) {
   const ref = useRef(null)
   const [showModal, setShowModal] = useState(false)
-  const [showModalWithOverlay, setShowModalWithOverlay] = useState(false)
   const debouncedShowModal = useDebounce(showModal, 500, 100)
   const handleMouseOver = () => setShowModal(true)
   const handleMouseLeave = () => {
-    if (overlay) {
-      return
-    }
     setShowModal(false)
   }
 
-  const handleClickIcon = () => {
-    if (!overlay) {
-      return
-    }
-    setShowModalWithOverlay(true)
-  }
-
   const handleClose = () => {
-    if (!overlay) {
-      return
-    }
-    setShowModalWithOverlay(false)
     setShowModal(false)
   }
 
   if (!editable && !value) {
     return
   }
-
-  const modalIsVisible = showModalWithOverlay || debouncedShowModal
 
   return (
     <div ref={ref} className={`${styles.note} ${className}`} onMouseLeave={handleMouseLeave}>
@@ -57,15 +40,13 @@ export default function NoteModal({
         size={iconSize}
         className={styles.infoIcon}
         iconClassName={styles.icon}
-        onClick={handleClickIcon}
+        onClick={onClickIcon}
         onMouseOver={handleMouseOver}
       />
-      {modalIsVisible && (
+      {debouncedShowModal && (
         <LinkedModal
           parentRef={ref}
           className={`${styles.noteModal} fadeIn`}
-          useOverlay={overlay ?? false}
-          allowOutsideClick={overlay ?? false}
           topOffset={24}
           leftOffset={10}
           closeModal={handleClose}

@@ -22,7 +22,6 @@ export default function Note({
     <PromptTextArea
       value={value}
       placeholder="Type your note here..."
-      simpleMode={true}
       onConfirm={handleConfirm}
       onCancel={handleCancel}
     />
