@@ -36,6 +36,8 @@ linux:
   target:
     - AppImage
     - deb
+  extraFiles:
+    - LICENSE
   maintainer: francescrequesens.com
   category: Utility
 rpm:

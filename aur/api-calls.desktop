@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=API Calls
-Comment=Simple application to call and test REST APIs
-Exec=api-calls
-Icon=api-calls
-Terminal=false
-Categories=Development;Utility;
