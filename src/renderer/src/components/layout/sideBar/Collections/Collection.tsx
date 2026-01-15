@@ -18,6 +18,7 @@ import SubMenu from '../../../base/Menu/SubMenu'
 import Icon from '../../../base/Icon/Icon'
 import { COLLECTIONS } from '../../../../../../lib/ipcChannels'
 import CollectionSettings from './CollectionSettings/CollectionSettings'
+import NoteModal from '../../../base/Notes/NoteModal'
 
 export default function Collection({
   collection,
@@ -258,6 +259,12 @@ export default function Collection({
           />
         </div>
         <div className={styles.headerRight}>
+          <NoteModal
+            value={coll.description}
+            iconSize={18}
+            className={styles.noteInfo}
+            overlay={true}
+          />
           {coll.environmentId !== undefined && (
             <div className={styles.collectionEnvironment}>
               <Icon className={styles.environmentIcon} icon="environment" size={16} />
