@@ -76,3 +76,15 @@
     }
   }
 }
+
+.danger {
+  --button-ok-background-color: var(--danger-background-color);
+  --button-ok-color: var(--danger-color);
+  --button-ok-border-color: var(--danger-color);
+  --button-ok-hover-background-color: color-mix(in srgb, var(--danger-color), transparent 30%);
+  --button-ok-hover-color: var(--background-base);
+  --button-ok-hover-border-color: var(--danger-color);
+  --button-ok-active-background-color: var(--danger-background-color);
+  --button-ok-active-color: var(--danger-color);
+  --button-ok-active-border-color: var(--danger-color);
+}

@@ -1,0 +1,173 @@
+{
+  "name": "GitHub Light",
+  "mode": "light",
+  "colors": {
+    "color-0": "#ffffff",
+    "color-1": "#f6f8fa",
+    "color-2": "#eaeef2",
+    "color-3": "#d0d7de",
+    "color-4": "#afb8c1",
+    "color-5": "#57606a",
+    "color-6": "#24292f",
+
+    "blue": "#0969da",
+    "green": "#1f883d",
+    "green-light": "#1a7f37",
+    "green-bright": "#2da44e",
+    "red": "#cf222e",
+    "orange": "#bc8c00",
+    "yellow": "#9a6700",
+    "purple": "#8250df",
+
+    "background-base": "var(--color-0)",
+    "background-content": "var(--color-1)",
+    "background-2": "var(--color-2)",
+
+    "foreground-0": "var(--color-6)",
+    "foreground-1": "var(--color-5)",
+    "foreground-2": "#6e7781",
+
+    "content-0": "var(--color-5)",
+    "content-1": "var(--color-3)",
+    "content-2": "var(--color-2)",
+
+    "border-color": "color-mix(in srgb, var(--color-2) 50%, var(--color-3))",
+    "divider-color": "var(--border-color)",
+
+    "active-background-color": "var(--color-2)",
+    "active-color": "var(--color-6)",
+    "hover-background-color": "color-mix(in srgb, var(--color-2) 40%, var(--color-3))",
+    "hover-color": "var(--blue)",
+
+    "sidePanel-menu-color": "var(--color-0)",
+    "sidePanel-color-hover": "color-mix(in srgb, var(--color-2) 40%, var(--color-3))",
+    "sidePanel-color": "color-mix(in srgb, var(--color-1) 30%, var(--color-2))",
+    "sidePanel-icon-color": "var(--foreground-1)",
+
+    "button-background-color": "var(--color-1)",
+    "button-color": "var(--color-6)",
+    "button-border-color": "var(--color-3)",
+    "button-hover-background-color": "color-mix(in srgb, var(--color-2) 40%, var(--color-3))",
+    "button-hover-color": "var(--color-6)",
+    "button-hover-border-color": "var(--color-3)",
+    "button-active-background-color": "var(--color-2)",
+    "button-active-border-color": "var(--color-3)",
+
+    "button-ok-background-color": "var(--green)",
+    "button-ok-color": "#ffffff",
+    "button-ok-border-color": "var(--green)",
+    "button-ok-hover-background-color": "var(--green-light)",
+    "button-ok-hover-color": "#ffffff",
+    "button-ok-hover-border-color": "var(--green-light)",
+    "button-ok-active-background-color": "var(--green)",
+    "button-ok-active-color": "#ffffff",
+    "button-ok-active-border-color": "var(--green-light)",
+
+    "button-cancel-background-color": "var(--color-1)",
+    "button-cancel-color": "var(--red)",
+    "button-cancel-border-color": "var(--color-3)",
+    "button-cancel-hover-background-color": "#ffebe9",
+
+    "button-cancel-active-background-color": "var(--color-2)",
+    "button-cancel-active-color": "var(--red)",
+    "button-cancel-active-border-color": "var(--color-3)",
+    "button-cancel-hover-color": "var(--red)",
+    "button-cancel-hover-border-color": "var(--color-3)",
+
+    "input-background-color": "transparent",
+    "input-color": "var(--color-6)",
+    "input-placeholder-color": "var(--foreground-2)",
+    "input-border-color": "var(--color-3)",
+    "input-hover-background-color": "var(--color-0)",
+    "input-hover-border-color": "var(--color-4)",
+    "input-focus-border-color": "var(--blue)",
+
+    "link-color": "var(--blue)",
+    "link-hover-color": "#1853db",
+
+    "highlight-color": "var(--blue)",
+    "accent-color": "var(--blue)",
+    "search-list-background-color": "var(--color-0)",
+    "search-list-border-color": "var(--color-3)",
+    "search-list-item-color": "var(--color-6)",
+    "search-list-item-active-color": "var(--color-2)",
+    "search-list-highlight-color": "#ddf4ff",
+
+    "scrollbar-background-color": "var(--color-0)",
+    "scrollbar-thumb-color": "var(--color-3)",
+    "scrollbar-thumb-hover-color": "var(--color-4)",
+    "scrollbar-border-color": "var(--color-2)",
+
+    "tab-color": "var(--color-5)",
+    "tab-background-color": "transparent",
+    "tab-selected-color": "var(--color-6)",
+    "tab-selected-background-color": "var(--color-0)",
+    "tab-hover-background-color": "var(--color-2)",
+
+    "popup-background-color": "var(--color-0)",
+    "popup-color": "var(--color-6)",
+    "popup-border-color": "var(--color-3)",
+
+    "dialog-background-color": "var(--color-0)",
+    "dialog-color": "var(--color-6)",
+    "dialog-border-color": "var(--color-3)",
+    "dialog-footer-background-color": "var(--color-1)",
+
+    "transparent-bg": "rgba(0, 0, 0, 0.1)",
+
+    "success-background-color": "#dafbe1",
+    "error-background-color": "#ffebe9",
+    "warning-background-color": "#fff8c5",
+    "info-background-color": "#ddf4ff",
+
+    "status-200-color": "var(--green-light)",
+    "status-300-color": "var(--yellow)",
+    "status-400-color": "var(--red)",
+    "status-500-color": "var(--red)",
+
+    "method-get-color": "var(--green-light)",
+    "method-post-color": "var(--blue)",
+    "method-put-color": "var(--yellow)",
+    "method-delete-color": "var(--red)",
+    "method-patch-color": "var(--orange)",
+
+    "json-key-color": "var(--green-light)",
+    "json-string-color": "#0a3069",
+    "json-number-color": "var(--blue)",
+    "json-boolean-color": "var(--red)",
+    "json-null-color": "var(--foreground-2)",
+
+    "console-background-color": "var(--color-1)",
+    "console-color": "var(--color-6)",
+
+    "switch-text-color": "var(--foreground-1)",
+    "switch-text-hover-color": "var(--blue)",
+    "switch-text-active-color": "var(--blue)",
+    "switch-active-background-color": "var(--color-3)",
+    "switch-active-color": "var(--blue)",
+    "switch-background-color": "var(--color-2)",
+    "switch-color": "var(--color-0)",
+    "switch-hover-color": "var(--blue)"
+  },
+  "editor": {
+    "base": "vs",
+    "inherit": true,
+    "rules": [
+      { "token": "", "foreground": "24292f", "background": "ffffff" },
+      { "token": "comment", "foreground": "6e7781" },
+      { "token": "string", "foreground": "0a3069" },
+      { "token": "keyword", "foreground": "cf222e" },
+      { "token": "number", "foreground": "0550ae" },
+      { "token": "string.key.json", "foreground": "1a7f37" },
+      { "token": "string.value.json", "foreground": "0a3069" }
+    ],
+    "colors": {
+      "editor.foreground": "#24292f",
+      "editor.background": "#ffffff",
+      "editor.selectionBackground": "#ddf4ff",
+      "editor.lineHighlightBackground": "#eaeef2",
+      "editorCursor.foreground": "#24292f",
+      "editorWhitespace.foreground": "#eaeef2"
+    }
+  }
+}

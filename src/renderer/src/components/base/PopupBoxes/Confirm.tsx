@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react'
+import React from 'react'
 import styles from './PopupBoxes.module.css'
 import { Button } from '../Buttons/Buttons'
 
@@ -21,23 +21,15 @@ export default function Confirm({
     }
   }
 
-  let styleConfirm: CSSProperties = {}
-  if (confirmColor === 'danger') {
-    styleConfirm = {
-      color: 'var(--danger-color)'
-    }
-  }
-
   return (
     <div className={styles.popupBox}>
       <div className={styles.message}>{message}</div>
       <div className={styles.buttons}>
         <Button.Cancel onClick={onCancel}>Cancel</Button.Cancel>
         <Button.Ok
-          className={styles.ok}
+          className={confirmColor === 'danger' ? styles.danger : styles.ok}
           onClick={onConfirm}
           onKeyDown={handleKeyDown}
-          style={styleConfirm}
           autoFocus
         >
           {confirmName || 'Ok'}

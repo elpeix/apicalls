@@ -54,6 +54,7 @@
   --danger-color: var(--red);
   --overlay-color: var(--transparent-bg);
   --cancel-color: var(--transparent-red);
+  --danger-background-color: var(--transparent-red);
 
   --input-background-color: transparent;
   --input-color: var(--foreground-2);
@@ -71,7 +72,7 @@
   --button-background-color: transparent;
   --button-color: var(--foreground-0);
   --button-border-color: var(--border-color);
-  --button-hover-background-color: var(--background-1);
+  --button-hover-background-color: var(--background-2);
   --button-hover-color: var(--foreground-0);
   --button-hover-border-color: var(--content-1);
   --button-active-background-color: var(--background-1);
@@ -88,15 +89,15 @@
   --button-cancel-active-color: var(--content-0);
   --button-cancel-active-border-color: var(--content-1);
 
-  --button-ok-background-color: var(--background-2);
-  --button-ok-color: var(--content-0);
-  --button-ok-border-color: var(--content-1);
-  --button-ok-hover-background-color: var(--content-2);
-  --button-ok-hover-color: var(--content-0);
-  --button-ok-hover-border-color: var(--content-0);
+  --button-ok-background-color: var(--content-2);
+  --button-ok-color: var(--foreground-0);
+  --button-ok-border-color: var(--content-2);
+  --button-ok-hover-background-color: var(--content-1);
+  --button-ok-hover-color: var(--foreground-0);
+  --button-ok-hover-border-color: var(--content-1);
   --button-ok-active-background-color: var(--background-2);
-  --button-ok-active-color: var(--content-0);
-  --button-ok-active-border-color: var(--content-0);
+  --button-ok-active-color: var(--foreground-0);
+  --button-ok-active-border-color: var(--content-1);
 
   --button-focus-color: var(--color-1);
 
@@ -204,16 +205,16 @@
 }
 
 :root[data-theme='light'] {
-  --foreground-0: #343a40;
-  --foreground-1: #495057;
-  --foreground-2: #6c757d;
-  --content-0: #adb5bd;
-  --content-1: #b8bfc5;
-  --content-2: #c8d0d6;
-  --background-2: #e8ebee;
-  --background-1: #f2f4f7;
-  --background-0: #fafbfc;
-  --transparent-bg: rgba(0, 0, 0, 0.2);
+  --foreground-0: #212529;
+  --foreground-1: #3d4144;
+  --foreground-2: #7d838a;
+  --content-0: #9fa6ad;
+  --content-1: #ced4da;
+  --content-2: #d7dadd;
+  --background-2: #e9ecef;
+  --background-1: #f8f9fa;
+  --background-0: #fafafa;
+  --transparent-bg: rgba(0, 0, 0, 0.1);
 }
 
 :root[data-theme='hc-dark'] {
