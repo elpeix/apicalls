@@ -14,6 +14,7 @@ export const defaultSettings: AppSettingsType = {
   saveLastResponse: false,
   rejectUnauthorized: true,
   followRequestRedirect: false,
+  linkOpenBehavior: 'browser',
   skippedVersions: []
 }
 

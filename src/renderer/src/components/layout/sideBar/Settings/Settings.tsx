@@ -209,6 +209,18 @@ export default function Settings() {
             </div>
             <div className={styles.switchRow}>
               <Switch
+                text="Open links in app"
+                active={(settings.linkOpenBehavior ?? 'app') === 'app'}
+                onChange={(active) => {
+                  changeSettings({
+                    ...settings,
+                    linkOpenBehavior: active ? 'app' : 'browser'
+                  })
+                }}
+              />
+            </div>
+            <div className={styles.switchRow}>
+              <Switch
                 text="Manage cookies"
                 active={settings.manageCookies}
                 onChange={(active) => changeSettings({ ...settings, manageCookies: active })}

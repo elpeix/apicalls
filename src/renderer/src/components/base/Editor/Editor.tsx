@@ -4,6 +4,7 @@ import React, { memo, useCallback, useContext, useEffect, useMemo, useRef } from
 import { AppContext } from '../../../context/AppContext'
 import { RequestContext } from '../../../context/RequestContext'
 import { useEditorTheme } from './useEditorTheme'
+import { createMethod } from '../../../lib/factory'
 
 type EditorRefType = {
   editor: monaco.editor.IStandaloneCodeEditor
@@ -25,18 +26,24 @@ export default function Editor({
   wordWrap?: boolean
   onChange?: OnChange
 }) {
-  const { appSettings } = useContext(AppContext)
-  const { isActive, setEditorState, getEditorState } = useContext(RequestContext)
+  const { appSettings, tabs } = useContext(AppContext)
+  const { isActive, setEditorState, getEditorState, getRequestEnvironment } =
+    useContext(RequestContext)
 
   const { theme, themeData } = useEditorTheme(appSettings)
   const editorRef = useRef<EditorRefType | null>(null)
 
   // Stable onChange handler to avoid re-rendering EditorWrapped when only the handler changes
   const onChangeRef = useRef(onChange)
+  const linkOpenBehaviorRef = useRef<AppSettingsLinkOpenBehavior>('app')
 
   useEffect(() => {
     onChangeRef.current = onChange
   }, [onChange])
+
+  useEffect(() => {
+    linkOpenBehaviorRef.current = appSettings?.settings?.linkOpenBehavior ?? 'app'
+  }, [appSettings?.settings?.linkOpenBehavior])
 
   const handleOnChange: OnChange = useCallback((value, ev) => {
     onChangeRef.current?.(value, ev)
@@ -117,6 +124,62 @@ export default function Editor({
           monaco.editor.defineTheme(theme, themeData)
         }
         monaco.editor.setTheme(theme)
+
+        monaco.editor.registerLinkOpener({
+          open: (link) => {
+            const linkOpenBehavior = linkOpenBehaviorRef.current
+            const environment = getRequestEnvironment()
+            const scheme = link.scheme ?? ''
+            const authority = link.authority ?? ''
+            const hasBaseUrl = Boolean(scheme && authority)
+            const variable = environment?.variables?.find((env) => env.name === 'baseUrl')
+            const variableEnabled = variable?.enabled !== false
+            let baseUrl = hasBaseUrl ? `${scheme}://${authority}` : ''
+            if (variable && variableEnabled) {
+              if (linkOpenBehavior === 'browser') {
+                if (variable.value) {
+                  baseUrl = variable.value
+                }
+              } else {
+                baseUrl = '{{baseUrl}}'
+              }
+            }
+            const rawPath = link.path ?? ''
+            const normalizedPath = rawPath && !rawPath.startsWith('/') ? `/${rawPath}` : rawPath
+            const queryParams: KeyValue[] = []
+            if (link.query) {
+              const searchParams = new URLSearchParams(link.query)
+              for (const [name, value] of searchParams.entries()) {
+                queryParams.push({ name, value, enabled: true } as KeyValue)
+              }
+            }
+            const url = `${baseUrl}${normalizedPath}`
+
+            if (linkOpenBehavior === 'browser') {
+              if (!url) {
+                return false
+              }
+              window.open(url, '_blank', 'noopener,noreferrer')
+              return true
+            }
+
+            if (!tabs) {
+              return false
+            }
+            const request: RequestType = {
+              id: window.crypto.randomUUID(),
+              type: 'draft',
+              name: normalizedPath || rawPath || url,
+              request: {
+                method: createMethod('GET'),
+                url,
+                queryParams
+              }
+            }
+            tabs.openTab({ request })
+            return true
+          }
+        })
       }}
     />
   )
