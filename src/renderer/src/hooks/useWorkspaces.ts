@@ -28,7 +28,14 @@ export function useWorkspaces(): WorkspacesHookType {
         console.warn('No workspace selected')
         return
       }
-      if (ws.id !== selectedWorkspace?.id) {
+
+      const isSwitching = ws.id !== selectedWorkspace?.id
+      const hasChanged =
+        isSwitching ||
+        ws.name !== selectedWorkspace?.name ||
+        JSON.stringify(ws.requestHeaders) !== JSON.stringify(selectedWorkspace?.requestHeaders)
+
+      if (hasChanged) {
         setSelectedWorkspace(ws)
 
         setWorkspaces((prevWorkspaces) =>
@@ -37,7 +44,9 @@ export function useWorkspaces(): WorkspacesHookType {
             selected: w.id === ws.id
           }))
         )
+      }
 
+      if (isSwitching) {
         ipcRenderer?.send(WORKSPACES.getList)
         ipcRenderer?.send(ENVIRONMENTS.get)
         ipcRenderer?.send(COLLECTIONS.get)

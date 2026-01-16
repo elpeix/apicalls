@@ -39,7 +39,7 @@ export default function useTabs(
 
   const newTab = (itemRequest?: RequestType, collectionId?: Identifier, path?: PathItem[]) => {
     itemRequest = itemRequest || createRequest({ name: 'Draft' })
-    const isDraft = itemRequest.name === 'Draft'
+    const isDraft = itemRequest.type === 'draft'
     const tab: RequestTab = { ...itemRequest, active: true, collectionId, path, saved: !isDraft }
     addTab(tab)
   }

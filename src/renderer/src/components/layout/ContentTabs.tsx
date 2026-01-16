@@ -16,30 +16,44 @@ export default function ContentTabs() {
   const hasTabs = tabList.length > 0
   const selectedTabIndex = tabs?.getSelectedTabIndex() ?? -1
 
-  useEffect(() => {
-    if (!tabs) return
+  const tabsRef = React.useRef(tabs)
+  const applicationRef = React.useRef(application)
 
+  useEffect(() => {
+    tabsRef.current = tabs
+    applicationRef.current = application
+  })
+
+  useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
 
     const handleCloseTab = () => {
-      const tab = tabs.tabs[tabs.getSelectedTabIndex()]
+      const currentTabs = tabsRef.current
+      if (!currentTabs) return
+
+      const tab = currentTabs.tabs[currentTabs.getSelectedTabIndex()]
       if (tab) {
-        application.tabActions.closeTab(tab)
+        applicationRef.current?.tabActions.closeTab(tab)
       }
     }
 
     const handleNextTab = () => {
-      const nextTabIndex = (tabs.getSelectedTabIndex() + 1) % tabs.tabs.length
-      tabs.setActiveTab(nextTabIndex)
+      const currentTabs = tabsRef.current
+      if (!currentTabs) return
+      const nextTabIndex = (currentTabs.getSelectedTabIndex() + 1) % currentTabs.tabs.length
+      currentTabs.setActiveTab(nextTabIndex)
     }
 
     const handlePrevTab = () => {
-      const prevTabIndex = (tabs.getSelectedTabIndex() - 1 + tabs.tabs.length) % tabs.tabs.length
-      tabs.setActiveTab(prevTabIndex)
+      const currentTabs = tabsRef.current
+      if (!currentTabs) return
+      const prevTabIndex =
+        (currentTabs.getSelectedTabIndex() - 1 + currentTabs.tabs.length) % currentTabs.tabs.length
+      currentTabs.setActiveTab(prevTabIndex)
     }
 
     const handleRestoreTab = () => {
-      tabs.restoreTab()
+      tabsRef.current?.restoreTab()
     }
 
     ipcRenderer?.on(ACTIONS.closeTab, handleCloseTab)
@@ -53,7 +67,7 @@ export default function ContentTabs() {
       ipcRenderer?.removeListener(ACTIONS.prevTab, handlePrevTab)
       ipcRenderer?.removeListener(ACTIONS.restoreTab, handleRestoreTab)
     }
-  }, [tabs, application])
+  }, [])
 
   const onSelect = (index: number, _: number, __: Event) => {
     tabs?.setActiveTab(index)

@@ -53,12 +53,15 @@ export default function LinkedModal({
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
-  })
+  }, [handleOutsideClick])
 
   useEffect(() => {
     document.body.setAttribute('data-simple-panels-disabled', 'true')
     return () => {
-      document.body.removeAttribute('data-simple-panels-disabled')
+      const otherModals = document.querySelectorAll(`.${styles.linkedModal}`)
+      if (otherModals.length === 0) {
+        document.body.removeAttribute('data-simple-panels-disabled')
+      }
     }
   }, [])
 

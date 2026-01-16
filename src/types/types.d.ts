@@ -371,6 +371,7 @@ type AppTheme = {
 
 type AppSettingsRequestView = 'horizontal' | 'vertical'
 type AppSettingsWindowMode = 'native' | 'custom'
+type AppSettingsLinkOpenBehavior = 'app' | 'browser'
 type AppSettingsType = {
   theme: string
   proxy: string
@@ -387,6 +388,7 @@ type AppSettingsType = {
   saveLastResponse?: boolean
   rejectUnauthorized?: boolean
   followRequestRedirect?: boolean
+  linkOpenBehavior?: AppSettingsLinkOpenBehavior
   skippedVersions?: string[]
 }
 
