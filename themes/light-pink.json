@@ -9,11 +9,9 @@
     "color-4": "#f48fb1",
     "color-5": "#ad1457",
     "color-6": "#880e4f",
-
     "pink-accent": "#d81b60",
     "pink-dark": "#c2185b",
     "pink-hover": "#f06292",
-
     "teal": "#00695c",
     "blue": "#1565c0",
     "orange": "#ef6c00",
@@ -26,32 +24,25 @@
     "error-bg": "#ffcdd2",
     "warning-bg": "#fff9c4",
     "info-bg": "#b3e5fc",
-
     "background-base": "var(--color-0)",
     "background-content": "var(--color-1)",
     "background-2": "var(--color-2)",
-
     "foreground-0": "var(--color-6)",
     "foreground-1": "var(--color-5)",
     "foreground-2": "var(--pink-dark)",
-
     "content-0": "var(--pink-accent)",
     "content-1": "var(--color-4)",
     "content-2": "var(--color-3)",
-
     "border-color": "var(--color-3)",
     "divider-color": "var(--color-3)",
-
     "active-background-color": "var(--color-2)",
     "active-color": "var(--color-6)",
     "hover-background-color": "var(--color-2)",
     "hover-color": "var(--color-6)",
-
     "sidePanel-menu-color": "var(--color-0)",
     "sidePanel-color-hover": "color-mix(in srgb, var(--color-2) 30%, var(--color-3))",
     "sidePanel-color": "color-mix(in srgb, var(--color-1) 30%, var(--color-2))",
     "sidePanel-icon-color": "var(--foreground-1)",
-
     "button-background-color": "transparent",
     "button-color": "var(--color-6)",
     "button-border-color": "var(--color-4)",
@@ -61,7 +52,6 @@
     "button-active-background-color": "var(--color-3)",
     "button-active-color": "var(--color-6)",
     "button-active-border-color": "var(--color-3)",
-
     "button-ok-background-color": "var(--pink-accent)",
     "button-ok-color": "#ffffff",
     "button-ok-border-color": "var(--pink-accent)",
@@ -71,7 +61,6 @@
     "button-ok-active-background-color": "var(--pink-accent)",
     "button-ok-active-color": "#ffffff",
     "button-ok-active-border-color": "var(--pink-accent)",
-
     "button-cancel-background-color": "transparent",
     "button-cancel-color": "var(--color-5)",
     "button-cancel-border-color": "var(--color-4)",
@@ -81,7 +70,6 @@
     "button-cancel-active-background-color": "var(--color-2)",
     "button-cancel-active-color": "var(--color-5)",
     "button-cancel-active-border-color": "var(--color-4)",
-
     "input-background-color": "transparent",
     "input-color": "var(--color-6)",
     "input-placeholder-color": "var(--color-4)",
@@ -89,10 +77,8 @@
     "input-hover-background-color": "#fff",
     "input-hover-border-color": "var(--pink-hover)",
     "input-focus-border-color": "var(--pink-accent)",
-
     "link-color": "var(--pink-accent)",
     "link-hover-color": "var(--pink-dark)",
-
     "highlight-color": "var(--color-4)",
     "accent-color": "var(--pink-accent)",
     "search-list-background-color": "var(--color-1)",
@@ -100,54 +86,38 @@
     "search-list-item-color": "var(--color-5)",
     "search-list-item-active-color": "var(--color-2)",
     "search-list-highlight-color": "var(--color-3)",
-
     "scrollbar-background-color": "var(--color-0)",
     "scrollbar-thumb-color": "var(--color-4)",
     "scrollbar-thumb-hover-color": "var(--pink-hover)",
     "scrollbar-border-color": "var(--color-3)",
-
     "tab-color": "var(--color-5)",
     "tab-background-color": "transparent",
     "tab-selected-color": "var(--color-6)",
     "tab-selected-background-color": "var(--color-2)",
     "tab-hover-background-color": "var(--color-2)",
-
     "popup-background-color": "var(--color-0)",
     "popup-color": "var(--color-6)",
     "popup-border-color": "var(--color-3)",
-
     "dialog-background-color": "var(--color-0)",
     "dialog-color": "var(--color-6)",
     "dialog-border-color": "var(--color-3)",
     "dialog-footer-background-color": "var(--color-2)",
-
     "transparent-bg": "rgba(136, 14, 79, 0.1)",
-
     "success-background-color": "var(--success-bg)",
     "error-background-color": "var(--error-bg)",
     "warning-background-color": "var(--warning-bg)",
     "info-background-color": "var(--info-bg)",
-
     "status-200-color": "var(--green)",
     "status-300-color": "var(--yellow)",
     "status-400-color": "var(--red)",
     "status-500-color": "var(--red-dark)",
-
     "method-get-color": "var(--green)",
     "method-post-color": "var(--blue)",
     "method-put-color": "var(--orange)",
     "method-delete-color": "var(--red)",
     "method-patch-color": "var(--yellow)",
-
-    "json-key-color": "var(--color-5)",
-    "json-string-color": "var(--teal)",
-    "json-number-color": "var(--blue)",
-    "json-boolean-color": "var(--orange)",
-    "json-null-color": "var(--grey)",
-
     "console-background-color": "var(--color-1)",
     "console-color": "var(--color-6)",
-
     "switch-text-color": "var(--foreground-1)",
     "switch-text-hover-color": "var(--pink-accent)",
     "switch-text-active-color": "var(--pink-accent)",
@@ -155,19 +125,92 @@
     "switch-active-color": "var(--pink-accent)",
     "switch-background-color": "var(--color-2)",
     "switch-color": "var(--color-4)",
-    "switch-hover-color": "var(--pink-accent)"
+    "switch-hover-color": "var(--pink-accent)",
+    "purple": "var(--blue)"
   },
   "editor": {
     "base": "vs",
     "inherit": true,
     "rules": [
-      { "token": "", "foreground": "880e4f", "background": "fff5f8" },
-      { "token": "comment", "foreground": "f48fb1" },
-      { "token": "string", "foreground": "00695c" },
-      { "token": "keyword", "foreground": "d81b60" },
-      { "token": "number", "foreground": "1565c0" },
-      { "token": "string.key.json", "foreground": "ad1457" },
-      { "token": "string.value.json", "foreground": "00695c" }
+      {
+        "token": "keyword",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "operator",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "variable",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "variable.parameter",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "function",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "method",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "type",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "class",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "interface",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "string.link",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "strong",
+        "foreground": "var(--foreground-0)",
+        "fontStyle": "bold"
+      },
+      {
+        "token": "emphasis",
+        "foreground": "var(--foreground-1)",
+        "fontStyle": "italic"
+      },
+      {
+        "token": "",
+        "foreground": "880e4f",
+        "background": "fff5f8"
+      },
+      {
+        "token": "comment",
+        "foreground": "f48fb1"
+      },
+      {
+        "token": "string",
+        "foreground": "00695c"
+      },
+      {
+        "token": "keyword",
+        "foreground": "d81b60"
+      },
+      {
+        "token": "number",
+        "foreground": "1565c0"
+      },
+      {
+        "token": "string.key.json",
+        "foreground": "ad1457"
+      },
+      {
+        "token": "string.value.json",
+        "foreground": "00695c"
+      }
     ],
     "colors": {
       "editor.foreground": "#880e4f",

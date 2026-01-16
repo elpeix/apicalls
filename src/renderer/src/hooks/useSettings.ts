@@ -102,7 +102,12 @@ export function useSettings(): AppSettingsHookType {
     removeStyleProperties()
   }
 
-  const getEditorTheme = (): { name: string; mode: string; data: object } => {
+  const getEditorTheme = (): {
+    name: string
+    mode: string
+    data: object
+    colors?: Record<string, string>
+  } => {
     if (!settings || settings.theme === 'system') {
       const theme = mode === DARK ? 'vs-dark' : 'vs'
       return { name: theme, mode: theme, data: {} }
@@ -119,7 +124,8 @@ export function useSettings(): AppSettingsHookType {
     return {
       name: settings?.theme,
       data: theme?.editor || {},
-      mode: theme?.mode || mode
+      mode: theme?.mode || mode,
+      colors: theme?.colors || {}
     }
   }
 

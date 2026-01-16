@@ -131,12 +131,6 @@
     "method-delete-color": "var(--red)",
     "method-patch-color": "var(--orange)",
 
-    "json-key-color": "var(--green-light)",
-    "json-string-color": "#0a3069",
-    "json-number-color": "var(--blue)",
-    "json-boolean-color": "var(--red)",
-    "json-null-color": "var(--foreground-2)",
-
     "console-background-color": "var(--color-1)",
     "console-color": "var(--color-6)",
 
@@ -153,6 +147,18 @@
     "base": "vs",
     "inherit": true,
     "rules": [
+      { "token": "keyword", "foreground": "var(--purple)" },
+      { "token": "operator", "foreground": "var(--purple)" },
+      { "token": "variable", "foreground": "var(--foreground-1)" },
+      { "token": "variable.parameter", "foreground": "var(--foreground-1)" },
+      { "token": "function", "foreground": "var(--blue)" },
+      { "token": "method", "foreground": "var(--blue)" },
+      { "token": "type", "foreground": "var(--yellow)" },
+      { "token": "class", "foreground": "var(--yellow)" },
+      { "token": "interface", "foreground": "var(--yellow)" },
+      { "token": "string.link", "foreground": "var(--blue)" },
+      { "token": "strong", "foreground": "var(--foreground-0)", "fontStyle": "bold" },
+      { "token": "emphasis", "foreground": "var(--foreground-1)", "fontStyle": "italic" },
       { "token": "", "foreground": "24292f", "background": "ffffff" },
       { "token": "comment", "foreground": "6e7781" },
       { "token": "string", "foreground": "0a3069" },

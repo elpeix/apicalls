@@ -149,12 +149,65 @@
     "tab-modal-background-color": "var(--base02)",
     "tab-modal-border-color": "var(--base01)",
     "table-border-color": "var(--border-color)",
-    "workspace-title-color": "var(--yellow)"
+    "workspace-title-color": "var(--yellow)",
+    "foreground-0": "var(--base1)",
+    "foreground-1": "var(--base0)",
+    "purple": "var(--magenta)"
   },
   "editor": {
     "base": "vs-dark",
     "inherit": true,
     "rules": [
+      {
+        "token": "keyword",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "operator",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "variable",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "variable.parameter",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "function",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "method",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "type",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "class",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "interface",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "string.link",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "strong",
+        "foreground": "var(--foreground-0)",
+        "fontStyle": "bold"
+      },
+      {
+        "token": "emphasis",
+        "foreground": "var(--foreground-1)",
+        "fontStyle": "italic"
+      },
       {
         "tempo": 123,
         "background": "002b36",

@@ -294,6 +294,7 @@ type AppSettingsHookType = {
     name: string
     mode: string
     data: data
+    colors?: Record<string, string>
   }
 }
 
