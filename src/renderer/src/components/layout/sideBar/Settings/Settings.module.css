@@ -21,22 +21,23 @@
       flex-direction: column;
       justify-content: center;
       width: 100%;
-      gap: 1.8rem;
+      gap: 1.5rem;
       padding: 0 0.2rem;
 
       .section {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 100%;
-        gap: 1.1rem;
-        padding: 0 0.2rem;
-
         .subTitle {
           font-size: 0.7rem;
           text-transform: uppercase;
-          align-self: self-start;
           color: var(--base-secondary-color);
+        }
+
+        .sectionContent {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+          gap: 1rem;
+          padding: 0 0.2rem;
         }
       }
 

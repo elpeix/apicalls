@@ -1,0 +1,46 @@
+.collapsible {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.2rem;
+  user-select: none;
+  cursor: pointer;
+}
+
+.content {
+  display: grid;
+  transition:
+    grid-template-rows 0.2s ease-out,
+    opacity 0.2s ease-in-out;
+
+  &.open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+
+    & > div {
+      margin-top: 1rem;
+      transition-delay: 0s;
+    }
+  }
+
+  &.closed {
+    grid-template-rows: 0fr;
+    opacity: 0;
+
+    & > div {
+      margin-top: 0;
+      transition-delay: 0.2s;
+    }
+  }
+
+  & > div {
+    overflow: hidden;
+    min-height: 0;
+  }
+}

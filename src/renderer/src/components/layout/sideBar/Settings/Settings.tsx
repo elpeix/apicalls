@@ -7,6 +7,7 @@ import ButtonIcon from '../../../base/ButtonIcon'
 import Params from '../../../base/Params/Params'
 import { defaultHttpHeaders } from '../../../../lib/factory'
 import Switch from '../../../base/Switch/Switch'
+import Collapsible from '../../../base/Collapsible/Collapsible'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -129,8 +130,12 @@ export default function Settings() {
       </div>
       <div className={`sidePanel-content ${styles.content}`} ref={scrollContainerRef}>
         <div className={styles.main}>
-          <div className={styles.section}>
-            <div className={styles.subTitle}>Appearance</div>
+          <Collapsible
+            className={styles.section}
+            title="Appearance"
+            titleClassName={styles.subTitle}
+            contentClassName={styles.sectionContent}
+          >
             <div className={styles.group}>
               <label htmlFor="theme">Theme</label>
               <SimpleSelect
@@ -176,10 +181,14 @@ export default function Settings() {
                 />
               </div>
             )}
-          </div>
+          </Collapsible>
 
-          <div className={styles.section}>
-            <div className={styles.subTitle}>Behavior</div>
+          <Collapsible
+            className={styles.section}
+            title="Behavior"
+            titleClassName={styles.subTitle}
+            contentClassName={styles.sectionContent}
+          >
             <div className={styles.switchRow}>
               <Switch
                 text="Scroll to active request"
@@ -249,10 +258,14 @@ export default function Settings() {
                 }
               />
             </div>
-          </div>
+          </Collapsible>
 
-          <div className={styles.section}>
-            <div className={styles.subTitle}>Network</div>
+          <Collapsible
+            className={styles.section}
+            title="Network"
+            titleClassName={styles.subTitle}
+            contentClassName={styles.sectionContent}
+          >
             <div className={styles.group}>
               <label htmlFor="timeout">Timeout</label>
               <input
@@ -301,8 +314,6 @@ export default function Settings() {
                   changeSettings({ ...settings, defaultHeaders: headers })
                 }}
                 onAdd={addHeader}
-                maxNameSize={240}
-                minNameSize={60}
                 defaultNameSize={90}
                 helperValues={defaultHttpHeaders}
                 bulkMode={true}
@@ -314,7 +325,7 @@ export default function Settings() {
                 scrollContainerRef={scrollContainerRef}
               />
             </div>
-          </div>
+          </Collapsible>
         </div>
       </div>
     </div>
