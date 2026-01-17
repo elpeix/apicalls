@@ -1,8 +1,9 @@
 .dialog {
   display: flex;
   flex-direction: column;
-  width: 50rem;
   min-height: 12rem;
+  height: 60vh;
+  width: 60vw;
 }
 
 .header {
@@ -53,7 +54,7 @@
   border-bottom: 1px solid var(--dialog-border-color);
   display: flex;
   min-height: 6rem;
-  height: 20rem;
+  height: 100%;
   width: 100%;
   flex-direction: row;
   background-color: var(--dialog-background-color);

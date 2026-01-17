@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import styles from './CollectionSettings.module.css'
 import PreRequestEditor from '../PreRequest/PreRequestEditor'
 import Editor from '../../../../base/Editor/Editor'
 import { Button } from '../../../../base/Buttons/Buttons'
 import CollectionScriptEditor from '../CollectionScriptEditor/CollectionScriptEditor'
+import { ACTIONS } from '../../../../../../../lib/ipcChannels'
 import Params from '../../../../base/Params/Params'
+import { deepMatches } from '../../../../../lib/utils'
 
 export type CollectionSettingsTab =
   | 'headers'
@@ -30,6 +32,25 @@ export default function CollectionSettings({
   const [postScript, setPostScript] = useState(collection.postScript || '')
   const [requestHeaders, setRequestHeaders] = useState<KeyValue[]>(collection.requestHeaders || [])
   const [description, setDescription] = useState(collection.description || '')
+
+  const [baseline, setBaseline] = useState({
+    preRequest: collection.preRequest,
+    preScript: collection.preScript || '',
+    postScript: collection.postScript || '',
+    requestHeaders: collection.requestHeaders || [],
+    description: collection.description || ''
+  })
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setBaseline({
+      preRequest: collection.preRequest,
+      preScript: collection.preScript || '',
+      postScript: collection.postScript || '',
+      requestHeaders: collection.requestHeaders || [],
+      description: collection.description || ''
+    })
+  }, [collection])
 
   const tabs = [
     {
@@ -103,7 +124,7 @@ export default function CollectionSettings({
 
   const [activeTab, setActiveTab] = useState(tabIdToIndex(activeTabId || 'headers'))
 
-  const handleSave = () => {
+  const saveChanges = React.useCallback(() => {
     onSave({
       ...collection,
       preRequest: preRequest,
@@ -112,8 +133,59 @@ export default function CollectionSettings({
       requestHeaders: requestHeaders,
       description: description
     })
+    setBaseline({
+      preRequest,
+      preScript,
+      postScript,
+      requestHeaders,
+      description
+    })
+  }, [collection, preRequest, preScript, postScript, requestHeaders, description, onSave])
+
+  const hasChanges = React.useMemo(() => {
+    return (
+      !deepMatches(preRequest, baseline.preRequest) ||
+      preScript !== baseline.preScript ||
+      postScript !== baseline.postScript ||
+      !deepMatches(requestHeaders, baseline.requestHeaders) ||
+      description !== baseline.description
+    )
+  }, [
+    preRequest,
+    baseline.preRequest,
+    preScript,
+    baseline.preScript,
+    postScript,
+    baseline.postScript,
+    requestHeaders,
+    baseline.requestHeaders,
+    description,
+    baseline.description
+  ])
+
+  const handleSave = () => {
+    if (hasChanges) {
+      saveChanges()
+    }
     onClose()
   }
+
+  useEffect(() => {
+    const ipcRenderer = window.electron?.ipcRenderer
+    if (!ipcRenderer) return
+
+    const handleSaveShortcut = () => {
+      if (hasChanges) {
+        saveChanges()
+      }
+    }
+
+    ipcRenderer.on(ACTIONS.saveRequest, handleSaveShortcut)
+
+    return () => {
+      ipcRenderer.removeListener(ACTIONS.saveRequest, handleSaveShortcut)
+    }
+  }, [saveChanges, hasChanges])
 
   return (
     <div className={styles.settings}>
@@ -133,8 +205,11 @@ export default function CollectionSettings({
         </div>
       </Tabs>
       <div className={styles.footer}>
-        <Button.Cancel onClick={onClose}>Cancel</Button.Cancel>
-        <Button.Ok onClick={handleSave}>Save</Button.Ok>
+        {hasChanges && <span className={styles.warning}>Unsaved changes</span>}
+        <div className={styles.buttons}>
+          {hasChanges && <Button.Cancel onClick={onClose}>Cancel</Button.Cancel>}
+          <Button.Ok onClick={handleSave}>{hasChanges ? 'Save & Close' : 'Close'}</Button.Ok>
+        </div>
       </div>
     </div>
   )

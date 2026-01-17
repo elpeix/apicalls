@@ -44,13 +44,13 @@
     "button-hover-color": "var(--orange)",
     "button-ok-active-background-color": "var(--color-4)",
     "button-ok-active-border-color": "var(--orange)",
-    "button-ok-active-color": "var(--orange)",
+    "button-ok-active-color": "var(--yellow)",
     "button-ok-background-color": "var(--color-2)",
-    "button-ok-border-color": "var(--blue)",
+    "button-ok-border-color": "var(--orange)",
     "button-ok-color": "var(--orange)",
-    "button-ok-hover-background-color": "var(--color-3)",
-    "button-ok-hover-border-color": "var(--blue)",
-    "button-ok-hover-color": "var(--orange)",
+    "button-ok-hover-background-color": "var(--color-4)",
+    "button-ok-hover-border-color": "var(--orange)",
+    "button-ok-hover-color": "var(--yellow)",
     "cancel-color": "rgba(217, 87, 87, 0.1)",
     "console-background-color": "var(--color-0)",
     "console-color": "var(--color-5)",
@@ -136,12 +136,65 @@
     "tab-selected-background-color": "var(--color-3)",
     "tab-selected-color": "var(--base-color)",
     "table-border-color": "var(--border-color)",
-    "workspace-title-color": "var(--cyan)"
+    "workspace-title-color": "var(--cyan)",
+    "foreground-0": "var(--color-5)",
+    "foreground-1": "var(--color-5)",
+    "purple": "var(--magenta)"
   },
   "editor": {
     "base": "vs-dark",
     "inherit": true,
     "rules": [
+      {
+        "token": "keyword",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "operator",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "variable",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "variable.parameter",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "function",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "method",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "type",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "class",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "interface",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "string.link",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "strong",
+        "foreground": "var(--foreground-0)",
+        "fontStyle": "bold"
+      },
+      {
+        "token": "emphasis",
+        "foreground": "var(--foreground-1)",
+        "fontStyle": "italic"
+      },
       {
         "background": "1F1F28",
         "foreground": "DCD7BA",

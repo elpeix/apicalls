@@ -1,0 +1,180 @@
+{
+  "name": "Nord",
+  "mode": "dark",
+  "colors": {
+    "color-0": "#2e3440",
+    "color-1": "#3b4252",
+    "color-2": "#434c5e",
+    "color-3": "#4c566a",
+    "color-4": "#d8dee9",
+    "color-5": "#e5e9f0",
+    "color-6": "#eceff4",
+
+    "blue": "#81a1c1",
+    "cyan": "#88c0d0",
+    "red": "#bf616a",
+    "orange": "#d08770",
+    "yellow": "#ebcb8b",
+    "green": "#a3be8c",
+    "purple": "#b48ead",
+
+    "background-base": "var(--color-0)",
+    "background-content": "var(--color-1)",
+    "background-2": "var(--color-2)",
+
+    "foreground-0": "var(--color-6)",
+    "foreground-1": "var(--color-5)",
+    "foreground-2": "var(--color-4)",
+
+    "content-0": "var(--color-3)",
+    "content-1": "var(--color-2)",
+    "content-2": "var(--color-1)",
+
+    "border-color": "var(--color-3)",
+    "divider-color": "var(--border-color)",
+
+    "active-background-color": "var(--color-2)",
+    "active-color": "var(--cyan)",
+    "hover-background-color": "var(--color-2)",
+    "hover-color": "var(--color-6)",
+
+    "sidePanel-menu-color": "var(--color-0)",
+    "sidePanel-color-hover": "var(--color-2)",
+    "sidePanel-color": "var(--color-1)",
+    "sidePanel-icon-color": "var(--foreground-1)",
+
+    "button-background-color": "transparent",
+    "button-color": "var(--color-6)",
+    "button-border-color": "var(--color-3)",
+    "button-hover-background-color": "var(--color-2)",
+    "button-hover-color": "var(--color-6)",
+    "button-hover-border-color": "var(--cyan)",
+    "button-active-background-color": "var(--color-3)",
+    "button-active-border-color": "var(--cyan)",
+
+    "button-ok-background-color": "var(--cyan)",
+    "button-ok-color": "var(--color-0)",
+    "button-ok-border-color": "var(--cyan)",
+    "button-ok-hover-background-color": "var(--blue)",
+    "button-ok-hover-color": "var(--color-0)",
+    "button-ok-hover-border-color": "var(--blue)",
+    "button-ok-active-background-color": "var(--cyan)",
+    "button-ok-active-color": "var(--color-0)",
+    "button-ok-active-border-color": "var(--cyan)",
+
+    "button-cancel-background-color": "transparent",
+    "button-cancel-color": "var(--red)",
+    "button-cancel-border-color": "var(--color-3)",
+    "button-cancel-hover-background-color": "var(--color-2)",
+    "button-cancel-hover-color": "var(--red)",
+    "button-cancel-hover-border-color": "var(--color-3)",
+    "button-cancel-active-background-color": "var(--color-2)",
+    "button-cancel-active-color": "var(--red)",
+    "button-cancel-active-border-color": "var(--color-3)",
+
+    "input-background-color": "transparent",
+    "input-color": "var(--color-6)",
+    "input-placeholder-color": "var(--color-4)",
+    "input-border-color": "var(--color-3)",
+    "input-hover-background-color": "var(--color-1)",
+    "input-hover-border-color": "var(--blue)",
+    "input-focus-border-color": "var(--cyan)",
+
+    "select-border-color": "var(--color-3)",
+    "select-arrow-color": "var(--color-4)",
+
+    "link-color": "var(--cyan)",
+    "link-hover-color": "var(--blue)",
+
+    "highlight-color": "var(--cyan)",
+    "accent-color": "var(--cyan)",
+    "search-list-background-color": "var(--color-1)",
+    "search-list-border-color": "var(--color-3)",
+    "search-list-item-color": "var(--color-4)",
+    "search-list-item-active-color": "var(--color-2)",
+    "search-list-highlight-color": "var(--cyan)",
+
+    "scrollbar-background-color": "var(--color-0)",
+    "scrollbar-thumb-color": "var(--color-3)",
+    "scrollbar-thumb-hover-color": "var(--color-2)",
+    "scrollbar-border-color": "var(--color-1)",
+
+    "tab-color": "var(--color-4)",
+    "tab-background-color": "transparent",
+    "tab-selected-color": "var(--color-6)",
+    "tab-selected-background-color": "var(--color-2)",
+    "tab-hover-background-color": "var(--color-2)",
+
+    "popup-background-color": "var(--color-0)",
+    "popup-color": "var(--color-6)",
+    "popup-border-color": "var(--color-3)",
+
+    "dialog-background-color": "var(--color-0)",
+    "dialog-color": "var(--color-6)",
+    "dialog-border-color": "var(--color-3)",
+    "dialog-footer-background-color": "var(--color-1)",
+
+    "transparent-bg": "rgba(46, 52, 64, 0.8)",
+
+    "success-background-color": "rgba(163, 190, 140, 0.2)",
+    "error-background-color": "rgba(191, 97, 106, 0.2)",
+    "warning-background-color": "rgba(235, 203, 139, 0.2)",
+    "info-background-color": "rgba(136, 192, 208, 0.2)",
+
+    "status-200-color": "var(--green)",
+    "status-300-color": "var(--yellow)",
+    "status-400-color": "var(--red)",
+    "status-500-color": "var(--red)",
+
+    "method-get-color": "var(--green)",
+    "method-post-color": "var(--cyan)",
+    "method-put-color": "var(--yellow)",
+    "method-delete-color": "var(--red)",
+    "method-patch-color": "var(--orange)",
+
+    "console-background-color": "var(--color-0)",
+    "console-color": "var(--color-6)",
+
+    "switch-active-background-color": "var(--color-3)",
+    "switch-active-color": "var(--cyan)",
+    "switch-background-color": "var(--color-2)",
+    "switch-color": "var(--color-6)",
+    "switch-hover-color": "var(--blue)",
+    "switch-text-active-color": "var(--color-6)",
+    "switch-text-color": "var(--color-5)",
+    "switch-text-hover-color": "var(--color-6)"
+  },
+  "editor": {
+    "base": "vs-dark",
+    "inherit": true,
+    "rules": [
+      { "token": "keyword", "foreground": "var(--purple)" },
+      { "token": "operator", "foreground": "var(--purple)" },
+      { "token": "variable", "foreground": "var(--foreground-1)" },
+      { "token": "variable.parameter", "foreground": "var(--foreground-1)" },
+      { "token": "function", "foreground": "var(--blue)" },
+      { "token": "method", "foreground": "var(--blue)" },
+      { "token": "type", "foreground": "var(--yellow)" },
+      { "token": "class", "foreground": "var(--yellow)" },
+      { "token": "interface", "foreground": "var(--yellow)" },
+      { "token": "string.link", "foreground": "var(--blue)" },
+      { "token": "strong", "foreground": "var(--foreground-0)", "fontStyle": "bold" },
+      { "token": "emphasis", "foreground": "var(--foreground-1)", "fontStyle": "italic" },
+      { "token": "", "foreground": "eceff4", "background": "2e3440" },
+      { "token": "comment", "foreground": "616e88" },
+      { "token": "string", "foreground": "a3be8c" },
+      { "token": "keyword", "foreground": "81a1c1" },
+      { "token": "number", "foreground": "b48ead" },
+      { "token": "string.key.json", "foreground": "88c0d0" },
+      { "token": "string.value.json", "foreground": "a3be8c" }
+    ],
+    "colors": {
+      "editor.foreground": "#d8dee9",
+      "editor.background": "#2e3440",
+      "editor.selectionBackground": "#434c5e",
+      "editor.lineHighlightBackground": "#3b4252",
+      "editorCursor.foreground": "#d8dee9",
+      "editorWhitespace.foreground": "#4c566a"
+    }
+  }
+}

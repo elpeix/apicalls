@@ -1,6 +1,6 @@
 .tooltip {
   pointer-events: none;
-  z-index: 10;
+  z-index: 10000;
 
   .content {
     max-width: 50rem;

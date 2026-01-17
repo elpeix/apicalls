@@ -294,6 +294,7 @@ type AppSettingsHookType = {
     name: string
     mode: string
     data: data
+    colors?: Record<string, string>
   }
 }
 
@@ -361,6 +362,7 @@ type RequestContextType = {
 type AppTheme = {
   name: string
   mode: string
+  isCustom?: boolean
   colors: {
     [key: string]: string
   }

@@ -108,7 +108,7 @@
     "select-arrow": "var(--base-color)",
     "selected-color": "var(--color-1)",
     "sidePanel-color-hover": "var(--color-3)",
-    "sidePanel-color": "var(--color-2)",
+    "sidePanel-color": "color-mix(in srgb, var(--color-1) 60%, var(--color-2))",
     "sidePanel-icon-color": "var(--color-6)",
     "status-200-color": "var(--color-10)",
     "status-300-color": "var(--color-7)",
@@ -130,12 +130,66 @@
     "tab-panel-background-color": "var(--color-0)",
     "tab-selected-background-color": "var(--color-3)",
     "tab-selected-color": "var(--base-color)",
-    "table-border-color": "var(--border-color)"
+    "table-border-color": "var(--border-color)",
+    "blue": "var(--color-9)",
+    "foreground-0": "var(--color-6)",
+    "foreground-1": "var(--color-5)",
+    "purple": "var(--color-8)"
   },
   "editor": {
     "base": "vs-dark",
     "inherit": true,
     "rules": [
+      {
+        "token": "keyword",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "operator",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "variable",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "variable.parameter",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "function",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "method",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "type",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "class",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "interface",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "string.link",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "strong",
+        "foreground": "var(--foreground-0)",
+        "fontStyle": "bold"
+      },
+      {
+        "token": "emphasis",
+        "foreground": "var(--foreground-1)",
+        "fontStyle": "italic"
+      },
       {
         "background": "272822",
         "foreground": "F8F8F2",

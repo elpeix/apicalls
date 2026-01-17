@@ -8,9 +8,13 @@ export const useEditorTheme = (appSettings: AppSettingsHookType | null) => {
     appSettings?.getEditorTheme()?.name ||
       (base.matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs')
   )
-  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(
-    appSettings?.getEditorTheme()?.data || null
-  )
+  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(() => {
+    const editorTheme = appSettings?.getEditorTheme()
+    if (editorTheme && editorTheme.data && editorTheme.data.colors) {
+      return resolveThemeVariables(editorTheme.data, editorTheme.colors || {})
+    }
+    return editorTheme?.data || null
+  })
 
   useEffect(() => {
     const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
@@ -18,7 +22,6 @@ export const useEditorTheme = (appSettings: AppSettingsHookType | null) => {
     const updateTheme = () => {
       const editorTheme = appSettings?.getEditorTheme()
 
-      // Fallback to system if no theme set or dynamic mode
       if (!editorTheme) {
         setTheme(matchMedia.matches ? 'vs-dark' : 'vs')
         return
@@ -32,7 +35,8 @@ export const useEditorTheme = (appSettings: AppSettingsHookType | null) => {
       }
 
       if (editorTheme.data && editorTheme.data.colors) {
-        setThemeData(editorTheme.data)
+        const resolvedThemeData = resolveThemeVariables(editorTheme.data, editorTheme.colors || {})
+        setThemeData(resolvedThemeData)
         setTheme(editorTheme.name)
       } else {
         setThemeData(null)
@@ -46,22 +50,67 @@ export const useEditorTheme = (appSettings: AppSettingsHookType | null) => {
       updateTheme()
     }
 
-    // Modern browsers use addEventListener
-    if (matchMedia.addEventListener) {
-      matchMedia.addEventListener('change', mediaListener)
-    } else {
-      // Fallback
-      matchMedia.addListener(mediaListener)
-    }
-
-    return () => {
-      if (matchMedia.removeEventListener) {
-        matchMedia.removeEventListener('change', mediaListener)
-      } else {
-        matchMedia.removeListener(mediaListener)
-      }
-    }
-  }, [appSettings]) // matchMedia is created inside, so not a dependency.
+    matchMedia.addEventListener('change', mediaListener)
+    return () => matchMedia.removeEventListener('change', mediaListener)
+  }, [appSettings])
 
   return { theme, themeData }
+}
+
+function resolveThemeVariables(
+  themeData: monaco.editor.IStandaloneThemeData,
+  themeColors: Record<string, string>
+): monaco.editor.IStandaloneThemeData {
+  const colors = themeData.colors || {}
+  const rules = themeData.rules || []
+
+  const resolveValue = (value: string, visited: Set<string> = new Set()): string => {
+    if (!value || !value.startsWith('var(--')) {
+      return value
+    }
+    const varName = value.replace('var(--', '').replace(')', '')
+
+    if (visited.has(varName)) {
+      console.warn(`Circular dependency detected for theme variable: ${varName}`)
+      return '#000000' // Return a safe fallback
+    }
+    visited.add(varName)
+
+    let resolved = themeColors[varName] || colors[varName]
+
+    if (!resolved) {
+      console.warn(`Theme variable not found: ${varName}`)
+      return '#ff00ff'
+    }
+
+    if (resolved.startsWith('var(--')) {
+      resolved = resolveValue(resolved, visited)
+    }
+
+    return resolved
+  }
+
+  const resolvedRules = rules.map((rule) => {
+    const newRule = { ...rule }
+    if (newRule.foreground) {
+      newRule.foreground = resolveValue(newRule.foreground)
+    }
+    if (newRule.background) {
+      newRule.background = resolveValue(newRule.background)
+    }
+    return newRule
+  })
+
+  const resolvedColors: Record<string, string> = {}
+  Object.keys(colors).forEach((key) => {
+    resolvedColors[key] = resolveValue(colors[key])
+  })
+
+  return {
+    ...themeData,
+    base: themeData.base,
+    inherit: themeData.inherit,
+    rules: resolvedRules,
+    colors: resolvedColors
+  }
 }

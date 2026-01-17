@@ -1,0 +1,24 @@
+.buttonSelector {
+  display: flex;
+  border: 1px solid var(--border-color);
+  width: fit-content;
+}
+
+.buttonSelectorOption {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background-color: var(--hover-background-color);
+  }
+
+  &.active {
+    background-color: var(--active-background-color);
+    color: var(--active-color);
+  }
+}

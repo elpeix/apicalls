@@ -56,9 +56,9 @@
     "dialog-border-color": "var(--base-1)",
     "dialog-color": "var(--base-color)",
     "dialog-footer-background-color": "var(--background)",
-    "dialog-footer-color": "var(--foreground)",
+    "dialog-footer-color": "var(--base-2)",
     "dialog-footer-hover-color": "var(--pink)",
-    "droppable-color": "var(--foreground)",
+    "droppable-color": "var(--base-2)",
     "error-background-color": "rgba(255, 85, 85, 0.3)",
     "error-color": "var(--red)",
     "gutter-color-drag": "var(--base-color)",
@@ -75,20 +75,20 @@
     "input-hover-border-color": "var(--foreground)",
     "input-hover-color": "var(--pink)",
     "input-placeholder-color": "color-mix(in srgb, var(--foreground) 30%, var(--base-2))",
-    "input-undefined-color": "var(--foreground)",
+    "input-undefined-color": "var(--base-2)",
     "link-color": "var(--purple)",
     "link-hover-color": "var(--cyan)",
-    "loading-color": "var(--foreground)",
+    "loading-color": "var(--base-2)",
     "method-delete-color": "var(--red)",
     "method-get-color": "var(--green)",
-    "method-head-color": "var(--foreground)",
+    "method-head-color": "var(--base-2)",
     "method-option-color": "var(--purple)",
     "method-patch-color": "var(--yellow)",
     "method-post-color": "var(--cyan)",
     "method-put-color": "var(--pink)",
     "overlay-color": "rgba(0, 0, 0, 0.45)",
     "response-no-content-background-color": "var(--background)",
-    "response-no-content-color": "var(--foreground)",
+    "response-no-content-color": "var(--base-2)",
     "scrollbar-background-color": "var(--background-base)",
     "scrollbar-border-color": "var(--border-color)",
     "scrollbar-corner-color": "var(--background)",
@@ -113,15 +113,15 @@
     "status-300-color": "var(--orange)",
     "status-400-color": "var(--purple)",
     "status-500-color": "var(--red)",
-    "status-unkonwn-color": "var(--foreground)",
+    "status-unkonwn-color": "var(--base-2)",
     "success-background-color": "var(--green)",
     "switch-active-background-color": "var(--base-1)",
     "switch-active-color": "var(--green)",
     "switch-background-color": "var(--base-1)",
-    "switch-color": "var(--foreground)",
+    "switch-color": "var(--base-2)",
     "switch-hover-color": "var(--pink)",
     "switch-text-active-color": "var(--pink)",
-    "switch-text-color": "var(--foreground)",
+    "switch-text-color": "var(--base-2)",
     "switch-text-hover-color": "var(--pink)",
     "tab-background-color": "transparent",
     "tab-color": "var(--base-color)",
@@ -130,12 +130,65 @@
     "tab-selected-background-color": "var(--base-1)",
     "tab-selected-color": "var(--base-color)",
     "table-border-color": "var(--border-color)",
-    "workspace-title-color": "var(--pink)"
+    "workspace-title-color": "var(--pink)",
+    "blue": "var(--cyan)",
+    "foreground-0": "var(--foreground)",
+    "foreground-1": "var(--foreground)"
   },
   "editor": {
     "base": "vs-dark",
     "inherit": true,
     "rules": [
+      {
+        "token": "keyword",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "operator",
+        "foreground": "var(--purple)"
+      },
+      {
+        "token": "variable",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "variable.parameter",
+        "foreground": "var(--foreground-1)"
+      },
+      {
+        "token": "function",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "method",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "type",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "class",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "interface",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "string.link",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "strong",
+        "foreground": "var(--foreground-0)",
+        "fontStyle": "bold"
+      },
+      {
+        "token": "emphasis",
+        "foreground": "var(--foreground-1)",
+        "fontStyle": "italic"
+      },
       {
         "background": "282a36",
         "foreground": "f8f8f2",

@@ -79,7 +79,9 @@ export const stringArrayEqual = (a: string[], b: string[]): boolean => {
 }
 
 export const getBody = (body: BodyType): string => {
-  if (body === 'none' || body === '') return ''
+  if (body === 'none' || body === '') {
+    return ''
+  }
   return typeof body === 'string' ? body : body.value || ''
 }
 export const getContentType = (body: BodyType): string | undefined => {
@@ -95,4 +97,47 @@ export const getContentType = (body: BodyType): string | undefined => {
     return contentTypes.text
   }
   return contentTypes[body.contentType]
+}
+
+export function deepMatches(source: unknown, target: unknown): boolean {
+  if (source === target) return true
+  if (
+    typeof source !== 'object' ||
+    source === null ||
+    typeof target !== 'object' ||
+    target === null
+  ) {
+    return false
+  }
+
+  if (Array.isArray(source)) {
+    if (!Array.isArray(target) || source.length !== target.length) {
+      return false
+    }
+    return source.every((item, index) => deepMatches(item, target[index]))
+  }
+
+  if (Array.isArray(target)) {
+    return false
+  }
+
+  const sourceObj = source as Record<string, unknown>
+  const targetObj = target as Record<string, unknown>
+
+  const keys = new Set([...Object.keys(sourceObj), ...Object.keys(targetObj)])
+
+  for (const key of keys) {
+    const valA = sourceObj[key]
+    const valB = targetObj[key]
+
+    if (valA === undefined && valB === undefined) {
+      continue
+    }
+
+    if (!deepMatches(valA, valB)) {
+      return false
+    }
+  }
+
+  return true
 }

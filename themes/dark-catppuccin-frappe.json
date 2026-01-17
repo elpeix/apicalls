@@ -2,12 +2,12 @@
   "name": "Catppuccin Frappe",
   "mode": "dark",
   "colors": {
-    "color-0": "#303446",
+    "color-0": "#232634",
     "color-1": "#292c3c",
     "color-2": "#303446",
     "color-3": "#414559",
     "color-4": "#51576d",
-    "color-5": "#a5adce",
+    "color-5": "#737994",
     "color-6": "#c6d0f5",
     "rosewater": "#f2d5cf",
     "flamingo": "#eebebe",
@@ -22,6 +22,12 @@
     "sapphire": "#85c1dc",
     "blue": "#8caaee",
     "lavender": "#babbf1",
+
+    "success-background-color": "color-mix(in srgb, var(--green) 30%, transparent)",
+    "error-background-color": "color-mix(in srgb, var(--red) 30%, transparent)",
+    "warning-background-color": "color-mix(in srgb, var(--yellow), 30% transparent)",
+    "info-background-color": "color-mix(in srgb, var(--blue) 30%, transparent)",
+
     "accent-color": "var(--blue)",
     "active-background-color": "var(--color-2)",
     "active-color": "var(--yellow)",
@@ -68,7 +74,6 @@
     "dialog-footer-color": "var(--color-5)",
     "dialog-footer-hover-color": "var(--color-6)",
     "droppable-color": "var(--color-5)",
-    "error-background-color": "color-mix(in srgb, var(--red) 10% transparent",
     "error-color": "var(--red)",
     "gutter-color-drag": "var(--peach)",
     "gutter-color": "var(--border-color)",
@@ -123,7 +128,6 @@
     "status-400-color": "var(--lavender)",
     "status-500-color": "var(--red)",
     "status-unkonwn-color": "var(--color-5)",
-    "success-background-color": "var(--green)",
     "switch-active-background-color": "var(--color-3)",
     "switch-active-color": "var(--green)",
     "switch-background-color": "var(--color-3)",
@@ -146,6 +150,56 @@
     "base": "vs-dark",
     "inherit": true,
     "rules": [
+      {
+        "token": "keyword",
+        "foreground": "var(--pink)"
+      },
+      {
+        "token": "operator",
+        "foreground": "var(--pink)"
+      },
+      {
+        "token": "variable",
+        "foreground": "var(--color-5)"
+      },
+      {
+        "token": "variable.parameter",
+        "foreground": "var(--color-5)"
+      },
+      {
+        "token": "function",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "method",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "type",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "class",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "interface",
+        "foreground": "var(--yellow)"
+      },
+      {
+        "token": "string.link",
+        "foreground": "var(--blue)"
+      },
+      {
+        "token": "strong",
+        "foreground": "var(--color-6)",
+        "fontStyle": "bold"
+      },
+      {
+        "token": "emphasis",
+        "foreground": "var(--color-5)",
+        "fontStyle": "italic"
+      },
       {
         "background": "303446",
         "foreground": "c6d0f5",

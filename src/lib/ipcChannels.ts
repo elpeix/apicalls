@@ -49,7 +49,11 @@ export const SETTINGS = {
   updated: 'settings:updated',
   toggleMenu: 'settings:toggle-menu',
   toggleMenuCookies: 'settings:toggle-menu-cookies',
-  listThemes: 'settings:list-themes'
+  listThemes: 'settings:list-themes',
+  importTheme: 'settings:import-theme',
+  importThemeSuccess: 'settings:import-theme-success',
+  importThemeFailure: 'settings:import-theme-failure',
+  deleteTheme: 'settings:delete-theme'
 }
 
 export const ENVIRONMENTS = {
