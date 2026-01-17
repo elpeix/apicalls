@@ -42,4 +42,4 @@ jobs:
         if: runner.os == 'macOS'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx electron-builder --mac universal --publish always
+        run: npx electron-builder --mac --universal --publish always
