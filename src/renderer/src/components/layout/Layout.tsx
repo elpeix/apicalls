@@ -61,7 +61,7 @@ export default function Layout() {
         >
           <SidePanel />
         </Panel>
-        <Separator onDoubleClick={expandSidePanel} />
+        <Separator onDoubleClick={toggleSidePanel} />
         <Panel>
           <ContentTabs />
         </Panel>
