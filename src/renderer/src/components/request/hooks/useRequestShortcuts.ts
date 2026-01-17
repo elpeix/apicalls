@@ -32,12 +32,15 @@ export function useRequestShortcuts() {
   useEffect(() => {
     if (!isActive) return
     const ipcRenderer = window.electron?.ipcRenderer
-    const handleSave = () => save()
+    const handleSave = () => {
+      if (application.dialogIsOpen) return
+      save()
+    }
     ipcRenderer?.on(ACTIONS.saveRequest, handleSave)
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.saveRequest)
     }
-  }, [isActive, save])
+  }, [isActive, save, application.dialogIsOpen])
 
   // Save As shortcut
   useEffect(() => {
