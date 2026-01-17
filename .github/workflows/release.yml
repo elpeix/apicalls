@@ -36,10 +36,22 @@ jobs:
         if: runner.os != 'macOS'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx electron-builder --publish always
+        shell: bash
+        run: |
+          ARGS=""
+          if [[ "${{ github.ref_name }}" == *"beta"* ]]; then
+            ARGS="-c.publish.releaseType=prerelease"
+          fi
+          npx electron-builder --publish always $ARGS
 
       - name: Package and Publish (mac)
         if: runner.os == 'macOS'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx electron-builder --mac --universal --publish always
+        shell: bash
+        run: |
+          ARGS=""
+          if [[ "${{ github.ref_name }}" == *"beta"* ]]; then
+            ARGS="-c.publish.releaseType=prerelease"
+          fi
+          npx electron-builder --mac --universal --publish always $ARGS
