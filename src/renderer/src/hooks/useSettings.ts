@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SETTINGS, SYSTEM_ACTIONS } from '../../../lib/ipcChannels'
 import { applyTheme, removeStyleProperties } from '../lib/utils'
 
@@ -15,6 +15,7 @@ const defaultEditorThemes: Record<string, string> = {
 export function useSettings(): AppSettingsHookType {
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
   const [themes, setThemes] = useState<Map<string, AppTheme>>(new Map())
+  const themesRef = useRef<Map<string, AppTheme>>(new Map())
 
   const base = window || global
   const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
@@ -42,6 +43,7 @@ export function useSettings(): AppSettingsHookType {
         }
       }
       setThemes(themes)
+      themesRef.current = themes
     })
 
     return () => {
@@ -81,7 +83,7 @@ export function useSettings(): AppSettingsHookType {
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(SETTINGS.save, newSettings)
     removeStyleProperties()
-    const colors = themes.get(newSettings.theme)?.colors
+    const colors = themesRef.current.get(newSettings.theme)?.colors
     if (colors) {
       applyTheme(colors)
     }

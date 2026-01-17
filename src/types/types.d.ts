@@ -362,6 +362,7 @@ type RequestContextType = {
 type AppTheme = {
   name: string
   mode: string
+  isCustom?: boolean
   colors: {
     [key: string]: string
   }

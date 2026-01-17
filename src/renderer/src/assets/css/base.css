@@ -40,7 +40,7 @@
   --active-color: var(--color-1);
   --active-background-color: var(--content-1);
   --highlight-color: var(--cyan);
-  --text-warning: var(--orange);
+  --text-warning: var(--highlight-color);
 
   --sidePanel-color: var(--background-2);
   --sidePanel-color-hover: var(--content-2);

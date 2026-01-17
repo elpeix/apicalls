@@ -8,6 +8,7 @@ import Params from '../../../base/Params/Params'
 import { defaultHttpHeaders } from '../../../../lib/factory'
 import Switch from '../../../base/Switch/Switch'
 import Collapsible from '../../../base/Collapsible/Collapsible'
+import ManageThemes from './ManageThemes'
 
 const initOpThemes = [
   { label: 'Auto', value: 'system', mode: 'system' },
@@ -98,6 +99,14 @@ export default function Settings() {
     })
   }
 
+  const handleManageThemes = () => {
+    application.showDialog({
+      children: <ManageThemes onClose={application.hideDialog} />,
+      preventKeyClose: false,
+      preventOverlayClickClose: true
+    })
+  }
+
   const requestViewOptions = [
     {
       value: 'horizontal',
@@ -138,14 +147,23 @@ export default function Settings() {
           >
             <div className={styles.group}>
               <label htmlFor="theme">Theme</label>
-              <SimpleSelect
-                value={settings.theme}
-                onChange={(e) =>
-                  changeSettings({ ...settings, theme: getThemeName(e.target.value) })
-                }
-                options={opThemes}
-                groupBy="mode"
-              />
+              <div className={styles.themes}>
+                <SimpleSelect
+                  className={styles.themeSelect}
+                  value={settings.theme}
+                  onChange={(e) =>
+                    changeSettings({ ...settings, theme: getThemeName(e.target.value) })
+                  }
+                  options={opThemes}
+                  groupBy="mode"
+                />
+                <ButtonIcon
+                  className={styles.themeManageButton}
+                  icon="settings"
+                  title="Manage themes"
+                  onClick={handleManageThemes}
+                />
+              </div>
             </div>
 
             {!window.api.os.isMac && (
@@ -245,7 +263,7 @@ export default function Settings() {
               />
             </div>
             <div className={styles.group}>
-              <label htmlFor="maxHistory">Max History</label>
+              <label htmlFor="maxHistory">Max History items</label>
               <input
                 id="maxHistory"
                 type="number"
@@ -267,7 +285,7 @@ export default function Settings() {
             contentClassName={styles.sectionContent}
           >
             <div className={styles.group}>
-              <label htmlFor="timeout">Timeout</label>
+              <label htmlFor="timeout">Timeout (in milliseconds)</label>
               <input
                 id="timeout"
                 type="number"

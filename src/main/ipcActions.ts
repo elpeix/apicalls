@@ -10,9 +10,9 @@ import * as path from 'path'
 
 let themes: Map<string, AppTheme> = new Map()
 
-ipcMain.handle(DIALOG.open, async () => {
+ipcMain.handle(DIALOG.open, async (_, options: Electron.OpenDialogOptions) => {
   if (!mainWindow) return { canceled: true, filePaths: [] }
-  return await dialog.showOpenDialog(mainWindow, { properties: ['openFile'] })
+  return await dialog.showOpenDialog(mainWindow, { properties: ['openFile'], ...options })
 })
 
 ipcMain.on(SETTINGS.get, (event) => {
@@ -38,6 +38,58 @@ ipcMain.on(SETTINGS.toggleMenu, (_, showMenu: boolean) => {
   setSettings({ ...settings, menu: showMenu })
   mainWindow?.setMenuBarVisibility(showMenu)
   mainWindow?.setAutoHideMenuBar(!showMenu)
+})
+
+ipcMain.on(SETTINGS.importTheme, (event, filePath: string) => {
+  try {
+    if (!filePath.endsWith('.json')) {
+      throw new Error('Only .json files are supported')
+    }
+    const content = fs.readFileSync(filePath, 'utf8')
+    // Validate JSON
+    const theme = JSON.parse(content)
+    if (
+      !theme ||
+      typeof theme !== 'object' ||
+      typeof theme.name !== 'string' ||
+      typeof theme.mode !== 'string' ||
+      typeof theme.colors !== 'object' ||
+      !theme.colors ||
+      typeof theme.editor !== 'object' ||
+      !theme.editor
+    ) {
+      throw new Error('Invalid theme format')
+    }
+    const fileName = path.basename(filePath)
+
+    // Prevent overwriting bundled themes
+    if (fs.existsSync(path.join(bundledThemesPath, fileName))) {
+      throw new Error('Cannot overwrite system themes')
+    }
+
+    fs.copyFileSync(filePath, path.join(themesDir, fileName))
+    themes = listThemes()
+    event.reply(SETTINGS.listThemes, themes)
+
+    const themeKey = fileName.replace('.json', '')
+    event.reply(SETTINGS.importThemeSuccess, themeKey)
+  } catch (e) {
+    console.error('Failed to import theme', e)
+    event.reply(SETTINGS.importThemeFailure, e instanceof Error ? e.message : 'Unknown error')
+  }
+})
+
+ipcMain.on(SETTINGS.deleteTheme, (event, themeName: string) => {
+  try {
+    const filePath = path.join(themesDir, `${themeName}.json`)
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
+    themes = listThemes()
+    event.reply(SETTINGS.listThemes, themes)
+  } catch (e) {
+    console.error('Failed to delete theme', e)
+  }
 })
 
 const requests = new Map<
@@ -90,6 +142,8 @@ const getChannel = (channel: string, id: Identifier = ''): string => `${channel}
 ipcMain.on(VERSION.get, (event) => event.reply(VERSION.getSuccess, app.getVersion()))
 
 const themesDir = path.join(app.getPath('userData'), 'themes')
+const bundledThemesPath = path.join(app.getAppPath(), 'themes')
+
 const listThemes = (): Map<string, AppTheme> => {
   const files = fs
     .readdirSync(themesDir)
@@ -101,7 +155,10 @@ const listThemes = (): Map<string, AppTheme> => {
     files.map((file) => {
       const theme = fs.readFileSync(path.join(themesDir, file), 'utf8')
       const key = file.replace('.json', '')
-      return [key, JSON.parse(theme) as AppTheme]
+      const isCustom = !fs.existsSync(path.join(bundledThemesPath, file))
+      const appTheme = JSON.parse(theme) as AppTheme
+      appTheme.isCustom = isCustom
+      return [key, appTheme]
     })
   )
 }

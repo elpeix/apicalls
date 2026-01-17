@@ -79,3 +79,16 @@
     }
   }
 }
+
+.themes {
+  display: flex;
+  gap: 0.5rem;
+
+  .themeSelect {
+    flex: 1;
+  }
+
+  .themeManageButton {
+    flex: 0;
+  }
+}
