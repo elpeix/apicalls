@@ -1,17 +1,17 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
 import { RequestContext } from '../../../context/RequestContext'
 import { AppContext } from '../../../context/AppContext'
-import { PanelHandle } from 'simple-panels'
+import { GroupHandle, PanelHandle } from 'simple-panels'
 
 export function useRequestShortcuts() {
   const { isActive, request, fetching, save, setOpenSaveAs } = useContext(RequestContext)
   const { application } = useContext(AppContext)
 
+  const requestGroupRef = useRef<GroupHandle>(null)
   const requestPanelRef = useRef<PanelHandle>(null)
-  const [requestPanelCollapsed, setRequestPanelCollapsed] = useState(false)
-
   const consolePanelRef = useRef<PanelHandle>(null)
+
   const [consoleCollapsed, setConsoleCollapsed] = useState(true)
 
   // Send Request shortcut
@@ -58,20 +58,27 @@ export function useRequestShortcuts() {
     }
   }, [isActive, setOpenSaveAs, application.dialogIsOpen])
 
+  const toggleRequestPanel = useCallback(() => {
+    if (!requestPanelRef.current) return
+    if (!requestGroupRef.current) return
+
+    const states = requestGroupRef.current.getCollapsedStates()
+    if (states && states[0]) {
+      requestPanelRef.current.expand()
+    } else {
+      requestPanelRef.current.collapse()
+    }
+  }, [])
+
   // Toggle Request Panel shortcut
   useEffect(() => {
     if (!isActive) return
     const ipcRenderer = window.electron?.ipcRenderer
-    const handleToggleRequestPanel = () => {
-      if (!requestPanelRef.current) return
-      if (requestPanelCollapsed) requestPanelRef.current.expand()
-      else requestPanelRef.current.collapse()
-    }
-    ipcRenderer?.on(ACTIONS.toggleRequestPanel, handleToggleRequestPanel)
+    ipcRenderer?.on(ACTIONS.toggleRequestPanel, toggleRequestPanel)
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.toggleRequestPanel)
     }
-  }, [isActive, requestPanelCollapsed])
+  }, [isActive, toggleRequestPanel])
 
   // Toggle Console shortcut
   useEffect(() => {
@@ -88,9 +95,9 @@ export function useRequestShortcuts() {
   }, [isActive, consoleCollapsed])
 
   return {
+    requestGroupRef,
     requestPanelRef,
-    requestPanelCollapsed,
-    setRequestPanelCollapsed,
+    toggleRequestPanel,
     consolePanelRef,
     consoleCollapsed,
     setConsoleCollapsed

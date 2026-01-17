@@ -18,6 +18,7 @@ export default function Collections() {
     })
     ipcRenderer?.on(WORKSPACES.changed, () => {
       collections?.select(null)
+      setSelectedCollection(null)
     })
     return () => {
       ipcRenderer?.removeAllListeners(COLLECTIONS.importFailure)

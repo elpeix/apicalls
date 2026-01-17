@@ -17,26 +17,15 @@ export default function RequestPanelContent() {
   const panelView = appSettings?.settings?.requestView || 'horizontal'
 
   const {
+    requestGroupRef,
     requestPanelRef,
-    requestPanelCollapsed,
-    setRequestPanelCollapsed,
     consolePanelRef,
     consoleCollapsed,
-    setConsoleCollapsed
+    setConsoleCollapsed,
+    toggleRequestPanel
   } = useRequestShortcuts()
 
   if (!request) return null
-
-  const toggleRequestPanel = () => {
-    if (!requestPanelRef.current) {
-      return
-    }
-    if (requestPanelCollapsed) {
-      requestPanelRef.current.expand()
-    } else {
-      requestPanelRef.current.collapse()
-    }
-  }
 
   const collapseConsole = () => consolePanelRef.current?.collapse()
   const expandConsole = () => consolePanelRef.current?.expand()
@@ -53,15 +42,13 @@ export default function RequestPanelContent() {
       <RequestBar />
       <Group orientation="horizontal">
         <Panel>
-          <Group orientation={panelView} storageId="requestPanelLayout">
+          <Group orientation={panelView} storageId="requestPanelLayout" ref={requestGroupRef}>
             <Panel
               defaultSize={30}
               minSize={panelView === 'vertical' ? 10 : 25}
               maxSize={90}
               collapsible={true}
               ref={requestPanelRef}
-              onCollapse={() => setRequestPanelCollapsed(true)}
-              onExpand={() => setRequestPanelCollapsed(false)}
             >
               <RequestTabs />
             </Panel>
