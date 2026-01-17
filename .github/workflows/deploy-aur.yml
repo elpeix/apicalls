@@ -22,19 +22,42 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG_NAME=$(git tag --points-at "${{ github.event.workflow_run.head_sha }}" | head -n1)
+          # Get all tags pointing to the commit
+          TAGS=$(git tag --points-at "${{ github.event.workflow_run.head_sha }}")
 
-          if [ -z "$TAG_NAME" ]; then
+          if [ -z "$TAGS" ]; then
             echo "No tag found for workflow run!"
             exit 1
           fi
 
-          IS_PRERELEASE=$(gh release view "$TAG_NAME" --json isPrerelease --jq '.isPrerelease')
+          echo "Found tags: $TAGS"
+
+          TAG_NAME=""
+          IS_PRERELEASE=""
+
+          # Iterate to find the tag associated with a GitHub Release
+          for TAG in $TAGS; do
+            echo "Checking tag: $TAG"
+            if gh release view "$TAG" > /dev/null 2>&1; then
+              echo "Found release for tag: $TAG"
+              TAG_NAME="$TAG"
+              IS_PRERELEASE=$(gh release view "$TAG" --json isPrerelease --jq '.isPrerelease')
+              break
+            fi
+          done
+
+          if [ -z "$TAG_NAME" ]; then
+            echo "No GitHub Release found for any of the tags on this commit."
+            exit 1
+          fi
 
           if [ "$IS_PRERELEASE" = "true" ]; then
             echo "Release is prerelease; skipping AUR deploy."
+            echo "skipped=true" >> $GITHUB_OUTPUT
             exit 0
           fi
+
+          echo "skipped=false" >> $GITHUB_OUTPUT
 
           # Get the version from the tag (remove 'v' prefix)
           VERSION=${TAG_NAME#v}
@@ -71,6 +94,7 @@ jobs:
           echo "sha256=$SHA256" >> $GITHUB_OUTPUT
 
       - name: Update PKGBUILD
+        if: ${{ steps.release_data.outputs.skipped != 'true' }}
         run: |
           sed -i "s/%PKGVER%/${{ steps.release_data.outputs.arch_version }}/g" aur/PKGBUILD
           sed -i "s|%SOURCE_URL%|${{ steps.release_data.outputs.asset_url }}|g" aur/PKGBUILD
@@ -82,6 +106,7 @@ jobs:
           # We'll rely on the action to handle the git push.
 
       - name: Publish to AUR
+        if: ${{ steps.release_data.outputs.skipped != 'true' }}
         uses: KSXGitHub/github-actions-deploy-aur@v3
         with:
           pkgname: api-calls-bin
