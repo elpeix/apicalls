@@ -199,18 +199,13 @@ export default function Collection({
     }
   }
 
-  const settingsSave = (collection: Collection) => {
-    update(collection)
-    application.hideDialog()
-  }
-
   const handleSettings = (tabId?: CollectionSettingsTab) => {
     setShowMenu(false)
     application.showDialog({
       children: (
         <CollectionSettings
           collection={coll}
-          onSave={settingsSave}
+          onSave={update}
           onClose={() => application.hideDialog()}
           activeTabId={tabId}
         />

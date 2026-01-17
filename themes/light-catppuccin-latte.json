@@ -35,6 +35,7 @@
     "background-content": "var(--color-0)",
     "base-color": "var(--color-6)",
     "border-color": "var(--color-3)",
+    "text-warning": "var(--yellow)",
     "button-active-background-color": "var(--color-4)",
     "button-active-border-color": "var(--blue)",
     "button-active-color": "var(--color-6)",

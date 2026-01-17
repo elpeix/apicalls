@@ -14,10 +14,22 @@
 .footer {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 10px;
+  align-items: center;
+  padding: 0.6rem;
   border-top: 1px solid var(--border-color);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+.warning {
+  color: var(--text-warning);
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
 .headers {
