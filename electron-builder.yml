@@ -25,6 +25,8 @@ mac:
     - dmg
     - zip
   artifactName: ${name}-${version}-${arch}.${ext}
+  hardenedRuntime: true
+  entitlements: build/entitlements.mac.plist
   entitlementsInherit: build/entitlements.mac.plist
   notarize: false
   icon: ./build/icon.icns
