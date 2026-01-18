@@ -38,7 +38,9 @@ export function initAutoUpdate(mainWindow: BrowserWindow) {
     const settings = settingsStore.get('settings', defaultSettings) as AppSettingsType
     const skippedVersions = settings.skippedVersions || []
 
-    if (skippedVersions.includes(info.version) && !manualCheckInProgress) {
+    const versionIsBeta = info.version.includes('beta')
+
+    if ((skippedVersions.includes(info.version) || versionIsBeta) && !manualCheckInProgress) {
       return
     }
 
@@ -61,11 +63,11 @@ export function initAutoUpdate(mainWindow: BrowserWindow) {
         }
       })
 
-    sendStatus({
-      type: 'available',
-      version: info.version,
-      initiatedByUser: manualCheckInProgress
-    })
+    // sendStatus({
+    //   type: 'available',
+    //   version: info.version,
+    //   initiatedByUser: manualCheckInProgress
+    // })
     manualCheckInProgress = false
   })
 
