@@ -14,6 +14,9 @@ Feel free to try it out and provide feedback!
 
 ## Installation guide
 
+> **IMPORTANT:** I recommend building the app from source instead of downloading the installer.
+> See the next section.
+
 > **Note:** API Calls installable is available for **Linux**, **MacOs** or
 > **Windows**.
 

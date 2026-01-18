@@ -10,6 +10,8 @@ and organise them into tabs, collections, and workspaces.
 
 ## Requirements and Installation
 
+> **IMPORTANT:** I recommend building the app from source instead of downloading the installer.
+
 - **Official packages**: download the latest release for Linux, macOS, or
   Windows from GitHub Releases.
 - **Arch Linux**: available through the `api-calls-bin` package (AUR).
