@@ -8,7 +8,7 @@
   background-color: var(--sidePanel-menu-color);
 
   &.mac {
-    --mac-spacer: 4.64rem;
+    --mac-spacer: 5rem;
     width: var(--mac-spacer);
 
     div.macSpacer {

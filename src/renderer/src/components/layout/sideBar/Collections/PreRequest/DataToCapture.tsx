@@ -36,7 +36,9 @@ export default function DataToCapture({
       <SimpleTable templateColumns={`100px 300px minmax(1rem, 1fr) 2rem`}>
         <SimpleTable.Header>
           <SimpleTable.HeaderCell>Type</SimpleTable.HeaderCell>
-          <SimpleTable.HeaderCell draggable={true}>Path</SimpleTable.HeaderCell>
+          <SimpleTable.HeaderCell draggable={true} maxWidth={800}>
+            Path
+          </SimpleTable.HeaderCell>
           <SimpleTable.HeaderCell>Environment Variable</SimpleTable.HeaderCell>
           <SimpleTable.HeaderCell>
             <></>

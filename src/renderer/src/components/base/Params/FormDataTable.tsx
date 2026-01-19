@@ -129,7 +129,9 @@ export default function FormDataTable({
                 )}
               </SimpleTable.HeaderCell>
             )}
-            <SimpleTable.HeaderCell draggable={true}>Name</SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true} maxWidth={600}>
+              Name
+            </SimpleTable.HeaderCell>
             {showType && <SimpleTable.HeaderCell>Type</SimpleTable.HeaderCell>}
             <SimpleTable.HeaderCell>Value</SimpleTable.HeaderCell>
             {showDelete && (

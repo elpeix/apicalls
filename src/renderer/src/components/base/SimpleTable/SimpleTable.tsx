@@ -7,7 +7,7 @@ import { useDebounce } from '../../../hooks/useDebounce'
 const SimpleTableContext = createContext<{
   templateColumns: string
   updateColumnWidth: (index: number, width: string) => void
-  onDrag: (index: number, offset: number) => void
+  onDrag: (index: number, offset: number, min?: number, max?: number) => void
   onDragStart: (widths: number[]) => void
 }>({
   templateColumns: '',
@@ -49,10 +49,12 @@ export default function SimpleTable({
     startWidthsRef.current = widths
   }, [])
 
-  const onDrag = useCallback((index: number, offset: number) => {
+  const onDrag = useCallback((index: number, offset: number, min?: number, max?: number) => {
     const startWidth = startWidthsRef.current[index]
     if (startWidth !== undefined) {
-      const newWidth = Math.min(Math.max(startWidth + offset, 30), window.innerWidth)
+      const minWidth = min ?? 30
+      const maxWidth = max ?? window.innerWidth
+      const newWidth = Math.min(Math.max(startWidth + offset, minWidth), maxWidth)
       setColumns((prev) => {
         const newColumns = [...prev]
         newColumns[index] = `${newWidth}px`
@@ -105,10 +107,14 @@ SimpleTableHeaderCell.displayName = 'SimpleTableHeaderCell'
 function SimpleTableHeaderCell({
   draggable = false,
   index,
+  minWidth,
+  maxWidth,
   children
 }: {
   draggable?: boolean
   index?: number
+  minWidth?: number
+  maxWidth?: number
   children: React.ReactNode
 }) {
   const { onDrag: contextOnDrag, onDragStart: contextOnDragStart } = useContext(SimpleTableContext)
@@ -142,7 +148,7 @@ function SimpleTableHeaderCell({
         return
       }
       const delta = e.clientX - startXRef.current
-      contextOnDrag(index, delta)
+      contextOnDrag(index, delta, minWidth, maxWidth)
     }
 
     const handleMouseUp = () => {
@@ -170,7 +176,7 @@ function SimpleTableHeaderCell({
       window.removeEventListener('mouseup', handleMouseUp)
       document.body.style.cursor = ''
     }
-  }, [draggable, index, contextOnDrag, contextOnDragStart])
+  }, [draggable, index, contextOnDrag, contextOnDragStart, minWidth, maxWidth])
 
   return (
     <div className={`${styles.cell} ${draggable && styles.draggable}`} role="columnheader">

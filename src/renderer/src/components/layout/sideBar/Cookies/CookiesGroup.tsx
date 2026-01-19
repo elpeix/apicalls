@@ -69,9 +69,15 @@ export default function CookiesGroup({
       <div className={styles.content}>
         <SimpleTable templateColumns={`100px 180px 50px minmax(1rem, 1fr) 2rem`}>
           <SimpleTable.Header>
-            <SimpleTable.HeaderCell draggable={true}>Name</SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell draggable={true}>Value</SimpleTable.HeaderCell>
-            <SimpleTable.HeaderCell draggable={true}>Path</SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true} maxWidth={300}>
+              Name
+            </SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true} maxWidth={500}>
+              Value
+            </SimpleTable.HeaderCell>
+            <SimpleTable.HeaderCell draggable={true} maxWidth={300}>
+              Path
+            </SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>Expires</SimpleTable.HeaderCell>
             <SimpleTable.HeaderCell>
               <></>
