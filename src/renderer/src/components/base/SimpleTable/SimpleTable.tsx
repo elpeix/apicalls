@@ -11,9 +11,9 @@ const SimpleTableContext = createContext<{
   onDragStart: (widths: number[]) => void
 }>({
   templateColumns: '',
-  updateColumnWidth: () => { },
-  onDrag: () => { },
-  onDragStart: () => { }
+  updateColumnWidth: () => {},
+  onDrag: () => {},
+  onDragStart: () => {}
 })
 
 const getColumns = (str: string) => str.trim().split(/\s+(?![^(]*\))/g)
@@ -49,22 +49,19 @@ export default function SimpleTable({
     startWidthsRef.current = widths
   }, [])
 
-  const onDrag = useCallback(
-    (index: number, offset: number, min?: number, max?: number) => {
-      const startWidth = startWidthsRef.current[index]
-      if (startWidth !== undefined) {
-        const minWidth = min ?? 30
-        const maxWidth = max ?? window.innerWidth
-        const newWidth = Math.min(Math.max(startWidth + offset, minWidth), maxWidth)
-        setColumns((prev) => {
-          const newColumns = [...prev]
-          newColumns[index] = `${newWidth}px`
-          return newColumns
-        })
-      }
-    },
-    []
-  )
+  const onDrag = useCallback((index: number, offset: number, min?: number, max?: number) => {
+    const startWidth = startWidthsRef.current[index]
+    if (startWidth !== undefined) {
+      const minWidth = min ?? 30
+      const maxWidth = max ?? window.innerWidth
+      const newWidth = Math.min(Math.max(startWidth + offset, minWidth), maxWidth)
+      setColumns((prev) => {
+        const newColumns = [...prev]
+        newColumns[index] = `${newWidth}px`
+        return newColumns
+      })
+    }
+  }, [])
 
   const templateColumns = columns.join(' ')
 

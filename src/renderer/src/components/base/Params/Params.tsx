@@ -9,7 +9,7 @@ import ParamLine from './ParamLine'
 export default function Params({
   items,
   onAdd,
-  onSave = () => { },
+  onSave = () => {},
   showEnable = true,
   editableName = true,
   editableValue = true,
