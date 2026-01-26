@@ -2,13 +2,23 @@ appId: com.francescrequesens.apicalls
 productName: API Calls
 directories:
   buildResources: build
+electronLanguages:
+  - en-US
+compression: maximum
 files:
   - '!**/.vscode/*'
+  - '!**/.git/*'
   - '!src/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
-  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
-  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
-  - '!{.git,aur}'
+  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md,SECURITY.md,AUTHORS,CONTRIBUTORS}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml,package-lock.json}'
+  - '!{aur,doc,test,scripts,.github}'
+  - '!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}'
+  - '!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}'
+  - '!**/node_modules/*.d.ts'
+  - '!**/node_modules/.bin'
+  - '!**/node_modules/*/man'
+  - '!build'
 asarUnpack:
   - resources/**
 win:
