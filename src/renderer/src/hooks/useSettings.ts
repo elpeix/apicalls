@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SETTINGS, SYSTEM_ACTIONS } from '../../../lib/ipcChannels'
 import { applyTheme, removeStyleProperties } from '../lib/utils'
 
@@ -73,38 +73,41 @@ export function useSettings(): AppSettingsHookType {
     return () => matchMedia.removeEventListener('change', handleChange)
   }, [matchMedia])
 
-  const save = (newSettings: AppSettingsType) => {
-    setSettings(newSettings)
-    if (newSettings.theme === 'system') {
-      document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
-    } else {
-      document.documentElement.setAttribute('data-theme', newSettings.theme)
-    }
-    const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.send(SETTINGS.save, newSettings)
-    removeStyleProperties()
-    const colors = themesRef.current.get(newSettings.theme)?.colors
-    if (colors) {
-      applyTheme(colors)
-    }
-    if (newSettings.menu !== undefined && newSettings.menu !== settings?.menu) {
-      ipcRenderer?.send(SETTINGS.toggleMenu, newSettings.menu)
-    }
-    if (
-      newSettings.manageCookies !== undefined &&
-      newSettings.manageCookies !== settings?.manageCookies
-    ) {
-      ipcRenderer?.send(SETTINGS.toggleMenuCookies, newSettings.manageCookies)
-    }
-  }
+  const save = useCallback(
+    (newSettings: AppSettingsType) => {
+      setSettings(newSettings)
+      if (newSettings.theme === 'system') {
+        document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
+      } else {
+        document.documentElement.setAttribute('data-theme', newSettings.theme)
+      }
+      const ipcRenderer = window.electron?.ipcRenderer
+      ipcRenderer?.send(SETTINGS.save, newSettings)
+      removeStyleProperties()
+      const colors = themesRef.current.get(newSettings.theme)?.colors
+      if (colors) {
+        applyTheme(colors)
+      }
+      if (newSettings.menu !== undefined && newSettings.menu !== settings?.menu) {
+        ipcRenderer?.send(SETTINGS.toggleMenu, newSettings.menu)
+      }
+      if (
+        newSettings.manageCookies !== undefined &&
+        newSettings.manageCookies !== settings?.manageCookies
+      ) {
+        ipcRenderer?.send(SETTINGS.toggleMenuCookies, newSettings.manageCookies)
+      }
+    },
+    [matchMedia, settings]
+  )
 
-  const clear = () => {
+  const clear = useCallback(() => {
     const ipcRenderer = window.electron?.ipcRenderer
     ipcRenderer?.send(SETTINGS.clear)
     removeStyleProperties()
-  }
+  }, [])
 
-  const getEditorTheme = (): {
+  const getEditorTheme = useCallback((): {
     name: string
     mode: string
     data: object
@@ -129,14 +132,17 @@ export function useSettings(): AppSettingsHookType {
       mode: theme?.mode || mode,
       colors: theme?.colors || {}
     }
-  }
+  }, [settings, mode, themes])
 
-  const isCustomWindowMode = () => {
+  const isCustomWindowMode = useCallback(() => {
     if (window.api.os.isMac) {
       return true
     }
     return settings?.windowMode !== 'native'
-  }
+  }, [settings?.windowMode])
 
-  return { settings, save, clear, getEditorTheme, themes, isCustomWindowMode }
+  return useMemo(
+    () => ({ settings, save, clear, getEditorTheme, themes, isCustomWindowMode }),
+    [settings, save, clear, getEditorTheme, themes, isCustomWindowMode]
+  )
 }

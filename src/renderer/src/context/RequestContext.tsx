@@ -50,66 +50,79 @@ export default function RequestContextProvider({
     requestConsole
   })
 
-  const contextValue = {
-    path: requestState.path || [],
-    isActive: tab.active,
-    collectionId: requestState.collectionId,
-    request: {
-      method: requestState.requestMethod,
-      url: requestState.requestUrl,
-      body: requestState.requestBody,
-      auth: requestState.requestAuth,
-      preScript: requestState.requestPreScript,
-      postScript: requestState.requestPostScript,
-      headers: {
-        items: requestState.requestHeaders,
-        set: requestState.setHeaders,
-        add: requestState.addHeader,
-        remove: requestState.removeHeader,
-        getActiveLength: requestState.getActiveHeadersLength
+  const contextValue = React.useMemo(
+    () => ({
+      path: requestState.path || [],
+      isActive: tab.active,
+      collectionId: requestState.collectionId,
+      request: {
+        method: requestState.requestMethod,
+        url: requestState.requestUrl,
+        body: requestState.requestBody,
+        auth: requestState.requestAuth,
+        preScript: requestState.requestPreScript,
+        postScript: requestState.requestPostScript,
+        headers: {
+          items: requestState.requestHeaders,
+          set: requestState.setHeaders,
+          add: requestState.addHeader,
+          remove: requestState.removeHeader,
+          getActiveLength: requestState.getActiveHeadersLength
+        },
+        pathParams: {
+          items: requestState.requestPathParams,
+          set: requestState.setPathParams,
+          remove: requestState.removePathParam,
+          getActiveLength: requestState.getActivePathParamsLength
+        },
+        queryParams: {
+          items: requestState.requestQueryParams,
+          set: requestState.setQueryParams,
+          add: requestState.addQueryParam,
+          remove: requestState.removeQueryParam,
+          getActiveLength: requestState.getActiveQueryParamsLength
+        },
+        setMethod: requestState.setMethod,
+        setUrl: requestState.setUrl,
+        setFullUrl: requestState.setFullUrl,
+        getFullUrl: requestState.getFullUrl,
+        setBody: requestState.setBody,
+        setAuth: requestState.setAuth,
+        setPreScript: requestState.setPreScript,
+        setPostScript: requestState.setPostScript,
+        fetch: requestSender.fetch,
+        cancel: requestSender.cancel,
+        urlIsValid: requestState.urlIsValid
       },
-      pathParams: {
-        items: requestState.requestPathParams,
-        set: requestState.setPathParams,
-        remove: requestState.removePathParam,
-        getActiveLength: requestState.getActivePathParamsLength
-      },
-      queryParams: {
-        items: requestState.requestQueryParams,
-        set: requestState.setQueryParams,
-        add: requestState.addQueryParam,
-        remove: requestState.removeQueryParam,
-        getActiveLength: requestState.getActiveQueryParamsLength
-      },
-      setMethod: requestState.setMethod,
-      setUrl: requestState.setUrl,
-      setFullUrl: requestState.setFullUrl,
-      getFullUrl: requestState.getFullUrl,
-      setBody: requestState.setBody,
-      setAuth: requestState.setAuth,
-      setPreScript: requestState.setPreScript,
-      setPostScript: requestState.setPostScript,
-      fetch: requestSender.fetch,
-      cancel: requestSender.cancel,
-      urlIsValid: requestState.urlIsValid
-    },
-    fetching: requestSender.fetching,
-    fetched: requestSender.fetched,
-    fetchError: requestSender.fetchError,
-    fetchErrorCause: requestSender.fetchErrorCause,
-    response: requestState.response,
-    save: requestState.saveRequest,
-    saved: requestState.saved,
-    requestConsole,
-    tabId: requestState.tabId,
-    openSaveAs: requestState.openSaveAs,
-    setOpenSaveAs: requestState.setOpenSaveAs,
-    setEditorState: requestState.setEditorState,
-    getEditorState: requestState.getEditorState,
-    getRequestEnvironment: requestState.getRequestEnvironment,
-    copyAsCurl: requestState.copyAsCurl,
-    pasteCurl: requestState.pasteCurl
-  }
+      fetching: requestSender.fetching,
+      fetched: requestSender.fetched,
+      fetchError: requestSender.fetchError,
+      fetchErrorCause: requestSender.fetchErrorCause,
+      response: requestState.response,
+      save: requestState.saveRequest,
+      saved: requestState.saved,
+      requestConsole,
+      tabId: requestState.tabId,
+      openSaveAs: requestState.openSaveAs,
+      setOpenSaveAs: requestState.setOpenSaveAs,
+      setEditorState: requestState.setEditorState,
+      getEditorState: requestState.getEditorState,
+      getRequestEnvironment: requestState.getRequestEnvironment,
+      copyAsCurl: requestState.copyAsCurl,
+      pasteCurl: requestState.pasteCurl
+    }),
+    [
+      requestState,
+      tab.active,
+      requestSender.fetch,
+      requestSender.cancel,
+      requestSender.fetching,
+      requestSender.fetched,
+      requestSender.fetchError,
+      requestSender.fetchErrorCause,
+      requestConsole
+    ]
+  )
 
   return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
 }

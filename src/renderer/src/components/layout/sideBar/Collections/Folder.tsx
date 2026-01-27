@@ -16,7 +16,9 @@ export default function Folder({
   update,
   onMove,
   remove,
-  scrolling
+  scrolling,
+  onDragStart,
+  onDragEnd
 }: {
   folder: CollectionFolder
   collectionId: Identifier
@@ -25,6 +27,8 @@ export default function Folder({
   onMove: (moveAction: MoveAction) => void
   remove: (folder: CollectionFolder) => void
   scrolling: boolean
+  onDragStart?: () => void
+  onDragEnd?: () => void
 }) {
   const { application, tabs, collections } = useContext(AppContext)
   const [expanded, setExpanded] = useState(folder.expanded || false)
@@ -190,6 +194,8 @@ export default function Folder({
               onMove={onMove}
               path={folderPath}
               scrolling={scrolling}
+              onDragStart={onDragStart || (() => {})}
+              onDragEnd={onDragEnd || (() => {})}
             />
           </div>
         )}
