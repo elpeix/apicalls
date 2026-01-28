@@ -34,6 +34,9 @@
     "border-color": "color-mix(in srgb, var(--color-2) 50%, var(--color-3))",
     "divider-color": "var(--border-color)",
 
+    "window-background": "var(--color-0)",
+    "window-background-mac": "var(--color-0)",
+
     "active-background-color": "var(--color-2)",
     "active-color": "var(--color-6)",
     "hover-background-color": "color-mix(in srgb, var(--color-2) 40%, var(--color-3))",
@@ -101,8 +104,8 @@
     "tab-color": "var(--color-5)",
     "tab-background-color": "transparent",
     "tab-selected-color": "var(--color-6)",
-    "tab-selected-background-color": "var(--color-0)",
-    "tab-hover-background-color": "var(--color-2)",
+    "tab-selected-background-color": "var(--color-2)",
+    "tab-hover-background-color": "var(--color-1)",
 
     "popup-background-color": "var(--color-0)",
     "popup-color": "var(--color-6)",

@@ -4,7 +4,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: var(--sidePanel-color);
+  background: linear-gradient(farthest-corner at 40px 40px, #16161a 0%, #21212a 100%);
 
   .workspace {
     height: var(--top-bar-height);
@@ -42,7 +42,10 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background-color: var(--sidePanel-color);
     border-top: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
+    border-radius: var(--sidePanel-border-radius) 0 0 0;
 
     .sidePanel {
       & > div {
@@ -57,6 +60,10 @@
         display: flex;
         flex-direction: column;
       }
+    }
+
+    &:has(.sidePanel.collection) {
+      border-radius: unset;
     }
   }
 }

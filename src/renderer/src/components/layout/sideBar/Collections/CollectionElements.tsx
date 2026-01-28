@@ -9,7 +9,9 @@ export default function CollectionElements({
   path,
   update,
   onMove,
-  scrolling
+  scrolling,
+  onDragStart,
+  onDragEnd
 }: {
   elements: (CollectionFolder | RequestType)[]
   collectionId: Identifier
@@ -17,6 +19,8 @@ export default function CollectionElements({
   update: () => void
   onMove: (moveAction: MoveAction) => void
   scrolling: boolean
+  onDragStart: () => void
+  onDragEnd: () => void
 }) {
   const [droppableActive, setDroppableActive] = useState(false)
 
@@ -57,7 +61,7 @@ export default function CollectionElements({
       />
       {elements.map((element, i) => (
         <CollectionElement
-          key={i}
+          key={element.id}
           index={i}
           collectionId={collectionId}
           element={element}
@@ -67,6 +71,8 @@ export default function CollectionElements({
           removeElement={removeElement}
           path={path}
           scrolling={scrolling}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
         />
       ))}
     </>

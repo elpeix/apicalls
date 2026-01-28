@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 import { createAuth, getMethods } from '../../lib/factory'
 
@@ -33,7 +33,25 @@ export function useRequestState(tab: RequestTab) {
     appSettings: settings
   } = useContext(AppContext)
 
-  const path = tab.path || []
+  const collectionsRef = useRef(collections)
+  const environmentsRef = useRef(environments)
+  const tabsRef = useRef(tabs)
+  const settingsRef = useRef(settings)
+  const workspacesRef = useRef(workspaces)
+  const cookiesRef = useRef(cookies)
+  const applicationRef = useRef(application)
+
+  useEffect(() => {
+    collectionsRef.current = collections
+    environmentsRef.current = environments
+    tabsRef.current = tabs
+    settingsRef.current = settings
+    workspacesRef.current = workspaces
+    cookiesRef.current = cookies
+    applicationRef.current = application
+  }, [collections, environments, tabs, settings, workspaces, cookies, application])
+
+  const path = useMemo(() => tab.path || [], [tab.path])
   const collectionId = tab.collectionId
   const tabId = tab.id
   const definedRequest = tab.request
@@ -102,301 +120,365 @@ export function useRequestState(tab: RequestTab) {
   ])
 
   useEffect(() => {
-    if (!collectionId || !collections) return
-    const collection = collections.get(collectionId)
-    if (!collection) return
+    if (!collectionId) return
+    const collection = collectionsRef.current?.get(collectionId)
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCollection(collection)
-    if (collection.preRequest) {
+    setCollection(collection || null)
+    if (collection?.preRequest) {
       setPreRequestData(collection.preRequest)
     }
-  }, [collectionId, collections, preRequestData])
+  }, [collectionId])
 
-  const getRequestEnvironment = () => {
-    if (collection && collection.environmentId) {
-      const environment = environments?.get(collection.environmentId)
+  const getRequestEnvironment = useCallback(() => {
+    // Access latest collection from ref or state if needed (but collection via state is derived from ref)
+    // Actually, collection state is updated via effect so getting it from ref is safer for callbacks?
+    // But 'collection' state updates when collectionId changes.
+    // Let's use the ref to get the fresh collection object if possible to avoid dependency on 'collection' state
+    const currentCollection = collectionId ? collectionsRef.current?.get(collectionId) : null
+
+    if (currentCollection && currentCollection.environmentId) {
+      const environment = environmentsRef.current?.get(currentCollection.environmentId)
       if (environment) {
         return environment
       }
     }
-    const environment = environments?.getActive()
+    const environment = environmentsRef.current?.getActive()
     if (!environment) {
       return null
     }
     return environment
-  }
+  }, [collectionId])
 
-  const getValue = (value: string): string => {
-    if (requestPathParams) {
-      value = replacePathParams(value, requestPathParams)
-    }
-    if (environments) {
-      const enviroment = getRequestEnvironment()
-      if (enviroment) {
-        value = environments.replaceVariables(enviroment.id, value)
+  const getValue = useCallback(
+    (value: string): string => {
+      if (requestPathParams) {
+        value = replacePathParams(value, requestPathParams)
       }
-    }
-    return value
-  }
+      if (environmentsRef.current) {
+        const enviroment = getRequestEnvironment()
+        if (enviroment) {
+          value = environmentsRef.current.replaceVariables(enviroment.id, value)
+        }
+      }
+      return value
+    },
+    [requestPathParams, getRequestEnvironment]
+  )
 
-  const setRequestResponse = (response: RequestResponseType) => {
-    setResponse(response)
-    const newTab = { ...tab }
-    newTab.response = settings?.settings?.saveLastResponse ? response : undefined
-    tabs?.updateTab(tab.id, newTab)
-  }
+  const setRequestResponse = useCallback(
+    (response: RequestResponseType) => {
+      setResponse(response)
+      const newTab = { ...tab }
+      newTab.response = settingsRef.current?.settings?.saveLastResponse ? response : undefined
+      tabsRef.current?.updateTab(tab.id, newTab)
+    },
+    [tab]
+  )
 
-  const setMethod = (method: Method) => {
-    if (!method) return
-    const definedMethod = methods.find((m) => m.value === method.value)
-    if (!definedMethod) return
-    setRequestMethod(definedMethod)
-    setChanged(true)
-    setSaved(false)
-  }
+  const setMethod = useCallback(
+    (method: Method) => {
+      if (!method) return
+      const definedMethod = methods.find((m) => m.value === method.value)
+      if (!definedMethod) return
+      setRequestMethod(definedMethod)
+      setChanged(true)
+      setSaved(false)
+    },
+    [methods]
+  )
 
-  const setUrl = (url: string) => {
+  const setUrl = useCallback((url: string) => {
     setRequestUrl(url)
     setChanged(true)
     setSaved(false)
-  }
+  }, [])
 
-  const setFullUrl = (value: string) => {
-    if (value === requestFullUrl) return
-    setRequestFullUrl(value)
-    const [url, params] = value.split('?')
-    setUrl(url)
-    setPathParams(getPathParamsFromUrl(url, requestPathParams))
-    setQueryParams(getQueryParamsFromUrl(params, requestQueryParams))
-  }
+  const setPathParams = useCallback(
+    (pathParams: KeyValue[]) => {
+      if (keyValuesAreEqual(pathParams, requestPathParams)) return
+      setRequestPathParams(pathParams)
+      setChanged(true)
+      setSaved(false)
+    },
+    [requestPathParams]
+  )
 
-  const setBody = (body: BodyType) => {
-    if (
-      typeof requestBody !== 'string' &&
-      typeof body !== 'string' &&
-      requestBody.contentType === body.contentType &&
-      requestBody.value === body.value
-    ) {
-      return
-    }
-    setRequestBody(body)
-    setChanged(true)
-    setSaved(false)
-  }
+  const setQueryParams = useCallback(
+    (params: KeyValue[]) => {
+      if (keyValuesAreEqual(params, requestQueryParams)) return
+      setRequestQueryParams(params)
+      setChanged(true)
+      setSaved(false)
+    },
+    [requestQueryParams]
+  )
 
-  const setAuth = (auth: RequestAuth) => {
+  const setFullUrl = useCallback(
+    (value: string) => {
+      if (value === requestFullUrl) return
+      setRequestFullUrl(value)
+      const [url, params] = value.split('?')
+      setUrl(url)
+      setPathParams(getPathParamsFromUrl(url, requestPathParams))
+      setQueryParams(getQueryParamsFromUrl(params, requestQueryParams))
+    },
+    [requestFullUrl, setUrl, setPathParams, setQueryParams, requestPathParams, requestQueryParams]
+  )
+
+  const setBody = useCallback(
+    (body: BodyType) => {
+      if (
+        typeof requestBody !== 'string' &&
+        typeof body !== 'string' &&
+        requestBody.contentType === body.contentType &&
+        requestBody.value === body.value
+      ) {
+        return
+      }
+      setRequestBody(body)
+      setChanged(true)
+      setSaved(false)
+    },
+    [requestBody]
+  )
+
+  const setAuth = useCallback((auth: RequestAuth) => {
     setRequestAuth(auth)
     setChanged(true)
     setSaved(false)
-  }
+  }, [])
 
-  const setPreScript = (script: string) => {
+  const setPreScript = useCallback((script: string) => {
     setRequestPreScript(script)
     setChanged(true)
     setSaved(false)
-  }
+  }, [])
 
-  const setPostScript = (script: string) => {
+  const setPostScript = useCallback((script: string) => {
     setRequestPostScript(script)
     setChanged(true)
     setSaved(false)
-  }
+  }, [])
 
-  const setHeaders = (headers: KeyValue[]) => {
-    if (keyValuesAreEqual(headers, requestHeaders)) return
-    setRequestHeaders(headers)
-    setChanged(true)
-    setSaved(false)
-  }
+  const setHeaders = useCallback(
+    (headers: KeyValue[]) => {
+      if (keyValuesAreEqual(headers, requestHeaders)) return
+      setRequestHeaders(headers)
+      setChanged(true)
+      setSaved(false)
+    },
+    [requestHeaders]
+  )
 
-  const addHeader = () => {
+  const addHeader = useCallback(() => {
     setHeaders([...requestHeaders, { enabled: true, name: '', value: '' }])
-  }
+  }, [requestHeaders, setHeaders])
 
-  const removeHeader = (index: number) => {
-    const headers = [...requestHeaders]
-    headers.splice(index, 1)
-    setHeaders(headers)
-  }
+  const removeHeader = useCallback(
+    (index: number) => {
+      const headers = [...requestHeaders]
+      headers.splice(index, 1)
+      setHeaders(headers)
+    },
+    [requestHeaders, setHeaders]
+  )
 
-  const getActiveHeadersLength = () => {
+  const getActiveHeadersLength = useCallback(() => {
     return requestHeaders.filter((header: KeyValue) => header.enabled).length
-  }
+  }, [requestHeaders])
 
-  const setPathParams = (pathParams: KeyValue[]) => {
-    if (keyValuesAreEqual(pathParams, requestPathParams)) return
-    setRequestPathParams(pathParams)
-    setChanged(true)
-    setSaved(false)
-  }
+  const removePathParam = useCallback(
+    (index: number) => {
+      const params = [...requestPathParams]
+      params.splice(index, 1)
+      setPathParams(params)
+    },
+    [requestPathParams, setPathParams]
+  )
 
-  const removePathParam = (index: number) => {
-    const params = [...requestPathParams]
-    params.splice(index, 1)
-    setPathParams(params)
-  }
-
-  const getActivePathParamsLength = () => {
+  const getActivePathParamsLength = useCallback(() => {
     return requestPathParams.filter((param: KeyValue) => param.enabled).length
-  }
+  }, [requestPathParams])
 
-  const setQueryParams = (params: KeyValue[]) => {
-    if (keyValuesAreEqual(params, requestQueryParams)) return
-    setRequestQueryParams(params)
-    setChanged(true)
-    setSaved(false)
-  }
-
-  const addQueryParam = () => {
+  const addQueryParam = useCallback(() => {
     setRequestQueryParams([...requestQueryParams, { enabled: true, name: '', value: '' }])
-  }
+  }, [requestQueryParams, setRequestQueryParams])
 
-  const removeQueryParam = (index: number) => {
-    const params = [...requestQueryParams]
-    params.splice(index, 1)
-    setQueryParams(params)
-  }
+  const removeQueryParam = useCallback(
+    (index: number) => {
+      const params = [...requestQueryParams]
+      params.splice(index, 1)
+      setQueryParams(params)
+    },
+    [requestQueryParams, setQueryParams]
+  )
 
-  const getActiveQueryParamsLength = () => {
+  const getActiveQueryParamsLength = useCallback(() => {
     return requestQueryParams.filter((param: KeyValue) => param.enabled).length
-  }
+  }, [requestQueryParams])
 
-  const saveRequest = () => {
-    if (!collections) return
+  const saveRequest = useCallback(() => {
+    if (!collectionsRef.current) return
     if (!collectionId) {
       setOpenSaveAs(true)
       return
     }
-    tabs?.saveTab(tab.id)
+    tabsRef.current?.saveTab(tab.id)
     setSaved(true)
     setChanged(true)
-  }
+  }, [collectionId, tab.id])
 
-  const getUrlObject = ({ url = requestUrl }) => new URL(getValue(url))
+  const getUrlObject = useCallback(
+    ({ url = requestUrl }) => new URL(getValue(url)),
+    [requestUrl, getValue]
+  )
 
-  const urlIsValid = ({ url = requestUrl }) => {
-    try {
-      getUrlObject({ url })
-      return true
-    } catch (_err) {
-      return false
-    }
-  }
+  const urlIsValid = useCallback(
+    ({ url = requestUrl }) => {
+      try {
+        getUrlObject({ url })
+        return true
+      } catch (_err) {
+        return false
+      }
+    },
+    [requestUrl, getUrlObject]
+  )
 
-  const setEditorState = (type: 'request' | 'response', state: string) => {
+  const setEditorState = useCallback((type: 'request' | 'response', state: string) => {
     if (type === 'request') {
       setRequestEditorState(state)
     } else {
       setResponseEditorState(state)
     }
-  }
+  }, [])
 
-  const getEditorState = (type: 'request' | 'response') => {
-    if (type === 'request') {
-      return requestEditorState
-    }
-    return responseEditorState
-  }
+  const getEditorState = useCallback(
+    (type: 'request' | 'response') => {
+      if (type === 'request') {
+        return requestEditorState
+      }
+      return responseEditorState
+    },
+    [requestEditorState, responseEditorState]
+  )
 
-  const getDefaultUserAgent = () => {
-    const settingsHeader = settings?.settings?.defaultHeaders?.find(
+  const getDefaultUserAgent = useCallback(() => {
+    const settingsHeader = settingsRef.current?.settings?.defaultHeaders?.find(
       (header) => header.name === 'User-Agent'
     )
     if (settingsHeader && settingsHeader.enabled && settingsHeader.value) {
       return getValue(settingsHeader.value)
     }
-    return getGeneralDefaultUserAgent(application.version)
-  }
+    return getGeneralDefaultUserAgent(applicationRef.current.version)
+  }, [getValue])
 
-  const setDefaultHeaders = (headers: Record<string, string>) => {
-    const headerNamesLower = Object.keys(headers).map((h) => h.toLowerCase())
+  const setDefaultHeaders = useCallback(
+    (headers: Record<string, string>) => {
+      const headerNamesLower = Object.keys(headers).map((h) => h.toLowerCase())
 
-    const setHeadersFn = (definedHeaders: KeyValue[] | undefined) => {
-      definedHeaders?.forEach((header) => {
-        if (
-          header.enabled &&
-          header.name &&
-          !headerNamesLower.includes(header.name.toLowerCase())
-        ) {
-          headers[header.name] = getValue(header.value)
-          headerNamesLower.push(header.name.toLowerCase())
+      const setHeadersFn = (definedHeaders: KeyValue[] | undefined) => {
+        definedHeaders?.forEach((header) => {
+          if (
+            header.enabled &&
+            header.name &&
+            !headerNamesLower.includes(header.name.toLowerCase())
+          ) {
+            headers[header.name] = getValue(header.value)
+            headerNamesLower.push(header.name.toLowerCase())
+          }
+        })
+      }
+
+      setHeadersFn(collection?.requestHeaders)
+      setHeadersFn(getRequestEnvironment()?.requestHeaders)
+      setHeadersFn(workspacesRef.current?.selectedWorkspace?.requestHeaders)
+      setHeadersFn(settingsRef.current?.settings?.defaultHeaders)
+    },
+    [collection, getRequestEnvironment, getValue]
+  )
+
+  const getHeaders = useCallback(
+    (url: string) => {
+      const headers: HeadersInit = {}
+      let userAgentDefined = false
+      let contentTypeDefined = false
+      requestHeaders.forEach((header) => {
+        if (header.enabled && header.name) {
+          const headerName = getValue(header.name)
+          headers[headerName] = getValue(header.value)
+          if (headerName.toLowerCase() === 'user-agent') {
+            userAgentDefined = true
+          }
+          if (headerName.toLowerCase() === 'content-type') {
+            contentTypeDefined = true
+          }
         }
       })
-    }
+      if (!userAgentDefined) {
+        headers['User-Agent'] = getDefaultUserAgent()
+      }
 
-    setHeadersFn(collection?.requestHeaders)
-    setHeadersFn(getRequestEnvironment()?.requestHeaders)
-    setHeadersFn(workspaces?.selectedWorkspace?.requestHeaders)
-    setHeadersFn(settings?.settings?.defaultHeaders)
-  }
-
-  const getHeaders = (url: string) => {
-    const headers: HeadersInit = {}
-    let userAgentDefined = false
-    let contentTypeDefined = false
-    requestHeaders.forEach((header) => {
-      if (header.enabled && header.name) {
-        const headerName = getValue(header.name)
-        headers[headerName] = getValue(header.value)
-        if (headerName.toLowerCase() === 'user-agent') {
-          userAgentDefined = true
-        }
-        if (headerName.toLowerCase() === 'content-type') {
-          contentTypeDefined = true
+      if (!contentTypeDefined && requestMethod.body && typeof requestBody !== 'string') {
+        const contentType = getContentType(requestBody)
+        if (contentType) {
+          headers['Content-Type'] = contentType
         }
       }
-    })
-    if (!userAgentDefined) {
-      headers['User-Agent'] = getDefaultUserAgent()
-    }
 
-    if (!contentTypeDefined && requestMethod.body && typeof requestBody !== 'string') {
-      const contentType = getContentType(requestBody)
-      if (contentType) {
-        headers['Content-Type'] = contentType
-      }
-    }
+      setDefaultHeaders(headers)
 
-    setDefaultHeaders(headers)
-
-    if (requestAuth.type !== 'none' && requestAuth.value) {
-      if (requestAuth.type === 'bearer') {
-        const value = getValue(requestAuth.value as string)
-        headers['Authorization'] = `Bearer ${getValue(value)}`
-      } else if (requestAuth.type === 'basic') {
-        const requestAuthRecord = requestAuth.value as RequestAuthBasic
-        const username = requestAuthRecord.username || ''
-        const password = requestAuthRecord.password || ''
-        headers['Authorization'] = `Basic ${btoa(`${getValue(username)}:${getValue(password)}`)}`
-      } else if (requestAuth.type === 'oauth2') {
-        const authValue = requestAuth.value as RequestAuthOAuth2
-        if (authValue?.accessToken) {
-          headers['Authorization'] = `Bearer ${getValue(authValue.accessToken)}`
+      if (requestAuth.type !== 'none' && requestAuth.value) {
+        if (requestAuth.type === 'bearer') {
+          const value = getValue(requestAuth.value as string)
+          headers['Authorization'] = `Bearer ${getValue(value)}`
+        } else if (requestAuth.type === 'basic') {
+          const requestAuthRecord = requestAuth.value as RequestAuthBasic
+          const username = requestAuthRecord.username || ''
+          const password = requestAuthRecord.password || ''
+          headers['Authorization'] = `Basic ${btoa(`${getValue(username)}:${getValue(password)}`)}`
+        } else if (requestAuth.type === 'oauth2') {
+          const authValue = requestAuth.value as RequestAuthOAuth2
+          if (authValue?.accessToken) {
+            headers['Authorization'] = `Bearer ${getValue(authValue.accessToken)}`
+          }
         }
       }
-    }
-    if (settings?.settings?.manageCookies) {
-      const originCookies = cookies?.stringify(getValue(url))
-      if (originCookies) {
-        headers['Cookie'] = originCookies
+      if (settingsRef.current?.settings?.manageCookies) {
+        const originCookies = cookiesRef.current?.stringify(getValue(url))
+        if (originCookies) {
+          headers['Cookie'] = originCookies
+        }
       }
-    }
-    return headers
-  }
+      return headers
+    },
+    [
+      requestHeaders,
+      getValue,
+      getDefaultUserAgent,
+      requestMethod.body,
+      requestBody,
+      setDefaultHeaders,
+      requestAuth
+    ]
+  )
 
-  const prepareQueryParams = (queryParams: KeyValue[]) => {
-    return queryParams
-      .filter((queryParam: KeyValue) => queryParam.enabled)
-      .map((queryParam: KeyValue) => {
-        return {
-          name: getValue(queryParam.name),
-          value: getValue(queryParam.value || ''),
-          enabled: queryParam.enabled
-        } as KeyValue
-      })
-  }
+  const prepareQueryParams = useCallback(
+    (queryParams: KeyValue[]) => {
+      return queryParams
+        .filter((queryParam: KeyValue) => queryParam.enabled)
+        .map((queryParam: KeyValue) => {
+          return {
+            name: getValue(queryParam.name),
+            value: getValue(queryParam.value || ''),
+            enabled: queryParam.enabled
+          } as KeyValue
+        })
+    },
+    [getValue]
+  )
 
-  const copyAsCurl = () => {
+  const copyAsCurl = useCallback(() => {
     const url = getValue(requestUrl)
     let path = url
     const queryParams = prepareQueryParams(requestQueryParams)
@@ -420,24 +502,35 @@ export function useRequestState(tab: RequestTab) {
       curl += `\\\n  -d '${getBody(requestBody)}'`
     }
     navigator.clipboard.writeText(curl)
-    application.notify({ message: 'cURL command copied to clipboard' })
-  }
+    applicationRef.current.notify({ message: 'cURL command copied to clipboard' })
+  }, [
+    getValue,
+    requestUrl,
+    prepareQueryParams,
+    requestQueryParams,
+    getHeaders,
+    requestMethod,
+    requestBody
+  ])
 
-  const pasteCurl = (curlCommand: string) => {
-    const requestBase = parseCurl(curlCommand)
-    if (!requestBase) {
-      application.notify({ message: 'Invalid cURL command' })
-      return
-    }
+  const pasteCurl = useCallback(
+    (curlCommand: string) => {
+      const requestBase = parseCurl(curlCommand)
+      if (!requestBase) {
+        applicationRef.current.notify({ message: 'Invalid cURL command' })
+        return
+      }
 
-    setRequestMethod(requestBase.method)
-    setRequestUrl(requestBase.url)
-    setRequestHeaders(requestBase.headers || [])
-    setQueryParams(requestBase.queryParams || [])
-    setRequestBody(requestBase.body || 'none')
-  }
+      setRequestMethod(requestBase.method)
+      setRequestUrl(requestBase.url)
+      setRequestHeaders(requestBase.headers || [])
+      setQueryParams(requestBase.queryParams || [])
+      setRequestBody(requestBase.body || 'none')
+    },
+    [setQueryParams]
+  )
 
-  const getFullUrl = () => {
+  const getFullUrl = useCallback(() => {
     const queryParams = new URLSearchParams()
     if (requestQueryParams) {
       requestQueryParams
@@ -456,70 +549,128 @@ export function useRequestState(tab: RequestTab) {
       )
     })
     return `${requestUrl}${queryParamsValue}`
-  }
+  }, [requestQueryParams, getRequestEnvironment, requestUrl])
 
-  return {
-    path,
-    collectionId,
-    collection,
-    preRequestData,
-    tabId,
+  return useMemo(
+    () => ({
+      path,
+      collectionId,
+      collection,
+      preRequestData,
+      tabId,
 
-    // State
-    requestMethod,
-    requestUrl,
-    requestBody,
-    requestAuth,
-    requestHeaders,
-    requestPathParams,
-    requestQueryParams,
-    requestFullUrl,
-    requestPreScript,
-    requestPostScript,
-    response,
-    openSaveAs,
-    saved,
-    requestEditorState,
-    responseEditorState,
+      // State
+      requestMethod,
+      requestUrl,
+      requestBody,
+      requestAuth,
+      requestHeaders,
+      requestPathParams,
+      requestQueryParams,
+      requestFullUrl,
+      requestPreScript,
+      requestPostScript,
+      response,
+      openSaveAs,
+      saved,
+      requestEditorState,
+      responseEditorState,
 
-    // Actions
-    setMethod,
-    setUrl,
-    setFullUrl,
-    setBody,
-    setAuth,
-    setPreScript,
-    setPostScript,
-    setHeaders,
-    addHeader,
-    removeHeader,
-    setPathParams,
-    removePathParam,
-    setQueryParams,
-    addQueryParam,
-    removeQueryParam,
-    saveRequest,
-    setOpenSaveAs,
-    setEditorState,
-    getEditorState,
-    copyAsCurl,
-    pasteCurl,
+      // Actions
+      setMethod,
+      setUrl,
+      setFullUrl,
+      setBody,
+      setAuth,
+      setPreScript,
+      setPostScript,
+      setHeaders,
+      addHeader,
+      removeHeader,
+      setPathParams,
+      removePathParam,
+      setQueryParams,
+      addQueryParam,
+      removeQueryParam,
+      saveRequest,
+      setOpenSaveAs,
+      setEditorState,
+      getEditorState,
+      copyAsCurl,
+      pasteCurl,
 
-    // Helpers
-    getValue,
-    getHeaders,
-    getRequestEnvironment,
-    prepareQueryParams,
-    urlIsValid,
-    getActiveHeadersLength,
-    getActivePathParamsLength,
-    getActiveQueryParamsLength,
-    getFullUrl,
-    setRequestResponse,
-    setResponse,
-    getDefaultUserAgent,
-    setDefaultHeaders
-  }
+      // Helpers
+      getValue,
+      getHeaders,
+      getRequestEnvironment,
+      prepareQueryParams,
+      urlIsValid,
+      getActiveHeadersLength,
+      getActivePathParamsLength,
+      getActiveQueryParamsLength,
+      getFullUrl,
+      setRequestResponse,
+      setResponse,
+      getDefaultUserAgent,
+      setDefaultHeaders
+    }),
+    [
+      path,
+      collectionId,
+      collection,
+      preRequestData,
+      tabId,
+      requestMethod,
+      requestUrl,
+      requestBody,
+      requestAuth,
+      requestHeaders,
+      requestPathParams,
+      requestQueryParams,
+      requestFullUrl,
+      requestPreScript,
+      requestPostScript,
+      response,
+      openSaveAs,
+      saved,
+      requestEditorState,
+      responseEditorState,
+      setMethod,
+      setUrl,
+      setFullUrl,
+      setBody,
+      setAuth,
+      setPreScript,
+      setPostScript,
+      setHeaders,
+      addHeader,
+      removeHeader,
+      setPathParams,
+      removePathParam,
+      setQueryParams,
+      addQueryParam,
+      removeQueryParam,
+      saveRequest,
+      setOpenSaveAs,
+      setEditorState,
+      getEditorState,
+      copyAsCurl,
+      pasteCurl,
+      getValue,
+      getHeaders,
+      getRequestEnvironment,
+      prepareQueryParams,
+      urlIsValid,
+      getActiveHeadersLength,
+      getActivePathParamsLength,
+      getActiveQueryParamsLength,
+      getFullUrl,
+      setRequestResponse,
+      setResponse,
+      getDefaultUserAgent,
+      setDefaultHeaders
+    ]
+  )
 }
 
 const keyValuesAreEqual = (a: KeyValue[], b: KeyValue[]) => {

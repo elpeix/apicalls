@@ -13,7 +13,9 @@ export default function CollectionElement({
   addRequest,
   onMove,
   removeElement,
-  scrolling
+  scrolling,
+  onDragStart,
+  onDragEnd
 }: {
   element: CollectionFolder | RequestType
   index: number
@@ -24,6 +26,8 @@ export default function CollectionElement({
   onMove: (moveAction: MoveAction) => void
   removeElement: (element: CollectionFolder | RequestType) => void
   scrolling: boolean
+  onDragStart: () => void
+  onDragEnd: () => void
 }) {
   const isFolder = element.type === 'folder'
   const [droppableActive, setDroppableActive] = useState(false)
@@ -36,6 +40,7 @@ export default function CollectionElement({
     e.dataTransfer.setData('type', element.type)
     e.dataTransfer.setData('path', JSON.stringify(elementPath))
     e.dataTransfer.setData('id', element.id.toString())
+    onDragStart()
   }
 
   const handleDragOver = () => setDroppableActive(true)
@@ -60,6 +65,7 @@ export default function CollectionElement({
   }
   const handleStopMove = () => {
     document.querySelector('body')?.classList.remove(styles.movingElements)
+    onDragEnd()
   }
 
   return (
@@ -73,6 +79,8 @@ export default function CollectionElement({
           onMove={onMove}
           remove={removeElement}
           scrolling={scrolling}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
         />
       )}
       {!isFolder && (

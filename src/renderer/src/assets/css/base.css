@@ -1,7 +1,7 @@
 :root {
   --background-0: #161616;
-  --background-1: #1d1d1d;
-  --background-2: #242424;
+  --background-1: #1b1b1b;
+  --background-2: #282828;
   --foreground-0: #b4b4b4;
   --foreground-1: #bbb;
   --foreground-2: #999;
@@ -29,6 +29,8 @@
   --icon-color: var(--foreground-1);
   --base-secondary-color: var(--icon-color);
   --icon-danger-color: var(--magenta);
+  --window-background: var(--background-base);
+  --window-background-mac: color-mix(in srgb, var(--background-base), transparent 20%);
 
   --selected-color: var(--foreground-0);
   --accent-color: var(--transparent-cyan);
@@ -46,7 +48,9 @@
   --sidePanel-color-hover: var(--content-2);
   --sidePanel-active-background-color: var(--sidePanel-color-hover);
   --sidePanel-icon-color: var(--foreground-1);
-  --sidePanel-menu-color: var(--background-base);
+  --sidePanel-menu-color: transparent;
+  --sidePanel-border-radius: 0.6rem;
+  --panel-tabs-header: transparent;
 
   --success-background-color: var(--transparent-cyan);
   --success-color: var(--green);
@@ -191,13 +195,16 @@
   --scrollbar-thumb-hover-color: var(--content-1);
   --scrollbar-corner-color: var(--content-0);
 
+  --statusbar-background-color: var(--background-base);
+
   --table-border-color: var(--border-color);
+  --tabs-list-backgroun-color: var(--background-base);
   --tooltip-color: var(--base-color);
   --tooltip-background-color: var(--background-base);
   --window-icon-color: var(--sidePanel-icon-color);
   --workspace-title-color: var(--base-color);
 
-  background-color: var(--background-base);
+  background-color: var(--window-background);
   color: var(--base-color);
 
   --font-family: 'Ubuntu', 'DejaVu', 'Helvetica Neue', sans-serif;
@@ -308,6 +315,10 @@ body {
 }
 body.mac {
   --top-bar-height: 2.2rem;
+}
+
+html:has(body.mac) {
+  background: var(--window-background-mac);
 }
 
 *,

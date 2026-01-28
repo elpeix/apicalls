@@ -20,6 +20,8 @@
     "background-content": "var(--background)",
     "base-color": "var(--foreground)",
     "border-color": "var(--base-1)",
+    "window-background": "var(--background)",
+    "window-background-mac": "var(--background)",
     "button-active-background-color": "var(--base-2)",
     "button-active-border-color": "var(--purple)",
     "button-active-color": "var(--pink)",

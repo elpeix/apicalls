@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './Collections.module.css'
 import ButtonIcon from '../../../base/ButtonIcon'
 import { createFolder, createRequest } from '../../../../lib/factory'
@@ -49,66 +49,81 @@ export default function Collection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collections, collection, collections?.updateTime])
 
+  // Shadow collection state to isolate local updates (expansion, reordering) from global context
+  const [localCollection, setLocalCollection] = useState<Collection>(coll)
+  const isDraggingRef = useRef(false)
+  const pendingUpdatesRef = useRef(false)
+
+  useEffect(() => {
+    if (!isDraggingRef.current) {
+      setLocalCollection(coll)
+    }
+  }, [coll])
+
+  const commitUpdates = useCallback(() => {
+    if (pendingUpdatesRef.current) {
+      collections?.update(localCollection)
+      pendingUpdatesRef.current = false
+    }
+  }, [collections, localCollection])
+
+  const handleDragStart = useCallback(() => {
+    isDraggingRef.current = true
+  }, [])
+
+  const handleDragEnd = useCallback(() => {
+    if (!isDraggingRef.current) return
+    isDraggingRef.current = false
+    commitUpdates()
+  }, [commitUpdates])
+
+  const update = useCallback(
+    (newCollection: Collection) => {
+      setLocalCollection(newCollection)
+      pendingUpdatesRef.current = true
+
+      if (!isDraggingRef.current) {
+        collections?.update(newCollection)
+        pendingUpdatesRef.current = false
+      }
+    },
+    [collections]
+  )
+
+  const handleUpdate = () => {
+    update({ ...localCollection })
+  }
+
   const filteredElements = useMemo(() => {
     if (filter === '') {
-      return coll.elements
+      return localCollection.elements
     }
 
-    const newFiltered = filterCollectionElements(coll.elements, filter)
+    const newFiltered = filterCollectionElements(localCollection.elements, filter)
 
     if (filter === prevFilterRef.current && prevFilteredRef.current.length > 0) {
       syncExpansionState(prevFilteredRef.current, newFiltered)
     }
 
     return newFiltered
-  }, [coll.elements, filter])
+  }, [localCollection.elements, filter])
 
   const envs = useMemo(() => environments?.getAll() || [], [environments])
 
   const environmentName = useMemo(() => {
-    if (!coll.environmentId || !environments) return ''
-    const environment = environments.get(coll.environmentId)
+    if (!localCollection.environmentId || !environments) return ''
+    const environment = environments.get(localCollection.environmentId)
     return environment?.name || 'unnamed'
-  }, [coll.environmentId, environments])
+  }, [localCollection.environmentId, environments])
 
   useEffect(() => {
-    prevFilterRef.current = filter
-    prevFilteredRef.current = filteredElements
-  }, [filter, filteredElements])
-
-  useEffect(() => {
-    if (!coll.name && !editingName) {
+    if (!localCollection.name && !editingName) {
       setEditingName(true)
       setTimeout(() => {
         nameRef.current?.focus()
       }, 0)
     }
-  }, [coll.name, editingName])
-
-  useEffect(() => {
-    const ipcRenderer = window.electron?.ipcRenderer
-    if (!ipcRenderer) return
-
-    const handleFailure = (_: unknown, { message }: { message: string }) => {
-      application.showAlert({ message })
-    }
-
-    ipcRenderer.on(COLLECTIONS.exportFailure, handleFailure)
-    return () => {
-      ipcRenderer.removeListener(COLLECTIONS.exportFailure, handleFailure)
-    }
-  }, [application])
-
-  const update = React.useCallback(
-    (newCollection: Collection) => {
-      collections?.update(newCollection)
-    },
-    [collections]
-  )
-
-  const handleUpdate = () => {
-    update({ ...coll })
-  }
+  }, [localCollection.name, editingName])
 
   const handleShowFilter = () => {
     setFilter('')
@@ -180,7 +195,7 @@ export default function Collection({
       confirmName: 'Remove',
       confirmColor: 'danger',
       onConfirm: () => {
-        collections?.remove(coll.id)
+        collections?.remove(localCollection.id)
         application.hideConfirm()
         onRemove?.()
       },
@@ -189,13 +204,13 @@ export default function Collection({
   }
 
   const handleMove = ({ from, to, after }: MoveAction) => {
-    // Force remove className
     document.querySelector('body')?.classList.remove(styles.movingElements)
 
-    const result = moveElements({ elements: coll.elements, from, to, after })
+    const result = moveElements({ elements: localCollection.elements, from, to, after })
     if (result.moved && result.elements) {
-      tabs?.updatePaths(coll.id, from, to)
-      update({ ...coll, elements: result.elements })
+      tabs?.updatePaths(localCollection.id, from, to)
+      isDraggingRef.current = false
+      update({ ...localCollection, elements: result.elements })
     }
   }
 
@@ -204,7 +219,7 @@ export default function Collection({
     application.showDialog({
       children: (
         <CollectionSettings
-          collection={coll}
+          collection={localCollection}
           onSave={update}
           onClose={() => application.hideDialog()}
           activeTabId={tabId}
@@ -217,26 +232,26 @@ export default function Collection({
 
   const toggleCollection = (expand: boolean) => {
     setShowMenu(false)
-    toggleCollectionElements(coll.elements, expand)
-    update({ ...coll })
+    toggleCollectionElements(localCollection.elements, expand)
+    update({ ...localCollection })
   }
 
   const selectEnvironment = (environmentId?: Identifier) => {
-    if (coll.environmentId === environmentId) {
-      collections?.setEnvironmentId(coll.id)
+    if (localCollection.environmentId === environmentId) {
+      collections?.setEnvironmentId(localCollection.id)
       return
     }
-    collections?.setEnvironmentId(coll.id, environmentId)
+    collections?.setEnvironmentId(localCollection.id, environmentId)
   }
 
   const exportToOpenAPI = () => {
     setShowMenu(false)
-    window.electron?.ipcRenderer.send(COLLECTIONS.export, coll.id, 'OpenAPI')
+    window.electron?.ipcRenderer.send(COLLECTIONS.export, localCollection.id, 'OpenAPI')
   }
 
   const exportToPostman = () => {
     setShowMenu(false)
-    window.electron?.ipcRenderer.send(COLLECTIONS.export, coll.id, 'Postman')
+    window.electron?.ipcRenderer.send(COLLECTIONS.export, localCollection.id, 'Postman')
   }
 
   return (
@@ -247,7 +262,7 @@ export default function Collection({
             <ButtonIcon icon="arrow" direction="west" onClick={back} />
           </div>
           <EditableName
-            name={coll.name}
+            name={localCollection.name}
             editMode={editingName}
             update={changeName}
             editOnDoubleClick={true}
@@ -359,6 +374,8 @@ export default function Collection({
           onMove={handleMove}
           path={[]}
           scrolling={isScrolling}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
         />
       </Scrollable>
     </div>

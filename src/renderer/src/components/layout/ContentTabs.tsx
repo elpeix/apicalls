@@ -73,49 +73,17 @@ export default function ContentTabs() {
     tabs?.setActiveTab(index)
   }
 
-  const handleMouseDown = (index: number) => {
-    tabs?.setActiveTab(index)
-  }
-
   return (
     <>
       {hasTabs && (
         <div className="panel-tabs">
-          <Tabs
+          <TabsRenderer
+            tabs={tabList}
+            selectedTabIndex={selectedTabIndex}
             onSelect={onSelect}
-            selectedIndex={selectedTabIndex}
-            forceRenderTabPanel={true}
-            disableUpDownKeys
-            disableLeftRightKeys
-          >
-            <div className="panel-tabs-header">
-              <HorizontalScroll className="panel-tabs-header-list">
-                <TabList>
-                  {tabList.map((tab, index) => (
-                    <Tab
-                      key={tab.id}
-                      className="request-tab"
-                      onMouseDown={() => handleMouseDown(index)}
-                    >
-                      <TabTitle tab={tab} />
-                    </Tab>
-                  ))}
-                </TabList>
-              </HorizontalScroll>
-              <NewTab />
-              <div className="panel-tabs-header-spacer" />
-              <SearchTabs />
-              {appSettings?.isCustomWindowMode() && <WindowIcons />}
-            </div>
-            <div className="panel-tabs-content">
-              {tabList.map((tab, index) => (
-                // Force render tab panel (fix editor not saving view state)
-                <TabPanel key={`${tab.id}-${index}`}>
-                  <RequestPanel tab={tab} />
-                </TabPanel>
-              ))}
-            </div>
-          </Tabs>
+            setActiveTab={tabs!.setActiveTab}
+            isCustomWindowMode={appSettings?.isCustomWindowMode() ?? false}
+          />
         </div>
       )}
       {!hasTabs && (
@@ -136,3 +104,55 @@ export default function ContentTabs() {
     </>
   )
 }
+
+const TabsRenderer = React.memo(function TabsRenderer({
+  tabs,
+  selectedTabIndex,
+  onSelect,
+  setActiveTab,
+  isCustomWindowMode
+}: {
+  tabs: RequestTab[]
+  selectedTabIndex: number
+  onSelect: (index: number, last: number, event: Event) => void
+  setActiveTab: (index: number) => void
+  isCustomWindowMode: boolean
+}) {
+  const handleMouseDown = (index: number) => {
+    setActiveTab(index)
+  }
+
+  return (
+    <Tabs
+      onSelect={onSelect}
+      selectedIndex={selectedTabIndex}
+      forceRenderTabPanel={true}
+      disableUpDownKeys
+      disableLeftRightKeys
+    >
+      <div className="panel-tabs-header">
+        <HorizontalScroll className="panel-tabs-header-list">
+          <TabList>
+            {tabs.map((tab, index) => (
+              <Tab key={tab.id} className="request-tab" onMouseDown={() => handleMouseDown(index)}>
+                <TabTitle tab={tab} />
+              </Tab>
+            ))}
+          </TabList>
+        </HorizontalScroll>
+        <NewTab />
+        <div className="panel-tabs-header-spacer" />
+        <SearchTabs />
+        {isCustomWindowMode && <WindowIcons />}
+      </div>
+      <div className="panel-tabs-content">
+        {tabs.map((tab, index) => (
+          // Force render tab panel (fix editor not saving view state)
+          <TabPanel key={`${tab.id}-${index}`}>
+            <RequestPanel tab={tab} />
+          </TabPanel>
+        ))}
+      </div>
+    </Tabs>
+  )
+})
