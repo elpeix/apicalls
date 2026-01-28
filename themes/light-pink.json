@@ -35,6 +35,8 @@
     "content-2": "var(--color-3)",
     "border-color": "var(--color-3)",
     "divider-color": "var(--color-3)",
+    "window-background": "var(--color-0)",
+    "window-background-mac": "var(--color-0)",
     "active-background-color": "var(--color-2)",
     "active-color": "var(--color-6)",
     "hover-background-color": "var(--color-2)",

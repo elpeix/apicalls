@@ -37,6 +37,9 @@
     "border-color": "var(--color-2)",
     "divider-color": "var(--color-3)",
 
+    "window-background": "var(--color-0)",
+    "window-background-mac": "var(--color-0)",
+
     "active-background-color": "var(--color-2)",
     "active-color": "var(--red)",
     "hover-background-color": "color-mix(in srgb, var(--color-2) 60%, var(--color-3))",

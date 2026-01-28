@@ -4,7 +4,6 @@
   width: 3rem;
   height: 100%;
   gap: 0;
-  border-right: 1px solid var(--border-color);
   background-color: var(--sidePanel-menu-color);
 
   &.mac {

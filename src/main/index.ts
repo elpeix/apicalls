@@ -15,6 +15,7 @@ let mainWindow: BrowserWindow | null
 function createWindow(settingsStore: IStore) {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    vibrancy: 'sidebar',
     width: 900,
     height: 670,
     minWidth: 560,
