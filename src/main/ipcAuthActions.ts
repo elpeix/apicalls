@@ -59,7 +59,7 @@ ipcMain.handle(OAUTH.getToken, async (_, config: RequestAuthOAuth2) => {
           if (tokenData.access_token) {
             resolve(tokenData.access_token)
           } else {
-            console.error('Available token response data:', tokenData)
+            console.error('Failed to retrieve access token. Available keys:', Object.keys(tokenData))
             reject(new Error('Failed to retrieve access token'))
           }
         } catch (err) {

@@ -28,7 +28,7 @@ function createWindow(settingsStore: IStore) {
     titleBarStyle: getTitleBarStyle(settingsStore),
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
-      sandbox: false,
+      sandbox: false, // Required for Monaco Editor web workers; contextIsolation provides security
       contextIsolation: true,
       spellcheck: false
     }

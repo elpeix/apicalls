@@ -1,14 +1,4 @@
-import {
-  fetch,
-  Agent,
-  RequestInit,
-  setGlobalDispatcher,
-  FormData,
-  Headers,
-  Response,
-  ProxyAgent,
-  Dispatcher
-} from 'undici'
+import { fetch, Agent, RequestInit, FormData, Headers, Response, ProxyAgent } from 'undici'
 import { RestCallerError } from './RestCallerError'
 import { getSettings } from './settings'
 import { openAsBlob } from 'node:fs'
@@ -124,31 +114,26 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       }
     }
 
-    let agent: Dispatcher
-    if (settings.proxy) {
-      agent = new ProxyAgent({
-        uri: settings.proxy,
-        keepAliveMaxTimeout: settings.timeout + 1000,
-        bodyTimeout: settings.timeout,
-        connectTimeout: settings.timeout,
-        connect: {
-          rejectUnauthorized: settings.rejectUnauthorized ?? true
-        }
-      })
-    } else {
-      agent = new Agent({
-        keepAliveMaxTimeout: settings.timeout + 1000,
-        bodyTimeout: settings.timeout,
-        connectTimeout: settings.timeout,
-        connect: {
-          rejectUnauthorized: settings.rejectUnauthorized ?? true
-        }
-      })
-    }
+    const dispatcher = settings.proxy
+      ? new ProxyAgent({
+          uri: settings.proxy,
+          keepAliveMaxTimeout: settings.timeout + 1000,
+          bodyTimeout: settings.timeout,
+          connectTimeout: settings.timeout,
+          connect: {
+            rejectUnauthorized: settings.rejectUnauthorized ?? true
+          }
+        })
+      : new Agent({
+          keepAliveMaxTimeout: settings.timeout + 1000,
+          bodyTimeout: settings.timeout,
+          connectTimeout: settings.timeout,
+          connect: {
+            rejectUnauthorized: settings.rejectUnauthorized ?? true
+          }
+        })
 
-    setGlobalDispatcher(agent)
-
-    const response = await fetch(path, requestInit)
+    const response = await fetch(path, { ...requestInit, dispatcher })
     const requestTime = Date.now() - initTime
     const dataTime = Date.now()
 
@@ -206,6 +191,8 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       err.stack = error.stack
     }
     throw err
+  } finally {
+    abortControllers.delete(id)
   }
 }
 
