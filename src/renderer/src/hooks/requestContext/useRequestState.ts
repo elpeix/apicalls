@@ -121,19 +121,15 @@ export function useRequestState(tab: RequestTab) {
 
   useEffect(() => {
     if (!collectionId) return
-    const collection = collectionsRef.current?.get(collectionId)
+    const collection = collections?.get(collectionId)
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCollection(collection || null)
     if (collection?.preRequest) {
       setPreRequestData(collection.preRequest)
     }
-  }, [collectionId])
+  }, [collectionId, collections])
 
   const getRequestEnvironment = useCallback(() => {
-    // Access latest collection from ref or state if needed (but collection via state is derived from ref)
-    // Actually, collection state is updated via effect so getting it from ref is safer for callbacks?
-    // But 'collection' state updates when collectionId changes.
-    // Let's use the ref to get the fresh collection object if possible to avoid dependency on 'collection' state
     const currentCollection = collectionId ? collectionsRef.current?.get(collectionId) : null
 
     if (currentCollection && currentCollection.environmentId) {
@@ -430,8 +426,7 @@ export function useRequestState(tab: RequestTab) {
 
       if (requestAuth.type !== 'none' && requestAuth.value) {
         if (requestAuth.type === 'bearer') {
-          const value = getValue(requestAuth.value as string)
-          headers['Authorization'] = `Bearer ${getValue(value)}`
+          headers['Authorization'] = `Bearer ${getValue(requestAuth.value as string)}`
         } else if (requestAuth.type === 'basic') {
           const requestAuthRecord = requestAuth.value as RequestAuthBasic
           const username = requestAuthRecord.username || ''
