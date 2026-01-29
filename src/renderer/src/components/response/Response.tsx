@@ -26,6 +26,7 @@ export default function Response() {
   const [parsedValue, setParsedValue] = useState('')
   const [tabIndex, setTabIndex] = useState(0)
   const [allowScripts, setAllowScripts] = useState(false)
+  const [baseUrl, setBaseUrl] = useState('')
 
   useEffect(() => {
     setFetching(context.fetching)
@@ -36,6 +37,13 @@ export default function Response() {
     setRawValue(context.response.body)
     setParsedValue(formatSource(context.response.body))
   }, [context])
+
+  useEffect(() => {
+    if (context.response.body) {
+      setBaseUrl(context.request?.url || '')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context.response.body])
 
   const language: string = useMemo(() => {
     if (raw) return 'text'
@@ -76,7 +84,7 @@ export default function Response() {
                   <Tab onMouseDown={() => handleSelectTab(1)}>Headers</Tab>
                 </TabList>
                 <div className={styles.responseActions}>
-                  {language === 'html' && (
+                  {language === 'html' && showRaw && (
                     <Switch
                       text="JS"
                       active={allowScripts}
@@ -108,6 +116,7 @@ export default function Response() {
                     raw={raw}
                     wordWrap={wordWrap}
                     language={language}
+                    baseUrl={baseUrl}
                     allowScripts={allowScripts}
                   />
                 </TabPanel>

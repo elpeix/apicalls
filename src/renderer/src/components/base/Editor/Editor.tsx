@@ -116,6 +116,12 @@ const EditorInner = memo(
       }
     }, [isActive, type, setEditorState])
 
+    useEffect(() => {
+      if (editorRef.current?.editor) {
+        editorRef.current.editor.updateOptions({ wordWrap: wordWrap ? 'on' : 'off' })
+      }
+    }, [wordWrap])
+
     const options = useMemo(() => {
       return {
         minimap: {
