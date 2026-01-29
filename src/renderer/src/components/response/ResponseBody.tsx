@@ -8,12 +8,14 @@ export default function ResponseBody({
   raw,
   wordWrap,
   language,
+  baseUrl = '',
   allowScripts = false
 }: {
   value: string
   raw: boolean
   wordWrap?: boolean
   language: string
+  baseUrl?: string
   allowScripts?: boolean
 }) {
   const wordWrapEditor = wordWrap === undefined ? raw : wordWrap
@@ -22,7 +24,9 @@ export default function ResponseBody({
     <div className={`${value.length ? styles.body : styles.bodyNoContent}`}>
       {value && (
         <div className={styles.bodyContent}>
-          {language === 'html' && <ExternalContent content={value} allowScripts={allowScripts} />}
+          {language === 'html' && (
+            <ExternalContent content={value} baseUrl={baseUrl} allowScripts={allowScripts} />
+          )}
           {language !== 'html' && (
             <Editor language={language} value={value} wordWrap={wordWrapEditor} type="response" />
           )}
