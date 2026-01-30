@@ -92,7 +92,14 @@ const EditorInner = memo(
         return null
       }
       const rawViewState = getEditorState(type)
-      return rawViewState ? JSON.parse(rawViewState) : null
+      if (!rawViewState) {
+        return null
+      }
+      try {
+        return JSON.parse(rawViewState)
+      } catch {
+        return null
+      }
     }, [type, getEditorState])
 
     useEffect(() => {

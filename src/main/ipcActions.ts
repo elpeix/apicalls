@@ -103,6 +103,7 @@ ipcMain.on(REQUEST.call, async (event, callRequest: CallRequest) => {
       request: callRequest,
       response: null
     } as CallResponseFailure)
+    return
   }
   const id = callRequest.id as Identifier
   if (requests.has(id)) {
