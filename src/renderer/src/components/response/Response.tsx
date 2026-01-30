@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import ResponseBody from './ResponseBody'
 import ResponseHeaders from './ResponseHeaders'
-import { RequestContext } from '../../context/RequestContext'
+import { ResponseContext } from '../../context/RequestContext'
 import Loading from '../base/Loading/Loading'
 import styles from './Response.module.css'
 import Switch from '../base/Switch/Switch'
@@ -12,8 +12,8 @@ import Icon from '../base/Icon/Icon'
 
 export default function Response() {
   const { application } = useContext(AppContext)
-  const { fetching, fetched, fetchError, fetchErrorCause, response, request } =
-    useContext(RequestContext)
+  const { fetching, fetched, fetchError, fetchErrorCause, response, requestUrl } =
+    useContext(ResponseContext)
 
   const [showRaw, setShowRaw] = useState(true)
   const [raw, setRaw] = useState(false)
@@ -25,7 +25,7 @@ export default function Response() {
   const headers = response.headers
 
   const parsedValue = useMemo(() => formatSource(rawValue), [rawValue])
-  const baseUrl = useMemo(() => (rawValue ? request?.url || '' : ''), [rawValue, request?.url])
+  const baseUrl = useMemo(() => (rawValue ? requestUrl : ''), [rawValue, requestUrl])
 
   const language: string = useMemo(() => {
     if (raw) return 'text'

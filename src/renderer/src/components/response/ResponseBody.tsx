@@ -1,23 +1,25 @@
-import React from 'react'
+import React, { memo } from 'react'
 import Editor from '../base/Editor/Editor'
 import ExternalContent from './ExternalContent'
 import styles from './Response.module.css'
 
-export default function ResponseBody({
-  value,
-  raw,
-  wordWrap,
-  language,
-  baseUrl = '',
-  allowScripts = false
-}: {
+type ResponseBodyProps = {
   value: string
   raw: boolean
   wordWrap?: boolean
   language: string
   baseUrl?: string
   allowScripts?: boolean
-}) {
+}
+
+const ResponseBody = memo(function ResponseBody({
+  value,
+  raw,
+  wordWrap,
+  language,
+  baseUrl = '',
+  allowScripts = false
+}: ResponseBodyProps) {
   const wordWrapEditor = wordWrap === undefined ? raw : wordWrap
 
   return (
@@ -35,4 +37,6 @@ export default function ResponseBody({
       {!value && <div className={styles.noContent}>No content</div>}
     </div>
   )
-}
+})
+
+export default ResponseBody

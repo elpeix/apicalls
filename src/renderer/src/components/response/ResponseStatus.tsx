@@ -3,7 +3,7 @@ import { getStatusName } from '../../lib/status'
 import ButtonIcon from '../base/ButtonIcon'
 import styles from './Response.module.css'
 import { stringifySize } from '../../lib/utils'
-import { RequestContext } from '../../context/RequestContext'
+import { ResponseContext } from '../../context/RequestContext'
 
 export default function ResponseStatus({
   consoleIsHidden,
@@ -12,7 +12,7 @@ export default function ResponseStatus({
   consoleIsHidden: boolean
   toggleConsole: () => void
 }) {
-  const { fetched, response } = useContext(RequestContext)
+  const { fetched, response } = useContext(ResponseContext)
 
   const status = response.status
   const time = response.time

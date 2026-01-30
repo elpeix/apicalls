@@ -55,6 +55,7 @@ export function useRequestSender({
   const [fetched, setFetched] = useState<FetchedType>(tab.response ? 'old' : false)
   const [fetchError, setFetchError] = useState('')
   const [fetchErrorCause, setFetchErrorCause] = useState('')
+  const [fetchedUrl, setFetchedUrl] = useState(tab.response ? requestUrl : '')
 
   const { history } = useContext(AppContext)
 
@@ -361,6 +362,7 @@ export function useRequestSender({
     setFetched(false)
     setFetchError('')
     setFetchErrorCause('')
+    setFetchedUrl(requestUrl)
 
     if (preRequestData && preRequestData.active && preRequestData.request.url.trim().length > 0) {
       sendPreRequest(getRequestEnvironment())
@@ -389,6 +391,7 @@ export function useRequestSender({
     fetched,
     fetchError,
     fetchErrorCause,
+    fetchedUrl,
     fetch,
     cancel
   }

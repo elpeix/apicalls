@@ -10,11 +10,6 @@ export const RequestContext = createContext<RequestContextType>({
   isActive: false,
   collectionId: null,
   request: null,
-  fetching: false,
-  fetched: false,
-  fetchError: '',
-  fetchErrorCause: '',
-  response: responseInitialValue,
   save: () => {},
   setEditorState: () => {},
   getEditorState: () => '',
@@ -22,6 +17,15 @@ export const RequestContext = createContext<RequestContextType>({
   getRequestEnvironment: () => null,
   copyAsCurl: () => {},
   pasteCurl: () => {}
+})
+
+export const ResponseContext = createContext<ResponseContextType>({
+  fetching: false,
+  fetched: false,
+  fetchError: '',
+  fetchErrorCause: '',
+  response: responseInitialValue,
+  requestUrl: ''
 })
 
 export default function RequestContextProvider({
@@ -50,7 +54,7 @@ export default function RequestContextProvider({
     requestConsole
   })
 
-  const contextValue = React.useMemo(
+  const requestContextValue = React.useMemo(
     () => ({
       path: requestState.path || [],
       isActive: tab.active,
@@ -94,11 +98,6 @@ export default function RequestContextProvider({
         cancel: requestSender.cancel,
         urlIsValid: requestState.urlIsValid
       },
-      fetching: requestSender.fetching,
-      fetched: requestSender.fetched,
-      fetchError: requestSender.fetchError,
-      fetchErrorCause: requestSender.fetchErrorCause,
-      response: requestState.response,
       save: requestState.saveRequest,
       saved: requestState.saved,
       requestConsole,
@@ -112,17 +111,78 @@ export default function RequestContextProvider({
       pasteCurl: requestState.pasteCurl
     }),
     [
-      requestState,
+      requestState.path,
       tab.active,
+      requestState.collectionId,
+      requestState.requestMethod,
+      requestState.requestUrl,
+      requestState.requestBody,
+      requestState.requestAuth,
+      requestState.requestPreScript,
+      requestState.requestPostScript,
+      requestState.requestHeaders,
+      requestState.setHeaders,
+      requestState.addHeader,
+      requestState.removeHeader,
+      requestState.getActiveHeadersLength,
+      requestState.requestPathParams,
+      requestState.setPathParams,
+      requestState.removePathParam,
+      requestState.getActivePathParamsLength,
+      requestState.requestQueryParams,
+      requestState.setQueryParams,
+      requestState.addQueryParam,
+      requestState.removeQueryParam,
+      requestState.getActiveQueryParamsLength,
+      requestState.setMethod,
+      requestState.setUrl,
+      requestState.setFullUrl,
+      requestState.getFullUrl,
+      requestState.setBody,
+      requestState.setAuth,
+      requestState.setPreScript,
+      requestState.setPostScript,
       requestSender.fetch,
       requestSender.cancel,
+      requestState.urlIsValid,
+      requestState.saveRequest,
+      requestState.saved,
+      requestConsole,
+      requestState.tabId,
+      requestState.openSaveAs,
+      requestState.setOpenSaveAs,
+      requestState.setEditorState,
+      requestState.getEditorState,
+      requestState.getRequestEnvironment,
+      requestState.copyAsCurl,
+      requestState.pasteCurl
+    ]
+  )
+
+  const responseContextValue = React.useMemo(
+    () => ({
+      fetching: requestSender.fetching,
+      fetched: requestSender.fetched,
+      fetchError: requestSender.fetchError,
+      fetchErrorCause: requestSender.fetchErrorCause,
+      response: requestState.response,
+      requestUrl: requestSender.fetchedUrl
+    }),
+    [
       requestSender.fetching,
       requestSender.fetched,
       requestSender.fetchError,
       requestSender.fetchErrorCause,
-      requestConsole
+      requestState.response,
+      requestSender.fetchedUrl
     ]
   )
 
-  return <RequestContext.Provider value={contextValue}>{children}</RequestContext.Provider>
+  return (
+    <RequestContext.Provider value={requestContextValue}>
+      <ResponseContext.Provider value={responseContextValue}>
+        {children}
+      </ResponseContext.Provider>
+    </RequestContext.Provider>
+  )
 }

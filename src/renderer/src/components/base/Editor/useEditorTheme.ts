@@ -1,46 +1,53 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as monaco from 'monaco-editor'
 
 const base = window || global
 
+const computeTheme = (
+  appSettings: AppSettingsHookType | null
+): { theme: string; themeData: monaco.editor.IStandaloneThemeData | null } => {
+  const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
+  const editorTheme = appSettings?.getEditorTheme()
+
+  if (!editorTheme) {
+    return { theme: matchMedia.matches ? 'vs-dark' : 'vs', themeData: null }
+  }
+
+  const editorThemeMode = editorTheme.mode
+  if (editorThemeMode === 'hc-light' || editorThemeMode === 'hc-black') {
+    return { theme: editorThemeMode, themeData: null }
+  }
+
+  if (editorTheme.data && editorTheme.data.colors) {
+    const resolvedThemeData = resolveThemeVariables(editorTheme.data, editorTheme.colors || {})
+    return { theme: editorTheme.name, themeData: resolvedThemeData }
+  }
+
+  return { theme: editorTheme.mode === 'vs-dark' ? 'vs-dark' : 'vs', themeData: null }
+}
+
 export const useEditorTheme = (appSettings: AppSettingsHookType | null) => {
-  const [theme, setTheme] = useState(
-    appSettings?.getEditorTheme()?.name ||
-      (base.matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs')
+  const [theme, setTheme] = useState(() => computeTheme(appSettings).theme)
+  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(
+    () => computeTheme(appSettings).themeData
   )
-  const [themeData, setThemeData] = useState<monaco.editor.IStandaloneThemeData | null>(() => {
-    const editorTheme = appSettings?.getEditorTheme()
-    if (editorTheme && editorTheme.data && editorTheme.data.colors) {
-      return resolveThemeVariables(editorTheme.data, editorTheme.colors || {})
-    }
-    return editorTheme?.data || null
-  })
+
+  const lastThemeNameRef = useRef<string | null>(null)
 
   useEffect(() => {
     const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
 
     const updateTheme = () => {
-      const editorTheme = appSettings?.getEditorTheme()
-
-      if (!editorTheme) {
-        setTheme(matchMedia.matches ? 'vs-dark' : 'vs')
+      const computed = computeTheme(appSettings)
+      // Only update state if theme name actually changed (skip on first run)
+      if (lastThemeNameRef.current === null) {
+        lastThemeNameRef.current = computed.theme
         return
       }
-
-      const editorThemeMode = editorTheme.mode
-      if (editorThemeMode === 'hc-light' || editorThemeMode === 'hc-black') {
-        setThemeData(null)
-        setTheme(editorThemeMode)
-        return
-      }
-
-      if (editorTheme.data && editorTheme.data.colors) {
-        const resolvedThemeData = resolveThemeVariables(editorTheme.data, editorTheme.colors || {})
-        setThemeData(resolvedThemeData)
-        setTheme(editorTheme.name)
-      } else {
-        setThemeData(null)
-        setTheme(editorTheme.mode === 'vs-dark' ? 'vs-dark' : 'vs')
+      if (lastThemeNameRef.current !== computed.theme) {
+        lastThemeNameRef.current = computed.theme
+        setTheme(computed.theme)
+        setThemeData(computed.themeData)
       }
     }
 
