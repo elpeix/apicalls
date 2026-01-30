@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { COLLECTIONS, WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
@@ -10,7 +10,11 @@ export default function Collections() {
   const { application, collections } = useContext(AppContext)
   const { showAlert } = application
 
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
+  const selectedCollection = collections?.selectedCollection ?? null
+
+  const setSelectedCollection = (collection: Collection | null) => {
+    collections?.select(collection?.id ?? null)
+  }
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -19,7 +23,6 @@ export default function Collections() {
     }
     const handleWorkspaceChanged = () => {
       collections?.select(null)
-      setSelectedCollection(null)
     }
     ipcRenderer?.on(COLLECTIONS.importFailure, handleImportFailure)
     ipcRenderer?.on(WORKSPACES.changed, handleWorkspaceChanged)
