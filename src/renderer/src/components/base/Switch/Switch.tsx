@@ -15,8 +15,7 @@ const Switch = memo(function Switch({
   onChange
 }: SwitchProps) {
   const className = useMemo(
-    () =>
-      `${styles.interruptor} ${active ? styles.active : ''} ${reverse ? styles.reverse : ''}`,
+    () => `${styles.interruptor} ${active ? styles.active : ''} ${reverse ? styles.reverse : ''}`,
     [active, reverse]
   )
 

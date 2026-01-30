@@ -180,9 +180,7 @@ export default function RequestContextProvider({
 
   return (
     <RequestContext.Provider value={requestContextValue}>
-      <ResponseContext.Provider value={responseContextValue}>
-        {children}
-      </ResponseContext.Provider>
+      <ResponseContext.Provider value={responseContextValue}>{children}</ResponseContext.Provider>
     </RequestContext.Provider>
   )
 }

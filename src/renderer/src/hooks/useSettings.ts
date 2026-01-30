@@ -82,33 +82,36 @@ export function useSettings(): AppSettingsHookType {
     matchMedia.addEventListener('change', handleChange)
 
     return () => matchMedia.removeEventListener('change', handleChange)
-  }, [matchMedia])  // matchMedia is now stable (from ref)
+  }, [matchMedia]) // matchMedia is now stable (from ref)
 
-  const save = useCallback((newSettings: AppSettingsType) => {
-    const currentSettings = settingsRef.current
-    setSettings(newSettings)
-    if (newSettings.theme === 'system') {
-      document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
-    } else {
-      document.documentElement.setAttribute('data-theme', newSettings.theme)
-    }
-    const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.send(SETTINGS.save, newSettings)
-    removeStyleProperties()
-    const colors = themesRef.current.get(newSettings.theme)?.colors
-    if (colors) {
-      applyTheme(colors)
-    }
-    if (newSettings.menu !== undefined && newSettings.menu !== currentSettings?.menu) {
-      ipcRenderer?.send(SETTINGS.toggleMenu, newSettings.menu)
-    }
-    if (
-      newSettings.manageCookies !== undefined &&
-      newSettings.manageCookies !== currentSettings?.manageCookies
-    ) {
-      ipcRenderer?.send(SETTINGS.toggleMenuCookies, newSettings.manageCookies)
-    }
-  }, [matchMedia])  // matchMedia is now stable
+  const save = useCallback(
+    (newSettings: AppSettingsType) => {
+      const currentSettings = settingsRef.current
+      setSettings(newSettings)
+      if (newSettings.theme === 'system') {
+        document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
+      } else {
+        document.documentElement.setAttribute('data-theme', newSettings.theme)
+      }
+      const ipcRenderer = window.electron?.ipcRenderer
+      ipcRenderer?.send(SETTINGS.save, newSettings)
+      removeStyleProperties()
+      const colors = themesRef.current.get(newSettings.theme)?.colors
+      if (colors) {
+        applyTheme(colors)
+      }
+      if (newSettings.menu !== undefined && newSettings.menu !== currentSettings?.menu) {
+        ipcRenderer?.send(SETTINGS.toggleMenu, newSettings.menu)
+      }
+      if (
+        newSettings.manageCookies !== undefined &&
+        newSettings.manageCookies !== currentSettings?.manageCookies
+      ) {
+        ipcRenderer?.send(SETTINGS.toggleMenuCookies, newSettings.manageCookies)
+      }
+    },
+    [matchMedia]
+  ) // matchMedia is now stable
 
   const clear = useCallback(() => {
     const ipcRenderer = window.electron?.ipcRenderer

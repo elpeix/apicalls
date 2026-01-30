@@ -108,10 +108,7 @@ export default function FormDataTableRow({
     [onChangeType]
   )
 
-  const valueOptions = useMemo(
-    () => helperValues[item.name] || [],
-    [helperValues, item.name]
-  )
+  const valueOptions = useMemo(() => helperValues[item.name] || [], [helperValues, item.name])
 
   return (
     <SimpleTable.Row

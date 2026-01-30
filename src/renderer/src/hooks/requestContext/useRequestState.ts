@@ -349,15 +349,12 @@ export function useRequestState(tab: RequestTab) {
     }
   }, [])
 
-  const getEditorState = useCallback(
-    (type: 'request' | 'response') => {
-      if (type === 'request') {
-        return requestEditorStateRef.current
-      }
-      return responseEditorStateRef.current
-    },
-    []
-  )
+  const getEditorState = useCallback((type: 'request' | 'response') => {
+    if (type === 'request') {
+      return requestEditorStateRef.current
+    }
+    return responseEditorStateRef.current
+  }, [])
 
   const getDefaultUserAgent = useCallback(() => {
     const settingsHeader = settingsRef.current?.settings?.defaultHeaders?.find(

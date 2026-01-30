@@ -145,10 +145,7 @@ export default function Input({
     })
   }, [internalValue, envId, environments])
 
-  const wrapperClassName = useMemo(
-    () => `${styles.input} ${className || ''}`,
-    [className]
-  )
+  const wrapperClassName = useMemo(() => `${styles.input} ${className || ''}`, [className])
 
   return (
     <>
