@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { getStatusName } from '../../lib/status'
 import ButtonIcon from '../base/ButtonIcon'
 import styles from './Response.module.css'
@@ -14,24 +14,13 @@ export default function ResponseStatus({
 }) {
   const { fetched, response } = useContext(RequestContext)
 
-  const [textSize, setTextSize] = useState('0 bytes')
-  const [requestFetched, setRequestFetched] = useState<FetchedType>(false)
-  const [status, setStatus] = useState(0)
-  const [time, setTime] = useState(0)
-  const [size, setSize] = useState(0)
+  const status = response.status
+  const time = response.time
+  const size = response.size
 
-  useEffect(() => {
-    setRequestFetched(fetched)
-    setStatus(response.status)
-    setTime(response.time)
-    setSize(response.size)
-  }, [fetched, response])
+  const textSize = useMemo(() => stringifySize(size), [size])
 
-  useEffect(() => {
-    setTextSize(stringifySize(size))
-  }, [size])
-
-  const showRequestFetched = requestFetched && status > 0 && status < 999
+  const showRequestFetched = fetched && status > 0 && status < 999
 
   return (
     <div className={`${styles.statusBar} ${!consoleIsHidden ? styles.opened : ''}`}>

@@ -6,6 +6,20 @@ import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 import { getBody } from '../../lib/utils'
 import FormDataEditor from './FormDataEditor'
 
+const contentTypes: Record<ContentTypes, string> = {
+  none: 'None',
+  json: 'Json',
+  xml: 'Xml',
+  'form-data': 'Multipart Form',
+  'form-urlencoded': 'Form URL Encoded',
+  text: 'Text'
+}
+
+const contentTypeOptions = Object.keys(contentTypes).map((contentType) => ({
+  value: contentType,
+  label: contentTypes[contentType as ContentTypes]
+}))
+
 export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }) {
   const { request } = useContext(RequestContext)
 
@@ -20,20 +34,6 @@ export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }
   const [value, setValue] = useState(getBody(request?.body || ''))
 
   if (!request) return null
-
-  const contentTypes: Record<ContentTypes, string> = {
-    none: 'None',
-    json: 'Json',
-    xml: 'Xml',
-    'form-data': 'Multipart Form',
-    'form-urlencoded': 'Form URL Encoded',
-    text: 'Text'
-  }
-
-  const contentTypeOptions = Object.keys(contentTypes).map((contentType) => ({
-    value: contentType,
-    label: contentTypes[contentType as ContentTypes]
-  }))
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value as ContentTypes

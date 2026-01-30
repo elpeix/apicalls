@@ -94,7 +94,7 @@ export default function Input({
     if (onBlur) onBlur(internalValue)
   }
 
-  const highlight = () => {
+  const highlightedValue = useMemo(() => {
     if (showTip || highlightVars) {
       return internalValue.split(REGEX).map((part, index) => {
         if (index % 2 === 0) return part
@@ -106,7 +106,7 @@ export default function Input({
       })
     }
     return internalValue
-  }
+  }, [internalValue, REGEX, showTip, highlightVars, envId, environments])
 
   const mouseOverHandler = () => setOnOver(true)
   const mouseOutHandler = () => setOnOver(false)
@@ -129,7 +129,7 @@ export default function Input({
         ref={inputWrapperRef}
       >
         <div style={style}>
-          <div>{highlight()}</div>
+          <div>{highlightedValue}</div>
         </div>
         <input
           ref={inputRef}

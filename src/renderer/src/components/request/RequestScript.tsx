@@ -4,16 +4,16 @@ import styles from './Request.module.css'
 import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 import ScriptEditor from '../base/Editor/ScriptEditor'
 
+const scriptOptions = [
+  { value: 'pre', label: 'Pre Script' },
+  { value: 'post', label: 'Post Script' }
+]
+
 export default function RequestScript({ wordWrap = false }: { wordWrap?: boolean }) {
   const { request } = useContext(RequestContext)
   const [scriptType, setScriptType] = useState<'pre' | 'post'>('pre')
 
   if (!request) return null
-
-  const scriptOptions = [
-    { value: 'pre', label: 'Pre Script' },
-    { value: 'post', label: 'Post Script' }
-  ]
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setScriptType(e.target.value as 'pre' | 'post')
