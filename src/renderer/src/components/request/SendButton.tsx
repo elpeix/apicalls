@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
-import { RequestContext } from '../../context/RequestContext'
+import { RequestContext, ResponseContext } from '../../context/RequestContext'
 import styles from './Request.module.css'
 import Icon from '../base/Icon/Icon'
 
 export default function SendButton() {
-  const { request, fetching } = useContext(RequestContext)
+  const { request } = useContext(RequestContext)
+  const { fetching } = useContext(ResponseContext)
 
   if (!request) return null
 

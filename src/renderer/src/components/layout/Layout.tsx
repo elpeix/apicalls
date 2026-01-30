@@ -21,16 +21,18 @@ export default function Layout() {
     }
   }, [menu?.expanded])
 
+  const { showDialog } = application
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ACTIONS.findRequest, () => {
-      application.showDialog?.({
+    const handleFindRequest = () => {
+      showDialog?.({
         children: <FindRequests />,
         position: 'top'
       })
-    })
-    return () => ipcRenderer?.removeAllListeners(ACTIONS.findRequest)
-  }, [application])
+    }
+    ipcRenderer?.on(ACTIONS.findRequest, handleFindRequest)
+    return () => ipcRenderer?.removeListener(ACTIONS.findRequest, handleFindRequest)
+  }, [showDialog])
 
   const expandSidePanel = () => sidePanel.current && sidePanel.current?.expand()
 

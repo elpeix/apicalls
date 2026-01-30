@@ -81,8 +81,8 @@ export function useRequestState(tab: RequestTab) {
     tab.response || responseInitialValue
   )
 
-  const [requestEditorState, setRequestEditorState] = useState('')
-  const [responseEditorState, setResponseEditorState] = useState('')
+  const requestEditorStateRef = useRef('')
+  const responseEditorStateRef = useRef('')
 
   useEffect(() => {
     if (changed) {
@@ -343,21 +343,18 @@ export function useRequestState(tab: RequestTab) {
 
   const setEditorState = useCallback((type: 'request' | 'response', state: string) => {
     if (type === 'request') {
-      setRequestEditorState(state)
+      requestEditorStateRef.current = state
     } else {
-      setResponseEditorState(state)
+      responseEditorStateRef.current = state
     }
   }, [])
 
-  const getEditorState = useCallback(
-    (type: 'request' | 'response') => {
-      if (type === 'request') {
-        return requestEditorState
-      }
-      return responseEditorState
-    },
-    [requestEditorState, responseEditorState]
-  )
+  const getEditorState = useCallback((type: 'request' | 'response') => {
+    if (type === 'request') {
+      return requestEditorStateRef.current
+    }
+    return responseEditorStateRef.current
+  }, [])
 
   const getDefaultUserAgent = useCallback(() => {
     const settingsHeader = settingsRef.current?.settings?.defaultHeaders?.find(
@@ -568,8 +565,6 @@ export function useRequestState(tab: RequestTab) {
       response,
       openSaveAs,
       saved,
-      requestEditorState,
-      responseEditorState,
 
       // Actions
       setMethod,
@@ -628,8 +623,6 @@ export function useRequestState(tab: RequestTab) {
       response,
       openSaveAs,
       saved,
-      requestEditorState,
-      responseEditorState,
       setMethod,
       setUrl,
       setFullUrl,

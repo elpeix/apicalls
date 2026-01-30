@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import ResponseBody from './ResponseBody'
 import ResponseHeaders from './ResponseHeaders'
-import { RequestContext } from '../../context/RequestContext'
+import { ResponseContext } from '../../context/RequestContext'
 import Loading from '../base/Loading/Loading'
 import styles from './Response.module.css'
 import Switch from '../base/Switch/Switch'
@@ -12,38 +12,20 @@ import Icon from '../base/Icon/Icon'
 
 export default function Response() {
   const { application } = useContext(AppContext)
-  const context = useContext(RequestContext)
-  const [fetching, setFetching] = useState(false)
-  const [fetched, setFetched] = useState<FetchedType>(false)
-  const [fetchError, setFetchError] = useState('')
-  const [fetchErrorCause, setFetchErrorCause] = useState('')
-  const [headers, setHeaders] = useState<KeyValue[]>([])
+  const { fetching, fetched, fetchError, fetchErrorCause, response, requestUrl } =
+    useContext(ResponseContext)
 
   const [showRaw, setShowRaw] = useState(true)
   const [raw, setRaw] = useState(false)
-  const [rawValue, setRawValue] = useState('')
   const [wordWrap, setWordWrap] = useState(false)
-  const [parsedValue, setParsedValue] = useState('')
   const [tabIndex, setTabIndex] = useState(0)
   const [allowScripts, setAllowScripts] = useState(false)
-  const [baseUrl, setBaseUrl] = useState('')
 
-  useEffect(() => {
-    setFetching(context.fetching)
-    setFetched(context.fetched)
-    setFetchError(context.fetchError)
-    setFetchErrorCause(context.fetchErrorCause)
-    setHeaders(context.response.headers)
-    setRawValue(context.response.body)
-    setParsedValue(formatSource(context.response.body))
-  }, [context])
+  const rawValue = response.body
+  const headers = response.headers
 
-  useEffect(() => {
-    if (context.response.body) {
-      setBaseUrl(context.request?.url || '')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context.response.body])
+  const parsedValue = useMemo(() => formatSource(rawValue), [rawValue])
+  const baseUrl = useMemo(() => (rawValue ? requestUrl : ''), [rawValue, requestUrl])
 
   const language: string = useMemo(() => {
     if (raw) return 'text'

@@ -6,15 +6,16 @@ import RequestAuthOAuth2 from './RequestAuthOAuth2'
 import RequestAuthBasic from './RequestAuthBasic'
 import RequestAuthBearer from './RequestAuthBearer'
 
+const authOptions: { value: RequestAuthType; label: string }[] = [
+  { value: 'none', label: 'None' },
+  { value: 'bearer', label: 'Bearer' },
+  { value: 'basic', label: 'Basic' },
+  { value: 'oauth2', label: 'OAuth 2.0' }
+]
+
 export default function RequestAuth() {
   const { request } = useContext(RequestContext)
 
-  const authOptions: { value: RequestAuthType; label: string }[] = [
-    { value: 'none', label: 'None' },
-    { value: 'bearer', label: 'Bearer' },
-    { value: 'basic', label: 'Basic' },
-    { value: 'oauth2', label: 'OAuth 2.0' }
-  ]
   const authType = request?.auth?.type || 'none'
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

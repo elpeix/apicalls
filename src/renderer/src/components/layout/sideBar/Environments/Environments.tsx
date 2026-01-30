@@ -11,6 +11,7 @@ import Icon from '../../../base/Icon/Icon'
 
 export default function Environments() {
   const { application, environments } = useContext(AppContext)
+  const { showAlert } = application
 
   const envs = environments?.getAll() || []
   const [selectedEnvId, setSelectedEnvId] = useState<Identifier | null>(null)
@@ -24,17 +25,19 @@ export default function Environments() {
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(ENVIRONMENTS.importFailure, (_: unknown, message: string) => {
-      application.showAlert({ message })
-    })
-    ipcRenderer?.on(WORKSPACES.changed, () => {
-      setSelectedEnvId(null)
-    })
-    return () => {
-      ipcRenderer?.removeAllListeners(ENVIRONMENTS.importFailure)
-      ipcRenderer?.removeAllListeners(WORKSPACES.changed)
+    const handleImportFailure = (_: unknown, message: string) => {
+      showAlert({ message })
     }
-  }, [environments, application])
+    const handleWorkspaceChanged = () => {
+      setSelectedEnvId(null)
+    }
+    ipcRenderer?.on(ENVIRONMENTS.importFailure, handleImportFailure)
+    ipcRenderer?.on(WORKSPACES.changed, handleWorkspaceChanged)
+    return () => {
+      ipcRenderer?.removeListener(ENVIRONMENTS.importFailure, handleImportFailure)
+      ipcRenderer?.removeListener(WORKSPACES.changed, handleWorkspaceChanged)
+    }
+  }, [showAlert])
 
   const setSelectedEnvironment = (env: Environment | null) => {
     setSelectedEnvId(env ? env.id : null)

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect } from 'react'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import { AppContext } from '../../context/AppContext'
 import RequestPanel from '../request/RequestPanel'
@@ -69,9 +69,12 @@ export default function ContentTabs() {
     }
   }, [])
 
-  const onSelect = (index: number, _: number, __: Event) => {
-    tabs?.setActiveTab(index)
-  }
+  const onSelect = useCallback(
+    (index: number, _: number, __: Event) => {
+      tabs?.setActiveTab(index)
+    },
+    [tabs]
+  )
 
   return (
     <>

@@ -50,8 +50,12 @@ export function usePreRequest({
     if (dataToCapture.type === 'body') {
       // value = getValueFromPath(callResponse.result || '', dataToCapture.path)
       // Original code had commented out getValueFromPath and used JSON parse
-      const jsonResult = JSON.parse(callResponse.result || '{}')
-      value = jsonResult[dataToCapture.path] // FIXME: Real path is not implemented
+      try {
+        const jsonResult = JSON.parse(callResponse.result || '{}')
+        value = jsonResult[dataToCapture.path] // FIXME: Real path is not implemented
+      } catch {
+        value = ''
+      }
     } else if (dataToCapture.type === 'header') {
       value =
         callResponse.responseHeaders
@@ -155,9 +159,10 @@ export function usePreRequest({
       }
     )
 
-    window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: number) => {
-      // Loose comparison if ids can be mixed types or ensure type casting
-      if (requestId != tabId) return
+    window.electron?.ipcRenderer.on(CHANNEL_CANCELLED, (_: unknown, requestId: Identifier) => {
+      if (requestId !== tabId) {
+        return
+      }
       setFetching(false)
       setFetched(true)
       setFetchError('Request was cancelled')

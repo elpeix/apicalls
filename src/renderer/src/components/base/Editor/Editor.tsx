@@ -92,7 +92,14 @@ const EditorInner = memo(
         return null
       }
       const rawViewState = getEditorState(type)
-      return rawViewState ? JSON.parse(rawViewState) : null
+      if (!rawViewState) {
+        return null
+      }
+      try {
+        return JSON.parse(rawViewState)
+      } catch {
+        return null
+      }
     }, [type, getEditorState])
 
     useEffect(() => {
@@ -154,6 +161,7 @@ const EditorInner = memo(
         onChange={handleOnChange}
         value={value}
         theme={theme}
+        themeData={themeData}
         options={options}
         onMount={(editor, monaco) => {
           editorRef.current = { editor, monaco }
@@ -233,6 +241,7 @@ const EditorInner = memo(
       prevProps.wordWrap === nextProps.wordWrap &&
       prevProps.isActive === nextProps.isActive &&
       prevProps.appSettings?.settings === nextProps.appSettings?.settings &&
+      prevProps.appSettings?.getEditorTheme === nextProps.appSettings?.getEditorTheme &&
       prevProps.tabs === nextProps.tabs &&
       prevProps.getRequestEnvironment === nextProps.getRequestEnvironment &&
       prevProps.setEditorState === nextProps.setEditorState &&
@@ -249,6 +258,7 @@ const EditorWrapped = memo(
     value,
     onChange,
     theme,
+    themeData,
     options,
     onMount
   }: {
@@ -256,9 +266,26 @@ const EditorWrapped = memo(
     value: string
     onChange?: OnChange
     theme: string
+    themeData: monaco.editor.IStandaloneThemeData | null
     options: monaco.editor.IStandaloneEditorConstructionOptions
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => void
   }) => {
+    const handleBeforeMount = useCallback(
+      (monacoInstance: Monaco) => {
+        if (themeData && themeData.colors) {
+          monacoInstance.editor.defineTheme(theme, themeData)
+        }
+      },
+      [theme, themeData]
+    )
+
+    const handleMount = useCallback(
+      (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: Monaco) => {
+        onMount(editor, monacoInstance)
+      },
+      [onMount]
+    )
+
     return (
       <MonacoEditor
         defaultLanguage={language}
@@ -270,7 +297,8 @@ const EditorWrapped = memo(
         loading={null}
         value={value}
         options={options}
-        onMount={onMount}
+        beforeMount={handleBeforeMount}
+        onMount={handleMount}
       />
     )
   },
@@ -278,6 +306,7 @@ const EditorWrapped = memo(
     return (
       prevProps.value === nextProps.value &&
       prevProps.theme === nextProps.theme &&
+      prevProps.themeData === nextProps.themeData &&
       prevProps.language === nextProps.language
     )
   }

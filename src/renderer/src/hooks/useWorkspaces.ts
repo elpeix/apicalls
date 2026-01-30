@@ -1,10 +1,16 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { COLLECTIONS, COOKIES, ENVIRONMENTS, TABS, WORKSPACES } from '../../../lib/ipcChannels'
 
 export function useWorkspaces(): WorkspacesHookType {
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
   const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceType | null>(null)
+  const selectedWorkspaceRef = useRef<WorkspaceType | null>(null)
   const ipcRenderer = window.electron?.ipcRenderer
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    selectedWorkspaceRef.current = selectedWorkspace
+  }, [selectedWorkspace])
 
   const reload = useCallback(() => {
     ipcRenderer?.send(WORKSPACES.getList)
@@ -12,28 +18,24 @@ export function useWorkspaces(): WorkspacesHookType {
   }, [ipcRenderer])
 
   useEffect(() => {
-    const reload = () => {
-      ipcRenderer?.send(WORKSPACES.getList)
-      ipcRenderer?.send(WORKSPACES.getSelected)
-    }
-
     reload()
 
-    ipcRenderer?.on(WORKSPACES.list, (_: unknown, ws: WorkspaceType[]) => {
+    const handleList = (_: unknown, ws: WorkspaceType[]) => {
       setWorkspaces(ws)
-    })
+    }
 
-    ipcRenderer?.on(WORKSPACES.selected, (_: unknown, ws: WorkspaceType) => {
+    const handleSelected = (_: unknown, ws: WorkspaceType) => {
       if (!ws) {
         console.warn('No workspace selected')
         return
       }
 
-      const isSwitching = ws.id !== selectedWorkspace?.id
+      const currentWorkspace = selectedWorkspaceRef.current
+      const isSwitching = ws.id !== currentWorkspace?.id
       const hasChanged =
         isSwitching ||
-        ws.name !== selectedWorkspace?.name ||
-        JSON.stringify(ws.requestHeaders) !== JSON.stringify(selectedWorkspace?.requestHeaders)
+        ws.name !== currentWorkspace?.name ||
+        JSON.stringify(ws.requestHeaders) !== JSON.stringify(currentWorkspace?.requestHeaders)
 
       if (hasChanged) {
         setSelectedWorkspace(ws)
@@ -53,23 +55,16 @@ export function useWorkspaces(): WorkspacesHookType {
         ipcRenderer?.send(TABS.load)
         ipcRenderer?.send(COOKIES.get)
       }
-    })
+    }
 
-    ipcRenderer?.on(WORKSPACES.created, (_: unknown, __: WorkspaceType) => {
-      reload()
-    })
+    const handleReload = () => reload()
 
-    ipcRenderer?.on(WORKSPACES.updated, (_: unknown, ___: WorkspaceType) => {
-      reload()
-    })
-
-    ipcRenderer?.on(WORKSPACES.removed, (_: unknown, __: { id: Identifier }) => {
-      reload()
-    })
-
-    ipcRenderer?.on(WORKSPACES.duplicated, (_: unknown, __: WorkspaceType) => {
-      reload()
-    })
+    ipcRenderer?.on(WORKSPACES.list, handleList)
+    ipcRenderer?.on(WORKSPACES.selected, handleSelected)
+    ipcRenderer?.on(WORKSPACES.created, handleReload)
+    ipcRenderer?.on(WORKSPACES.updated, handleReload)
+    ipcRenderer?.on(WORKSPACES.removed, handleReload)
+    ipcRenderer?.on(WORKSPACES.duplicated, handleReload)
 
     return () => {
       ipcRenderer?.removeAllListeners(WORKSPACES.list)
@@ -80,36 +75,54 @@ export function useWorkspaces(): WorkspacesHookType {
       ipcRenderer?.removeAllListeners(WORKSPACES.duplicated)
       ipcRenderer?.removeAllListeners(WORKSPACES.error)
     }
-  }, [ipcRenderer, selectedWorkspace])
+  }, [ipcRenderer, reload])
 
-  const create = (name: string) => {
-    ipcRenderer?.send(WORKSPACES.create, { name })
-  }
+  const create = useCallback(
+    (name: string) => {
+      ipcRenderer?.send(WORKSPACES.create, { name })
+    },
+    [ipcRenderer]
+  )
 
-  const update = (workspace: WorkspaceType) => {
-    ipcRenderer?.send(WORKSPACES.update, workspace)
-  }
+  const update = useCallback(
+    (workspace: WorkspaceType) => {
+      ipcRenderer?.send(WORKSPACES.update, workspace)
+    },
+    [ipcRenderer]
+  )
 
-  const select = (id: Identifier) => {
-    ipcRenderer?.send(WORKSPACES.select, { id })
-  }
+  const select = useCallback(
+    (id: Identifier) => {
+      ipcRenderer?.send(WORKSPACES.select, { id })
+    },
+    [ipcRenderer]
+  )
 
-  const remove = (id: Identifier) => {
-    ipcRenderer?.send(WORKSPACES.remove, { id })
-  }
+  const remove = useCallback(
+    (id: Identifier) => {
+      ipcRenderer?.send(WORKSPACES.remove, { id })
+    },
+    [ipcRenderer]
+  )
 
-  const duplicate = (id: Identifier) => {
-    ipcRenderer?.send(WORKSPACES.duplicate, { id })
-  }
+  const duplicate = useCallback(
+    (id: Identifier) => {
+      ipcRenderer?.send(WORKSPACES.duplicate, { id })
+    },
+    [ipcRenderer]
+  )
 
-  return {
-    workspaces,
-    selectedWorkspace,
-    create,
-    update,
-    select,
-    reload,
-    remove,
-    duplicate
-  }
+  return useMemo(
+    () => ({
+      workspaces,
+      selectedWorkspace,
+      create,
+      update,
+      select,
+      reload,
+      remove,
+      duplicate
+    }),
+    [workspaces, selectedWorkspace, create, update, select, reload, remove, duplicate]
+  )
 }

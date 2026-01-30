@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { COLLECTIONS, WORKSPACES } from '../../../../../../lib/ipcChannels'
 import { AppContext } from '../../../../context/AppContext'
 import ButtonIcon from '../../../base/ButtonIcon'
@@ -8,23 +8,29 @@ import Icon from '../../../base/Icon/Icon'
 
 export default function Collections() {
   const { application, collections } = useContext(AppContext)
+  const { showAlert } = application
 
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
+  const selectedCollection = collections?.selectedCollection ?? null
+
+  const setSelectedCollection = (collection: Collection | null) => {
+    collections?.select(collection?.id ?? null)
+  }
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
-    ipcRenderer?.on(COLLECTIONS.importFailure, (_: unknown, message: string) => {
-      application.showAlert({ message })
-    })
-    ipcRenderer?.on(WORKSPACES.changed, () => {
-      collections?.select(null)
-      setSelectedCollection(null)
-    })
-    return () => {
-      ipcRenderer?.removeAllListeners(COLLECTIONS.importFailure)
-      ipcRenderer?.removeAllListeners(WORKSPACES.changed)
+    const handleImportFailure = (_: unknown, message: string) => {
+      showAlert({ message })
     }
-  })
+    const handleWorkspaceChanged = () => {
+      collections?.select(null)
+    }
+    ipcRenderer?.on(COLLECTIONS.importFailure, handleImportFailure)
+    ipcRenderer?.on(WORKSPACES.changed, handleWorkspaceChanged)
+    return () => {
+      ipcRenderer?.removeListener(COLLECTIONS.importFailure, handleImportFailure)
+      ipcRenderer?.removeListener(WORKSPACES.changed, handleWorkspaceChanged)
+    }
+  }, [showAlert, collections])
 
   const add = () => {
     if (!collections) return

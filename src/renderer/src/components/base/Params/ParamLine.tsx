@@ -1,30 +1,11 @@
-import React from 'react'
+import React, { memo, useCallback } from 'react'
 import SimpleTable from '../SimpleTable/SimpleTable'
 import styles from './Params.module.css'
 import ButtonIcon from '../ButtonIcon'
 import Droppable from '../Droppable/Droppable'
 import Icon from '../Icon/Icon'
 
-export default function ParamLine({
-  item,
-  editableName = true,
-  editableValue = true,
-  showEnable = true,
-  showDelete = true,
-  removeCaption = 'Remove param',
-  showTip = true,
-  helperValues = {},
-  draggable = false,
-  dragFormat = '',
-  index = -1,
-  onChangeEnabled = () => {},
-  onChangeName = () => {},
-  onChangeValue = () => {},
-  onDelete = () => {},
-  onDrag = () => {},
-  scrollContainerRef,
-  environmentId
-}: {
+type ParamLineProps = {
   item: KeyValue
   editableName?: boolean
   editableValue?: boolean
@@ -36,14 +17,35 @@ export default function ParamLine({
   draggable?: boolean
   dragFormat?: string
   onDrag?: (from: number, to: number) => void
-  index?: number
-  onChangeEnabled?: (enabled: boolean) => void
-  onChangeName?: (value: string) => void
-  onChangeValue?: (value: string) => void
-  onDelete?: () => void
+  index: number
+  onChangeEnabled?: (index: number, enabled: boolean) => void
+  onChangeName?: (index: number, value: string) => void
+  onChangeValue?: (index: number, value: string) => void
+  onDelete?: (index: number) => void
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>
   environmentId?: Identifier
-}) {
+}
+
+const ParamLine = memo(function ParamLine({
+  item,
+  editableName = true,
+  editableValue = true,
+  showEnable = true,
+  showDelete = true,
+  removeCaption = 'Remove param',
+  showTip = true,
+  helperValues = {},
+  draggable = false,
+  dragFormat = '',
+  index,
+  onChangeEnabled,
+  onChangeName,
+  onChangeValue,
+  onDelete,
+  onDrag,
+  scrollContainerRef,
+  environmentId
+}: ParamLineProps) {
   const getAvailableNames = () => {
     return Object.keys(helperValues)
   }
@@ -56,8 +58,33 @@ export default function ParamLine({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation()
     const droppedIndex = e.dataTransfer.getData(dragFormat)
-    onDrag(Number(droppedIndex), index)
+    onDrag?.(Number(droppedIndex), index)
   }
+
+  const handleChangeEnabled = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChangeEnabled?.(index, e.target.checked)
+    },
+    [index, onChangeEnabled]
+  )
+
+  const handleChangeName = useCallback(
+    (value: string) => {
+      onChangeName?.(index, value)
+    },
+    [index, onChangeName]
+  )
+
+  const handleChangeValue = useCallback(
+    (value: string) => {
+      onChangeValue?.(index, value)
+    },
+    [index, onChangeValue]
+  )
+
+  const handleDelete = useCallback(() => {
+    onDelete?.(index)
+  }, [index, onDelete])
 
   const showHelperColumn = showEnable || draggable
 
@@ -85,7 +112,7 @@ export default function ParamLine({
                 type="checkbox"
                 checked={item.enabled}
                 className={styles.checkbox}
-                onChange={(e) => onChangeEnabled(e.target.checked)}
+                onChange={handleChangeEnabled}
               />
             )}
           </>
@@ -97,7 +124,7 @@ export default function ParamLine({
         value={item.name}
         placeholder="Name"
         changeOnKeyUp={true}
-        onChange={onChangeName}
+        onChange={handleChangeName}
         showTip={showTip}
         options={getAvailableNames()}
         scrollContainerRef={scrollContainerRef}
@@ -108,7 +135,7 @@ export default function ParamLine({
         value={item.value}
         placeholder="Value"
         changeOnKeyUp={true}
-        onChange={onChangeValue}
+        onChange={handleChangeValue}
         showTip={showTip}
         options={helperValues[item.name] || []}
         scrollContainerRef={scrollContainerRef}
@@ -116,9 +143,11 @@ export default function ParamLine({
       />
       {showDelete && (
         <SimpleTable.Cell>
-          <ButtonIcon icon="delete" onClick={onDelete} title={removeCaption} />
+          <ButtonIcon icon="delete" onClick={handleDelete} title={removeCaption} />
         </SimpleTable.Cell>
       )}
     </SimpleTable.Row>
   )
-}
+})
+
+export default ParamLine

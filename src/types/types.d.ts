@@ -342,11 +342,6 @@ type RequestContextType = {
   isActive: boolean
   collectionId?: Identifier | null
   request: RequestContextRequestType | null
-  fetching: boolean
-  fetched: FetchedType
-  fetchError: string
-  fetchErrorCause: string
-  response: RequestResponseType
   save: () => void
   requestConsole?: ConsoleHookType | null
   tabId?: Identifier
@@ -357,6 +352,15 @@ type RequestContextType = {
   getRequestEnvironment: () => Environment | null
   copyAsCurl: () => void
   pasteCurl: (curl: string) => void
+}
+
+type ResponseContextType = {
+  fetching: boolean
+  fetched: FetchedType
+  fetchError: string
+  fetchErrorCause: string
+  response: RequestResponseType
+  requestUrl: string
 }
 
 type AppTheme = {

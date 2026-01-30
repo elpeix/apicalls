@@ -16,11 +16,16 @@ export function useSettings(): AppSettingsHookType {
   const [settings, setSettings] = useState<AppSettingsType | null>(null)
   const [themes, setThemes] = useState<Map<string, AppTheme>>(new Map())
   const themesRef = useRef<Map<string, AppTheme>>(new Map())
+  const settingsRef = useRef<AppSettingsType | null>(null)
 
-  const base = window || global
-  const matchMedia = base.matchMedia('(prefers-color-scheme: dark)')
+  const matchMediaRef = useRef<MediaQueryList | null>(null)
+  if (!matchMediaRef.current) {
+    const base = window || global
+    matchMediaRef.current = base.matchMedia('(prefers-color-scheme: dark)')
+  }
+  const matchMedia = matchMediaRef.current
 
-  const [mode, setMode] = useState(matchMedia.matches ? DARK : LIGHT)
+  const [mode, setMode] = useState(() => (matchMedia.matches ? DARK : LIGHT))
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -53,28 +58,35 @@ export function useSettings(): AppSettingsHookType {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Keep settingsRef in sync
+  settingsRef.current = settings
+
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
 
     // Listen for system theme changes from main process
-    ipcRenderer?.on(SYSTEM_ACTIONS.systemThemeChanged, (_: unknown, systemTheme: string) => {
-      if (settings?.theme === 'system') {
+    const handleSystemThemeChanged = (_: unknown, systemTheme: string) => {
+      // Always update mode to reflect system preference
+      setMode(systemTheme === DARK ? DARK : LIGHT)
+      if (settingsRef.current?.theme === 'system') {
         document.documentElement.setAttribute('data-theme', systemTheme)
         removeStyleProperties()
       }
-    })
+    }
+    ipcRenderer?.on(SYSTEM_ACTIONS.systemThemeChanged, handleSystemThemeChanged)
     return () => ipcRenderer?.removeAllListeners(SYSTEM_ACTIONS.systemThemeChanged)
-  }, [settings])
+  }, [])
 
   useEffect(() => {
     const handleChange = (e: MediaQueryListEvent) => setMode(e.matches ? DARK : LIGHT)
     matchMedia.addEventListener('change', handleChange)
 
     return () => matchMedia.removeEventListener('change', handleChange)
-  }, [matchMedia])
+  }, [matchMedia]) // matchMedia is now stable (from ref)
 
   const save = useCallback(
     (newSettings: AppSettingsType) => {
+      const currentSettings = settingsRef.current
       setSettings(newSettings)
       if (newSettings.theme === 'system') {
         document.documentElement.setAttribute('data-theme', matchMedia.matches ? DARK : LIGHT)
@@ -88,18 +100,18 @@ export function useSettings(): AppSettingsHookType {
       if (colors) {
         applyTheme(colors)
       }
-      if (newSettings.menu !== undefined && newSettings.menu !== settings?.menu) {
+      if (newSettings.menu !== undefined && newSettings.menu !== currentSettings?.menu) {
         ipcRenderer?.send(SETTINGS.toggleMenu, newSettings.menu)
       }
       if (
         newSettings.manageCookies !== undefined &&
-        newSettings.manageCookies !== settings?.manageCookies
+        newSettings.manageCookies !== currentSettings?.manageCookies
       ) {
         ipcRenderer?.send(SETTINGS.toggleMenuCookies, newSettings.manageCookies)
       }
     },
-    [matchMedia, settings]
-  )
+    [matchMedia]
+  ) // matchMedia is now stable
 
   const clear = useCallback(() => {
     const ipcRenderer = window.electron?.ipcRenderer

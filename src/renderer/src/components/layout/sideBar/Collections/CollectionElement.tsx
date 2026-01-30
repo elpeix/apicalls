@@ -50,11 +50,15 @@ export default function CollectionElement({
     e.preventDefault()
     e.stopPropagation()
     setDroppableActive(false)
-    onMove({
-      from: JSON.parse(e.dataTransfer.getData('path')),
-      to: path,
-      after: element.id
-    })
+    try {
+      onMove({
+        from: JSON.parse(e.dataTransfer.getData('path')),
+        to: path,
+        after: element.id
+      })
+    } catch {
+      // Invalid drop data, ignore
+    }
   }
 
   const handleStartMove = () => {

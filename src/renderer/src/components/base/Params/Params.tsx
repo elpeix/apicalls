@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react'
+import React, { useCallback, useContext, useRef } from 'react'
 import SimpleTable from '../SimpleTable/SimpleTable'
 import ButtonIcon from '../ButtonIcon'
 import styles from './Params.module.css'
@@ -54,57 +54,77 @@ export default function Params({
   const deleteColumn = showDelete ? '2rem' : ''
   const templateColumns = `${helperColumn} ${defaultNameSize}px minmax(1rem, 1fr) ${deleteColumn}`
 
-  const openBulk = () => {
+  const saveItems = useCallback(
+    (itemsToSave: KeyValue[]) => {
+      onSave(itemsToSave)
+    },
+    [onSave]
+  )
+
+  const openBulk = useCallback(() => {
     application.showDialog({
       children: (
         <BulkEntry
           initialValue={items}
-          onSave={(items) => {
+          onSave={(newItems) => {
             application.hideDialog()
-            saveItems(items)
+            saveItems(newItems)
           }}
           onCancel={application.hideDialog}
         />
       ),
       fullWidth: true
     })
-  }
+  }, [application, items, saveItems])
 
-  const changeEnabledHandler = (index: number, enabled: boolean) => {
-    const newItems = [...items]
-    newItems[index] = { ...newItems[index], enabled }
-    saveItems(newItems)
-  }
+  const changeEnabledHandler = useCallback(
+    (index: number, enabled: boolean) => {
+      const newItems = [...items]
+      newItems[index] = { ...newItems[index], enabled }
+      saveItems(newItems)
+    },
+    [items, saveItems]
+  )
 
-  const changeNameHandler = (index: number, name: string) => {
-    const newItems = [...items]
-    newItems[index] = { ...newItems[index], name }
-    saveItems(newItems)
-  }
-  const changeValueHandler = (index: number, value: string) => {
-    const newItems = [...items]
-    newItems[index] = { ...newItems[index], value }
-    saveItems(newItems)
-  }
-  const deleteHandler = (index: number) => {
-    const newItems = [...items]
-    newItems.splice(index, 1)
-    saveItems(newItems)
-  }
+  const changeNameHandler = useCallback(
+    (index: number, name: string) => {
+      const newItems = [...items]
+      newItems[index] = { ...newItems[index], name }
+      saveItems(newItems)
+    },
+    [items, saveItems]
+  )
 
-  const dragHandler = (from: number, to: number) => {
-    if (!draggable || from === to) {
-      return
-    }
-    const newItems = [...items]
-    const [fromItem] = newItems.splice(from, 1)
-    newItems.splice(to, 0, fromItem)
-    saveItems(newItems)
-  }
+  const changeValueHandler = useCallback(
+    (index: number, value: string) => {
+      const newItems = [...items]
+      newItems[index] = { ...newItems[index], value }
+      saveItems(newItems)
+    },
+    [items, saveItems]
+  )
 
-  const saveItems = (itemsToSave: KeyValue[]) => {
-    onSave(itemsToSave)
-  }
+  const deleteHandler = useCallback(
+    (index: number) => {
+      const newItems = [...items]
+      newItems.splice(index, 1)
+      saveItems(newItems)
+    },
+    [items, saveItems]
+  )
+
+  const dragHandler = useCallback(
+    (from: number, to: number) => {
+      if (!draggable || from === to) {
+        return
+      }
+      const newItems = [...items]
+      const [fromItem] = newItems.splice(from, 1)
+      newItems.splice(to, 0, fromItem)
+      saveItems(newItems)
+    },
+    [draggable, items, saveItems]
+  )
 
   return (
     <div className={`${styles.params} ${className}`} ref={paramsRef}>
@@ -145,10 +165,10 @@ export default function Params({
                 dragFormat={dragFormat}
                 index={index}
                 removeCaption={removeCaption}
-                onChangeEnabled={(enabled) => changeEnabledHandler(index, enabled)}
-                onChangeName={(value) => changeNameHandler(index, value)}
-                onChangeValue={(value) => changeValueHandler(index, value)}
-                onDelete={() => deleteHandler(index)}
+                onChangeEnabled={changeEnabledHandler}
+                onChangeName={changeNameHandler}
+                onChangeValue={changeValueHandler}
+                onDelete={deleteHandler}
                 onDrag={dragHandler}
                 scrollContainerRef={scrollContainerRef ? scrollContainerRef : paramsRef}
                 environmentId={environmentId}

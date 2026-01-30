@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDebounce } from './useDebounce'
+
 type TooltipType = {
   text: string
   top: number
@@ -11,15 +12,20 @@ type TooltipType = {
 }
 
 const TOOLTIP_TIMEOUT = 400
-const TOOLTIP_DATA = 'data-tooltip-timeout'
+const TOOLTIP_FAST = 1
 
 export const useTooltip = () => {
   const [tooltip, setTooltip] = useState<TooltipType | null>(null)
-  const debouncedTooltip = useDebounce<TooltipType | null>(
-    tooltip,
-    Number(document.querySelector('body')?.getAttribute(TOOLTIP_DATA)) || TOOLTIP_TIMEOUT,
-    100
-  )
+  const [hasRecentTooltip, setHasRecentTooltip] = useState(false)
+
+  // Use fast timeout if we recently had a tooltip (for quick transitions between elements)
+  const debounceDelay = hasRecentTooltip ? TOOLTIP_FAST : TOOLTIP_TIMEOUT
+  const debouncedTooltip = useDebounce<TooltipType | null>(tooltip, debounceDelay, 100)
+
+  // Track if we recently showed a tooltip
+  if ((debouncedTooltip !== null) !== hasRecentTooltip) {
+    setHasRecentTooltip(debouncedTooltip !== null)
+  }
 
   useEffect(() => {
     const handleMouseOver = (event: MouseEvent) => {
@@ -64,9 +70,7 @@ export const useTooltip = () => {
       document.removeEventListener('mouseover', handleMouseOver)
       document.removeEventListener('mouseout', handleMouseOut)
     }
-  }, [tooltip])
+  }, [])
 
-  const timeout = debouncedTooltip === null ? TOOLTIP_TIMEOUT : 1
-  document.querySelector('body')?.setAttribute(TOOLTIP_DATA, timeout.toString())
   return debouncedTooltip as TooltipType
 }

@@ -3,3 +3,17 @@
   width: 100%;
   background-color: var(--background-content);
 }
+
+.editorContainer {
+  height: 100%;
+  width: 100%;
+  background-color: var(--background-content);
+}
+
+.editorHidden {
+  visibility: hidden;
+}
+
+.editorVisible {
+  visibility: visible;
+}

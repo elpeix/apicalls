@@ -42,12 +42,16 @@ export default function CollectionElements({
     e.preventDefault()
     e.stopPropagation()
     setDroppableActive(false)
-    const from = JSON.parse(e.dataTransfer.getData('path'))
-    const to = [...path]
-    if (to.length) {
-      to[to.length - 1] = { ...to[to.length - 1], type: 'folder' }
+    try {
+      const from = JSON.parse(e.dataTransfer.getData('path'))
+      const to = [...path]
+      if (to.length) {
+        to[to.length - 1] = { ...to[to.length - 1], type: 'folder' }
+      }
+      onMove({ from, to })
+    } catch {
+      // Invalid drop data, ignore
     }
-    onMove({ from, to })
   }
 
   return (
