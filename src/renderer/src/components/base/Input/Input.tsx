@@ -1,9 +1,16 @@
-import React, { useContext, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
 import LinkedModal from '../linkedModal/LinkedModal'
 import { RequestContext } from '../../../context/RequestContext'
+
+type Variable = {
+  part: string
+  value: string
+}
+
+const REGEX = /\{\{([^}]+)\}\}/i // Get {{variable}} from string
 
 export default function Input({
   inputRef,
@@ -42,27 +49,20 @@ export default function Input({
   environmentId?: Identifier
   inputId?: string
 }) {
-  type Variable = {
-    part: string
-    value: string
-  }
-
-  const REGEX = useMemo(() => /\{\{([^}]+)\}\}/i, []) // Get {{variable}} from string
-
   const { environments, collections } = useContext(AppContext)
   const { collectionId } = useContext(RequestContext)
   const inputWrapperRef = useRef(null)
 
-  const [internalValue, setInternalValue] = useState(value)
+  // State with value tracking for sync with prop
+  const [state, setState] = useState({ value, internalValue: value })
+  if (value !== state.value) {
+    setState({ value, internalValue: value })
+  }
+  const { internalValue } = state
+
   const [onOver, setOnOver] = useState(false)
   const debouncedOnOver = useDebounce(onOver, 500)
   const debouncedValue = useDebounce(internalValue, 700)
-
-  const [prevValue, setPrevValue] = useState(value)
-  if (value !== prevValue) {
-    setPrevValue(value)
-    setInternalValue(value)
-  }
 
   const envId = useMemo(() => {
     if (environmentId) return environmentId
@@ -82,48 +82,78 @@ export default function Input({
       }
     })
     return variables
-  }, [debouncedValue, internalValue, REGEX, environments, envId])
+  }, [debouncedValue, internalValue, environments, envId])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement
-    setInternalValue(target.value)
-    if (onChange) onChange(target.value)
-  }
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value
+      setState((prev) => ({ ...prev, internalValue: newValue }))
+      onChange?.(newValue)
+    },
+    [onChange]
+  )
 
-  const handleBlur = () => {
-    if (onBlur) onBlur(internalValue)
-  }
+  const handleBlur = useCallback(() => {
+    onBlur?.(internalValue)
+  }, [onBlur, internalValue])
 
   const highlightedValue = useMemo(() => {
     if (showTip || highlightVars) {
       return internalValue.split(REGEX).map((part, index) => {
         if (index % 2 === 0) return part
-        const className =
+        const varClassName =
           envId && environments?.variableIsDefined(envId, part)
             ? styles.variable
             : styles.variableUndefined
-        return <mark key={`${index}-${part}`} className={className}>{`{{${part}}}`}</mark>
+        return <mark key={`${index}-${part}`} className={varClassName}>{`{{${part}}}`}</mark>
       })
     }
     return internalValue
-  }, [internalValue, REGEX, showTip, highlightVars, envId, environments])
+  }, [internalValue, showTip, highlightVars, envId, environments])
 
-  const mouseOverHandler = () => setOnOver(true)
-  const mouseOutHandler = () => setOnOver(false)
+  const mouseOverHandler = useCallback(() => setOnOver(true), [])
+  const mouseOutHandler = useCallback(() => setOnOver(false), [])
 
-  const showLinkedModal = () => {
-    return showTip && debouncedOnOver && variableList.length > 0 && REGEX.test(internalValue)
-  }
+  const shouldShowLinkedModal = useMemo(
+    () => showTip && debouncedOnOver && variableList.length > 0 && REGEX.test(internalValue),
+    [showTip, debouncedOnOver, variableList.length, internalValue]
+  )
 
-  const style = {
-    fontSize: `${fontSize}px`,
-    anchorName: inputId ? `--${inputId}` : undefined
-  }
+  const style = useMemo(
+    () => ({
+      fontSize: `${fontSize}px`,
+      anchorName: inputId ? `--${inputId}` : undefined
+    }),
+    [fontSize, inputId]
+  )
+
+  const variableListContent = useMemo(() => {
+    return internalValue.split(REGEX).map((part, index) => {
+      if (index % 2 === 0) return null
+      const varClassName =
+        envId && environments?.variableIsDefined(envId, part)
+          ? styles.variable
+          : styles.variableUndefined
+      return (
+        <div key={`${part}-${index}`}>
+          <span className={varClassName}>{part}</span>
+          <span className={styles.variableValue}>
+            {envId && environments?.getVariableValue(envId, part)}
+          </span>
+        </div>
+      )
+    })
+  }, [internalValue, envId, environments])
+
+  const wrapperClassName = useMemo(
+    () => `${styles.input} ${className || ''}`,
+    [className]
+  )
 
   return (
     <>
       <div
-        className={`${styles.input} ${className || ''}`}
+        className={wrapperClassName}
         onMouseOver={mouseOverHandler}
         onMouseOut={mouseOutHandler}
         ref={inputWrapperRef}
@@ -145,7 +175,7 @@ export default function Input({
           autoFocus={autoFocus}
         />
       </div>
-      {showLinkedModal() && (
+      {shouldShowLinkedModal && (
         <LinkedModal
           parentRef={inputWrapperRef}
           topOffset={28}
@@ -158,23 +188,7 @@ export default function Input({
             onMouseOver={mouseOverHandler}
             onMouseOut={mouseOutHandler}
           >
-            {internalValue.split(REGEX).map((part, index) => {
-              if (index % 2 === 0) return null
-              const className =
-                envId && environments?.variableIsDefined(envId, part)
-                  ? styles.variable
-                  : styles.variableUndefined
-              return (
-                <div key={`${part}-${index}`}>
-                  <span key={`variable-name-${index}_${part}`} className={className}>
-                    {part}
-                  </span>
-                  <span key={`variable-value-${index}_${value}`} className={styles.variableValue}>
-                    {envId && environments?.getVariableValue(envId, part)}
-                  </span>
-                </div>
-              )
-            })}
+            {variableListContent}
           </div>
         </LinkedModal>
       )}

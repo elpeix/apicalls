@@ -1,11 +1,21 @@
 import { DIALOG } from '../../../../../lib/ipcChannels'
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import SimpleTable from '../SimpleTable/SimpleTable' // Correct relative path from components/request/ to components/base/ is ../base/
 import styles from './Params.module.css'
 import ButtonIcon from '../ButtonIcon'
 import Droppable from '../Droppable/Droppable'
 import Icon from '../Icon/Icon'
 import SimpleSelect from '../SimpleSelect/SimpleSelect'
+
+const typeOptions = [
+  { value: 'text', label: 'Text' },
+  { value: 'file', label: 'File' }
+]
+
+const simplePath = (path: string) => {
+  const parts = path.split('/').filter((p) => p !== '')
+  return parts[parts.length - 1]
+}
 
 export default function FormDataTableRow({
   item,
@@ -50,25 +60,30 @@ export default function FormDataTableRow({
   environmentId?: Identifier
   showType?: boolean
 }) {
-  const getAvailableNames = () => {
-    return Object.keys(helperValues)
-  }
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.stopPropagation()
-    e.dataTransfer.setData(dragFormat, index.toString())
-    e.dataTransfer.effectAllowed = 'move'
-  }
+  const availableNames = useMemo(() => Object.keys(helperValues), [helperValues])
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.stopPropagation()
-    const droppedIndex = e.dataTransfer.getData(dragFormat)
-    onDrag(Number(droppedIndex), index)
-  }
+  const handleDragStart = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      e.dataTransfer.setData(dragFormat, index.toString())
+      e.dataTransfer.effectAllowed = 'move'
+    },
+    [dragFormat, index]
+  )
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      const droppedIndex = e.dataTransfer.getData(dragFormat)
+      onDrag(Number(droppedIndex), index)
+    },
+    [dragFormat, index, onDrag]
+  )
 
   const showHelperColumn = showEnable || draggable
   const allowFiles = showType
 
-  const handleFileChoice = async () => {
+  const handleFileChoice = useCallback(async () => {
     try {
       const result = await window.electron.ipcRenderer.invoke(DIALOG.open)
       if (!result.canceled && result.filePaths.length > 0) {
@@ -77,12 +92,26 @@ export default function FormDataTableRow({
     } catch (e) {
       console.error('Failed to open dialog', e)
     }
-  }
+  }, [onChangeValue])
 
-  const simplePath = (path: string) => {
-    const parts = path.split('/').filter((p) => p !== '')
-    return parts[parts.length - 1]
-  }
+  const handleEnabledChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChangeEnabled(e.target.checked)
+    },
+    [onChangeEnabled]
+  )
+
+  const handleTypeChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      onChangeType(e.target.value as 'text' | 'file')
+    },
+    [onChangeType]
+  )
+
+  const valueOptions = useMemo(
+    () => helperValues[item.name] || [],
+    [helperValues, item.name]
+  )
 
   return (
     <SimpleTable.Row
@@ -109,7 +138,7 @@ export default function FormDataTableRow({
                 type="checkbox"
                 checked={item.enabled}
                 className={styles.checkbox}
-                onChange={(e) => onChangeEnabled(e.target.checked)}
+                onChange={handleEnabledChange}
               />
             )}
           </>
@@ -123,7 +152,7 @@ export default function FormDataTableRow({
         changeOnKeyUp={true}
         onChange={onChangeName}
         showTip={showTip}
-        options={getAvailableNames()}
+        options={availableNames}
         scrollContainerRef={scrollContainerRef}
         environmentId={environmentId}
       />
@@ -134,11 +163,8 @@ export default function FormDataTableRow({
           <SimpleSelect
             className={styles.select}
             value={item.type || 'text'}
-            onChange={(e) => onChangeType(e.target.value as 'text' | 'file')}
-            options={[
-              { value: 'text', label: 'Text' },
-              { value: 'file', label: 'File' }
-            ]}
+            onChange={handleTypeChange}
+            options={typeOptions}
           />
         </SimpleTable.Cell>
       )}
@@ -165,7 +191,7 @@ export default function FormDataTableRow({
           changeOnKeyUp={true}
           onChange={onChangeValue}
           showTip={showTip}
-          options={helperValues[item.name] || []}
+          options={valueOptions}
           scrollContainerRef={scrollContainerRef}
           environmentId={environmentId}
         />
