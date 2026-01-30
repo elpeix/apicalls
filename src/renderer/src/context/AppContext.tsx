@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import useTabs from '../hooks/useTabs'
 import { useHistory } from '../hooks/useHistory'
 import { useEnvironments } from '../hooks/useEnvironments'
@@ -59,32 +59,37 @@ export default function AppContextProvider({ children }: { children: React.React
 
   const [dialogProps, setDialogProps] = useState<DialogType | null>(null)
 
-  const showDialog = (dialogProps: DialogType) => {
+  const showDialog = useCallback((dialogProps: DialogType) => {
     setDialogProps(dialogProps)
-  }
+  }, [])
 
-  const hideDialog = () => {
-    dialogProps?.onClose?.()
-    setDialogProps(null)
-  }
-
-  const showAlert = (alertProps: AlertType) => {
-    showDialog({
-      children: (
-        <Alert
-          message={alertProps.message}
-          buttonName={alertProps.buttonName}
-          buttonColor={alertProps.buttonColor}
-          onClose={() => {
-            hideAlert()
-            alertProps.onClose?.()
-          }}
-        />
-      )
+  const hideDialog = useCallback(() => {
+    setDialogProps((prev) => {
+      prev?.onClose?.()
+      return null
     })
-  }
+  }, [])
 
-  const hideAlert = () => hideDialog()
+  const showAlert = useCallback(
+    (alertProps: AlertType) => {
+      showDialog({
+        children: (
+          <Alert
+            message={alertProps.message}
+            buttonName={alertProps.buttonName}
+            buttonColor={alertProps.buttonColor}
+            onClose={() => {
+              hideDialog()
+              alertProps.onClose?.()
+            }}
+          />
+        )
+      })
+    },
+    [showDialog, hideDialog]
+  )
+
+  const hideAlert = useCallback(() => hideDialog(), [hideDialog])
 
   useEffect(() => {
     if (window.api.os.isMac) {
@@ -143,52 +148,64 @@ export default function AppContextProvider({ children }: { children: React.React
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const showConfirm = (props: ConfirmType) => {
-    showDialog({
-      children: <Confirm {...props} />
-    })
-  }
+  const showConfirm = useCallback(
+    (props: ConfirmType) => {
+      showDialog({
+        children: <Confirm {...props} />
+      })
+    },
+    [showDialog]
+  )
 
-  const showYesNo = (props: YesNoType) => {
-    showDialog({
-      children: <ConfirmYesNo {...props} />
-    })
-  }
+  const showYesNo = useCallback(
+    (props: YesNoType) => {
+      showDialog({
+        children: <ConfirmYesNo {...props} />
+      })
+    },
+    [showDialog]
+  )
 
-  const hideConfirm = () => hideDialog()
+  const hideConfirm = useCallback(() => hideDialog(), [hideDialog])
 
-  const showPrompt = (promptProps: PromptType) => {
-    showDialog({
-      children: (
-        <Prompt
-          message={promptProps.message}
-          placeholder={promptProps.placeholder}
-          value={promptProps.value}
-          valueSelected={promptProps.valueSelected}
-          confirmName={promptProps.confirmName}
-          onConfirm={promptProps.onConfirm}
-          onCancel={promptProps.onCancel}
-        />
-      )
-    })
-  }
+  const showPrompt = useCallback(
+    (promptProps: PromptType) => {
+      showDialog({
+        children: (
+          <Prompt
+            message={promptProps.message}
+            placeholder={promptProps.placeholder}
+            value={promptProps.value}
+            valueSelected={promptProps.valueSelected}
+            confirmName={promptProps.confirmName}
+            onConfirm={promptProps.onConfirm}
+            onCancel={promptProps.onCancel}
+          />
+        )
+      })
+    },
+    [showDialog]
+  )
 
-  const hidePrompt = () => hideDialog()
+  const hidePrompt = useCallback(() => hideDialog(), [hideDialog])
 
   const dialogIsOpen = !!dialogProps
 
-  const notify = ({ message }: NotifcationTtype) => {
-    const settings = appSettings.settings
-    if (!(settings?.showNotification ?? true)) {
-      return
-    }
-    const notification = new window.Notification('API Calls', {
-      body: message
-    })
-    notification.onclick = () => {
-      window.focus()
-    }
-  }
+  const notify = useCallback(
+    ({ message }: NotifcationTtype) => {
+      const settings = appSettings.settings
+      if (!(settings?.showNotification ?? true)) {
+        return
+      }
+      const notification = new window.Notification('API Calls', {
+        body: message
+      })
+      notification.onclick = () => {
+        window.focus()
+      }
+    },
+    [appSettings.settings]
+  )
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer
@@ -250,41 +267,53 @@ export default function AppContextProvider({ children }: { children: React.React
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const revealRequest = (tab: RequestTab) => {
-    if (tab.collectionId) {
-      collections?.select(tab.collectionId)
-      menu?.selectAndExpand('collection')
-      tabs?.highlightCollectionRequest(tab)
-    }
-  }
+  const avoidCloseConfirm = useCallback(
+    () => !(appSettings.settings?.confirmCloseUnsavedTab ?? true),
+    [appSettings.settings?.confirmCloseUnsavedTab]
+  )
 
-  const closeTab = (tab: RequestTab) => {
-    if (tab.saved || avoidCloseConfirm()) {
-      tabs?.removeTab(tab.id, true)
-      return
-    }
-    showYesNo({
-      message: 'Do you want to save changes before closing the tab?',
-      noName: 'Close without save',
-      noColor: 'danger',
-      yesName: 'Save',
-      onYes: () => {
-        tabs?.saveTab(tab.id)
+  const revealRequest = useCallback(
+    (tab: RequestTab) => {
+      if (tab.collectionId) {
+        collections?.select(tab.collectionId)
+        menu?.selectAndExpand('collection')
+        tabs?.highlightCollectionRequest(tab)
+      }
+    },
+    [collections, menu, tabs]
+  )
+
+  const closeTab = useCallback(
+    (tab: RequestTab) => {
+      if (tab.saved || avoidCloseConfirm()) {
         tabs?.removeTab(tab.id, true)
-        hideDialog()
-      },
-      onNo: () => {
-        tabs?.removeTab(tab.id, true)
-        hideDialog()
-      },
-      onCancel: hideDialog
-    })
-  }
+        return
+      }
+      showYesNo({
+        message: 'Do you want to save changes before closing the tab?',
+        noName: 'Close without save',
+        noColor: 'danger',
+        yesName: 'Save',
+        onYes: () => {
+          tabs?.saveTab(tab.id)
+          tabs?.removeTab(tab.id, true)
+          hideDialog()
+        },
+        onNo: () => {
+          tabs?.removeTab(tab.id, true)
+          hideDialog()
+        },
+        onCancel: hideDialog
+      })
+    },
+    [tabs, avoidCloseConfirm, showYesNo, hideDialog]
+  )
 
   const confirmCloseMessage = 'There are unsaved tabs. Do you still want to close?'
-  const closeAllTabs = () => {
+
+  const closeAllTabs = useCallback(() => {
     if (avoidCloseConfirm()) {
-      tabs.closeAllTabs(true)
+      tabs?.closeAllTabs(true)
       return
     }
     if (tabs?.getTabs().some((tab) => !tab.saved)) {
@@ -292,41 +321,52 @@ export default function AppContextProvider({ children }: { children: React.React
         message: confirmCloseMessage,
         confirmName: 'Close tabs',
         onConfirm: () => {
-          tabs.closeAllTabs(true)
+          tabs?.closeAllTabs(true)
           hideDialog()
         },
         onCancel: hideDialog
       })
       return
     }
-    tabs.closeAllTabs()
-  }
+    tabs?.closeAllTabs()
+  }, [tabs, avoidCloseConfirm, showConfirm, hideDialog])
 
-  const closeOtherTabs = (tab: RequestTab) => {
-    if (avoidCloseConfirm()) {
-      tabs.closeOtherTabs(tab.id, true)
-      return
-    }
-    const tabsToClose = tabs?.getTabs().filter((t) => t.id !== tab.id)
-    if (tabsToClose.some((tab) => !tab.saved)) {
-      showConfirm({
-        message: confirmCloseMessage,
-        confirmName: 'Close tabs',
-        onConfirm: () => {
-          tabs.closeOtherTabs(tab.id, true)
-          hideDialog()
-        },
-        onCancel: hideDialog
-      })
-      return
-    }
-    tabs.closeOtherTabs(tab.id)
-  }
+  const closeOtherTabs = useCallback(
+    (tab: RequestTab) => {
+      if (avoidCloseConfirm()) {
+        tabs?.closeOtherTabs(tab.id, true)
+        return
+      }
+      const tabsToClose = tabs?.getTabs().filter((t) => t.id !== tab.id)
+      if (tabsToClose?.some((tab) => !tab.saved)) {
+        showConfirm({
+          message: confirmCloseMessage,
+          confirmName: 'Close tabs',
+          onConfirm: () => {
+            tabs?.closeOtherTabs(tab.id, true)
+            hideDialog()
+          },
+          onCancel: hideDialog
+        })
+        return
+      }
+      tabs?.closeOtherTabs(tab.id)
+    },
+    [tabs, avoidCloseConfirm, showConfirm, hideDialog]
+  )
 
-  const avoidCloseConfirm = () => !(appSettings.settings?.confirmCloseUnsavedTab ?? true)
+  const tabActions = useMemo(
+    () => ({
+      revealRequest,
+      closeTab,
+      closeAllTabs,
+      closeOtherTabs
+    }),
+    [revealRequest, closeTab, closeAllTabs, closeOtherTabs]
+  )
 
-  const contextValue = {
-    application: {
+  const application = useMemo(
+    () => ({
       showDialog,
       hideDialog,
       showAlert,
@@ -337,23 +377,39 @@ export default function AppContextProvider({ children }: { children: React.React
       hideConfirm,
       dialogIsOpen,
       notify,
-      tabActions: {
-        revealRequest,
-        closeTab,
-        closeAllTabs,
-        closeOtherTabs
-      },
+      tabActions,
       version: appVersion
-    },
-    workspaces,
-    menu,
-    tabs,
-    collections,
-    environments,
-    history,
-    cookies,
-    appSettings
-  }
+    }),
+    [
+      showDialog,
+      hideDialog,
+      showAlert,
+      hideAlert,
+      showPrompt,
+      hidePrompt,
+      showConfirm,
+      hideConfirm,
+      dialogIsOpen,
+      notify,
+      tabActions,
+      appVersion
+    ]
+  )
+
+  const contextValue = useMemo(
+    () => ({
+      application,
+      workspaces,
+      menu,
+      tabs,
+      collections,
+      environments,
+      history,
+      cookies,
+      appSettings
+    }),
+    [application, workspaces, menu, tabs, collections, environments, history, cookies, appSettings]
+  )
 
   return (
     <AppContext.Provider value={contextValue}>
