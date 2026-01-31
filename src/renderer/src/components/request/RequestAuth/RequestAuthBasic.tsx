@@ -1,26 +1,28 @@
-import React, { useContext, useRef } from 'react'
+import React, { useRef } from 'react'
 import styles from './RequestAuth.module.css'
-import { RequestContext } from '../../../context/RequestContext'
+import { useRequestData, useRequestActions, useRequestMeta } from '../../../context/RequestContext'
 import Autocompleter from '../../base/Autocompleter/Autocompleter'
 
 export default function RequestAuthBasic() {
-  const { request, getRequestEnvironment } = useContext(RequestContext)
+  const { auth } = useRequestData()
+  const { setAuth } = useRequestActions()
+  const { getRequestEnvironment } = useRequestMeta()
 
   const inputRef = useRef<HTMLInputElement>(null)
 
   const environmentId = getRequestEnvironment()?.id
 
-  const authValue: RequestAuthBasic = (request?.auth?.value as RequestAuthBasic) || {
+  const authValue: RequestAuthBasic = (auth?.value as RequestAuthBasic) || {
     username: '',
     password: ''
   }
 
   const handleInputValueChangeUsername = (value: string) => {
-    request?.setAuth({ type: 'basic', value: { ...authValue, username: value } })
+    setAuth({ type: 'basic', value: { ...authValue, username: value } })
   }
 
   const handleInputValueChangePassword = (value: string) => {
-    request?.setAuth({ type: 'basic', value: { ...authValue, password: value } })
+    setAuth({ type: 'basic', value: { ...authValue, password: value } })
   }
   return (
     <div className={styles.basicAuth}>

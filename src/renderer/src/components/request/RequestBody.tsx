@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import Editor from '../base/Editor/Editor'
 import styles from './Request.module.css'
-import { RequestContext } from '../../context/RequestContext'
+import { useRequestData, useRequestActions } from '../../context/RequestContext'
 import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 import { getBody } from '../../lib/utils'
 import FormDataEditor from './FormDataEditor'
@@ -21,28 +21,26 @@ const contentTypeOptions = Object.keys(contentTypes).map((contentType) => ({
 }))
 
 export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }) {
-  const { request } = useContext(RequestContext)
+  const { body } = useRequestData()
+  const { setBody } = useRequestActions()
 
   const [contentType, setContentType] = useState<ContentTypes>(() => {
-    if (!request) return 'none'
-    return request.body === 'none' || request.body === ''
+    return body === 'none' || body === ''
       ? 'none'
-      : typeof request.body !== 'string'
-        ? request.body.contentType
+      : typeof body !== 'string'
+        ? body.contentType
         : 'json'
   })
-  const [value, setValue] = useState(getBody(request?.body || ''))
-
-  if (!request) return null
+  const [value, setValue] = useState(getBody(body || ''))
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value as ContentTypes
     setContentType(selected)
     if (selected === 'none') {
       setValue('')
-      request.setBody('none')
+      setBody('none')
     } else {
-      request.setBody({
+      setBody({
         contentType: selected,
         value
       })
@@ -53,7 +51,7 @@ export default function RequestBody({ wordWrap = false }: { wordWrap?: boolean }
     value = value || ''
     setValue(value)
     if (contentType !== 'none') {
-      request.setBody({
+      setBody({
         contentType: contentType as Exclude<ContentTypes, 'none'>,
         value: value as string
       })

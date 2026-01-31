@@ -4,18 +4,20 @@ import Autocompleter from '../../base/Autocompleter/Autocompleter'
 import { OAUTH } from '../../../../../lib/ipcChannels'
 import { Button } from '../../base/Buttons/Buttons'
 import { AppContext } from '../../../context/AppContext'
-import { RequestContext } from '../../../context/RequestContext'
+import { useRequestData, useRequestActions, useRequestMeta } from '../../../context/RequestContext'
 import ButtonIcon from '../../base/ButtonIcon'
 
 export default function RequestAuthOAuth2() {
   const { application } = useContext(AppContext)
-  const { request, getRequestEnvironment } = useContext(RequestContext)
+  const { auth } = useRequestData()
+  const { setAuth } = useRequestActions()
+  const { getRequestEnvironment } = useRequestMeta()
 
   const inputRef = useRef<HTMLInputElement>(null)
 
   const environmentId = getRequestEnvironment()?.id
 
-  const authValue: RequestAuthOAuth2 = (request?.auth?.value as RequestAuthOAuth2) || {
+  const authValue: RequestAuthOAuth2 = (auth?.value as RequestAuthOAuth2) || {
     grantType: 'authorization_code',
     clientId: '',
     authorizationUrl: '',
@@ -27,7 +29,7 @@ export default function RequestAuthOAuth2() {
 
   const handleOAuthChange = (key: keyof RequestAuthOAuth2, value: string) => {
     const newAuth = { ...authValue, [key]: value }
-    request?.setAuth({ type: 'oauth2', value: newAuth })
+    setAuth({ type: 'oauth2', value: newAuth })
   }
 
   const handleGetToken = async () => {

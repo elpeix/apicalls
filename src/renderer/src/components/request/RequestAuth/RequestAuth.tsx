@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import styles from './RequestAuth.module.css'
-import { RequestContext } from '../../../context/RequestContext'
+import { useRequestData, useRequestActions } from '../../../context/RequestContext'
 import SimpleSelect from '../../base/SimpleSelect/SimpleSelect'
 import RequestAuthOAuth2 from './RequestAuthOAuth2'
 import RequestAuthBasic from './RequestAuthBasic'
@@ -14,9 +14,10 @@ const authOptions: { value: RequestAuthType; label: string }[] = [
 ]
 
 export default function RequestAuth() {
-  const { request } = useContext(RequestContext)
+  const { auth } = useRequestData()
+  const { setAuth } = useRequestActions()
 
-  const authType = request?.auth?.type || 'none'
+  const authType = auth?.type || 'none'
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const option = authOptions.find((option) => option.value === e.target.value)
@@ -38,7 +39,7 @@ export default function RequestAuth() {
                 }
               : undefined
 
-      request?.setAuth({ type: option.value, value: authValue as RequestAuthValue })
+      setAuth({ type: option.value, value: authValue as RequestAuthValue })
     }
   }
 

@@ -45,12 +45,6 @@ export default function useTabs(
       }
       updateTabsTimeout.current = null
       setTabs(newTabs)
-      // tabsRef will be updated in useEffect, but for immediate logic relying on it before render we might need care
-      // However, usually we update state and next render cycles handle it.
-      // If we need immediate ref update for sequential calls in same tick (unlikely for UI actions), we'd do it here.
-      // For safety in async/timeout flows:
-      // tabsRef.current = newTabs 
-      // But React pure state flow is safer. Let's rely on standard flow.
       ipcRenderer?.send(TABS.update, newTabs)
     },
     [ipcRenderer]

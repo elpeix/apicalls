@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styles from './Request.module.css'
-import { RequestContext } from '../../context/RequestContext'
+import { useRequestActions, useRequestMeta } from '../../context/RequestContext'
 import Autocompleter from '../base/Autocompleter/Autocompleter'
 
 export default function RequestUrl() {
-  const { request, pasteCurl, getRequestEnvironment, tabId } = useContext(RequestContext)
+  const { setFullUrl, getFullUrl, urlIsValid } = useRequestActions()
+  const { pasteCurl, getRequestEnvironment, tabId } = useRequestMeta()
   const urlRef = useRef<HTMLInputElement>(null)
 
   // State is keyed by tabId - reset when tab changes
@@ -21,31 +22,29 @@ export default function RequestUrl() {
 
   const { internalUrl, paramsAreValid } = state
 
-  const displayUrl = internalUrl ?? (request?.getFullUrl() || '')
+  const displayUrl = internalUrl ?? (getFullUrl() || '')
 
   const handleUrlChange = useCallback(
     (value: string) => {
-      if (!request) return
       let valid = true
       try {
-        request.setFullUrl(value)
+        setFullUrl(value)
       } catch (_) {
         valid = false
       }
       setState((prev) => ({ ...prev, internalUrl: value, paramsAreValid: valid }))
     },
-    [request]
+    [setFullUrl]
   )
 
   const handleUrlBlur = useCallback(() => {
-    if (!request) return
     setState((prev) => {
       if (prev.internalUrl !== null) {
-        request.setFullUrl(prev.internalUrl)
+        setFullUrl(prev.internalUrl)
       }
       return { ...prev, internalUrl: null }
     })
-  }, [request])
+  }, [setFullUrl])
 
   const handlePaste = useCallback(
     (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -59,10 +58,10 @@ export default function RequestUrl() {
   )
 
   const urlError = useMemo(() => {
-    if (!request || !displayUrl.length) return false
+    if (!displayUrl.length) return false
     const [urlBase] = displayUrl.split('?')
-    return !request.urlIsValid({ url: urlBase })
-  }, [request, displayUrl])
+    return !urlIsValid({ url: urlBase })
+  }, [displayUrl, urlIsValid])
 
   const className = useMemo(
     () => `${styles.url} ${displayUrl.length && (urlError || !paramsAreValid) ? styles.error : ''}`,
@@ -70,10 +69,6 @@ export default function RequestUrl() {
   )
 
   const environmentId = useMemo(() => getRequestEnvironment()?.id, [getRequestEnvironment])
-
-  if (!request) {
-    return null
-  }
 
   return (
     <Autocompleter

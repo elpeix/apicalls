@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { RequestContext } from '../../context/RequestContext'
+import React, { useState } from 'react'
+import { useRequestData, useRequestActions } from '../../context/RequestContext'
 import styles from './Request.module.css'
 import SimpleSelect from '../base/SimpleSelect/SimpleSelect'
 import ScriptEditor from '../base/Editor/ScriptEditor'
@@ -10,10 +10,9 @@ const scriptOptions = [
 ]
 
 export default function RequestScript({ wordWrap = false }: { wordWrap?: boolean }) {
-  const { request } = useContext(RequestContext)
+  const { preScript, postScript } = useRequestData()
+  const { setPreScript, setPostScript } = useRequestActions()
   const [scriptType, setScriptType] = useState<'pre' | 'post'>('pre')
-
-  if (!request) return null
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setScriptType(e.target.value as 'pre' | 'post')
@@ -33,14 +32,14 @@ export default function RequestScript({ wordWrap = false }: { wordWrap?: boolean
       <div className={styles.contentBody}>
         {scriptType === 'pre' ? (
           <ScriptEditor
-            script={request.preScript}
-            onChange={(val) => request.setPreScript(val)}
+            script={preScript}
+            onChange={(val) => setPreScript(val)}
             wordWrap={wordWrap}
           />
         ) : (
           <ScriptEditor
-            script={request.postScript}
-            onChange={(val) => request.setPostScript(val)}
+            script={postScript}
+            onChange={(val) => setPostScript(val)}
             wordWrap={wordWrap}
           />
         )}

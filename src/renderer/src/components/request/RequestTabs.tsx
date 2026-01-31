@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { RequestContext } from '../../context/RequestContext'
+import React, { useState } from 'react'
+import { useRequestData, useRequestActions, useRequestMeta } from '../../context/RequestContext'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import RequestTab from './RequestTab'
 import styles from './Request.module.css'
@@ -29,7 +29,13 @@ const getTabIndexes = (showPathParams: boolean, showBody: boolean) => {
 }
 
 export default function RequestTabs() {
-  const { request, getRequestEnvironment, tabId } = useContext(RequestContext)
+  const { method, headers, queryParams, pathParams } = useRequestData()
+  const {
+    headers: headersActions,
+    queryParams: queryParamsActions,
+    pathParams: pathParamsActions
+  } = useRequestActions()
+  const { getRequestEnvironment, tabId } = useRequestMeta()
 
   const getInitialTabIndex = () => {
     if (!tabId) return 0
@@ -40,13 +46,11 @@ export default function RequestTabs() {
   const [tabIndex, setTabIndex] = useState(getInitialTabIndex())
   const [wordWrap, setWordWrap] = useState(false)
 
-  if (!request) return null
+  const showBody = method.body
+  const activeQueryParams = queryParamsActions.getActiveLength()
+  const activeHeaders = headersActions.getActiveLength()
 
-  const showBody = request.method.body
-  const activeQueryParams = request.queryParams.getActiveLength()
-  const activeHeaders = request.headers.getActiveLength()
-
-  const tabIndexes = getTabIndexes(request.pathParams.items.length > 0, showBody)
+  const tabIndexes = getTabIndexes(pathParams.length > 0, showBody)
 
   const handleTabSelect = (index: number) => {
     setTabIndex(index)
@@ -66,7 +70,7 @@ export default function RequestTabs() {
         <div className={styles.tabsList}>
           <HorizontalScroll className={`${styles.requestTabs} panel-tabs-header-list`}>
             <TabList>
-              {request.pathParams.items.length > 0 && (
+              {pathParams.length > 0 && (
                 <Tab onMouseDown={() => handleTabSelect(tabIndexes.pathParams)}>
                   <RequestTab name="Path params" />
                 </Tab>
@@ -89,11 +93,11 @@ export default function RequestTabs() {
           </div>
         </div>
         <div className="tab-panel-wrapper">
-          {request.pathParams.items.length > 0 && (
+          {pathParams.length > 0 && (
             <TabPanel>
               <Params
-                items={request.pathParams.items}
-                onSave={request.pathParams.set}
+                items={pathParams}
+                onSave={pathParamsActions.set}
                 editableName={false}
                 showDelete={false}
                 environmentId={getRequestEnvironment()?.id}
@@ -102,18 +106,18 @@ export default function RequestTabs() {
           )}
           <TabPanel>
             <Params
-              items={request.queryParams.items}
-              onSave={request.queryParams.set}
-              onAdd={request.queryParams.add}
+              items={queryParams}
+              onSave={queryParamsActions.set}
+              onAdd={queryParamsActions.add}
               draggable={true}
               environmentId={getRequestEnvironment()?.id}
             />
           </TabPanel>
           <TabPanel>
             <Params
-              items={request.headers.items}
-              onSave={request.headers.set}
-              onAdd={request.headers.add}
+              items={headers}
+              onSave={headersActions.set}
+              onAdd={headersActions.add}
               helperValues={defaultHttpHeaders}
               bulkMode={true}
               draggable={true}

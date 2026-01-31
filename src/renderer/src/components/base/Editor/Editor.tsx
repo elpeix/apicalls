@@ -2,7 +2,7 @@ import { Monaco, Editor as MonacoEditor, OnChange } from '@monaco-editor/react'
 import * as monaco from 'monaco-editor'
 import React, { memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { AppContext } from '../../../context/AppContext'
-import { RequestContext } from '../../../context/RequestContext'
+import { useRequestMeta } from '../../../context/RequestContext'
 import { useEditorTheme } from './useEditorTheme'
 import { createMethod } from '../../../lib/factory'
 
@@ -20,8 +20,7 @@ export default function Editor(props: {
   onChange?: OnChange
 }) {
   const { appSettings, tabs } = useContext(AppContext)
-  const { isActive, setEditorState, getEditorState, getRequestEnvironment } =
-    useContext(RequestContext)
+  const { isActive, setEditorState, getEditorState, getRequestEnvironment } = useRequestMeta()
 
   return (
     <EditorInner

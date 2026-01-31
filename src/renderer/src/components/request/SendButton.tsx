@@ -1,18 +1,16 @@
 import React, { useContext } from 'react'
-import { RequestContext, ResponseContext } from '../../context/RequestContext'
+import { useRequestActions, ResponseContext } from '../../context/RequestContext'
 import styles from './Request.module.css'
 import Icon from '../base/Icon/Icon'
 
 export default function SendButton() {
-  const { request } = useContext(RequestContext)
+  const { fetch, cancel } = useRequestActions()
   const { fetching } = useContext(ResponseContext)
-
-  if (!request) return null
 
   return (
     <>
       {fetching && (
-        <button className={styles.cancel} onClick={request.cancel}>
+        <button className={styles.cancel} onClick={cancel}>
           <div className={styles.buttonIcon}>
             <Icon icon="close" />
           </div>
@@ -20,7 +18,7 @@ export default function SendButton() {
         </button>
       )}
       {!fetching && (
-        <button className={styles.send} onClick={request.fetch}>
+        <button className={styles.send} onClick={fetch}>
           <div className={styles.buttonIcon}>
             <Icon icon="send" />
           </div>

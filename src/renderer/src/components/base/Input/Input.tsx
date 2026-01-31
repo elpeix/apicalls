@@ -3,7 +3,7 @@ import styles from './Input.module.css'
 import { AppContext } from '../../../context/AppContext'
 import { useDebounce } from '../../../hooks/useDebounce'
 import LinkedModal from '../linkedModal/LinkedModal'
-import { RequestContext } from '../../../context/RequestContext'
+import { useRequestMeta } from '../../../context/RequestContext'
 
 type Variable = {
   part: string
@@ -50,7 +50,7 @@ export default function Input({
   inputId?: string
 }) {
   const { environments, collections } = useContext(AppContext)
-  const { collectionId } = useContext(RequestContext)
+  const { collectionId } = useRequestMeta()
   const inputWrapperRef = useRef(null)
 
   // State with value tracking for sync with prop
