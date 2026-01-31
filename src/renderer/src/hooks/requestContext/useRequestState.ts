@@ -95,31 +95,30 @@ export function useRequestState(tab: RequestTab) {
   const collectionRef = useRef(collection)
 
   useEffect(() => {
-     requestMethodRef.current = requestMethod
-     requestUrlRef.current = requestUrl
-     requestBodyRef.current = requestBody
-     requestAuthRef.current = requestAuth
-     requestHeadersRef.current = requestHeaders
-     requestPathParamsRef.current = requestPathParams
-     requestQueryParamsRef.current = requestQueryParams
-     requestFullUrlRef.current = requestFullUrl
-     requestPreScriptRef.current = requestPreScript
-     requestPostScriptRef.current = requestPostScript
-     collectionRef.current = collection
+    requestMethodRef.current = requestMethod
+    requestUrlRef.current = requestUrl
+    requestBodyRef.current = requestBody
+    requestAuthRef.current = requestAuth
+    requestHeadersRef.current = requestHeaders
+    requestPathParamsRef.current = requestPathParams
+    requestQueryParamsRef.current = requestQueryParams
+    requestFullUrlRef.current = requestFullUrl
+    requestPreScriptRef.current = requestPreScript
+    requestPostScriptRef.current = requestPostScript
+    collectionRef.current = collection
   }, [
-      requestMethod,
-      requestUrl,
-      requestBody,
-      requestAuth,
-      requestHeaders,
-      requestPathParams,
-      requestQueryParams,
-      requestFullUrl,
-      requestPreScript,
-      requestPostScript,
-      collection
+    requestMethod,
+    requestUrl,
+    requestBody,
+    requestAuth,
+    requestHeaders,
+    requestPathParams,
+    requestQueryParams,
+    requestFullUrl,
+    requestPreScript,
+    requestPostScript,
+    collection
   ])
-
 
   const requestEditorStateRef = useRef('')
   const responseEditorStateRef = useRef('')
@@ -230,65 +229,53 @@ export function useRequestState(tab: RequestTab) {
     setSaved(false)
   }, [])
 
-  const setPathParams = useCallback(
-    (pathParams: KeyValue[]) => {
-      if (keyValuesAreEqual(pathParams, requestPathParamsRef.current)) return
-      setRequestPathParams(pathParams)
-      setChanged(true)
-      setSaved(false)
-    },
-    []
-  )
+  const setPathParams = useCallback((pathParams: KeyValue[]) => {
+    if (keyValuesAreEqual(pathParams, requestPathParamsRef.current)) return
+    setRequestPathParams(pathParams)
+    setChanged(true)
+    setSaved(false)
+  }, [])
 
-  const setQueryParams = useCallback(
-    (params: KeyValue[]) => {
-      if (keyValuesAreEqual(params, requestQueryParamsRef.current)) return
-      setRequestQueryParams(params)
-      setChanged(true)
-      setSaved(false)
-    },
-    []
-  )
+  const setQueryParams = useCallback((params: KeyValue[]) => {
+    if (keyValuesAreEqual(params, requestQueryParamsRef.current)) return
+    setRequestQueryParams(params)
+    setChanged(true)
+    setSaved(false)
+  }, [])
 
-  const setFullUrl = useCallback(
-    (value: string) => {
-      if (value === requestFullUrlRef.current) return
-      setRequestFullUrl(value)
-      const [url, params] = value.split('?')
-        setRequestUrl(url)
-      const newPathParams = getPathParamsFromUrl(url, requestPathParamsRef.current)
-      if (!keyValuesAreEqual(newPathParams, requestPathParamsRef.current)){
-          setRequestPathParams(newPathParams)
-      }
+  const setFullUrl = useCallback((value: string) => {
+    if (value === requestFullUrlRef.current) return
+    setRequestFullUrl(value)
+    const [url, params] = value.split('?')
+    setRequestUrl(url)
+    const newPathParams = getPathParamsFromUrl(url, requestPathParamsRef.current)
+    if (!keyValuesAreEqual(newPathParams, requestPathParamsRef.current)) {
+      setRequestPathParams(newPathParams)
+    }
 
-      const newQueryParams = getQueryParamsFromUrl(params, requestQueryParamsRef.current)
-      if(!keyValuesAreEqual(newQueryParams, requestQueryParamsRef.current)) {
-          setRequestQueryParams(newQueryParams)
-      }
+    const newQueryParams = getQueryParamsFromUrl(params, requestQueryParamsRef.current)
+    if (!keyValuesAreEqual(newQueryParams, requestQueryParamsRef.current)) {
+      setRequestQueryParams(newQueryParams)
+    }
 
-      setChanged(true)
-      setSaved(false)
-    },
-    []
-  )
+    setChanged(true)
+    setSaved(false)
+  }, [])
 
-  const setBody = useCallback(
-    (body: BodyType) => {
-      const currentBody = requestBodyRef.current
-      if (
-        typeof currentBody !== 'string' &&
-        typeof body !== 'string' &&
-        currentBody.contentType === body.contentType &&
-        currentBody.value === body.value
-      ) {
-        return
-      }
-      setRequestBody(body)
-      setChanged(true)
-      setSaved(false)
-    },
-    []
-  )
+  const setBody = useCallback((body: BodyType) => {
+    const currentBody = requestBodyRef.current
+    if (
+      typeof currentBody !== 'string' &&
+      typeof body !== 'string' &&
+      currentBody.contentType === body.contentType &&
+      currentBody.value === body.value
+    ) {
+      return
+    }
+    setRequestBody(body)
+    setChanged(true)
+    setSaved(false)
+  }, [])
 
   const setAuth = useCallback((auth: RequestAuth) => {
     setRequestAuth(auth)
@@ -308,15 +295,12 @@ export function useRequestState(tab: RequestTab) {
     setSaved(false)
   }, [])
 
-  const setHeaders = useCallback(
-    (headers: KeyValue[]) => {
-      if (keyValuesAreEqual(headers, requestHeadersRef.current)) return
-      setRequestHeaders(headers)
-      setChanged(true)
-      setSaved(false)
-    },
-    []
-  )
+  const setHeaders = useCallback((headers: KeyValue[]) => {
+    if (keyValuesAreEqual(headers, requestHeadersRef.current)) return
+    setRequestHeaders(headers)
+    setChanged(true)
+    setSaved(false)
+  }, [])
 
   const addHeader = useCallback(() => {
     setHeaders([...requestHeadersRef.current, { enabled: true, name: '', value: '' }])
@@ -349,7 +333,10 @@ export function useRequestState(tab: RequestTab) {
   }, [])
 
   const addQueryParam = useCallback(() => {
-    setRequestQueryParams([...requestQueryParamsRef.current, { enabled: true, name: '', value: '' }])
+    setRequestQueryParams([
+      ...requestQueryParamsRef.current,
+      { enabled: true, name: '', value: '' }
+    ])
   }, [])
 
   const removeQueryParam = useCallback(
@@ -378,8 +365,8 @@ export function useRequestState(tab: RequestTab) {
 
   const getUrlObject = useCallback(
     ({ url = '' }) => {
-        const targetUrl = url || requestUrlRef.current
-        return new URL(getValue(targetUrl))
+      const targetUrl = url || requestUrlRef.current
+      return new URL(getValue(targetUrl))
     },
     [getValue]
   )
@@ -453,13 +440,13 @@ export function useRequestState(tab: RequestTab) {
       const headers: HeadersInit = {}
       let userAgentDefined = false
       let contentTypeDefined = false
-      
+
       const currentHeaders = requestHeadersRef.current
       const currentMethod = requestMethodRef.current
       const currentBody = requestBodyRef.current
       const currentAuth = requestAuthRef.current
       const currentSettings = settingsRef.current
-      
+
       currentHeaders.forEach((header) => {
         if (header.enabled && header.name) {
           const headerName = getValue(header.name)
@@ -508,11 +495,7 @@ export function useRequestState(tab: RequestTab) {
       }
       return headers
     },
-    [
-      getValue,
-      getDefaultUserAgent,
-      setDefaultHeaders
-    ]
+    [getValue, getDefaultUserAgent, setDefaultHeaders]
   )
 
   const prepareQueryParams = useCallback(
@@ -547,7 +530,7 @@ export function useRequestState(tab: RequestTab) {
     const headers: Record<string, string> = getHeaders(url)
     const currentMethod = requestMethodRef.current
     const currentBody = requestBodyRef.current
-    
+
     let curl = `curl -X ${currentMethod.value} '${path}'`
     if (headers && Object.keys(headers).length > 0) {
       Object.keys(headers).forEach((key) => {
@@ -559,11 +542,7 @@ export function useRequestState(tab: RequestTab) {
     }
     navigator.clipboard.writeText(curl)
     applicationRef.current.notify({ message: 'cURL command copied to clipboard' })
-  }, [
-    getValue,
-    prepareQueryParams,
-    getHeaders
-  ])
+  }, [getValue, prepareQueryParams, getHeaders])
 
   const pasteCurl = useCallback(
     (curlCommand: string) => {

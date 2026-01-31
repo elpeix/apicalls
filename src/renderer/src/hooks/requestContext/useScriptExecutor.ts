@@ -134,7 +134,7 @@ export function useScriptExecutor({
 
       const onFailure = (_: unknown, response: CallResponseFailure) => {
         if (response.request?.id !== scriptRequestId) return
-        
+
         if (!activeScriptIds.current.has(scriptRequestId)) {
           cleanUp()
           reject(new Error('CANCELED_BY_USER'))

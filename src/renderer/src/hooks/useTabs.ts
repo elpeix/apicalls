@@ -14,11 +14,11 @@ export default function useTabs(
   const [tabs, setTabs] = useState([...initialTabs])
   const [closedTabs, setClosedTabs] = useState<ClosedTab[]>([])
   const [activeRequest, setActiveRequest] = useState<ActiveRequest | null>(null)
-  
+
   const collectionsRef = useRef(collections)
   const tabsRef = useRef(tabs)
   const closedTabsRef = useRef(closedTabs)
-  
+
   // Sync refs with state
   useEffect(() => {
     collectionsRef.current = collections
@@ -120,7 +120,7 @@ export default function useTabs(
       }
       updateTabsImmediate(_setActiveTab(currentTabs, index))
     },
-    [ _setActiveTab, updateTabsImmediate]
+    [_setActiveTab, updateTabsImmediate]
   )
 
   const addTab = useCallback(
@@ -372,7 +372,8 @@ export default function useTabs(
     return index
   }, []) // tabs is no longer a dependency
 
-  const actions = useMemo(() => ({
+  const actions = useMemo(
+    () => ({
       openTab,
       newTab,
       addTab,
@@ -395,7 +396,8 @@ export default function useTabs(
       closeOtherTabs,
       closeAllTabs,
       saveTab
-  }), [
+    }),
+    [
       openTab,
       newTab,
       addTab,
@@ -418,14 +420,14 @@ export default function useTabs(
       closeOtherTabs,
       closeAllTabs,
       saveTab
-  ])
+    ]
+  )
 
   return useMemo(
     () => ({
       ...actions,
-       tabs
+      tabs
     }),
     [actions, tabs]
   )
 }
-
