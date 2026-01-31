@@ -242,7 +242,7 @@ const EditorInner = memo(
       prevProps.isActive === nextProps.isActive &&
       prevProps.appSettings?.settings === nextProps.appSettings?.settings &&
       prevProps.appSettings?.getEditorTheme === nextProps.appSettings?.getEditorTheme &&
-      prevProps.tabs === nextProps.tabs &&
+      prevProps.tabs?.openTab === nextProps.tabs?.openTab &&
       prevProps.getRequestEnvironment === nextProps.getRequestEnvironment &&
       prevProps.setEditorState === nextProps.setEditorState &&
       prevProps.getEditorState === nextProps.getEditorState

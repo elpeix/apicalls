@@ -14,15 +14,27 @@ export default function useTabs(
   const [tabs, setTabs] = useState([...initialTabs])
   const [closedTabs, setClosedTabs] = useState<ClosedTab[]>([])
   const [activeRequest, setActiveRequest] = useState<ActiveRequest | null>(null)
+  
   const collectionsRef = useRef(collections)
-
+  const tabsRef = useRef(tabs)
+  const closedTabsRef = useRef(closedTabs)
+  
+  // Sync refs with state
   useEffect(() => {
     collectionsRef.current = collections
   }, [collections])
 
-  const getTab = useCallback((tabId: Identifier) => tabs.find((t) => t.id === tabId), [tabs])
-  const getTabs = useCallback(() => tabs, [tabs])
-  const hasTabs = useCallback(() => tabs.length > 0, [tabs])
+  useEffect(() => {
+    tabsRef.current = tabs
+  }, [tabs])
+
+  useEffect(() => {
+    closedTabsRef.current = closedTabs
+  }, [closedTabs])
+
+  const getTab = useCallback((tabId: Identifier) => tabsRef.current.find((t) => t.id === tabId), [])
+  const getTabs = useCallback(() => tabsRef.current, [])
+  const hasTabs = useCallback(() => tabsRef.current.length > 0, [])
 
   const updateTabsTimeout = useRef<NodeJS.Timeout | null>(null)
 
@@ -33,6 +45,12 @@ export default function useTabs(
       }
       updateTabsTimeout.current = null
       setTabs(newTabs)
+      // tabsRef will be updated in useEffect, but for immediate logic relying on it before render we might need care
+      // However, usually we update state and next render cycles handle it.
+      // If we need immediate ref update for sequential calls in same tick (unlikely for UI actions), we'd do it here.
+      // For safety in async/timeout flows:
+      // tabsRef.current = newTabs 
+      // But React pure state flow is safer. Let's rely on standard flow.
       ipcRenderer?.send(TABS.update, newTabs)
     },
     [ipcRenderer]
@@ -52,9 +70,9 @@ export default function useTabs(
 
   const updateTab = useCallback(
     (tabId: Identifier, tab: RequestTab) => {
-      updateTabsImmediate(tabs.map((t) => (t.id === tabId ? tab : t)))
+      updateTabsImmediate(tabsRef.current.map((t) => (t.id === tabId ? tab : t)))
     },
-    [tabs, updateTabsImmediate]
+    [updateTabsImmediate]
   )
 
   const highlightCollectionRequest = useCallback((tab: RequestTab) => {
@@ -99,30 +117,31 @@ export default function useTabs(
 
   const setActiveTab = useCallback(
     (index: number) => {
-      if (index < 0 || index >= tabs.length) {
+      const currentTabs = tabsRef.current
+      if (index < 0 || index >= currentTabs.length) {
         return
       }
-      if (tabs[index].active) {
+      if (currentTabs[index].active) {
         return
       }
-      updateTabsImmediate(_setActiveTab(tabs, index))
+      updateTabsImmediate(_setActiveTab(currentTabs, index))
     },
-    [tabs, _setActiveTab, updateTabsImmediate]
+    [ _setActiveTab, updateTabsImmediate]
   )
 
   const addTab = useCallback(
     (tab: RequestTab, index = -1) => {
-      const newTabs = [...tabs]
+      const newTabs = [...tabsRef.current]
       if (index === -1) {
         newTabs.push(tab)
-        index = tabs.length
+        index = newTabs.length - 1 // Fix: was tabs.length which was stale
       } else {
         newTabs.splice(index, 0, tab)
       }
       _setActiveTab(newTabs, index)
       updateTabsImmediate(newTabs)
     },
-    [tabs, _setActiveTab, updateTabsImmediate]
+    [_setActiveTab, updateTabsImmediate]
   )
 
   const newTab = useCallback(
@@ -143,9 +162,9 @@ export default function useTabs(
 
   const openTab = useCallback(
     ({ request, collectionId, path = [], shiftKey = false }: OpenTabArguments) => {
-      const tab = getTab(request.id)
+      const tab = tabsRef.current.find((t) => t.id === request.id)
       if (tab && !shiftKey) {
-        setActiveTab(tabs.indexOf(tab))
+        setActiveTab(tabsRef.current.indexOf(tab))
       } else {
         if (shiftKey) {
           request.id = crypto.randomUUID()
@@ -153,7 +172,7 @@ export default function useTabs(
         newTab(request, collectionId, path)
       }
     },
-    [getTab, tabs, setActiveTab, newTab]
+    [setActiveTab, newTab]
   )
 
   const initTabs = useCallback(
@@ -171,7 +190,7 @@ export default function useTabs(
 
   const duplicateTab = useCallback(
     (tabId: Identifier) => {
-      const tab = getTab(tabId)
+      const tab = tabsRef.current.find((t) => t.id === tabId)
       if (!tab) return
       const id = crypto.randomUUID()
       const pathItem = {
@@ -182,7 +201,7 @@ export default function useTabs(
       if (tab.path && tab.path.length > 0) {
         path = tab.path.slice(0, tab.path.length - 1)
       }
-      const tabIndex = tabs.findIndex((t) => t.id === tabId)
+      const tabIndex = tabsRef.current.findIndex((t) => t.id === tabId)
 
       path.push(pathItem)
       const newTab = {
@@ -194,7 +213,7 @@ export default function useTabs(
       }
       addTab(newTab, tabIndex + 1)
     },
-    [getTab, tabs, addTab]
+    [addTab]
   )
 
   const addCloseTab = useCallback((tab: RequestTab, index: number) => {
@@ -218,95 +237,98 @@ export default function useTabs(
 
   const removeTab = useCallback(
     (tabId: Identifier, force?: boolean) => {
-      const index = tabs.findIndex((t) => t.id === tabId)
+      const currentTabs = tabsRef.current
+      const index = currentTabs.findIndex((t) => t.id === tabId)
       if (index === -1) return
-      if (!force && !tabs[index].saved) {
+      if (!force && !currentTabs[index].saved) {
         return
       }
-      addCloseTab(tabs[index], index)
-      if (tabs[index].active) {
+      addCloseTab(currentTabs[index], index)
+      if (currentTabs[index].active) {
         if (index === 0) {
-          _setActiveTab(tabs, 1)
+          _setActiveTab(currentTabs, 1)
         } else {
-          _setActiveTab(tabs, index - 1)
+          _setActiveTab(currentTabs, index - 1)
         }
       }
-      updateTabsImmediate(tabs.filter((tab) => tab.id !== tabId))
+      updateTabsImmediate(currentTabs.filter((tab) => tab.id !== tabId))
     },
-    [tabs, addCloseTab, _setActiveTab, updateTabsImmediate]
+    [addCloseTab, _setActiveTab, updateTabsImmediate]
   )
 
   const closeOtherTabs = useCallback(
     (tabId: Identifier, force?: boolean) => {
-      const tabsToClose = tabs.filter((t) => t.id !== tabId)
+      const currentTabs = tabsRef.current
+      const tabsToClose = currentTabs.filter((t) => t.id !== tabId)
       if (!force) {
         if (tabsToClose.some((tab) => !tab.saved)) {
           return
         }
       }
-      const index = tabs.findIndex((t) => t.id === tabId)
-      const newTabs = [tabs[index]]
+      const index = currentTabs.findIndex((t) => t.id === tabId)
+      const newTabs = [currentTabs[index]]
       _setActiveTab(newTabs, 0)
       addClosedTabs(tabsToClose)
       updateTabsImmediate(newTabs)
     },
-    [tabs, addClosedTabs, _setActiveTab, updateTabsImmediate]
+    [addClosedTabs, _setActiveTab, updateTabsImmediate]
   )
 
   const closeAllTabs = useCallback(
     (force?: boolean) => {
+      const currentTabs = tabsRef.current
       if (!force) {
-        if (tabs.some((tab) => !tab.saved)) {
+        if (currentTabs.some((tab) => !tab.saved)) {
           return
         }
       }
-      addClosedTabs(tabs)
+      addClosedTabs(currentTabs)
       updateTabsImmediate([])
     },
-    [tabs, addClosedTabs, updateTabsImmediate]
+    [addClosedTabs, updateTabsImmediate]
   )
 
   const restoreTab = useCallback(() => {
-    if (closedTabs.length > 0) {
-      const [tab, ...rest] = closedTabs
+    if (closedTabsRef.current.length > 0) {
+      const [tab, ...rest] = closedTabsRef.current
       setClosedTabs(rest)
       const index = tab.index
-      const newTabs = [...tabs]
+      const newTabs = [...tabsRef.current]
       newTabs.splice(index, 0, tab)
       _setActiveTab(newTabs, index)
       updateTabsImmediate(newTabs)
     }
-  }, [closedTabs, tabs, _setActiveTab, updateTabsImmediate])
+  }, [_setActiveTab, updateTabsImmediate])
 
   const updateTabRequest = useCallback(
     (tabId: Identifier, saved: boolean, request: RequestBase) => {
-      const newTabs = tabs.map((tab: RequestTab) =>
+      const newTabs = tabsRef.current.map((tab: RequestTab) =>
         tab.id === tabId ? { ...tab, request, saved } : tab
       )
       updateTabs(newTabs)
     },
-    [tabs, updateTabs]
+    [updateTabs]
   )
 
   const renameTab = useCallback(
     (tabId: Identifier, name: string) => {
-      const tab = getTab(tabId)
+      const tab = tabsRef.current.find((t) => t.id === tabId)
       if (!tab) return
       updateTab(tabId, { ...tab, name })
     },
-    [getTab, updateTab]
+    [updateTab]
   )
 
   const moveTab = useCallback(
     (tabId: Identifier, toBeforeTabId: Identifier) => {
-      const newTabs = [...tabs]
+      const newTabs = [...tabsRef.current]
       const fromIndex = newTabs.findIndex((t) => t.id == tabId)
       const toIndex = newTabs.findIndex((t) => t.id == toBeforeTabId)
       const [removed] = newTabs.splice(fromIndex, 1)
       newTabs.splice(toIndex, 0, removed)
       updateTabsImmediate(newTabs)
     },
-    [tabs, updateTabsImmediate]
+    [updateTabsImmediate]
   )
 
   const updatePaths = useCallback(
@@ -315,18 +337,18 @@ export default function useTabs(
         collectionId,
         from,
         to,
-        tabs
+        tabs: tabsRef.current
       })
       if (updatedTabs.updated) {
         updateTabsImmediate(updatedTabs.tabs)
       }
     },
-    [tabs, updateTabsImmediate]
+    [updateTabsImmediate]
   )
 
   const saveTab = useCallback(
     (tabId: Identifier) => {
-      const tab = getTab(tabId)
+      const tab = tabsRef.current.find((t) => t.id === tabId)
       if (!tab) {
         console.error(`Tab [${tabId}] not found`)
         return
@@ -344,68 +366,72 @@ export default function useTabs(
       collectionsRef.current?.saveRequest({ path, collectionId, request: tab })
       updateTab(tabId, tab)
     },
-    [getTab, updateTab]
+    [updateTab]
   )
 
   const getActiveRequest = useCallback(() => activeRequest, [activeRequest])
   const getSelectedTabIndex = useCallback(() => {
-    let index = tabs.findIndex((t) => t.active)
+    let index = tabsRef.current.findIndex((t) => t.active)
     if (index === -1) {
       index = 2
     }
     return index
-  }, [tabs])
+  }, []) // tabs is no longer a dependency
+
+  const actions = useMemo(() => ({
+      openTab,
+      newTab,
+      addTab,
+      duplicateTab,
+      removeTab,
+      updateTab,
+      updateTabRequest,
+      restoreTab,
+      hasTabs,
+      getTab,
+      getTabs,
+      setActiveTab,
+      getSelectedTabIndex,
+      highlightCollectionRequest,
+      initTabs,
+      renameTab,
+      moveTab,
+      updatePaths,
+      getActiveRequest,
+      closeOtherTabs,
+      closeAllTabs,
+      saveTab
+  }), [
+      openTab,
+      newTab,
+      addTab,
+      duplicateTab,
+      removeTab,
+      updateTab,
+      updateTabRequest,
+      restoreTab,
+      hasTabs,
+      getTab,
+      getTabs,
+      setActiveTab,
+      getSelectedTabIndex,
+      highlightCollectionRequest,
+      initTabs,
+      renameTab,
+      moveTab,
+      updatePaths,
+      getActiveRequest,
+      closeOtherTabs,
+      closeAllTabs,
+      saveTab
+  ])
 
   return useMemo(
     () => ({
-      openTab,
-      newTab,
-      addTab,
-      duplicateTab,
-      removeTab,
-      updateTab,
-      updateTabRequest,
-      restoreTab,
-      hasTabs,
-      getTab,
-      getTabs,
-      setActiveTab,
-      getSelectedTabIndex,
-      highlightCollectionRequest,
-      initTabs,
-      renameTab,
-      moveTab,
-      tabs,
-      updatePaths,
-      getActiveRequest,
-      closeOtherTabs,
-      closeAllTabs,
-      saveTab
+      ...actions,
+       tabs
     }),
-    [
-      openTab,
-      newTab,
-      addTab,
-      duplicateTab,
-      removeTab,
-      updateTab,
-      updateTabRequest,
-      restoreTab,
-      hasTabs,
-      getTab,
-      getTabs,
-      setActiveTab,
-      getSelectedTabIndex,
-      highlightCollectionRequest,
-      initTabs,
-      renameTab,
-      moveTab,
-      tabs,
-      updatePaths,
-      getActiveRequest,
-      closeOtherTabs,
-      closeAllTabs,
-      saveTab
-    ]
+    [actions, tabs]
   )
 }
+
