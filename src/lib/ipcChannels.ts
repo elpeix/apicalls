@@ -171,5 +171,6 @@ export const DIALOG = {
 }
 
 export const OAUTH = {
-  getToken: 'oauth:get-token'
+  getToken: 'oauth:get-token',
+  log: 'oauth:log'
 }

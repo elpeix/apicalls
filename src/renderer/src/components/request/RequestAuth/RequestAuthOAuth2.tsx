@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useRef, useEffect } from 'react'
 import styles from './RequestAuth.module.css'
 import Autocompleter from '../../base/Autocompleter/Autocompleter'
 import { OAUTH } from '../../../../../lib/ipcChannels'
@@ -11,7 +11,25 @@ export default function RequestAuthOAuth2() {
   const { application } = useContext(AppContext)
   const { auth } = useRequestData()
   const { setAuth } = useRequestActions()
-  const { getRequestEnvironment } = useRequestMeta()
+  const { getRequestEnvironment, requestConsole } = useRequestMeta()
+
+  const requesting = useRef(false)
+
+  const addLogRef = useRef(requestConsole?.add)
+  useEffect(() => {
+    addLogRef.current = requestConsole?.add
+  }, [requestConsole?.add])
+
+  useEffect(() => {
+    const handleLog = (_: unknown, log: RequestLog) => {
+      if (!requesting.current) return
+      addLogRef.current?.(log)
+    }
+    window.electron.ipcRenderer.on(OAUTH.log, handleLog)
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners(OAUTH.log)
+    }
+  }, [])
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -35,6 +53,7 @@ export default function RequestAuthOAuth2() {
   const handleGetToken = async () => {
     if (!authValue) return
 
+    requesting.current = true
     try {
       const token = await window.electron.ipcRenderer.invoke(OAUTH.getToken, authValue)
       if (token) {
@@ -45,6 +64,8 @@ export default function RequestAuthOAuth2() {
         message: 'Failed to get token: ' + error,
         buttonColor: 'danger'
       })
+    } finally {
+      requesting.current = false
     }
   }
 
