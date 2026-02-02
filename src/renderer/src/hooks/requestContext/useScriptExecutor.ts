@@ -72,7 +72,6 @@ export function useScriptExecutor({
 
     return {
       log: (message: unknown) => {
-        console.log('Script Log:', message)
         requestConsole?.add({
           type: 'log',
           message: safeStringify(message),
@@ -135,6 +134,13 @@ export function useScriptExecutor({
 
       const onFailure = (_: unknown, response: CallResponseFailure) => {
         if (response.request?.id !== scriptRequestId) return
+
+        if (!activeScriptIds.current.has(scriptRequestId)) {
+          cleanUp()
+          reject(new Error('CANCELED_BY_USER'))
+          return
+        }
+
         cleanUp()
         reject(new Error(response.message))
       }
@@ -236,6 +242,12 @@ export function useScriptExecutor({
           cleanup()
           resolve(true)
         } else if (data.type === 'execution-error') {
+          if (String(data.error).includes('CANCELED_BY_USER')) {
+            scriptConsole.error('Script execution canceled')
+            cleanup()
+            resolve(false)
+            return
+          }
           application.showAlert({
             message: 'Script error: ' + data.error,
             buttonColor: 'danger'
@@ -359,7 +371,11 @@ export function useScriptExecutor({
              
              window.parent.postMessage({ type: 'execution-complete', request: context.request, response: context.response }, '*');
           } catch (e) {
-             window.parent.postMessage({ type: 'execution-error', error: e.toString() }, '*');
+             let errorMsg = String(e);
+             if (typeof e === 'object' && e !== null && e.message) {
+                 errorMsg = e.message;
+             }
+             window.parent.postMessage({ type: 'execution-error', error: errorMsg }, '*');
           }
         });
       `
@@ -402,6 +418,7 @@ export function useScriptExecutor({
   }
 
   const cancelScripts = () => {
+    console.log('cancelScripts', activeScriptIds.current)
     activeScriptIds.current.forEach((id) => {
       window.electron?.ipcRenderer.send(REQUEST.cancel, id)
     })

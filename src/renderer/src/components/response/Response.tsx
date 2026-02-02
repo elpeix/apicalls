@@ -53,9 +53,14 @@ export default function Response() {
       message: 'Response copied to clipboard'
     })
   }
+
   return (
     <>
-      {fetching && <Loading />}
+      {fetching && (
+        <div className={styles.fetching}>
+          <Loading />
+        </div>
+      )}
       {!fetching && fetched && fetchError.length === 0 && (
         <div className={styles.response}>
           <div className={styles.content}>

@@ -1,21 +1,41 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useRef, useEffect } from 'react'
 import styles from './RequestAuth.module.css'
 import Autocompleter from '../../base/Autocompleter/Autocompleter'
 import { OAUTH } from '../../../../../lib/ipcChannels'
 import { Button } from '../../base/Buttons/Buttons'
 import { AppContext } from '../../../context/AppContext'
-import { RequestContext } from '../../../context/RequestContext'
+import { useRequestData, useRequestActions, useRequestMeta } from '../../../context/RequestContext'
 import ButtonIcon from '../../base/ButtonIcon'
 
 export default function RequestAuthOAuth2() {
   const { application } = useContext(AppContext)
-  const { request, getRequestEnvironment } = useContext(RequestContext)
+  const { auth } = useRequestData()
+  const { setAuth } = useRequestActions()
+  const { getRequestEnvironment, requestConsole } = useRequestMeta()
+
+  const requesting = useRef(false)
+
+  const addLogRef = useRef(requestConsole?.add)
+  useEffect(() => {
+    addLogRef.current = requestConsole?.add
+  }, [requestConsole?.add])
+
+  useEffect(() => {
+    const handleLog = (_: unknown, log: RequestLog) => {
+      if (!requesting.current) return
+      addLogRef.current?.(log)
+    }
+    window.electron.ipcRenderer.on(OAUTH.log, handleLog)
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners(OAUTH.log)
+    }
+  }, [])
 
   const inputRef = useRef<HTMLInputElement>(null)
 
   const environmentId = getRequestEnvironment()?.id
 
-  const authValue: RequestAuthOAuth2 = (request?.auth?.value as RequestAuthOAuth2) || {
+  const authValue: RequestAuthOAuth2 = (auth?.value as RequestAuthOAuth2) || {
     grantType: 'authorization_code',
     clientId: '',
     authorizationUrl: '',
@@ -27,12 +47,13 @@ export default function RequestAuthOAuth2() {
 
   const handleOAuthChange = (key: keyof RequestAuthOAuth2, value: string) => {
     const newAuth = { ...authValue, [key]: value }
-    request?.setAuth({ type: 'oauth2', value: newAuth })
+    setAuth({ type: 'oauth2', value: newAuth })
   }
 
   const handleGetToken = async () => {
     if (!authValue) return
 
+    requesting.current = true
     try {
       const token = await window.electron.ipcRenderer.invoke(OAUTH.getToken, authValue)
       if (token) {
@@ -43,6 +64,8 @@ export default function RequestAuthOAuth2() {
         message: 'Failed to get token: ' + error,
         buttonColor: 'danger'
       })
+    } finally {
+      requesting.current = false
     }
   }
 

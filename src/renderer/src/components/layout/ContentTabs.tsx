@@ -14,7 +14,7 @@ export default function ContentTabs() {
 
   const tabList = tabs?.tabs || []
   const hasTabs = tabList.length > 0
-  const selectedTabIndex = tabs?.getSelectedTabIndex() ?? -1
+  const selectedTabIndex = tabList.findIndex((t) => t.active)
 
   const tabsRef = React.useRef(tabs)
   const applicationRef = React.useRef(application)

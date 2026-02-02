@@ -354,6 +354,71 @@ type RequestContextType = {
   pasteCurl: (curl: string) => void
 }
 
+// Specialized context types for reduced re-renders
+
+// Data that changes frequently
+type RequestDataContextType = {
+  method: Method
+  url: string
+  body: BodyType
+  auth: RequestAuth
+  headers: KeyValue[]
+  queryParams: KeyValue[]
+  pathParams: KeyValue[]
+  preScript: string
+  postScript: string
+}
+
+// Actions that are stable (wrapped in useCallback)
+type RequestActionsContextType = {
+  setMethod: (method: Method) => void
+  setUrl: (url: string) => void
+  setFullUrl: (url: string) => void
+  getFullUrl: () => string
+  setBody: (body: BodyType) => void
+  setAuth: (auth: RequestAuth) => void
+  setPreScript: (script: string) => void
+  setPostScript: (script: string) => void
+  headers: {
+    set: (headers: KeyValue[]) => void
+    add: () => void
+    remove: (index: number) => void
+    getActiveLength: () => number
+  }
+  pathParams: {
+    set: (params: KeyValue[]) => void
+    remove: (index: number) => void
+    getActiveLength: () => number
+  }
+  queryParams: {
+    set: (params: KeyValue[]) => void
+    add: () => void
+    remove: (index: number) => void
+    getActiveLength: () => number
+  }
+  fetch: () => void
+  cancel: () => void
+  urlIsValid: ({ url }: { url?: string }) => boolean
+}
+
+// Metadata that changes infrequently
+type RequestMetaContextType = {
+  path: PathItem[]
+  isActive: boolean
+  collectionId?: Identifier | null
+  tabId?: Identifier
+  saved?: boolean
+  openSaveAs?: boolean
+  save: () => void
+  setOpenSaveAs?: (openSaveAs: boolean) => void
+  setEditorState: (type: 'request' | 'response', state: string) => void
+  getEditorState: (type: 'request' | 'response') => string
+  getRequestEnvironment: () => Environment | null
+  copyAsCurl: () => void
+  pasteCurl: (curl: string) => void
+  requestConsole?: ConsoleHookType | null
+}
+
 type ResponseContextType = {
   fetching: boolean
   fetched: FetchedType

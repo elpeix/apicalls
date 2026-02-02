@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import styles from './Request.module.css'
 import LinkedModal from '../base/linkedModal/LinkedModal'
-import { RequestContext } from '../../context/RequestContext'
+import { useRequestMeta } from '../../context/RequestContext'
 import { AppContext } from '../../context/AppContext'
 import SaveAs from '../base/SaveAs/SaveAs'
 import Menu from '../base/Menu/Menu'
@@ -9,7 +9,7 @@ import { MenuElement, MenuSeparator } from '../base/Menu/MenuElement'
 
 export default function SaveButton() {
   const { application } = useContext(AppContext)
-  const { tabId, path, save, openSaveAs, setOpenSaveAs, copyAsCurl } = useContext(RequestContext)
+  const { tabId, path, save, openSaveAs, setOpenSaveAs, copyAsCurl } = useRequestMeta()
   const arrowRef = useRef(null)
   const [showModal, setShowModal] = useState(false)
 

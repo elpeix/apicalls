@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { RequestContext } from '../../context/RequestContext'
 import RequestBar from './RequestBar'
 import RequestTabs from './RequestTabs'
 import Console from '../base/Console/Console'
@@ -12,7 +11,6 @@ import { useRequestShortcuts } from './hooks/useRequestShortcuts'
 
 export default function RequestPanelContent() {
   const { appSettings } = useContext(AppContext)
-  const { request } = useContext(RequestContext)
 
   const panelView = appSettings?.settings?.requestView || 'horizontal'
 
@@ -24,8 +22,6 @@ export default function RequestPanelContent() {
     setConsoleCollapsed,
     toggleRequestPanel
   } = useRequestShortcuts()
-
-  if (!request) return null
 
   const collapseConsole = () => consolePanelRef.current?.collapse()
   const expandConsole = () => consolePanelRef.current?.expand()

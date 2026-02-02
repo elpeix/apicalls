@@ -1,11 +1,12 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { ACTIONS } from '../../../../../lib/ipcChannels'
-import { RequestContext, ResponseContext } from '../../../context/RequestContext'
+import { useRequestActions, useRequestMeta, ResponseContext } from '../../../context/RequestContext'
 import { AppContext } from '../../../context/AppContext'
 import { GroupHandle, PanelHandle } from 'simple-panels'
 
 export function useRequestShortcuts() {
-  const { isActive, request, save, setOpenSaveAs } = useContext(RequestContext)
+  const { fetch } = useRequestActions()
+  const { isActive, save, setOpenSaveAs } = useRequestMeta()
   const { fetching } = useContext(ResponseContext)
   const { application } = useContext(AppContext)
 
@@ -21,13 +22,13 @@ export function useRequestShortcuts() {
     const ipcRenderer = window.electron?.ipcRenderer
     const handleSendRequest = () => {
       if (application.dialogIsOpen) return
-      return request?.fetch()
+      return fetch()
     }
     ipcRenderer?.on(ACTIONS.sendRequest, handleSendRequest)
     return () => {
       ipcRenderer?.removeAllListeners(ACTIONS.sendRequest)
     }
-  }, [isActive, request, fetching, application.dialogIsOpen])
+  }, [isActive, fetch, fetching, application.dialogIsOpen])
 
   // Save Request shortcut
   useEffect(() => {

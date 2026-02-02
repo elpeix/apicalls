@@ -1,16 +1,15 @@
-import React, { useContext } from 'react'
-import { RequestContext } from '../../context/RequestContext'
+import React from 'react'
+import { useRequestData, useRequestActions } from '../../context/RequestContext'
 import styles from './Request.module.css'
 import MethodSelect from '../base/MethodSelect/MethodSelect'
 
 export default function RequestMethod() {
-  const { request } = useContext(RequestContext)
-
-  if (!request) return null
+  const { method } = useRequestData()
+  const { setMethod } = useRequestActions()
 
   return (
     <div className={styles.method}>
-      <MethodSelect method={request.method} onSelect={request.setMethod} />
+      <MethodSelect method={method} onSelect={setMethod} />
     </div>
   )
 }
