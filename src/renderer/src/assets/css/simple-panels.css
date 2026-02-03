@@ -56,7 +56,7 @@ body[data-active-sep-x='east'][data-active-sep-y='north'] {
     background-color: var(--gutter-color-drag);
 
     .inset {
-      z-index: 2;
+      z-index: 5;
       transition-delay: var(--gutter-transition-delay);
       background-color: var(--gutter-color-drag);
     }

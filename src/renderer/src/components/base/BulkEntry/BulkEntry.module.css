@@ -1,0 +1,42 @@
+.bulkEntry {
+  display: flex;
+  flex-direction: column;
+  min-width: 20rem;
+}
+
+.editorContainer {
+  height: 25rem;
+  background-color: var(--background-content);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.wordWrap {
+  text-transform: uppercase;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-top: 1px solid var(--dialog-border-color);
+  background-color: var(--dialog-footer-background-color);
+  padding: 0.5rem;
+
+  button {
+    min-width: 6rem;
+  }
+}
