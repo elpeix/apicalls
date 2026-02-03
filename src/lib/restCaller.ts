@@ -11,6 +11,51 @@ const defaultMethod: Method = {
 
 const abortControllers: Map<Identifier, AbortController> = new Map()
 
+// Agent cache for connection pooling - reuse agents with same configuration
+const agentCache: Map<string, Agent | ProxyAgent> = new Map()
+
+function getAgentCacheKey(
+  proxy: string | undefined,
+  timeout: number,
+  rejectUnauthorized: boolean
+): string {
+  return `${proxy ?? ''}-${timeout}-${rejectUnauthorized}`
+}
+
+function getOrCreateAgent(settings: {
+  proxy?: string
+  timeout: number
+  rejectUnauthorized?: boolean
+}): Agent | ProxyAgent {
+  const rejectUnauthorized = settings.rejectUnauthorized ?? true
+  const cacheKey = getAgentCacheKey(settings.proxy, settings.timeout, rejectUnauthorized)
+
+  let agent = agentCache.get(cacheKey)
+  if (!agent) {
+    agent = settings.proxy
+      ? new ProxyAgent({
+          uri: settings.proxy,
+          keepAliveMaxTimeout: settings.timeout + 1000,
+          bodyTimeout: settings.timeout,
+          connectTimeout: settings.timeout,
+          connect: {
+            rejectUnauthorized
+          }
+        })
+      : new Agent({
+          keepAliveMaxTimeout: settings.timeout + 1000,
+          bodyTimeout: settings.timeout,
+          connectTimeout: settings.timeout,
+          connect: {
+            rejectUnauthorized
+          }
+        })
+    agentCache.set(cacheKey, agent)
+  }
+
+  return agent
+}
+
 export const restCall = async (id: Identifier, request: CallRequest): Promise<CallResponse> => {
   if (!request.method) {
     request.method = defaultMethod
@@ -30,7 +75,6 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
         })
       path += `?${queryParams.toString()}`
     }
-    const initTime = Date.now()
     const requestInit: RequestInit = {
       method: request.method.value,
       headers: request.headers,
@@ -114,25 +158,9 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
       }
     }
 
-    const dispatcher = settings.proxy
-      ? new ProxyAgent({
-          uri: settings.proxy,
-          keepAliveMaxTimeout: settings.timeout + 1000,
-          bodyTimeout: settings.timeout,
-          connectTimeout: settings.timeout,
-          connect: {
-            rejectUnauthorized: settings.rejectUnauthorized ?? true
-          }
-        })
-      : new Agent({
-          keepAliveMaxTimeout: settings.timeout + 1000,
-          bodyTimeout: settings.timeout,
-          connectTimeout: settings.timeout,
-          connect: {
-            rejectUnauthorized: settings.rejectUnauthorized ?? true
-          }
-        })
+    const dispatcher = getOrCreateAgent(settings)
 
+    const initTime = Date.now()
     const response = await fetch(path, { ...requestInit, dispatcher })
     const requestTime = Date.now() - initTime
     const dataTime = Date.now()
