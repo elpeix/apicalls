@@ -265,7 +265,7 @@ export function useScriptExecutor({
       const runtimeCode = `
         window.addEventListener('message', async (event) => {
           if (event.data.type !== 'START_EXECUTION') return;
-          
+
           const { script, context } = event.data;
 
           // SHIM: Console
@@ -351,7 +351,7 @@ export function useScriptExecutor({
               request
             };
           };
-          
+
           const http = createHttp();
           const { request, response } = context;
 
@@ -359,16 +359,16 @@ export function useScriptExecutor({
              // Use new Function to execute the script string in this scope
              // properties defined above (console, environment, http, request, response) are available via closure/scope
              const userScriptFunction = new Function(
-                'console', 
-                'environment', 
-                'http', 
-                'request', 
-                'response', 
+                'console',
+                'environment',
+                'http',
+                'request',
+                'response',
                 'return (async () => { ' + script + ' })()'
              );
-             
+
              await userScriptFunction(console, environment, http, request, response);
-             
+
              window.parent.postMessage({ type: 'execution-complete', request: context.request, response: context.response }, '*');
           } catch (e) {
              let errorMsg = String(e);
@@ -418,7 +418,6 @@ export function useScriptExecutor({
   }
 
   const cancelScripts = () => {
-    console.log('cancelScripts', activeScriptIds.current)
     activeScriptIds.current.forEach((id) => {
       window.electron?.ipcRenderer.send(REQUEST.cancel, id)
     })

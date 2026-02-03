@@ -47,12 +47,12 @@ and organise them into tabs, collections, and workspaces.
 2. **Query parameters**: add rows in the _Params_ section (toggle each one
    on/off).
 3. **Headers**: add request headers.
-   - I will overwrite collection headers.
+   - They will overwrite collection headers.
 4. **Body**: choose the mode (JSON, YAML, text, form-data,
    x-www-form-urlencoded, file). The Monaco-based editor offers syntax
    highlighting and validation. For `form-data`, a key-value editor allows sending text and files.
-5. **Authentication**: configure Bearer, Basic, or custom tokens from the
-   _Auth_ tab.
+5. **Authentication**: configure Bearer, Basic, OAuth 2.0 (Authorization Code
+   flow), or custom tokens from the _Auth_ tab.
 6. **Environment**: assign variables via _Environment_ (collections can specify
    a preferred environment).
 7. **Send and cancel**: `Ctrl/Cmd+Enter` sends the request, `Esc` cancels it.
@@ -79,7 +79,7 @@ and organise them into tabs, collections, and workspaces.
   example, generating tokens).
 - Import and export from the context menu: supports Postman v2, OpenAPI, and
   custom YAML/JSON files.
-- Define collection headers that will be sent on requests. Thery will overwrite
+- Define collection headers that will be sent on requests. They will overwrite
   environment headers.
 
 ## Scripting
@@ -122,7 +122,7 @@ The following objects are available in the script execution context:
 - Define environments (dev, staging, prod) with key/value pairs.
   - Insert variables as `{{variable}}` in URLs, headers, or bodies.
   - Define environment headers that will be sent on requests. They will
-    overwrite workpace headers.
+    overwrite workspace headers.
 - Duplicate, reorder, or export complete environments as needed.
 - Pick the active environment per tab from the request toolbar.
 
@@ -140,7 +140,7 @@ The following objects are available in the script execution context:
 - Access the list and workspace actions from the side menu (folder icon).
 - Create, duplicate, rename, and remove workspaces (the default workspace
   cannot be deleted). Each workspace is stored in its own electron-store file.
-- Define workpace headers that will be sent on requests. They will overwrite
+- Define workspace headers that will be sent on requests. They will overwrite
   headers defined on settings.
 
 ## Settings

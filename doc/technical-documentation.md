@@ -11,7 +11,7 @@ environments, cookies, and history.
 
 ## Technology Stack
 
-- Electron 39 with context isolation and a custom preload
+- Electron 40 with context isolation and a custom preload
   (`src/preload/index.ts`).
 - React 19 with TypeScript 5 and Vite 7 (`src/renderer/src`).
 - electron-vite for unified development and build workflows (`npm run dev` /
@@ -20,7 +20,7 @@ environments, cookies, and history.
   zip), and Windows (NSIS) (`electron-builder.yml`).
 - Undici to perform HTTP requests (`src/lib/restCaller.ts`).
 - electron-store for local persistence (`src/lib/appStore.ts`).
-- @monaco-editor/react for the editor and react-resizable-panels for the
+- @monaco-editor/react for the editor and simple-panels for the resizable
   layout.
 
 ## Folder Structure
