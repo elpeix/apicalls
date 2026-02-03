@@ -5,12 +5,6 @@
   max-width: 40rem;
 }
 
-.popupBoxTextarea {
-  display: flex;
-  flex-direction: column;
-  min-width: 15rem;
-}
-
 .message {
   font-size: 0.9rem;
   font-weight: 500;
@@ -34,46 +28,6 @@
 
   button {
     min-width: 6rem;
-  }
-}
-
-.textareaContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  width: 100%;
-
-  .label {
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-  .textarea {
-    resize: none;
-    height: 12rem;
-    white-space: nowrap;
-    width: 100%;
-    padding: 0.5rem;
-    text-wrap: wrap;
-  }
-}
-.popupBoxTextarea.simpleMode {
-  min-width: 25rem;
-
-  .textareaContainer {
-    padding: 0;
-
-    .label {
-      display: none;
-    }
-    .textarea {
-      border: none;
-      field-sizing: content;
-      height: unset;
-      min-height: 12rem;
-      max-height: 20rem;
-      width: 25rem;
-    }
   }
 }
 
