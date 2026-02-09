@@ -31,7 +31,7 @@
     "electron-updater": "^6.7.3",
     "react-tabs": "^6.1.0",
     "simple-panels": "github:elpeix/simple-panels#v1.1.0",
-    "undici": "^7.20.0",
+    "undici": "^7.21.0",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
