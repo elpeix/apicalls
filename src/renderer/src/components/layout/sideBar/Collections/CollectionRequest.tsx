@@ -55,7 +55,6 @@ export default function CollectionRequest({
           block: 'nearest'
         })
       }
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActive(true)
     } else {
       setActive(false)

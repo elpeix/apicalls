@@ -38,9 +38,6 @@ export default function Collection({
   const [filter, setFilter] = useState('')
   const [showMenu, setShowMenu] = useState(false)
 
-  const prevFilterRef = useRef(filter)
-  const prevFilteredRef = useRef<(CollectionFolder | RequestType)[]>([])
-
   const coll = useMemo(() => {
     // We depend on updateTime to force re-render when collection updates in global store
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -98,14 +95,7 @@ export default function Collection({
     if (filter === '') {
       return localCollection.elements
     }
-
-    const newFiltered = filterCollectionElements(localCollection.elements, filter)
-
-    if (filter === prevFilterRef.current && prevFilteredRef.current.length > 0) {
-      syncExpansionState(prevFilteredRef.current, newFiltered)
-    }
-
-    return newFiltered
+    return filterCollectionElements(localCollection.elements, filter)
   }, [localCollection.elements, filter])
 
   const envs = useMemo(() => environments?.getAll() || [], [environments])
@@ -116,12 +106,14 @@ export default function Collection({
     return environment?.name || 'unnamed'
   }, [localCollection.environmentId, environments])
 
+  if (!localCollection.name && !editingName) {
+    setEditingName(true)
+  }
+
   useEffect(() => {
-    if (!localCollection.name && !editingName) {
-      setEditingName(true)
-      setTimeout(() => {
-        nameRef.current?.focus()
-      }, 0)
+    if (!localCollection.name && editingName) {
+      const timer = setTimeout(() => nameRef.current?.focus(), 0)
+      return () => clearTimeout(timer)
     }
   }, [localCollection.name, editingName])
 
@@ -380,40 +372,4 @@ export default function Collection({
       </Scrollable>
     </div>
   )
-}
-
-const syncExpansionState = (
-  prevItems: (CollectionFolder | RequestType)[],
-  newItems: (CollectionFolder | RequestType)[]
-) => {
-  const stateMap = new Map<string, boolean>()
-
-  const collect = (items: (CollectionFolder | RequestType)[]) => {
-    items.forEach((i) => {
-      if (i.type === 'folder') {
-        const folder = i as CollectionFolder
-        if (folder.expanded !== undefined) {
-          stateMap.set(String(folder.id), folder.expanded)
-        }
-        collect(folder.elements)
-      }
-    })
-  }
-
-  collect(prevItems)
-
-  const apply = (items: (CollectionFolder | RequestType)[]) => {
-    items.forEach((i) => {
-      if (i.type === 'folder') {
-        const folder = i as CollectionFolder
-        const id = String(folder.id)
-        if (stateMap.has(id)) {
-          folder.expanded = stateMap.get(id)
-        }
-        apply(folder.elements)
-      }
-    })
-  }
-
-  apply(newItems)
 }

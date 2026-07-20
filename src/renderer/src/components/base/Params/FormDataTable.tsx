@@ -40,6 +40,8 @@ export default function FormDataTable({
   bulkCaption?: string
   removeCaption?: string
   defaultNameSize?: number
+  maxNameSize?: number
+  minNameSize?: number
   bulkMode?: boolean
   helperValues?: { [key: string]: string[] }
   className?: string

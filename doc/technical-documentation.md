@@ -4,7 +4,7 @@
 
 API Calls is an Electron-based desktop application designed to build, execute,
 and analyse HTTP requests. The project combines an Electron main process
-written in TypeScript with a modern React interface bundled via electron-vite.
+written in TypeScript with a modern React interface bundled via Vite.
 The application prioritises data separation by workspace, local persistence
 through electron-store, and a broad feature set for managing tabs, collections,
 environments, cookies, and history.
@@ -14,8 +14,10 @@ environments, cookies, and history.
 - Electron 40 with context isolation and a custom preload
   (`src/preload/index.ts`).
 - React 19 with TypeScript 5 and Vite 7 (`src/renderer/src`).
-- electron-vite for unified development and build workflows (`npm run dev` /
-  `npm run build`).
+- Vite for the development and build workflows, orchestrated by small scripts
+  (`scripts/dev.mjs`, `scripts/build.mjs`) with per-process configs
+  (`vite.main.config.ts`, `vite.preload.config.ts`, `vite.renderer.config.ts`);
+  see `npm run dev` / `npm run build`.
 - electron-builder to generate packages for Linux (AppImage, deb), macOS (dmg,
   zip), and Windows (NSIS) (`electron-builder.yml`).
 - Undici to perform HTTP requests (`src/lib/restCaller.ts`).

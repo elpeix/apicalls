@@ -1,4 +1,13 @@
-import { fetch, Agent, RequestInit, FormData, Headers, Response, ProxyAgent } from 'undici'
+import {
+  fetch,
+  Agent,
+  RequestInit,
+  FormData,
+  Headers,
+  HeadersInit,
+  Response,
+  ProxyAgent
+} from 'undici'
 import { RestCallerError } from './RestCallerError'
 import { getSettings } from './settings'
 import { openAsBlob } from 'node:fs'
@@ -77,7 +86,7 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
     }
     const requestInit: RequestInit = {
       method: request.method.value,
-      headers: request.headers,
+      headers: request.headers as HeadersInit,
       cache: 'no-cache',
       signal: abortController.signal,
       redirect: (settings.followRequestRedirect ?? false) ? 'follow' : 'manual'
@@ -85,7 +94,7 @@ export const restCall = async (id: Identifier, request: CallRequest): Promise<Ca
     let sentBody: string | undefined
     if (request.body && request.method.body) {
       // Normalize headers to handle case-insensitivity and various formats (array, object, Headers)
-      const headers = new Headers(request.headers)
+      const headers = new Headers(request.headers as HeadersInit)
       const contentType = headers.get('content-type') || ''
       requestInit.headers = headers
 

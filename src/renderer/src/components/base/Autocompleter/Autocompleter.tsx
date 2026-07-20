@@ -68,6 +68,7 @@ export default function Autocompleter({
   const inputId = useId()
 
   const [inputValue, setInputValue] = useState(value)
+  const [prevValue, setPrevValue] = useState(value)
   const [searchValue, setSearchValue] = useState('')
   const [searchIndex, setSearchIndex] = useState(-1)
   const [cursorPosition, setCursorPosition] = useState(-1)
@@ -194,9 +195,10 @@ export default function Autocompleter({
   )
 
   // Sync props to state
-  useEffect(() => {
+  if (value !== prevValue) {
+    setPrevValue(value)
     setInputValue(value)
-  }, [value])
+  }
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent) => {
@@ -358,7 +360,6 @@ export default function Autocompleter({
           ref={refSuggestions}
           style={{
             transform: `translate(${offsetX}px, ${offsetY}px)`,
-            // @ts-expect-error - property not yet supported by React types
             positionAnchor: `--${inputId}`,
             width: `${width - offsetX}px`,
             zIndex: Z_INDEX,

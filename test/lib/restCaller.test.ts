@@ -131,7 +131,7 @@ describe('restCaller', () => {
           statusText: STATUS_TEXT,
           headers: headers,
           text: async () => RESULT
-        } as Response)
+        } as unknown as Response)
       })
     )
 
@@ -198,7 +198,7 @@ describe('restCaller', () => {
           statusText: STATUS_TEXT,
           headers: new Headers(),
           text: async () => RESULT
-        } as Response)
+        } as unknown as Response)
       })
     )
 

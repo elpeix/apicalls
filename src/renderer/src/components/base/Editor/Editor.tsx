@@ -173,7 +173,7 @@ const EditorInner = memo(
           monaco.editor.setTheme(theme)
 
           monaco.editor.registerLinkOpener({
-            open: (link) => {
+            open: (link: monaco.Uri) => {
               const linkOpenBehavior = linkOpenBehaviorRef.current
               const environment = getRequestEnvironment()
               const scheme = link.scheme ?? ''

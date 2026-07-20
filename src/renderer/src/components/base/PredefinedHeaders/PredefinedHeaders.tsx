@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './PredefinedHeaders.module.css'
 import Params from '../Params/Params'
 import { Button } from '../Buttons/Buttons'
@@ -15,10 +15,12 @@ export default function PredefinedHeaders({
   onClose: () => void
 }) {
   const [items, setItems] = useState(headers)
+  const [prevHeaders, setPrevHeaders] = useState(headers)
 
-  useEffect(() => {
+  if (headers !== prevHeaders) {
+    setPrevHeaders(headers)
     setItems(headers)
-  }, [headers])
+  }
 
   const onAddHandler = () => {
     setItems([
