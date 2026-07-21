@@ -37,7 +37,7 @@ export default [
   },
 
   {
-    files: ['src/main/**/*.{ts,tsx}', 'src/preload/**/*.{ts,tsx}'],
+    files: ['src/main/**/*.{ts,tsx}', 'src/preload/**/*.{ts,tsx}', 'scripts/**/*.mjs'],
     languageOptions: {
       globals: globals.node
     }

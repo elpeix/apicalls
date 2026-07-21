@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import SimpleTable from '../../../base/SimpleTable/SimpleTable'
 
@@ -14,10 +14,12 @@ export default function Cookie({
   remove: (index: number) => void
 }) {
   const [cookieData, setCookieData] = useState(cookie)
+  const [prevCookie, setPrevCookie] = useState(cookie)
 
-  useEffect(() => {
+  if (cookie !== prevCookie) {
+    setPrevCookie(cookie)
     setCookieData(cookie)
-  }, [cookie])
+  }
 
   const updateValue = (key: string, value: string | Date) => {
     const newCookie = { ...cookieData, [key]: value }

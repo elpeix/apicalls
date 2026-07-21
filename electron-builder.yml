@@ -9,7 +9,7 @@ files:
   - '!**/.vscode/*'
   - '!**/.git/*'
   - '!src/*'
-  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!vite.*.config.{js,ts,mjs,cjs}'
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md,SECURITY.md,AUTHORS,CONTRIBUTORS}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml,package-lock.json}'
   - '!{aur,doc,test,scripts,.github}'

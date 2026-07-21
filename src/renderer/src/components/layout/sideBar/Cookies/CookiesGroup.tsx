@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ButtonIcon from '../../../base/ButtonIcon'
 import styles from './Cookies.module.css'
 import SimpleTable from '../../../base/SimpleTable/SimpleTable'
@@ -18,10 +18,12 @@ export default function CookiesGroup({
   remove: (group: string) => void
 }) {
   const [cookieList, setCookieList] = useState(cookies)
+  const [prevCookies, setPrevCookies] = useState(cookies)
 
-  useEffect(() => {
+  if (cookies !== prevCookies) {
+    setPrevCookies(cookies)
     setCookieList(cookies)
-  }, [cookies])
+  }
 
   const updateCookie = (cookie: Cookie, index: number) => {
     const newCookies = [...cookieList]

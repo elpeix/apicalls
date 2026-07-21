@@ -39,6 +39,9 @@ export default function Params({
   bulkCaption?: string
   removeCaption?: string
   defaultNameSize?: number
+  maxNameSize?: number
+  minNameSize?: number
+  showType?: boolean
   bulkMode?: boolean
   helperValues?: { [key: string]: string[] }
   className?: string

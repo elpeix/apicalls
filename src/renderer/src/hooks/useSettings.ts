@@ -18,12 +18,10 @@ export function useSettings(): AppSettingsHookType {
   const themesRef = useRef<Map<string, AppTheme>>(new Map())
   const settingsRef = useRef<AppSettingsType | null>(null)
 
-  const matchMediaRef = useRef<MediaQueryList | null>(null)
-  if (!matchMediaRef.current) {
+  const [matchMedia] = useState(() => {
     const base = window || global
-    matchMediaRef.current = base.matchMedia('(prefers-color-scheme: dark)')
-  }
-  const matchMedia = matchMediaRef.current
+    return base.matchMedia('(prefers-color-scheme: dark)')
+  })
 
   const [mode, setMode] = useState(() => (matchMedia.matches ? DARK : LIGHT))
 
@@ -58,8 +56,9 @@ export function useSettings(): AppSettingsHookType {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Keep settingsRef in sync
-  settingsRef.current = settings
+  useEffect(() => {
+    settingsRef.current = settings
+  }, [settings])
 
   useEffect(() => {
     const ipcRenderer = window.electron?.ipcRenderer

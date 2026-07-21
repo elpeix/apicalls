@@ -22,26 +22,34 @@ export default function EditableName({
   onBlur?: () => void
   editOnDoubleClick?: boolean
 }) {
-  const [editingName, setEditingName] = useState(false)
+  const [editingName, setEditingName] = useState(editMode)
   const [nameValue, setNameValue] = useState(name)
+  const [prevName, setPrevName] = useState(name)
+  const [prevEditMode, setPrevEditMode] = useState(editMode)
   const nameRef = useRef<HTMLInputElement>(null)
   const ipcRenderer = window.electron?.ipcRenderer
 
-  useEffect(() => {
-    if (editingName) return
-    if (editMode) {
+  if (name !== prevName) {
+    setPrevName(name)
+    setNameValue(name)
+  }
+
+  if (editMode !== prevEditMode) {
+    setPrevEditMode(editMode)
+    if (editMode && !editingName) {
       setEditingName(true)
-      setTimeout(() => {
-        if (!nameRef.current || name.length === 0) return
-        nameRef.current.setSelectionRange(0, nameValue.length)
-        nameRef.current.focus()
-      }, 0)
     }
-  }, [editMode, nameValue, name, editingName])
+  }
 
   useEffect(() => {
-    setNameValue(name)
-  }, [name])
+    if (!editMode) return
+    const timer = setTimeout(() => {
+      if (!nameRef.current || name.length === 0) return
+      nameRef.current.setSelectionRange(0, name.length)
+      nameRef.current.focus()
+    }, 0)
+    return () => clearTimeout(timer)
+  }, [editMode, name])
 
   const cancelEdit = useCallback(() => {
     if (!editingName) return

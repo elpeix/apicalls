@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { AppContext } from '../../../../context/AppContext'
 import { createFolder, createRequest } from '../../../../lib/factory'
 import ButtonIcon from '../../../base/ButtonIcon'
@@ -33,10 +33,13 @@ export default function Folder({
   const { application, tabs, collections } = useContext(AppContext)
   const [expanded, setExpanded] = useState(folder.expanded || false)
   const [editingName, setEditingName] = useState(false)
+  const expandedProp = folder.expanded || false
+  const [prevExpanded, setPrevExpanded] = useState(expandedProp)
 
-  useEffect(() => {
-    setExpanded(folder.expanded || false)
-  }, [folder.expanded])
+  if (expandedProp !== prevExpanded) {
+    setPrevExpanded(expandedProp)
+    setExpanded(expandedProp)
+  }
 
   const folderPath = useMemo(
     () => [...path, { id: folder.id, type: 'folder' }] as PathItem[],

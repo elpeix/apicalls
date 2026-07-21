@@ -26,16 +26,18 @@ export default function SimpleTable({
   children: React.ReactNode
 }) {
   const [columns, setColumns] = useState<string[]>(() => getColumns(initialTemplateColumns))
+  const [prevTemplate, setPrevTemplate] = useState(initialTemplateColumns)
   const startWidthsRef = useRef<number[]>([])
   const columnsRef = useRef<string[]>(columns)
+
+  if (initialTemplateColumns !== prevTemplate) {
+    setPrevTemplate(initialTemplateColumns)
+    setColumns(getColumns(initialTemplateColumns))
+  }
 
   useEffect(() => {
     columnsRef.current = columns
   }, [columns])
-
-  useEffect(() => {
-    setColumns(getColumns(initialTemplateColumns))
-  }, [initialTemplateColumns])
 
   const updateColumnWidth = useCallback((index: number, width: string) => {
     setColumns((prev) => {
@@ -254,12 +256,14 @@ function SimpleTableCell({
   const inputRef = useRef<HTMLInputElement>(null)
   const [inputFocused, setInputFocused] = useState(false)
   const [changedValue, setChangedValue] = useState(value)
+  const [prevValue, setPrevValue] = useState(value)
   const debouncedValue = useDebounce(changedValue, 150)
 
-  useEffect(() => {
+  if (value !== prevValue) {
+    setPrevValue(value)
     setEditableValue(value)
     setChangedValue(value)
-  }, [value])
+  }
 
   useEffect(() => {
     if (editable && autoFocus && inputRef.current) {

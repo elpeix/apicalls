@@ -27,7 +27,7 @@ function createWindow(settingsStore: IStore) {
     title: 'API Calls',
     titleBarStyle: getTitleBarStyle(settingsStore),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.mjs'),
+      preload: join(import.meta.dirname, '../preload/index.mjs'),
       sandbox: false, // Required for Monaco Editor web workers; contextIsolation provides security
       contextIsolation: true,
       spellcheck: false
@@ -47,7 +47,7 @@ function createWindow(settingsStore: IStore) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']).then(() => mainWindow?.maximize())
   } else {
     mainWindow
-      .loadFile(join(__dirname, '../renderer/index.html'))
+      .loadFile(join(import.meta.dirname, '../renderer/index.html'))
       .then(() => mainWindow?.maximize())
   }
 
@@ -167,9 +167,9 @@ app.on('window-all-closed', () => {
 
 function getIcon() {
   if (process.platform === 'darwin') {
-    return join(__dirname, '../../resources/icon_darwin.png')
+    return join(import.meta.dirname, '../../resources/icon_darwin.png')
   }
-  return join(__dirname, '../../resources/icon.png')
+  return join(import.meta.dirname, '../../resources/icon.png')
 }
 
 function getTitleBarStyle(settingsStore: IStore) {
