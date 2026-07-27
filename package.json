@@ -42,7 +42,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
-    "electron": "^43.1.1",
+    "electron": "^43.2.0",
     "electron-builder": "^26.15.3",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
