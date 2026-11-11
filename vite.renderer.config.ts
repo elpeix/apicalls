@@ -10,9 +10,10 @@ export default defineConfig({
     emptyOutDir: true
   },
   resolve: {
-    alias: {
-      '@renderer': resolve('src/renderer/src')
-    }
+    alias: [
+      { find: '@renderer', replacement: resolve('src/renderer/src') },
+      { find: /^\.\/dompurify\/dompurify\.js$/, replacement: 'dompurify' }
+    ]
   },
   plugins: [react()]
 })
